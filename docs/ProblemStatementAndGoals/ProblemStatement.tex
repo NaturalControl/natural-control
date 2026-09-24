@@ -1,99 +1,206 @@
-\documentclass{article}
-
-\usepackage{tabularx}
-\usepackage{booktabs}
-
-\title{Problem Statement and Goals\\\progname}
-
-\author{\authname}
-
-\date{}
-
-\input{../Comments.text}
+\documentclass[11pt]{article}
+\input{../MilestoneDraft.text}
 \input{../Common.text}
-
+\title{Problem Statement and Goals\\\progname}
+\author{\authname}
+\date{September 23, 2026}
 \begin{document}
-
 \maketitle
+\draftnotice
 
-\begin{table}[hp]
-\caption{Revision History} \label{TblRevisionHistory}
+\begin{table}[h]
+\centering
+\caption{Revision history.}\label{tab:ps-revisions}
 \begin{tabularx}{\textwidth}{llX}
 \toprule
-\textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
+Date & Revision & Change \\
 \midrule
-Date1 & Name(s) & Description of changes\\
-Date2 & Name(s) & Description of changes\\
-... & ... & ...\\
+2026-09-23 & Review draft & AI-assisted draft from Aaron Loh's decisions;
+whole-team review pending. \\
 \bottomrule
 \end{tabularx}
 \end{table}
+Table~\ref{tab:ps-revisions} records this draft's origin. Natural Control is
+a working name. The accompanying Development Plan contains the proof of
+concept (POC) plan and proposed team charter.
 
 \section{Problem Statement}
-
-\wss{You should check your problem statement with the
-\href{https://smiths.github.io/capTemplate/Checklists/ProbState-Checklist.pdf}
-{problem statement checklist}}. 
-
-\wss{You can change the section headings, as long as you include the required
-information.}
+Blind computer users can encounter barriers when completing tasks across
+websites, applications, and connected services. The project addresses
+independent task completion and the ability to remain informed and in
+control when delegating digital work.
 
 \subsection{Problem}
+Completing a digital task can require navigating unfamiliar interfaces,
+tracking changes, and recovering from controls or content that existing
+access tools do not expose effectively. Screen readers already provide
+selective navigation; users do not simply listen to every item on a page.
+WebAIM's self-selected survey identifies barriers including unclear
+controls and unexpected changes, but does not establish their prevalence
+among our prospective participants \citep{WebAIM2024}.
 
-\wss{What problem are you trying to solve?  Why is it important? Do not talk
-about how you will solve the problem, only what the problem is.  AI is rarely
-part of the problem.  The problem is ``what'' you want to do, not ``how'' you
-want to do it.  The problem statement should be written in a way that is
-understandable to a non-technical audience.}
+Delegation to an artificial intelligence (AI) agent introduces another
+problem: the user needs to understand what is happening, make meaningful
+choices, and correct mistakes without visual monitoring. Research on Morae
+examines this issue by involving blind and low-vision users in decisions
+during agent execution \citep{Morae2025}. These sources motivate the
+project; interviews must still establish participants' actual priorities.
+
+Natural Control aims to make general digital task delegation usable
+through conversation while preserving user agency. Success means a person
+can complete and verify useful tasks independently after initial setup,
+not that they abandon their screen reader. Representative tasks span
+connected accounts, unfamiliar websites, and local computer applications.
+They are evaluation cases, not a product allowlist or fixed scripts.
 
 \subsection{Inputs and Outputs}
+The intended inputs are spoken goals, preferences, clarification answers,
+corrections, approvals, and stop requests. Users may also supply keyboard
+or text input. With appropriate access, the system receives relevant page,
+application, file, and connected-account state needed for the requested
+task. Initial setup supplies permitted accounts, tools, and provider
+credentials; credentials are not intended for spoken entry or public logs.
 
-\wss{Characterize the problem in terms of ``high level'' inputs and outputs.  
-Use abstraction so that you can avoid details.}
+The intended outputs are actions on permitted services or the computer;
+concise spoken progress and results; requests for clarification or
+approval; and an accessible, reviewable task history. Completion feedback
+must distinguish verified results, partial work, and unresolved failures.
+An acknowledgment of a stop request is not a claim that execution has
+already stopped or that prior actions were undone.
 
 \subsection{Stakeholders}
+\begin{description}[style=nextline]
+\item[Primary users.]
+Blind people with screen-reader experience who want to delegate digital
+tasks while retaining control. Initial evaluation is with English-speaking
+Mac users; this is a development boundary, not a claim that these users
+represent all blind people.
+\item[Research collaborators and accessibility organizations.]
+Potential participants and advisers can identify barriers and evaluate
+interaction choices. A team connection may facilitate a CNIB introduction;
+no partnership, participation, or endorsement is confirmed.
+\item[Setup helpers and open-source contributors.]
+Trusted helpers may assist with initial installation and account setup.
+Maintainers need understandable code, documented limitations, and a
+reproducible default configuration.
+\item[Course team and assessors.]
+Four student contributors, the teaching assistant (TA), and instructor
+need a feasible project and evidence that the team understands its work.
+People receiving messages or invitations are also affected by the
+system's actions, which makes accurate user authorization important.
+\end{description}
 
-\subsection{Environment}
+\subsection{Environment and Boundaries}
+The initial evaluated environment is macOS with Chrome, English speech,
+a microphone, audio output, internet access, and existing accessibility
+tools such as VoiceOver and keyboard navigation. A web voice interface is
+planned; its location in a browser does not restrict the agent to web
+tasks. Cloud processing is permitted, and users provide their own account
+connections and provider credentials.
 
-\wss{Hardware and Software Environment for the users.  The developer environment
-is summarized as part of the developer plan.}
+A local component is necessary for local Mac tasks. An always-available
+Mac or Mac mini is one deployment option; hosted execution is another for
+tasks that do not require a local device. A hosted service cannot operate
+an offline Mac. Independent everyday use is the initial goal; assisted
+setup is acceptable. Telephone access will be compared with on-Mac voice,
+with support for both channels treated as an extension.
+
+Unrestricted success on every website or application, guaranteed
+reversibility, universal provider compatibility, and replacement of all
+screen-reader functions are not promised. The project will build on an
+existing agent rather than train a new foundation model. User needs and
+provider constraints may change the evaluated scope, with changes
+recorded rather than hidden.
 
 \section{Goals}
+The following four goals describe benefits to users. Numerical targets
+are provisional design commitments accepted for this draft, not measured
+results. A pilot will inform revisions before the main evaluation; changes
+will be justified and retained in the revision history. Detailed task
+selection and measurement procedures belong in the Development Plan and
+later verification and validation plan.
+
+\begin{enumerate}[label=G\arabic*.,leftmargin=*]
+\item \textbf{Complete useful digital tasks independently.}
+After assisted setup, users should complete at least 80\% of a declared,
+representative task set correctly without sighted assistance. The set will
+cover connected-account, browser, and local-Mac tasks. Report results per
+category and overall, including failed attempts. This target applies to
+the evaluated tasks, not arbitrary computer use.
+
+\item \textbf{Retain control over delegated work.}
+Users should be able to stop work and decide whether consequential
+actions proceed. In the evaluation, explicit stop requests should be
+acknowledged within two seconds, and every tested consequential action
+must require explicit approval. Verified stopping is separately checked:
+no new action may be issued after the system confirms execution stopped.
+
+\item \textbf{Understand and correct the assistant without visual help.}
+In each evaluated scenario, check whether the participant can identify the
+actual outcome or blocker and, in a seeded-misunderstanding scenario,
+correct the request without sighted assistance. Report successful cases
+and failure reasons. Brief feedback and access to details should support
+awareness without requiring constant narration.
+
+\item \textbf{Make the system usable beyond the development team.}
+Release an open-source implementation with one documented default
+configuration, user-provided credentials, and extension points. Verify
+that a person outside the implementation team can follow the setup guide
+on a clean supported environment, with assistance documented, and run the
+reference tasks. Stars or downloads alone are not evidence of usefulness.
+\end{enumerate}
 
 \section{Stretch Goals}
-
-\wss{Goals you hope to get to, but not necessary.  They are also helpful if the
-scope of the original project needs to be expanded.}
+The leading extension is a second voice channel: let a user access the
+same task context through telephone and on-Mac voice. Later possibilities
+include messaging continuity and evaluated Safari support. These must not
+displace a reliable initial experience or be presented as completed work.
 
 \section{Custom Documents (CDs)}
+Two custom documents are proposed under the course outline
+\citep{CourseOutline}. \textbf{Instructor approval is pending.}
+\begin{itemize}
+\item \textbf{Fall: User/Stakeholder Interview Report.} Record recruitment,
+participant needs, methods, findings, and resulting design decisions.
+Separate direct evidence from team hypotheses.
+\item \textbf{Winter: Usability Report.} Evaluate independent completion,
+awareness, correction, and user control against participants' usual
+workflows. Report limitations and unsuccessful cases as well as benefits.
+\end{itemize}
 
-\wss{For CAS 741: State whether the project is a research project. This
-designation, with the approval (or request) of the instructor, can be modified
-over the course of the term.}
+\section*{Appendix A: Generative AI Use Disclosure}
+\addcontentsline{toc}{section}{Appendix A: Generative AI Use Disclosure}
+\textbf{Tool and use.} Aaron Loh used OpenAI Codex with GPT-6 Astra,
+primarily at Medium reasoning and occasionally High (settings reported by
+Aaron). Codex helped extract questions from course requirements, challenge
+assumptions, research options, and develop ideas through discussion. It also
+assisted with drafting and revising text throughout this document, organizing
+references, and LaTeX/PDF formatting. Aaron made the judgment calls and reviewed
+the work. These are working drafts for further team revision, not evidence of
+team-wide agreement or completed participant research.
 
-\wss{For SE Capstone: List your custom documents (CDs).  Potential CDs include
-usability testing, code walkthroughs, user documentation, formal proof,
-GenderMag personas, Design Thinking, etc.  (The full list is on the course
-outline and in Lecture 02.) Normally the number of CDs will be two (one per
-term).  Approval of the CDs will be part of the discussion with the instructor
-for approving the project. The CDs, with the approval (or request) of the
-instructor, can be modified over the course of the term.}
+\textbf{Verification and responsibility.} The assistant checked cited sources,
+course requirements, document consistency, and PDF rendering. These checks do
+not establish that the proposed system works. Team review, ratification, and
+personal reflections remain pending. Before submission, the team will verify
+the final content and update this disclosure to reflect subsequent revisions
+and any additional AI use. The team remains responsible for the submitted work.
 
-\newpage{}
-
-\section*{Appendix --- Reflection}
-
-\wss{Not required for CAS 741}
-
-\input{../Reflection.text}
-
+\section*{Appendix B: Reflection}
+These prompts require the team's own account of producing the deliverable.
+They have deliberately not been answered on behalf of absent contributors.
 \begin{enumerate}
-    \item What went well while writing this deliverable? 
-    \item What pain points did you experience during this deliverable, and how
-    did you resolve them?
-    \item How did you and your team adjust the scope of your goals to ensure
-    they are suitable for a Capstone project (not overly ambitious but also of
-    appropriate complexity for a senior design project)?
-\end{enumerate}  
+\item \textbf{What went well?} \pending{Describe actual collaboration and
+what helped produce this deliverable.}
+\item \textbf{What pain points arose and how were they resolved?}
+\pending{Supply actual experiences and actions, not hypothetical lessons.}
+\item \textbf{How did the team adjust scope?} \pending{Reflect on the
+scope decision. The planning record establishes a general-agent interface
+with bounded evaluation, but does not establish every member's reasoning
+or agreement.}
+\end{enumerate}
 
+\clearpage
+\bibliographystyle{plainnat}
+\bibliography{../../refs/CapstoneSources}
 \end{document}
