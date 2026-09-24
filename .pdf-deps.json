@@ -62,10 +62,10 @@
     "refs/References.bib"
   ],
   "docs/DevelopmentPlan/DevelopmentPlan.tex": [
-    "docs/Comments.text",
     "docs/Common.text",
     "docs/DevelopmentPlan/DevelopmentPlan.tex",
-    "docs/Reflection.text"
+    "docs/MilestoneDraft.text",
+    "refs/CapstoneSources.bib"
   ],
   "docs/HazardAnalysis/HazardAnalysis.tex": [
     "docs/Comments.text",
@@ -74,10 +74,10 @@
     "docs/Reflection.text"
   ],
   "docs/ProblemStatementAndGoals/ProblemStatement.tex": [
-    "docs/Comments.text",
     "docs/Common.text",
+    "docs/MilestoneDraft.text",
     "docs/ProblemStatementAndGoals/ProblemStatement.tex",
-    "docs/Reflection.text"
+    "refs/CapstoneSources.bib"
   ],
   "docs/ReflectAndTrace/ReflectAndTrace.tex": [
     "docs/Comments.text",
