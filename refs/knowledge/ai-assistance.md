@@ -23,3 +23,5 @@ The newly supplied Avenue rubrics supersede the earlier note that they were unav
 Aaron reports using Codex with GPT-6 Astra, primarily Medium reasoning and occasionally High. He made the judgment calls and reviewed the work. The interaction included extracting questions from course requirements, challenging assumptions, researching options, and developing ideas collaboratively, as well as AI-assisted drafting, revision, reference organization, and formatting. Both deliverables now use concise wording describing this assistance without implying that AI made the project decisions.
 
 These remain working drafts for further team rewriting. Future rewriting has not been represented as already completed; the final disclosures should reflect the submitted versions and each member's actual use. Team ratification and personal reflections remain pending. The repository history will separate reference/setup work from the two deliverable drafts. No remote publication is requested in this step.
+
+At Aaron’s request, Codex replaced em dashes in LaTeX sources, rebuilt the Development Plan PDF, and checked the changed pages and both milestone PDFs for remaining em dashes.

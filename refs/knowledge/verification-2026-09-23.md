@@ -5,7 +5,7 @@
 | Artifact | Pages | SHA-256 |
 |---|---:|---|
 | `pdfs/ProblemStatementAndGoals/ProblemStatement.pdf` | 5 | `44a9ecdceb16dece6a8b639af02b590ad55184ab0a192282b344fc4fa6f336ea` |
-| `pdfs/DevelopmentPlan/DevelopmentPlan.pdf` | 11 | `badedbdd83ddb79913c1eeee6f663edb7019d1b6e1310a1751fa9be1bd3ea337` |
+| `pdfs/DevelopmentPlan/DevelopmentPlan.pdf` | 11 | `098bcbc7ac1877f8616ea26872e32911a122aa4bc6f77af22071b9a147de1110` |
 
 Both are **review drafts**, not submissions or evidence of team ratification.
 
@@ -39,3 +39,7 @@ Initial preparation did not commit or publish. At Aaron’s subsequent request, 
 ## Disclosure revision
 
 Updated both disclosures with Aaron’s reported GPT-6 Astra Medium/High settings and his decision-making/review role. Rebuilt both PDFs without warnings and visually checked the changed disclosure/reflection/charter pages (PS page 4; DP pages 9–10). Other content is unchanged; page counts remain 5 and 11. Artifact hashes above reflect this revision.
+
+## Punctuation cleanup
+
+Removed em dashes and LaTeX triple-hyphen equivalents from all LaTeX sources and shared text files. Rebuilt Development Plan without warnings and inspected pages 9–10. Extracted text from both milestone PDFs contains no em dashes. Problem Statement was already free of them. Future-deliverable template PDFs were not rebuilt; their sources are updated.
