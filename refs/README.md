@@ -1,4 +1,6 @@
-# Project Name: Reference Information
+# Natural Control: Reference Information
+
+Start with the [capstone knowledge base](knowledge/README.md), [course source index](course/README.md), and [research index](research/README.md).
 
 This folder holds information and resources of interest for the project.  This
 is intended to be a convenient location for project members to access

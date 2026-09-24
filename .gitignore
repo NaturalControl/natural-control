@@ -283,3 +283,6 @@ TSWLatexianTemp*
 ## Python bytecode from the build scripts
 __pycache__/
 *.pyc
+
+# Personal course source copies; keep shared summaries in refs/knowledge.
+/refs/course/local/
