@@ -13,7 +13,8 @@ Table~\ref{tab:dev-revisions} summarizes revision history.
 \captionof{table}{Revision history.}\label{tab:dev-revisions}
 \begin{tabularx}{\textwidth}{llX}
 \toprule Date & Contributor & Change\\\midrule
-2026-09-23 & Aaron Loh / AI assistance & Initial review draft based on Aaron's planning interview; team ratification pending.\\\bottomrule
+2026-09-23 & Aaron Loh / AI assistance & Initial review draft based on Aaron's planning interview; team ratification pending.\\
+2026-09-27 & Lucas DeBoer & Review contents\\\bottomrule
 \end{tabularx}
 \end{minipage}
 \end{center}
@@ -26,8 +27,7 @@ is on Mac, in English, alongside VoiceOver and keyboard access. The companion
 Problem Statement and Goals defines the user outcomes.
 
 \section{Confidential Information?}
-No external confidentiality agreement is known from Aaron's planning interview.
-\pending{All members must confirm any employer, sponsor, or industry restrictions.}
+No external confidentiality agreements present for any team members. 
 Participant identities, recordings, account credentials, and personal task data
 are private even without an industry agreement. Public artifacts will use test
 accounts, synthetic data, and consented, de-identified findings. Raw recruitment
@@ -48,19 +48,18 @@ MIT is the proposed license for original project contributions. Its permissive
 terms require retaining the copyright and permission notice \citep{MITLicense}.
 The repository's \href{https://github.com/NaturalControl/natural-control/blob/main/LICENSE}{LICENSE}
 currently contains the inherited template notice. The local license proposal
-preserves that notice; team ratification and confirmation of attribution remain
-pending before publication. Third-party notices will be recorded when actual
+preserves that notice. Third-party notices will be recorded when actual
 dependencies are selected, rather than assuming all candidate tools share MIT.
 
 \section{Team Meeting Plan}
-The proposal is one weekly team sync, supported by asynchronous work.
-\pending{Recurring day, time, duration, and virtual/in-person arrangement.}
-Each meeting has a rotating chair and note taker, an issue-based agenda, attendance,
-decisions, owners, and next commitments recorded in GitHub. Members review
-materials beforehand. A member unable to attend can provide an advance written
-update and input on decisions; emergencies are communicated when practical.
-A supervisor/teaching assistant (TA) check-in approximately monthly is proposed, in addition to
-required course reviews; the TA's availability and actual schedule need confirmation.
+The plan is one weekly team sync, supported by asynchronous meetings held on the teams discord server as required.
+Weekly team syncs will be held in-person every Wednesday from 2:30 - 3:30 p.m. Meeting location will 
+be confirmed virtually. Each meeting has a rotating chair and note taker, determined at the previous meeting.
+The meeting chair will create an issue-based agenda at least 24 hours prior to the meeting. 
+Members review materials beforehand. Attendance, decisions, owners, and next commitments recorded 
+in GitHub. A member unable to attend can provide an advance written update and input on decisions;
+emergencies are communicated when practical. A supervisor/teaching assistant (TA) check-in approximately 
+monthly is proposed, in addition to required course reviews; the TA's availability and actual schedule need confirmation.
 
 \section{Team Communication Plan}
 Discord is proposed for coordination, with a response to actionable messages
@@ -70,7 +69,8 @@ and secrets do not belong in either public issues or the project board. Urgent
 blockers are explicitly flagged; silence is not agreement or approval.
 
 \section{Team Member Roles}
-The team has four members; only Aaron Loh's name is confirmed in this draft.
+The team has four members, Aaron Loh, Curtis Vos, Kevin Kim and Lucas DeBoer.
+Each member will take ownership of a primary workstream and be a cross-reviewer for another workstream.
 Primary ownership provides accountability without preventing another member from
 contributing. All four members implement, test, review, and document work.
 Owners and cross-review assignments are revisited at milestones.
@@ -88,17 +88,19 @@ Evaluation and quality & Recruitment coordination, task protocol, outcome measur
 \end{tabularx}
 \end{minipage}
 \end{center}
-Meeting chair, note taker, release coordinator, and TA liaison are rotating process
-roles. A contributor reviews outside their primary workstream to reduce dependence
-on one person. \pending{Three names, named initial owners, cross-reviewers, and liaison.}
+Meeting chair, note taker, release coordinator, and external liason (if required) are rotating process
+roles. Curtis Vos is the liason between course staff and the team. A contributor reviews outside their primary workstream to reduce dependence
+on one person. \pending{named initial owners, cross-reviewers.}
 
 \section{Workflow Plan}
 Work is tracked in \href{https://github.com/NaturalControl/natural-control}{the public repository}.
 Each meaningful change starts with an issue describing the problem, acceptance
-criteria, owner, and relevant risk. Labels distinguish features, defects,
-accessibility, research, documentation, and blockers. Short-lived topic branches
-and small pull requests keep changes reviewable. One non-author reviewer must
-approve each pull request; relevant continuous integration (CI) checks must pass before merging.
+criteria, owner, and relevant risk. The existing issue templates (Lectures, TA Meetings, etc.) should be used when possible.
+Labels distinguish features, defects, accessibility, research, documentation, and blockers. 
+Short-lived topic branches and small pull requests keep changes reviewable. Branch and pull request names should
+include an issue number if relevant. One non-author reviewer must approve each pull request; relevant
+continuous integration (CI) checks must pass before merging into the protected main branch.
+Tags will be used to mark major milestones as they are completed. 
 
 The repository already contains a LaTeX/PDF and Pages workflow. Python and
 TypeScript checks will be added when the corresponding implementation exists:
@@ -109,11 +111,12 @@ control and logs. A change is done when its acceptance criteria, checks,
 documentation, and review are complete, with known limitations recorded.
 
 \section{Project Decomposition and Scheduling}
-A GitHub Project is proposed with Backlog, Ready, In progress, Review, and Done
-columns. Each member commits to concrete weekly outputs rather than fixed hours
-or commit quotas. Dependencies and risks are recorded on issues. The team aims
-for one primary active item per member and resolves blocked work at the weekly
-sync. \pending{Create and link the actual project board; agree initial assignments.}
+\href{https://github.com/orgs/NaturalControl/projects/1/views/1}{A GitHub project} will be used to
+track development and milestone progress. The project is an Kanban board with Backlog, 
+Ready, In progress, Review, and Done columns. Each member commits to concrete weekly 
+outputs rather than fixed hours or commit quotas. Dependencies and risks are recorded on issues. 
+The team aims for one primary active item per member and resolves blocked work at the weekly
+sync. \pending{ agree initial assignments.}
 
 Drafts are ready 48 hours before deadlines. For the first milestone, the target
 is September 26 at 11:59 p.m. Toronto time, leaving time for human review and
@@ -146,7 +149,7 @@ Dates reflect the checked course calendar snapshot \citep{CourseCalendar}; this
 is a milestone overview, not a replacement for the complete course calendar.
 
 \paragraph{Resources and budget.}
-The proposed total budget has a Canadian-dollar ceiling of \$500, not authorization to spend. A provisional
+The proposed total budget has a Canadian-dollar ceiling of \$500. A provisional
 allocation is \$240 participant appreciation, \$120 model/voice application programming interfaces (APIs), \$60
 hosting/telephony, and \$80 reserve. Appreciation assumes at most twelve paid
 sessions at \$20, subject to recruitment and institutional guidance. Team Macs
@@ -158,7 +161,7 @@ explicitly approved budget change.
 \section{Proof of Concept Demonstration Plan}
 The POC tests a narrow integration risk before broader prototype development.
 \subsection{Risk and experiment}
-The central risk is whether a blind user can understand and control a running
+The central risk is whether a visually impaired user can understand and control a running
 general-purpose agent through voice without visually monitoring it. Individual
 speech and agent components do not establish that their integration works.
 The POC will test the supervision interface across three task classes, rather
@@ -232,7 +235,7 @@ sample supports formative findings, not population-wide efficacy claims.
 Technical POC results and participant results will be reported separately.
 
 \subsection{Failure consequences}
-Table~\ref{tab:dev-risks} summarizes pOC uncertainties and failure consequences.
+Table~\ref{tab:dev-risks} summarizes POC uncertainties and failure consequences.
 \begin{center}
 \begin{minipage}{\textwidth}
 \captionof{table}{POC uncertainties and failure consequences.}\label{tab:dev-risks}
@@ -321,7 +324,7 @@ will be documented after a working configuration is demonstrated. A second voice
 channel connecting telephone and on-Mac interaction is the leading stretch goal.
 
 \subsection{Engineering and measurement tools}
-Git and GitHub provide version history, issues, reviews, and project tracking.
+Git, GitHub, and GitHub projects provide version history, issues, reviews, and project tracking.
 GitHub Actions supplies repeatable checks; hosted CI cannot substitute for Mac
 permission tests or participant evaluation. Proposed Python tools are Ruff,
 pytest, and pytest-cov; proposed client tools are TypeScript strict checks,
@@ -340,12 +343,13 @@ management through small tested integration slices.
 \section{Use of AI and LLMs}
 The product uses existing models to interpret goals and operate tools. The team
 also proposes AI assistance for research, code, tests, and documentation, with
-human understanding and review. Codex has assisted this draft; other members'
-tools and versions remain to be reported. Generated code must pass relevant
-checks and review. Sources must be opened and verified, claims distinguished
-from assumptions, and participant quotations/results never generated as evidence.
-Per-document disclosures record material assistance, affected sections, tool
-versions where known, and actual verification \citep{CourseOutline}.
+human understanding and review. All AI-generated content must be humanly reviewed by a 
+team member who is not the author of the content. This review must be explicitly requested
+by the author of the content. Generated code must pass relevant checks and review. 
+Sources must be opened and verified, claims distinguished from assumptions, and 
+participant quotations/results never generated as evidence. Per-document disclosures 
+record material assistance, affected sections, tool versions where known, 
+and actual verification \citep{CourseOutline}.
 
 \section{Coding Standard}
 Python will follow PEP 8 conventions, type annotations at public boundaries, and
@@ -371,7 +375,7 @@ team-wide agreement or completed participant research.
 \textbf{Verification and responsibility.} The assistant checked cited sources,
 course requirements, document consistency, and PDF rendering. These checks do
 not establish that the proposed system works. Team review, ratification, and
-personal reflections remain pending. Before submission, the team will verify
+personal reflections remain pending. \pending{}Before submission, the team will verify
 the final content and update this disclosure to reflect subsequent revisions
 and any additional AI use. The team remains responsible for the submitted work.
 
@@ -380,12 +384,30 @@ These answers must come from the members' actual experience, not invented AI
 reflections.
 \begin{enumerate}
 \item Why is it important to create a development plan before starting?
+\\- Identify areas where team members should brush up knowledge
+\\- get all team members on same page about project and its goals/scoipe (helps avoid assumptions)
+\\- Cover basic admin details (roles, responsibilities, communication, 
+\\- Set the tone. Good project starts with good plan.
+\\- Helps avoid analysis paralysis. Forces you to make decisions and start\\
 \pending{Members' reflections on this project's planning experience.}
 \item What are the advantages and disadvantages of continuous integration and deployment (CI/CD) in your opinion?
+\\Advantages:
+\\- Faster realeases
+\\- Easier to merge work
+\\- automates the boring stuff (testing, builds, deployment)
+\\- better understanding of work(encourages many smaller changes)
+\\Disadvantages:
+\\- Initial setup takes time
+\\- need to maintain/update pipeline
+\\- learning curve 
+\\- Makes it easier to deploy bad/broken code
 \pending{Members' own assessment, including actual experience where available.}
 \item What disagreements occurred in this deliverable and how were they resolved?
 \pending{An honest account of team discussion; do not claim consensus or disputes
 that have not occurred.}
+\\ No major disagreements occurred. Differences regarding ideas during brainstorming were resolved by discussion and compromise.
+\\ Slight disagreements regarding uneven work distribution. Just kinda how it worked out this deliverable. 
+\\ For future deliverable we will divide work up better beforehand, and follow expectations laid out in this document
 \end{enumerate}
 
 \section*{Appendix C: Team Charter}
@@ -413,14 +435,15 @@ not be made public.
 
 \subsection*{Accountability and teamwork}
 \textbf{Quality.} Weekly commitments specify outputs and acceptance criteria.
-Meeting preparation includes reading the agenda and relevant drafts. Contributions
+Meeting preparation includes reading the agenda and relevant drafts and any additional duties
+required by the team member's meeting role for the week. Contributions
 include evidence of checks, understandable documentation, and a reviewable change.
 Drafts are ready 48 hours before deadlines. All members must understand and be
 able to explain AI-assisted work they submit.
 
 \textbf{Attitude.} Discuss ideas respectfully, make room for disagreement, and
 ask before assuming a teammate's intent. Treat participant expertise as evidence;
-avoid speaking for blind people without consulting them. Do not disclose personal
+avoid speaking for visually impaired people without consulting them. Do not disclose personal
 participant information to resolve team debates.
 
 \textbf{Staying on track.} Use weekly output commitments and the issue board, not
