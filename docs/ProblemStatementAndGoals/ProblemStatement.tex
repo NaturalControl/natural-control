@@ -3,10 +3,9 @@
 \input{../Common.text}
 \title{Problem Statement and Goals\\\progname}
 \author{\authname}
-\date{September 23, 2026}
+\date{September 28, 2026}
 \begin{document}
 \maketitle
-\draftnotice
 
 \begin{table}[h]
 \centering
@@ -20,53 +19,39 @@ whole-team review pending. \\
 \bottomrule
 \end{tabularx}
 \end{table}
-Table~\ref{tab:ps-revisions} records this draft's origin. Natural Control is
-a working name. The accompanying Development Plan contains the proof of
-concept (POC) plan and proposed team charter.
 
 \section{Problem Statement}
-Blind computer users can encounter barriers when completing tasks across
-websites, applications, and connected services. The project addresses
-independent task completion and the ability to remain informed and in
-control when delegating digital work.
+Visually impaired individuals can face many difficulties when navigating screen-based websites, 
+applications, and connected services that rely on visual feedback. These barriers become especially 
+challenging when completing complex, multi-step digital tasks that require the interpretation of changing
+system states. This project aims to support independent task completion while allowing users to 
+remain informed of relevant system changes and maintain control when completing digital work.
 
 \subsection{Problem}
-Completing a digital task can require navigating unfamiliar interfaces,
-tracking changes, and recovering from controls or content that existing
-access tools do not expose effectively. Screen readers already provide
-selective navigation; users do not simply listen to every item on a page.
-WebAIM's self-selected survey identifies barriers including unclear
-controls and unexpected changes, but does not establish their prevalence
-among our prospective participants \citep{WebAIM2024}.
+Visually impaired individuals may encounter significant barriers when 
+completing computer tasks, as many websites and applications require visual interactions
+to communicate information, present possible actions, and indicate changes in a system's state.
+Complex and unfamiliar tasks can require users to navigate multiple applications, interpret changing 
+interface and application states, recover from errors and unexpected outcomes, and determine if actions
+were completed successfully. Managing these tasks can be particularly difficult without relying on 
+visual feedback.
 
-Delegation to an artificial intelligence (AI) agent introduces another
-problem: the user needs to understand what is happening, make meaningful
-choices, and correct mistakes without visual monitoring. Research on Morae
-examines this issue by involving blind and low-vision users in decisions
-during agent execution \citep{Morae2025}. These sources motivate the
-project; interviews must still establish participants' actual priorities.
-
-Natural Control aims to make general digital task delegation usable
-through conversation while preserving user agency. Success means a person
-can complete and verify useful tasks independently after initial setup,
-not that they abandon their screen reader. Representative tasks span
-connected accounts, unfamiliar websites, and local computer applications.
-They are evaluation cases, not a product allowlist or fixed scripts.
+Barriers like these can make it difficult for users to complete multi-step tasks independently and 
+to remain aware of what's happening while a task is being performed. This problem has become increasingly
+important as many activities depend more on websites, applications, and other digital services.
+Difficulties with nonvisual interactions can therefore limit many users' abilities to interact with
+the modern digital world.
 
 \subsection{Inputs and Outputs}
-The intended inputs are spoken goals, preferences, clarification answers,
-corrections, approvals, and stop requests. Users may also supply keyboard
-or text input. With appropriate access, the system receives relevant page,
-application, file, and connected-account state needed for the requested
-task. Initial setup supplies permitted accounts, tools, and provider
-credentials; credentials are not intended for spoken entry or public logs.
+The intended input is the individual's voice as a form of control.
+This can be expanded to spoken goals, preferences, clarification answers,
+corrections, approvals, and stop requests. Users who are able may also supply 
+keyboard or text input for assistance.
 
-The intended outputs are actions on permitted services or the computer;
-concise spoken progress and results; requests for clarification or
-approval; and an accessible, reviewable task history. Completion feedback
+The intended outputs are actions on permitted services or the computer,
+concise spoken progress and results, requests for clarification or
+approval, and an accessible, reviewable task history. Completion feedback
 must distinguish verified results, partial work, and unresolved failures.
-An acknowledgment of a stop request is not a claim that execution has
-already stopped or that prior actions were undone.
 
 \subsection{Stakeholders}
 \begin{description}[style=nextline]
