@@ -21,8 +21,8 @@ whole-team review pending. \\
 \end{table}
 
 \section{Problem Statement}
-Visually impaired individuals can face many difficulties when navigating screen-based websites, 
-applications, and connected services that rely on visual feedback. These barriers become especially 
+Visually impaired individuals can face many difficulties when navigating screen-based websites and
+applications that rely on visual feedback. These barriers become especially 
 challenging when completing complex, multi-step digital tasks that require the interpretation of changing
 system states. This project aims to support independent task completion while allowing users to 
 remain informed of relevant system changes and maintain control when completing digital work.
@@ -98,41 +98,23 @@ provider constraints may change the evaluated scope, with changes
 recorded rather than hidden.
 
 \section{Goals}
-The following four goals describe benefits to users. Numerical targets
-are provisional design commitments accepted for this draft, not measured
-results. A pilot will inform revisions before the main evaluation; changes
-will be justified and retained in the revision history. Detailed task
-selection and measurement procedures belong in the Development Plan and
-later verification and validation plan.
 
 \begin{enumerate}[label=G\arabic*.,leftmargin=*]
-\item \textbf{Complete useful digital tasks independently.}
-After assisted setup, users should complete at least 80\% of a declared,
-representative task set correctly without sighted assistance. The set will
-cover connected-account, browser, and local-Mac tasks. Report results per
-category and overall, including failed attempts. This target applies to
-the evaluated tasks, not arbitrary computer use.
+\item \textbf{Complete complex digital tasks independently.}
+Users should be able to complete common, multi-step tasks across websites and applications without 
+relying on visual feedback or sighted assistance. Success can be measured by task completion rate 
+and the amount of sighted assistance that is required.
 
-\item \textbf{Retain control over delegated work.}
-Users should be able to stop work and decide whether consequential
-actions proceed. In the evaluation, explicit stop requests should be
-acknowledged within two seconds, and every tested consequential action
-must require explicit approval. Verified stopping is separately checked:
-no new action may be issued after the system confirms execution stopped.
+\item \textbf{Maintain awareness and control during digital tasks.}
+Users should be able to understand relevant task progress and state changes, provide input when required,
+and stop or redirect tasks when necessary. Success can be measured by the number of clarifying questions 
+users feel the need to raise, the level of obedience in response to users' interventions and stoppages, and the
+amount of caution presented by the program when it comes to critical tasks.
 
-\item \textbf{Understand and correct the assistant without visual help.}
-In each evaluated scenario, check whether the participant can identify the
-actual outcome or blocker and, in a seeded-misunderstanding scenario,
-correct the request without sighted assistance. Report successful cases
-and failure reasons. Brief feedback and access to details should support
-awareness without requiring constant narration.
-
-\item \textbf{Make the system usable beyond the development team.}
-Release an open-source implementation with one documented default
-configuration, user-provided credentials, and extension points. Verify
-that a person outside the implementation team can follow the setup guide
-on a clean supported environment, with assistance documented, and run the
-reference tasks. Stars or downloads alone are not evidence of usefulness.
+\item \textbf{Recover from errors and unexpected outcomes.}
+Users should be able to identify unexpected, misunderstood, or failed actions and recover without restarting
+the entire task or relying on sighted assistance. Success can be measured by the amount of feedback and clarifications
+required for the user and program to understand the problem before continuing or correcting the task.
 \end{enumerate}
 
 \section{Stretch Goals}
