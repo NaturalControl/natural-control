@@ -81,10 +81,19 @@ Table~\ref{tab:dev-roles} summarizes proposed workstreams.
 \captionof{table}{Proposed workstreams.}\label{tab:dev-roles}
 \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.29\textwidth}X}
 \toprule Proposed workstream & Responsibility and assignment\\\midrule
-Voice and accessible client & Conversation controls, keyboard access, VoiceOver compatibility. Owner and cross-reviewer pending.\\
+Voice and accessible client & Conversation controls, keyboard access, VoiceOver compatibility. \\
+- Owner: Lucas DeBoer \\
+- Cross Reviewer: Curtis Vos \\
 Agent and tool integration & Hermes adapter, account/browser tools, local execution control. Owner and cross-reviewer pending.\\
+- Owner: Aaron Loh \\
+- Cross Reviewer: Kevin Kim \\
 Deployment and reliability & Configuration, credentials, CI, reconnection, observability. Owner and cross-reviewer pending.\\
-Evaluation and quality & Recruitment coordination, task protocol, outcome measurement, accessibility checks. Owner and cross-reviewer pending.\\\bottomrule
+- Owner: Kevin Kim \\
+- Cross Reviewer: Aaron Loh \\
+Evaluation and quality & Recruitment coordination, task protocol, outcome measurement, accessibility checks. \\
+- Owner: Curtis Vos \\
+- Cross Reviewer: Lucas DeBoer \\
+\bottomrule
 \end{tabularx}
 \end{minipage}
 \end{center}
@@ -110,13 +119,17 @@ checks and participant evidence remain necessary. Secrets stay out of source
 control and logs. A change is done when its acceptance criteria, checks,
 documentation, and review are complete, with known limitations recorded.
 
+For each deliverable, the quality-assurance owner coordinates reviews against
+the course checklist and Avenue rubric. Issues found during review are recorded
+and addressed before submission.
+
 \section{Project Decomposition and Scheduling}
 \href{https://github.com/orgs/NaturalControl/projects/1/views/1}{A GitHub project} will be used to
 track development and milestone progress. The project is an Kanban board with Backlog, 
 Ready, In progress, Review, and Done columns. Each member commits to concrete weekly 
 outputs rather than fixed hours or commit quotas. Dependencies and risks are recorded on issues. 
 The team aims for one primary active item per member and resolves blocked work at the weekly
-sync. \pending{ agree initial assignments.}
+sync.
 
 Drafts are ready 48 hours before deadlines. For the first milestone, the target
 is September 26 at 11:59 p.m. Toronto time, leaving time for human review and
@@ -124,6 +137,12 @@ ratification before September 28 at 11:59 p.m. The TA's September 23 guidance wa
 that assessment uses the repository's latest push at the deadline, without an
 Avenue upload; the knowledge base links the meeting source. Later official
 announcements take precedence.
+
+Large tasks will be divided into GitHub issues with a clear description, an assigned owner, 
+and an acceptance criteria that defines when the work will be complete. Each issue should 
+generally require hours of work instead of days. For example, instead of assigning ``write the Problem Statement''
+as one task, we will create separate issues to draft the problem statement with the requirements in mind.
+Assignments will consider members' availability, relevant experience, and dependencies on other work.
 
 Table~\ref{tab:dev-schedule} summarizes milestone overview.
 \begin{center}
@@ -375,7 +394,7 @@ team-wide agreement or completed participant research.
 \textbf{Verification and responsibility.} The assistant checked cited sources,
 course requirements, document consistency, and PDF rendering. These checks do
 not establish that the proposed system works. Team review, ratification, and
-personal reflections remain pending. \pending{}Before submission, the team will verify
+personal reflections remain pending. Before submission, the team will verify
 the final content and update this disclosure to reflect subsequent revisions
 and any additional AI use. The team remains responsible for the submitted work.
 
@@ -389,7 +408,6 @@ reflections.
 \\- Clarify administrative details, including team roles, responsibilities, and communication expectation.
 \\- Set the tone. Good project starts with good plan.
 \\- Helps avoid analysis paralysis. Forces you to make decisions and start\\
-\pending{Creating a development plan before starting helps us identify areas where each team member needs to strengthen their knowledge. It establishes a shared understanding of the project’s goals and scope, reducing assumptions and clarifying team roles, responsibilities, and communication expectations. Planning also sets the tone for how we will work together. By making initial decisions and identifying concrete next steps, we can avoid analysis paralysis and begin making progress.}
 \item What are the advantages and disadvantages of continuous integration and deployment (CI/CD) in your opinion?
 \\Advantages:
 \\- Faster releases
@@ -400,14 +418,11 @@ reflections.
 \\- Initial setup takes time
 \\- need to maintain/update pipeline
 \\- learning curve 
-\\- Makes it easier to deploy bad/broken code
-\pending{Members' own assessment, including actual experience where available.}
+\\- If test coverage is incomplete, automated checks can miss bugs
 \item What disagreements occurred in this deliverable and how were they resolved?
-\pending{An honest account of team discussion; do not claim consensus or disputes
-that have not occurred.}
 \\ No major disagreements occurred. Differences regarding ideas during brainstorming were resolved by discussion and compromise.
-\\ Slight disagreements regarding uneven work distribution. Just kinda how it worked out this deliverable. 
-\\ For future deliverable we will divide work up better beforehand, and follow expectations laid out in this document
+\\ Minor disagreements arose over uneven work distribution for this deliverable.
+\\ For future deliverable we will divide work up better beforehand, and follow expectations laid out in this document.
 \end{enumerate}
 
 \section*{Appendix C: Team Charter}
