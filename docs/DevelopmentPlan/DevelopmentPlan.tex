@@ -6,7 +6,6 @@
 \date{September 28, 2026}
 \begin{document}
 \maketitle
-\draftnotice
 Table~\ref{tab:dev-revisions} summarizes the revision history.
 \begin{center}
 \begin{minipage}{\textwidth}
@@ -44,16 +43,15 @@ code, model weights, services, and assets retain their own terms; licensing our
 code does not relicense dependencies.
 
 \section{Copyright License}
-MIT is the proposed license for original project contributions. Its permissive
+MIT is the license for original project contributions. Its permissive
 terms require retaining the copyright and permission notice \citep{MITLicense}.
 The repository's \href{https://github.com/NaturalControl/natural-control/blob/main/LICENSE}{LICENSE}
-currently contains the inherited template notice. The local license proposal
-preserves that notice. Third-party notices will be recorded when actual
+contains the team copyright and preserved upstream template notice. Third-party notices will be recorded when actual
 dependencies are selected, rather than assuming all candidate tools share MIT.
 
 \section{Team Meeting Plan}
-The plan is one weekly team sync, supported by asynchronous meetings held on the team's Discord server as required.
-Weekly team syncs will be held in person every Wednesday from 2:30 to 3:30 p.m. The meeting location will
+The plan is one weekly team sync, supported by asynchronous coordination on the team's Discord server as required.
+Weekly team syncs will be held in person every Wednesday from 2:30 to 3:30 p.m. Toronto time The meeting location will
 be confirmed virtually. Each meeting has a rotating chair and note taker, selected at the previous meeting.
 The meeting chair will create an issue-based agenda at least 24 hours prior to the meeting.
 Members review materials beforehand. Attendance, decisions, owners, and next commitments are recorded
@@ -80,18 +78,10 @@ Table~\ref{tab:dev-roles} summarizes proposed workstreams.
 \captionof{table}{Proposed workstreams.}\label{tab:dev-roles}
 \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.29\textwidth}X}
 \toprule Proposed workstream & Responsibility and assignment\\\midrule
-Voice and accessible client & Conversation controls, keyboard access, VoiceOver compatibility. \\
-- Owner: Lucas DeBoer \\
-- Cross-reviewer: Curtis Vos \\
-Agent and tool integration & Hermes adapter, account/browser tools, local execution control. Owner and cross-reviewer pending.\\
-- Owner: Aaron Loh \\
-- Cross-reviewer: Kevin Kim \\
-Deployment and reliability & Configuration, credentials, CI, reconnection, observability. Owner and cross-reviewer pending.\\
-- Owner: Kevin Kim \\
-- Cross-reviewer: Aaron Loh \\
-Evaluation and quality & Recruitment coordination, task protocol, outcome measurement, accessibility checks. \\
-- Owner: Curtis Vos \\
-- Cross-reviewer: Lucas DeBoer \\
+Voice and accessible client & Conversation controls, keyboard access, VoiceOver compatibility. Owner: Lucas DeBoer. Cross-reviewer: Curtis Vos.\\
+Agent and tool integration & Hermes adapter, account/browser tools, local execution control. Owner: Aaron Loh. Cross-reviewer: Kevin Kim.\\
+Deployment and reliability & Configuration, credentials, CI, reconnection, observability. Owner: Kevin Kim. Cross-reviewer: Aaron Loh.\\
+Evaluation and quality & Recruitment coordination, task protocol, outcome measurement, accessibility checks. Owner: Curtis Vos. Cross-reviewer: Lucas DeBoer.\\
 \bottomrule
 \end{tabularx}
 \end{minipage}
@@ -153,10 +143,10 @@ October 1 & First milestone peer-review issues; substantive findings, not manufa
 October 19 & Software Requirements Specification (SRS) and Hazard Analysis; discovery informs scope and safety requirements.\\
 October--November & Working voice/agent supervision loop; instrumented POC trials; repeated discovery if recruitment succeeds.\\
 November 2 & Verification and Validation (V\&V) Plan.\\
-November 16 & Design revision minus one and proposed fall Interview Report, subject to instructor approval.\\
+November 16 & Design revision minus one and proposed fall Interview Report, as reported approved in the team review.\\
 November 23--December 3 & Course POC demonstration window; assigned slot pending.\\
 January 18, 2027 & Design documentation; integration and accessibility refinement continue.\\
-March 8 & V\&V report and proposed winter Usability Report, subject to approval.\\
+March 8 & V\&V report and proposed winter Usability Report, as reported approved in the team review.\\
 March 31 & Final documentation.\\
 April 6 & EXPO; event details to confirm.\\\bottomrule
 \end{tabularx}
@@ -176,7 +166,8 @@ spend; paid expansion requires a revised allocation within the ceiling or an
 explicitly approved budget change.
 
 \section{Proof of Concept Demonstration Plan}
-The POC tests a narrow integration risk before broader prototype development.
+The POC tests whether the voice interface can supervise a running agent. It is
+a technical demonstration, separate from the later participant evaluation.
 \subsection{Risk and experiment}
 The central risk is whether a visually impaired user can understand and control a running
 general-purpose agent through voice without visually monitoring it. Individual
@@ -195,8 +186,10 @@ supported application; prepare a derived file, confirming consequential changes
 such as overwriting an existing file. Native control support is an experimental dependency.
 \end{enumerate}
 
-Each class exercises clarification, consequential-action approval, progress,
-correction, explicit execution stop, and reconnection. The demonstration uses
+The demonstration uses one short task from each class. Across these tasks,
+exercise clarification, consequential-action approval, progress, correction,
+explicit execution stop, and reconnection at least once. A full repetition of
+every condition in every class belongs to later evaluation. The demonstration uses
 controlled accounts and data; no participant's real email is required.
 
 \subsection{Control semantics}
@@ -221,7 +214,9 @@ approval, cancellation, and connection events without retaining sensitive payloa
 The team must verify cancellation through the adapter and downstream worker;
 a browser or native action may have different cancellation behavior.
 
-\subsection{Measures and participant evaluation}
+\subsection{Later evaluation and provisional targets}\label{sec:evaluation}
+The following participant study and performance targets guide subsequent
+validation; they are not prerequisites for the technical POC.
 Targets below are provisional goals, not results:
 \begin{itemize}
 \item At least 80\% correct independent completion on a declared representative
@@ -380,46 +375,50 @@ in the relevant pull request.
 
 \clearpage
 \section*{Appendix A: Generative AI Use Disclosure}
-\textbf{Tool and use.} Aaron Loh and Kevin Kim used OpenAI Codex with GPT-6 Astra,
+\textbf{Tool and use.} Aaron Loh used OpenAI Codex with GPT-6 Astra,
 primarily at Medium reasoning and occasionally High (settings reported by
 Aaron). Codex helped extract questions from course requirements, challenge
 assumptions, research options, and develop ideas through discussion. It also
 assisted with drafting and revising text throughout this document, organizing
 references, and LaTeX/PDF formatting. Aaron made the judgment calls and reviewed
-the work. These are working drafts for further team revision, not evidence of
-team-wide agreement or completed participant research.
+the work. During integration, Codex also helped reconcile both reviews, clarify
+evaluation wording, and check formatting. No participant research results are
+claimed.
+
+Kevin Kim used Codex for grammar, punctuation, and wording revisions. His
+exact model and reasoning settings were not specified in his contribution.
 
 \textbf{Verification and responsibility.} The assistant checked cited sources,
 course requirements, document consistency, and PDF rendering. These checks do
-not establish that the proposed system works. Team review, ratification, and
-personal reflections remain pending. Before submission, the team will verify
+not establish that the proposed system works. Lucas and Kevin reviewed the Development Plan; their changes and reflections
+are incorporated here. Charter ratification remains to be confirmed. Before
+submission, the team will verify
 the final content and update this disclosure to reflect subsequent revisions
 and any additional AI use. The team remains responsible for the submitted work.
 
 \section*{Appendix B: Reflection}
-These answers must come from the members' actual experience, not invented AI
-reflections.
+The following reflections were contributed by Lucas during the team review.
 \begin{enumerate}
 \item Why is it important to create a development plan before starting?
 \\A strong development plan is important for many reasons. First, it is used to get all team members on the same
 page about the project's descriptions, goals, and scope, and it helps the team clarify administrative details
 such as team roles, responsibilities and communication expectations. Explicitly laying out these expectations at the start
-of the project helps prevents assumptions from causing misunderstandings later on. Additionally, it can be used by 
+of the project helps prevent assumptions from causing misunderstandings later on. Additionally, it can be used by 
 team members to see what fields or technologies they should brush up on before the project begins. Lastly, this project 
 may seem overwhelming at first, but a development plan can help avoid analysis paralysis by encouraging the team to make 
 decisions and begin concrete work. 
 
 \item What are the advantages and disadvantages of continuous integration and deployment (CI/CD) in your opinion?
-\\CI/CD offer many disadvantages and advantages. Some advantages include faster realeases, an easier time merging work,
+\\CI/CD offer many disadvantages and advantages. Some advantages include faster releases, an easier time merging work,
 and automation of repetitive tasks such as testing, builds, and deployment. Additionally, CI/CD encourages smaller changes 
-that are easer to understand and review. However, there are also disadvantages; the initial setup can take some time,
+that are easier to understand and review. However, there are also disadvantages; the initial setup can take some time,
 and there is a learning curve to setting up an effective CI/CD pipeline. These pipelines can create a false sense of security,
 as developers may assume that if the pipeline passes, the code is correct. However, if test coverage is incomplete, automated
 checks can miss bugs making it easier for faulty code to slip through.
 
 \item What disagreements occurred in this deliverable and how were they resolved?
 \\Overall, there were no major disagreements in this deliverable. Some differences while brainstorming ideas were 
-resolved through discussion and compromise. There were a minor concern over the uneven distrubution of work for this deliverable. 
+resolved through discussion and compromise. There was a minor concern over the uneven distribution of work for this deliverable. 
 For future deliverables, the team will divide work more clearly beforehand and follow the expectations laid out in this document.
 \end{enumerate}
 
@@ -475,8 +474,8 @@ choice, the assigned owner decides and records the rationale. Course-policy
 questions go to the TA. No individual can invent another member's consent or
 participant research results.
 
-\textbf{Ratification.} \pending{All four names, review date, acceptance or amendments,
-and initial responsibilities. No signatures or approval dates are implied.}
+\textbf{Ratification.} \pending{Record all members' acceptance or amendments and the ratification
+date. Names and initial responsibilities are recorded above.}
 
 \clearpage
 \bibliographystyle{plainnat}

@@ -1,3 +1,18 @@
+# Current review update: September 28, 2026
+
+This update supersedes conflicting pending items in the September 23 record below. Aaron authorized integration and merging of PRs #1 and #2.
+
+- Team: Aaron Loh, Lucas DeBoer, Kevin Kim, Curtis Vos. Wednesday meetings 2:30–3:30 p.m. Toronto time; location coordinated privately.
+- Owners/cross-reviewers: voice Lucas/Curtis; agent Aaron/Kevin; deployment Kevin/Aaron; evaluation Curtis/Lucas. Curtis is course liaison.
+- Project board: https://github.com/orgs/NaturalControl/projects/1/views/1
+- MIT notice includes team and preserved upstream copyright. Lucas reports instructor approval of the two custom documents in PR #2; the private course proposal was not independently opened during integration.
+- The broader audience includes people seeking nonvisual interaction; initial evaluation remains blind, English-speaking Mac users with screen-reader experience.
+- POC: one short task per category, supervision conditions exercised across the demonstration. Repeated participant evaluation is later work.
+- Team-provided reflections are now incorporated. Charter ratification is still explicitly pending; integration authorization is not a signature for absent members.
+- Saved workflows are a stretch goal, with fresh approval for consequential actions.
+
+## Historical planning record
+
 # Natural Control: current project context
 
 Updated September 23, 2026 after the user interview and explicit authorization to prepare drafts. Natural Control is a working name. This record supersedes earlier brainstorming.

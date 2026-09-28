@@ -58,7 +58,9 @@ must distinguish verified results, partial work, and unresolved failures.
 \begin{description}[style=nextline]
 \item[Visually impaired individuals]
 Primary stakeholders are visually impaired, English-speaking individuals who want to complete digital
-tasks while retaining control through non-visual interactions.
+tasks while retaining control through non-visual interactions. Initial evaluation
+will recruit blind Mac users with screen-reader experience; the broader
+stakeholder group does not imply evaluation of every user population.
 \item[Users Wanting Non-Visual Interactions]
 Secondary stakeholders are non-visually impaired individuals who still want the ability to complete
 digital tasks without relying on visual feedback. They may be unable to view their computer screens
@@ -71,6 +73,9 @@ a microphone, audio output, and internet access. Some tasks may also require acc
 environment. Users may also have existing accessibility tools like VoiceOver and keyboard navigation enabled.
 
 \section{Goals}
+The Development Plan, Section 9.3, specifies provisional targets and the
+evaluation method for these goals. The goals below describe intended outcomes,
+not achieved results.
 
 \begin{enumerate}[label=G\arabic*.,leftmargin=*]
 \item \textbf{Complete complex digital tasks independently.}
@@ -80,20 +85,20 @@ and the amount of sighted assistance that is required.
 
 \item \textbf{Maintain awareness and control during digital tasks.}
 Users should be able to understand relevant task progress and state changes, provide input when required,
-and stop or redirect tasks when necessary. Success can be measured by the number of clarifying questions 
-users feel the need to raise, the level of obedience in response to users' interventions and stoppages, and the
-amount of caution presented by the program when it comes to critical tasks.
+and stop or redirect tasks when necessary. Measure successful corrections, explicit stop acknowledgment and execution-stop
+confirmation, and approval before consequential actions. Clarification counts
+provide context; fewer questions alone do not establish better control.
 
 \item \textbf{Accurately receive results and execute commands.}
 Users should be able to have confidence that the program is correctly tracking the system's state,
-retrieving results, and executing their desired actions and commands. Success can be measured by a monitored session's 
-percentage of accuracy with regards to command execution compared to the user's input, the current system state 
-and its changes, and feedback or results being relayed to the user.
+retrieving results, and executing their desired actions and commands. Compare reported outcomes and executed actions against independently verified
+application state and the user's request. Report incorrect or unsupported
+completion claims separately from successful actions.
 
 \item \textbf{Recover from errors and unexpected outcomes.}
 Users should be able to identify unexpected, misunderstood, or failed actions and recover without restarting
-the entire task or relying on sighted assistance. Success can be measured by the amount of feedback and clarifications
-required for the user and program to understand the problem before continuing or correcting the task.
+the entire task or relying on sighted assistance. Measure whether recovery succeeds without sighted help or a full restart,
+along with recovery time and clarification turns.
 
 \item \textbf{Easy, understandable, and stable installation setup.}
 Individuals responsible for setting up the interface should have a smooth setup process. They should also not be required to
@@ -114,7 +119,9 @@ could allow for them to interact with their computer through voice-controlled in
 \item \textbf{Support saving workflows.}
 Allowing users to save common workflows, such as paying one's credit card bill, would be helpful and improve their efficiency in 
 interacting with the computer. Users could have the option to complete a task or interaction, and save it to a collection of frequent workflows
-that they can quickly request when desired.
+that they can quickly request when desired. Saving a workflow does not grant
+standing approval: consequential actions still require confirmation of their
+current details.
 
 \end{enumerate}
 
@@ -155,7 +162,7 @@ was reminded, however, to be open to further widening the scope or limiting the 
 \end{enumerate}
 
 \section*{Appendix B: Generative AI Use Disclosure}
-\addcontentsline{toc}{section}{Appendix A: Generative AI Use Disclosure}
+\addcontentsline{toc}{section}{Appendix B: Generative AI Use Disclosure}
 \textbf{Tool and use} 
 \begin{enumerate}
 \item Aaron Loh: OpenAI Codex was used with GPT-6 Astra,
@@ -164,10 +171,11 @@ Aaron). Codex helped extract questions from course requirements, challenge
 assumptions, research options, and develop ideas through discussion. It also
 assisted with drafting and revising text throughout this document, organizing
 references, and LaTeX/PDF formatting. Aaron made the judgment calls and reviewed
-the work. These are working drafts for further team revision, not evidence of
-team-wide agreement or completed participant research.
+the work. During integration, Codex also helped reconcile team revisions,
+clarify measurements, and check the PDFs. No participant research results are
+claimed.
 \item Curtis Vos: For each section, after performing a manual review and update 
-of the intial draft, OpenAI's GPT-5.6 Luna was used for general feedback and for grammatical
+of the initial draft, OpenAI's GPT-5.6 Luna was used for general feedback and for grammatical
 assistance. Each response was read through fully and worked from if deemed applicable, with no 
 generated responses being copied, and no generated feedback being used without full review.
 

@@ -27,3 +27,7 @@ These remain working drafts for further team rewriting. Future rewriting has not
 At Aaron’s request, Codex replaced em dashes in LaTeX sources, rebuilt the Development Plan PDF, and checked the changed pages and both milestone PDFs for remaining em dashes.
 
 Kevin Kim used Codex to fix grammar, punctuation, and awkward wording in the Development Plan.
+
+## September 28, 2026: review integration
+
+At Aaron's request, Codex reviewed and integrated PRs #1 and #2, reconciled the author list, preserved the upstream copyright, clarified POC versus later evaluation, made goal measurements more concrete, retained approvals for saved workflows, separated contributor AI disclosures, and corrected stale status text. Team-authored reflections were preserved apart from spelling/grammar corrections. Charter ratification is not inferred from merge authorization. The updated PDFs are compiled and visually checked before merging.

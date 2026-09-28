@@ -1,3 +1,5 @@
+> September 28 update: PRs #1 and #2 supply team names, roles, meeting time, project-board link and reflections. The root MIT license now preserves both upstream and team notices. Lucas reports custom-document approval in PR #2. Charter ratification remains pending. Earlier unchecked items below are historical; see [current integration verification](verification-2026-09-28.md) and [current context](project-context.md).
+
 # First milestone rubric and checklist map
 
 September 23, 2026. **Coverage is not an awarded score or team approval.** PS = Problem Statement and Goals; DP = Development Plan. See [source rubrics](../course/rubrics/README.md).
