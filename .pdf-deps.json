@@ -76,8 +76,7 @@
   "docs/ProblemStatementAndGoals/ProblemStatement.tex": [
     "docs/Common.text",
     "docs/MilestoneDraft.text",
-    "docs/ProblemStatementAndGoals/ProblemStatement.tex",
-    "refs/CapstoneSources.bib"
+    "docs/ProblemStatementAndGoals/ProblemStatement.tex"
   ],
   "docs/ReflectAndTrace/ReflectAndTrace.tex": [
     "docs/Comments.text",
