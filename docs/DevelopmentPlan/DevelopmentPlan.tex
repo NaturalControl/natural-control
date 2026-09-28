@@ -7,13 +7,14 @@
 \begin{document}
 \maketitle
 \draftnotice
-Table~\ref{tab:dev-revisions} summarizes revision history.
+Table~\ref{tab:dev-revisions} summarizes the revision history.
 \begin{center}
 \begin{minipage}{\textwidth}
 \captionof{table}{Revision history.}\label{tab:dev-revisions}
 \begin{tabularx}{\textwidth}{llX}
 \toprule Date & Contributor & Change\\\midrule
-2026-09-23 & Aaron Loh / AI assistance & Initial review draft based on Aaron's planning interview; team ratification pending.\\\bottomrule
+2026-09-23 & Aaron Loh / AI assistance & Initial review draft based on Aaron's planning interview; team ratification pending.\\
+2026-09-27 & Lucas DeBoer & Reviewed the contents.\\\bottomrule
 \end{tabularx}
 \end{minipage}
 \end{center}
@@ -22,15 +23,14 @@ This plan describes how a four-person team proposes to build and evaluate a
 general-purpose, voice-supervised agent interface for blind users. It covers
 team operations, technical choices, the proof of concept (POC), and evaluation.
 It does not promise a universal replacement for screen readers. Initial use
-is on Mac, in English, alongside VoiceOver and keyboard access. The companion
+will be on a Mac, in English, alongside VoiceOver and keyboard access. The companion
 Problem Statement and Goals defines the user outcomes.
 
 \section{Confidential Information?}
-No external confidentiality agreement is known from Aaron's planning interview.
-\pending{All members must confirm any employer, sponsor, or industry restrictions.}
+No external confidentiality agreements are present for any team members.
 Participant identities, recordings, account credentials, and personal task data
 are private even without an industry agreement. Public artifacts will use test
-accounts, synthetic data, and consented, de-identified findings. Raw recruitment
+accounts, synthetic data, and de-identified findings shared with participants' consent. Raw recruitment
 and meeting materials remain outside the public repository. No raw microphone
 audio will be retained by default; provider retention policies require separate
 review and disclosure.
@@ -48,19 +48,17 @@ MIT is the proposed license for original project contributions. Its permissive
 terms require retaining the copyright and permission notice \citep{MITLicense}.
 The repository's \href{https://github.com/NaturalControl/natural-control/blob/main/LICENSE}{LICENSE}
 currently contains the inherited template notice. The local license proposal
-preserves that notice; team ratification and confirmation of attribution remain
-pending before publication. Third-party notices will be recorded when actual
+preserves that notice. Third-party notices will be recorded when actual
 dependencies are selected, rather than assuming all candidate tools share MIT.
 
 \section{Team Meeting Plan}
-The proposal is one weekly team sync, supported by asynchronous work.
-\pending{Recurring day, time, duration, and virtual/in-person arrangement.}
-Each meeting has a rotating chair and note taker, an issue-based agenda, attendance,
-decisions, owners, and next commitments recorded in GitHub. Members review
-materials beforehand. A member unable to attend can provide an advance written
-update and input on decisions; emergencies are communicated when practical.
-A supervisor/teaching assistant (TA) check-in approximately monthly is proposed, in addition to
-required course reviews; the TA's availability and actual schedule need confirmation.
+The plan is one weekly team sync, supported by asynchronous meetings held on the team's Discord server as required.
+Weekly team syncs will be held in person every Wednesday from 2:30 to 3:30 p.m. The meeting location will
+be confirmed virtually. Each meeting has a rotating chair and note taker, selected at the previous meeting.
+The meeting chair will create an issue-based agenda at least 24 hours prior to the meeting.
+Members review materials beforehand. Attendance, decisions, owners, and next commitments are recorded
+on GitHub. A member unable to attend can provide an advance written update and input on decisions;
+emergencies are communicated when practical.
 
 \section{Team Communication Plan}
 Discord is proposed for coordination, with a response to actionable messages
@@ -70,7 +68,8 @@ and secrets do not belong in either public issues or the project board. Urgent
 blockers are explicitly flagged; silence is not agreement or approval.
 
 \section{Team Member Roles}
-The team has four members; only Aaron Loh's name is confirmed in this draft.
+The team has four members: Aaron Loh, Curtis Vos, Kevin Kim, and Lucas DeBoer.
+Each member will take ownership of a primary workstream and be a cross-reviewer for another workstream.
 Primary ownership provides accountability without preventing another member from
 contributing. All four members implement, test, review, and document work.
 Owners and cross-review assignments are revisited at milestones.
@@ -81,39 +80,55 @@ Table~\ref{tab:dev-roles} summarizes proposed workstreams.
 \captionof{table}{Proposed workstreams.}\label{tab:dev-roles}
 \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.29\textwidth}X}
 \toprule Proposed workstream & Responsibility and assignment\\\midrule
-Voice and accessible client & Conversation controls, keyboard access, VoiceOver compatibility. Owner and cross-reviewer pending.\\
+Voice and accessible client & Conversation controls, keyboard access, VoiceOver compatibility. \\
+- Owner: Lucas DeBoer \\
+- Cross-reviewer: Curtis Vos \\
 Agent and tool integration & Hermes adapter, account/browser tools, local execution control. Owner and cross-reviewer pending.\\
+- Owner: Aaron Loh \\
+- Cross-reviewer: Kevin Kim \\
 Deployment and reliability & Configuration, credentials, CI, reconnection, observability. Owner and cross-reviewer pending.\\
-Evaluation and quality & Recruitment coordination, task protocol, outcome measurement, accessibility checks. Owner and cross-reviewer pending.\\\bottomrule
+- Owner: Kevin Kim \\
+- Cross-reviewer: Aaron Loh \\
+Evaluation and quality & Recruitment coordination, task protocol, outcome measurement, accessibility checks. \\
+- Owner: Curtis Vos \\
+- Cross-reviewer: Lucas DeBoer \\
+\bottomrule
 \end{tabularx}
 \end{minipage}
 \end{center}
-Meeting chair, note taker, release coordinator, and TA liaison are rotating process
-roles. A contributor reviews outside their primary workstream to reduce dependence
-on one person. \pending{Three names, named initial owners, cross-reviewers, and liaison.}
+Meeting chair, note taker, release coordinator, and external liaison (if required) are rotating process
+roles. Curtis Vos is the liaison between course staff and the team. A contributor reviews outside their primary workstream to reduce dependence
+on one person.
 
 \section{Workflow Plan}
 Work is tracked in \href{https://github.com/NaturalControl/natural-control}{the public repository}.
 Each meaningful change starts with an issue describing the problem, acceptance
-criteria, owner, and relevant risk. Labels distinguish features, defects,
-accessibility, research, documentation, and blockers. Short-lived topic branches
-and small pull requests keep changes reviewable. One non-author reviewer must
-approve each pull request; relevant continuous integration (CI) checks must pass before merging.
+criteria, owner, and relevant risk. The existing issue templates (Lectures, TA Meetings, etc.) should be used when possible.
+Labels distinguish features, defects, accessibility, research, documentation, and blockers.
+Short-lived topic branches and small pull requests keep changes reviewable. Branch names and pull request titles should
+include an issue number if relevant. One non-author reviewer must approve each pull request; relevant
+continuous integration (CI) checks must pass before merging into the protected main branch.
+Tags will be used to mark major milestones as they are completed.
 
 The repository already contains a LaTeX/PDF and Pages workflow. Python and
 TypeScript checks will be added when the corresponding implementation exists:
 format/lint, type checks, unit/contract tests, and applicable integration tests.
-Passing automation does not establish accessibility. Manual VoiceOver/keyboard
+Passing automated checks does not establish accessibility. Manual VoiceOver/keyboard
 checks and participant evidence remain necessary. Secrets stay out of source
 control and logs. A change is done when its acceptance criteria, checks,
 documentation, and review are complete, with known limitations recorded.
 
+For each deliverable, the quality-assurance owner coordinates reviews against
+the course checklist and Avenue rubric. Issues found during review are recorded
+and addressed before submission.
+
 \section{Project Decomposition and Scheduling}
-A GitHub Project is proposed with Backlog, Ready, In progress, Review, and Done
-columns. Each member commits to concrete weekly outputs rather than fixed hours
-or commit quotas. Dependencies and risks are recorded on issues. The team aims
-for one primary active item per member and resolves blocked work at the weekly
-sync. \pending{Create and link the actual project board; agree initial assignments.}
+\href{https://github.com/orgs/NaturalControl/projects/1/views/1}{A GitHub project} will be used to
+track development and milestone progress. The project is a Kanban board with Backlog,
+Ready, In progress, Review, and Done columns. Each member commits to concrete weekly
+outputs rather than fixed hours or commit quotas. Dependencies and risks are recorded on issues.
+The team aims for one primary active item per member and resolves blocked work at the weekly
+sync.
 
 Drafts are ready 48 hours before deadlines. For the first milestone, the target
 is September 26 at 11:59 p.m. Toronto time, leaving time for human review and
@@ -122,7 +137,12 @@ that assessment uses the repository's latest push at the deadline, without an
 Avenue upload; the knowledge base links the meeting source. Later official
 announcements take precedence.
 
-Table~\ref{tab:dev-schedule} summarizes milestone overview.
+Large tasks will be divided into GitHub issues with a clear description, an assigned owner,
+and acceptance criteria that define when the work will be complete. Each issue should
+generally require hours of work instead of days.
+Assignments will consider members' availability, relevant experience, and dependencies on other work.
+
+Table~\ref{tab:dev-schedule} provides an overview of the milestones.
 \begin{center}
 \begin{minipage}{\textwidth}
 \captionof{table}{Milestone overview.}\label{tab:dev-schedule}
@@ -146,7 +166,7 @@ Dates reflect the checked course calendar snapshot \citep{CourseCalendar}; this
 is a milestone overview, not a replacement for the complete course calendar.
 
 \paragraph{Resources and budget.}
-The proposed total budget has a Canadian-dollar ceiling of \$500, not authorization to spend. A provisional
+The proposed total budget has a Canadian-dollar ceiling of \$500. A provisional
 allocation is \$240 participant appreciation, \$120 model/voice application programming interfaces (APIs), \$60
 hosting/telephony, and \$80 reserve. Appreciation assumes at most twelve paid
 sessions at \$20, subject to recruitment and institutional guidance. Team Macs
@@ -158,7 +178,7 @@ explicitly approved budget change.
 \section{Proof of Concept Demonstration Plan}
 The POC tests a narrow integration risk before broader prototype development.
 \subsection{Risk and experiment}
-The central risk is whether a blind user can understand and control a running
+The central risk is whether a visually impaired user can understand and control a running
 general-purpose agent through voice without visually monitoring it. Individual
 speech and agent components do not establish that their integration works.
 The POC will test the supervision interface across three task classes, rather
@@ -172,7 +192,7 @@ general browser tools, report a meaningful choice, and incorporate a correction.
 The site and task are selected before the trial, without coding a dedicated workflow.
 \item \textbf{A local Mac task:} locate and open a test file or interact with a
 supported application; prepare a derived file, confirming consequential changes
-such as overwrite. Native control support is an experimental dependency.
+such as overwriting an existing file. Native control support is an experimental dependency.
 \end{enumerate}
 
 Each class exercises clarification, consequential-action approval, progress,
@@ -183,8 +203,8 @@ controlled accounts and data; no participant's real email is required.
 Ordinary speech interruption stops spoken output while the underlying task
 continues. An explicit ``stop working'' requests cancellation of execution.
 The interface first acknowledges receipt, then separately confirms whether
-execution has stopped. Acknowledgment is not proof of cancellation. Once stopped
-is confirmed, no further action may be dispatched for that task. An action
+execution has stopped. Acknowledgment is not proof of cancellation. Once execution is confirmed
+to have stopped, no further action may be dispatched for that task. An action
 already completed cannot be undone by saying stop; in-flight actions with an
 unknown outcome must be reported and reconciled before retrying.
 
@@ -195,7 +215,7 @@ and preparation can proceed autonomously, but sending, purchasing, submitting,
 and consequential account/file changes require specific approval. If the action
 or its relevant details change, the previous approval does not apply.
 
-The POC will inject a misunderstanding, interrupt speech, request stop during a
+The POC will inject a misunderstanding, interrupt speech, request a stop during a
 tool operation, and disconnect while work is active. Logs correlate task, action,
 approval, cancellation, and connection events without retaining sensitive payloads.
 The team must verify cancellation through the adapter and downstream worker;
@@ -220,9 +240,9 @@ control, and useful versus excessive spoken feedback.
 \end{itemize}
 The team seeks four to six blind participants with screen-reader experience for
 repeated discovery and evaluation. Recruitment is unconfirmed. The protocol,
-consent and institutional research requirements must be resolved before sessions.
-A personal route to an accessibility organization is a possible introduction,
-not a partnership or recruitment commitment.
+consent, and institutional research requirements must be resolved before sessions.
+A personal contact may facilitate an introduction to an accessibility organization;
+this is not a partnership or recruitment commitment.
 
 Before the main evaluation, freeze task definitions, outcome checks, allowed
 assistance, and exclusions. Report all attempted tasks and explain invalidated
@@ -232,14 +252,14 @@ sample supports formative findings, not population-wide efficacy claims.
 Technical POC results and participant results will be reported separately.
 
 \subsection{Failure consequences}
-Table~\ref{tab:dev-risks} summarizes pOC uncertainties and failure consequences.
+Table~\ref{tab:dev-risks} summarizes POC uncertainties and failure consequences.
 \begin{center}
 \begin{minipage}{\textwidth}
 \captionof{table}{POC uncertainties and failure consequences.}\label{tab:dev-risks}
 \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.25\textwidth}X}
 \toprule Uncertainty & Evidence needed and consequence if unresolved\\\midrule
-Harness supervision & Verify streamed status, approvals, steering, cancellation, and reconnect on a pinned Hermes version. If unavailable, revisit the adapter/harness before promising supervision.\\
-Tool cancellation & Test slow and in-flight account/browser operations. If outcome is unknown, expose that state and block retries; do not claim confirmed stop.\\
+Harness supervision & Verify streamed status, approvals, steering, cancellation, and reconnection on a pinned Hermes version. If unavailable, revisit the adapter/harness before promising supervision.\\
+Tool cancellation & Test slow and in-flight account/browser operations. If the outcome is unknown, expose that state and block retries; do not claim confirmed stop.\\
 Native Mac control & Prove permissions, actionable targets, and result verification. If unsuccessful, defer native control and retain general browser/account tasks.\\
 Voice and VoiceOver & Measure latency, intelligibility, and competing audio with keyboard alternatives. If remote calls fail, retain local voice.\\
 Remote continuity & Test network loss, pending approvals, and duplicate prevention. Defer telephone interaction if it cannot preserve control.\\
@@ -321,7 +341,7 @@ will be documented after a working configuration is demonstrated. A second voice
 channel connecting telephone and on-Mac interaction is the leading stretch goal.
 
 \subsection{Engineering and measurement tools}
-Git and GitHub provide version history, issues, reviews, and project tracking.
+Git, GitHub, and GitHub Projects provide version history, issues, reviews, and project tracking.
 GitHub Actions supplies repeatable checks; hosted CI cannot substitute for Mac
 permission tests or participant evaluation. Proposed Python tools are Ruff,
 pytest, and pytest-cov; proposed client tools are TypeScript strict checks,
@@ -340,12 +360,13 @@ management through small tested integration slices.
 \section{Use of AI and LLMs}
 The product uses existing models to interpret goals and operate tools. The team
 also proposes AI assistance for research, code, tests, and documentation, with
-human understanding and review. Codex has assisted this draft; other members'
-tools and versions remain to be reported. Generated code must pass relevant
-checks and review. Sources must be opened and verified, claims distinguished
-from assumptions, and participant quotations/results never generated as evidence.
-Per-document disclosures record material assistance, affected sections, tool
-versions where known, and actual verification \citep{CourseOutline}.
+human understanding and review. All AI-generated content must be reviewed by a
+team member other than the contributor who prepared it. This review must be explicitly
+requested by that contributor. Generated code must pass relevant checks and review.
+Sources must be opened and verified, claims distinguished from assumptions, and
+participant quotations/results never generated as evidence. Per-document disclosures
+record material assistance, affected sections, tool versions where known,
+and actual verification \citep{CourseOutline}.
 
 \section{Coding Standard}
 Python will follow PEP 8 conventions, type annotations at public boundaries, and
@@ -359,7 +380,7 @@ in the relevant pull request.
 
 \clearpage
 \section*{Appendix A: Generative AI Use Disclosure}
-\textbf{Tool and use.} Aaron Loh used OpenAI Codex with GPT-6 Astra,
+\textbf{Tool and use.} Aaron Loh and Kevin Kim used OpenAI Codex with GPT-6 Astra,
 primarily at Medium reasoning and occasionally High (settings reported by
 Aaron). Codex helped extract questions from course requirements, challenge
 assumptions, research options, and develop ideas through discussion. It also
@@ -380,12 +401,26 @@ These answers must come from the members' actual experience, not invented AI
 reflections.
 \begin{enumerate}
 \item Why is it important to create a development plan before starting?
-\pending{Members' reflections on this project's planning experience.}
+\\A strong development plan is important for many reasons. First, it is used to get all team members on the same
+page about the project's descriptions, goals, and scope, and it helps the team clarify administrative details
+such as team roles, responsibilities and communication expectations. Explicitly laying out these expectations at the start
+of the project helps prevents assumptions from causing misunderstandings later on. Additionally, it can be used by 
+team members to see what fields or technologies they should brush up on before the project begins. Lastly, this project 
+may seem overwhelming at first, but a development plan can help avoid analysis paralysis by encouraging the team to make 
+decisions and begin concrete work. 
+
 \item What are the advantages and disadvantages of continuous integration and deployment (CI/CD) in your opinion?
-\pending{Members' own assessment, including actual experience where available.}
+\\CI/CD offer many disadvantages and advantages. Some advantages include faster realeases, an easier time merging work,
+and automation of repetitive tasks such as testing, builds, and deployment. Additionally, CI/CD encourages smaller changes 
+that are easer to understand and review. However, there are also disadvantages; the initial setup can take some time,
+and there is a learning curve to setting up an effective CI/CD pipeline. These pipelines can create a false sense of security,
+as developers may assume that if the pipeline passes, the code is correct. However, if test coverage is incomplete, automated
+checks can miss bugs making it easier for faulty code to slip through.
+
 \item What disagreements occurred in this deliverable and how were they resolved?
-\pending{An honest account of team discussion; do not claim consensus or disputes
-that have not occurred.}
+\\Overall, there were no major disagreements in this deliverable. Some differences while brainstorming ideas were 
+resolved through discussion and compromise. There were a minor concern over the uneven distrubution of work for this deliverable. 
+For future deliverables, the team will divide work more clearly beforehand and follow the expectations laid out in this document.
 \end{enumerate}
 
 \section*{Appendix C: Team Charter}
@@ -404,7 +439,7 @@ failure to contribute.
 
 \textbf{Acceptable excuses.} Illness, emergencies, accessibility needs, and
 communicated academic/work conflicts merit rescheduling or reassignment. Repeated
-unexplained silence or uncommunicated missed commitments calls for a recovery
+unexplained silence or uncommunicated missed commitments call for a recovery
 conversation, rather than an assumption about personal motivation.
 
 \textbf{Emergency process.} Notify the group when practical, identify work at
@@ -413,14 +448,15 @@ not be made public.
 
 \subsection*{Accountability and teamwork}
 \textbf{Quality.} Weekly commitments specify outputs and acceptance criteria.
-Meeting preparation includes reading the agenda and relevant drafts. Contributions
+Meeting preparation includes reading the agenda and relevant drafts and completing
+any additional duties associated with the member's meeting role for the week. Contributions
 include evidence of checks, understandable documentation, and a reviewable change.
 Drafts are ready 48 hours before deadlines. All members must understand and be
 able to explain AI-assisted work they submit.
 
 \textbf{Attitude.} Discuss ideas respectfully, make room for disagreement, and
 ask before assuming a teammate's intent. Treat participant expertise as evidence;
-avoid speaking for blind people without consulting them. Do not disclose personal
+avoid speaking for visually impaired people without consulting them. Do not disclose personal
 participant information to resolve team debates.
 
 \textbf{Staying on track.} Use weekly output commitments and the issue board, not
@@ -431,7 +467,7 @@ for the member to respond. Recognize useful contributions and help remove blocke
 
 \textbf{Team building.} Include short demos and informal check-ins in the weekly
 sync. Recognize progress; any additional social activities are optional and have
-not yet been agreed.
+not yet been agreed upon.
 
 \textbf{Decision making.} Seek evidence and run a small experiment where useful,
 then vote if discussion does not resolve the question. For a tied technical
