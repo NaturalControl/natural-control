@@ -14,9 +14,9 @@
 \toprule
 Date & Developer(s) & Change \\
 \midrule
-2026-09-23 & Aaron Loh & AI-assisted draft. \\
+2026-09-23 & Aaron & AI-assisted draft. \\
 \midrule
-2026-09-27 & Curtis Vos & Reviewing draft for alignment with rubric and expectations. \\
+2026-09-28 & Curtis & Reviewed draft for alignment with rubric and expectations. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -111,11 +111,15 @@ to have the maximal amount of user access.
 A useful extension is to allow users access the same task context through their computer as well as their cell phone. This extension
 could allow for them to interact with their computer through voice-controlled interactions without being directly in front of it.
 
+\item \textbf{Support saving workflows.}
+Allowing users to save common workflows, such as paying one's credit card bill, would be helpful and improve their efficiency in 
+interacting with the computer. Users could have the option to complete a task or interaction, and save it to a collection of frequent workflows
+that they can quickly request when desired.
+
 \end{enumerate}
 
 \section{Custom Documents (CDs)}
-Two custom documents are proposed under the course outline
-\citep{CourseOutline}. \textbf{Instructor approval is pending.}
+Two custom documents are proposed to be completed over the course of the project's development.
 \begin{itemize}
 \item \textbf{Fall: User/Stakeholder Interview Report.} Record recruitment,
 participant needs, methods, findings, and resulting design decisions.
@@ -127,21 +131,34 @@ workflows. Report limitations and unsuccessful cases as well as benefits.
 
 \section*{Appendix A: Reflection}
 \begin{enumerate}
-\item \textbf{What went well while writing this deliverable?} \pending{Describe actual collaboration and
-what helped produce this deliverable.}
+\item \textbf{What went well while writing this deliverable?} 
+Overall, the team communication was well-established and effective. There was consistent communication
+within the group about the deliverable, how the initial draft would be completed, and how review would be
+handled. The process of using Git for branches and GitHub Pull Requests to foster discussion on changes was organized
+and easy to manage.
+
 \item \textbf{What pain points arose and how were they resolved?}
-\pending{Supply actual experiences and actions, not hypothetical lessons.}
-\item \textbf{How did the team adjust scope?} \pending{Reflect on the
-scope decision. The planning record establishes a general-agent interface
-with bounded evaluation, but does not establish every member's reasoning
-or agreement.}
+The group had initially determined that transparently using AI assistance for writing the draft of the document before manually
+reviewing would be effective and efficient, but this turned out to be rather time-consuming when it came down to the review
+process. Some sections didn't align with expectations, were difficult to understand, and were rather vague due to the nature of LLM's and 
+their writing style, so the next process to try moving forward will be primarily manual writing first, then use AI assistance to proofread and 
+expand on anything needing elaboration. This should be beneficial as a whole for the group's effectiveness when it comes to writing 
+proposals and further documents.
+
+\item \textbf{How did the team adjust scope?}
+During the team's planning, the scope was limited to only the visually impaired, as well as only handling web page interactions.
+After a conversation over email with Dr. Spencer Smith, the scope was suggested to be expanded to general users who might desire the
+project's functionality, as well as ensuring to handle more applications and complex state changes than just creating a simple screen reader.
+After meeting with Teaching Assistant Rebecca DiFilippo, this scope was confirmed as sufficient as of the initial time of writing; the team
+was reminded, however, to be open to further widening the scope or limiting the scope to a small subset of tasks, according to how the development process moves along.
+
 \end{enumerate}
 
 \section*{Appendix B: Generative AI Use Disclosure}
 \addcontentsline{toc}{section}{Appendix A: Generative AI Use Disclosure}
 \textbf{Tool and use} 
 \begin{enumerate}
-\item Aaron Loh used OpenAI Codex with GPT-6 Astra,
+\item Aaron Loh: OpenAI Codex was used with GPT-6 Astra,
 primarily at Medium reasoning and occasionally High (settings reported by
 Aaron). Codex helped extract questions from course requirements, challenge
 assumptions, research options, and develop ideas through discussion. It also
@@ -150,7 +167,7 @@ references, and LaTeX/PDF formatting. Aaron made the judgment calls and reviewed
 the work. These are working drafts for further team revision, not evidence of
 team-wide agreement or completed participant research.
 \item Curtis Vos: For each section, after performing a manual review and update 
-of the intial draft, ChatGPT was used with Auto mode for general feedback and for grammatical
+of the intial draft, OpenAI's GPT-5.6 Luna was used for general feedback and for grammatical
 assistance. Each response was read through fully and worked from if deemed applicable, with no 
 generated responses being copied, and no generated feedback being used without full review.
 
@@ -159,6 +176,4 @@ generated responses being copied, and no generated feedback being used without f
 \textbf{The team maintains responsibility for all submitted work.}
 
 \clearpage
-\bibliographystyle{plainnat}
-\bibliography{../../refs/CapstoneSources}
 \end{document}
