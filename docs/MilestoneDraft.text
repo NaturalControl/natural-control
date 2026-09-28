@@ -1,0 +1,24 @@
+% Shared formatting for the first two milestone drafts only.
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs,tabularx,longtable,array,enumitem,xcolor}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{microtype}
+\usepackage{caption}
+\usepackage{xurl}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlist{itemsep=3pt,topsep=4pt}
+\setlength{\emergencystretch}{2em}
+\widowpenalty=10000
+\clubpenalty=10000
+\brokenpenalty=10000
+\renewcommand{\tabularxcolumn}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcommand{\pending}[1]{\textbf{Pending team input:} #1}
+\newcommand{\draftnotice}{%
+\begin{quote}\small
+\textbf{Review draft -- September 23, 2026.}
+Prepared from Aaron Loh's planning interview. Team-wide ratification,
+remaining names, approvals, and reflections are pending. Proposed targets
+are not achieved results. This document is not ready for submission.
+\end{quote}}
