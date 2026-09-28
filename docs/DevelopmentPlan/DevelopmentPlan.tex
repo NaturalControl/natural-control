@@ -7,14 +7,14 @@
 \begin{document}
 \maketitle
 \draftnotice
-Table~\ref{tab:dev-revisions} summarizes revision history.
+Table~\ref{tab:dev-revisions} summarizes the revision history.
 \begin{center}
 \begin{minipage}{\textwidth}
 \captionof{table}{Revision history.}\label{tab:dev-revisions}
 \begin{tabularx}{\textwidth}{llX}
 \toprule Date & Contributor & Change\\\midrule
 2026-09-23 & Aaron Loh / AI assistance & Initial review draft based on Aaron's planning interview; team ratification pending.\\
-2026-09-27 & Lucas DeBoer & Review contents\\\bottomrule
+2026-09-27 & Lucas DeBoer & Reviewed the contents.\\\bottomrule
 \end{tabularx}
 \end{minipage}
 \end{center}
@@ -23,14 +23,14 @@ This plan describes how a four-person team proposes to build and evaluate a
 general-purpose, voice-supervised agent interface for blind users. It covers
 team operations, technical choices, the proof of concept (POC), and evaluation.
 It does not promise a universal replacement for screen readers. Initial use
-is on Mac, in English, alongside VoiceOver and keyboard access. The companion
+will be on a Mac, in English, alongside VoiceOver and keyboard access. The companion
 Problem Statement and Goals defines the user outcomes.
 
 \section{Confidential Information?}
-No external confidentiality agreements present for any team members. 
+No external confidentiality agreements are present for any team members.
 Participant identities, recordings, account credentials, and personal task data
 are private even without an industry agreement. Public artifacts will use test
-accounts, synthetic data, and consented, de-identified findings. Raw recruitment
+accounts, synthetic data, and de-identified findings shared with participants' consent. Raw recruitment
 and meeting materials remain outside the public repository. No raw microphone
 audio will be retained by default; provider retention policies require separate
 review and disclosure.
@@ -52,13 +52,13 @@ preserves that notice. Third-party notices will be recorded when actual
 dependencies are selected, rather than assuming all candidate tools share MIT.
 
 \section{Team Meeting Plan}
-The plan is one weekly team sync, supported by asynchronous meetings held on the teams discord server as required.
-Weekly team syncs will be held in-person every Wednesday from 2:30 - 3:30 p.m. Meeting location will 
-be confirmed virtually. Each meeting has a rotating chair and note taker, determined at the previous meeting.
-The meeting chair will create an issue-based agenda at least 24 hours prior to the meeting. 
-Members review materials beforehand. Attendance, decisions, owners, and next commitments recorded 
-in GitHub. A member unable to attend can provide an advance written update and input on decisions;
-emergencies are communicated when practical. A supervisor/teaching assistant (TA) check-in approximately 
+The plan is one weekly team sync, supported by asynchronous meetings held on the team's Discord server as required.
+Weekly team syncs will be held in person every Wednesday from 2:30 to 3:30 p.m. The meeting location will
+be confirmed virtually. Each meeting has a rotating chair and note taker, selected at the previous meeting.
+The meeting chair will create an issue-based agenda at least 24 hours prior to the meeting.
+Members review materials beforehand. Attendance, decisions, owners, and next commitments are recorded
+on GitHub. A member unable to attend can provide an advance written update and input on decisions;
+emergencies are communicated when practical. A supervisor/teaching assistant (TA) check-in approximately
 monthly is proposed, in addition to required course reviews; the TA's availability and actual schedule need confirmation.
 
 \section{Team Communication Plan}
@@ -69,7 +69,7 @@ and secrets do not belong in either public issues or the project board. Urgent
 blockers are explicitly flagged; silence is not agreement or approval.
 
 \section{Team Member Roles}
-The team has four members, Aaron Loh, Curtis Vos, Kevin Kim and Lucas DeBoer.
+The team has four members: Aaron Loh, Curtis Vos, Kevin Kim, and Lucas DeBoer.
 Each member will take ownership of a primary workstream and be a cross-reviewer for another workstream.
 Primary ownership provides accountability without preventing another member from
 contributing. All four members implement, test, review, and document work.
@@ -83,38 +83,38 @@ Table~\ref{tab:dev-roles} summarizes proposed workstreams.
 \toprule Proposed workstream & Responsibility and assignment\\\midrule
 Voice and accessible client & Conversation controls, keyboard access, VoiceOver compatibility. \\
 - Owner: Lucas DeBoer \\
-- Cross Reviewer: Curtis Vos \\
+- Cross-reviewer: Curtis Vos \\
 Agent and tool integration & Hermes adapter, account/browser tools, local execution control. Owner and cross-reviewer pending.\\
 - Owner: Aaron Loh \\
-- Cross Reviewer: Kevin Kim \\
+- Cross-reviewer: Kevin Kim \\
 Deployment and reliability & Configuration, credentials, CI, reconnection, observability. Owner and cross-reviewer pending.\\
 - Owner: Kevin Kim \\
-- Cross Reviewer: Aaron Loh \\
+- Cross-reviewer: Aaron Loh \\
 Evaluation and quality & Recruitment coordination, task protocol, outcome measurement, accessibility checks. \\
 - Owner: Curtis Vos \\
-- Cross Reviewer: Lucas DeBoer \\
+- Cross-reviewer: Lucas DeBoer \\
 \bottomrule
 \end{tabularx}
 \end{minipage}
 \end{center}
-Meeting chair, note taker, release coordinator, and external liason (if required) are rotating process
-roles. Curtis Vos is the liason between course staff and the team. A contributor reviews outside their primary workstream to reduce dependence
+Meeting chair, note taker, release coordinator, and external liaison (if required) are rotating process
+roles. Curtis Vos is the liaison between course staff and the team. A contributor reviews outside their primary workstream to reduce dependence
 on one person. \pending{named initial owners, cross-reviewers.}
 
 \section{Workflow Plan}
 Work is tracked in \href{https://github.com/NaturalControl/natural-control}{the public repository}.
 Each meaningful change starts with an issue describing the problem, acceptance
 criteria, owner, and relevant risk. The existing issue templates (Lectures, TA Meetings, etc.) should be used when possible.
-Labels distinguish features, defects, accessibility, research, documentation, and blockers. 
-Short-lived topic branches and small pull requests keep changes reviewable. Branch and pull request names should
+Labels distinguish features, defects, accessibility, research, documentation, and blockers.
+Short-lived topic branches and small pull requests keep changes reviewable. Branch names and pull request titles should
 include an issue number if relevant. One non-author reviewer must approve each pull request; relevant
 continuous integration (CI) checks must pass before merging into the protected main branch.
-Tags will be used to mark major milestones as they are completed. 
+Tags will be used to mark major milestones as they are completed.
 
 The repository already contains a LaTeX/PDF and Pages workflow. Python and
 TypeScript checks will be added when the corresponding implementation exists:
 format/lint, type checks, unit/contract tests, and applicable integration tests.
-Passing automation does not establish accessibility. Manual VoiceOver/keyboard
+Passing automated checks does not establish accessibility. Manual VoiceOver/keyboard
 checks and participant evidence remain necessary. Secrets stay out of source
 control and logs. A change is done when its acceptance criteria, checks,
 documentation, and review are complete, with known limitations recorded.
@@ -125,9 +125,9 @@ and addressed before submission.
 
 \section{Project Decomposition and Scheduling}
 \href{https://github.com/orgs/NaturalControl/projects/1/views/1}{A GitHub project} will be used to
-track development and milestone progress. The project is an Kanban board with Backlog, 
-Ready, In progress, Review, and Done columns. Each member commits to concrete weekly 
-outputs rather than fixed hours or commit quotas. Dependencies and risks are recorded on issues. 
+track development and milestone progress. The project is a Kanban board with Backlog,
+Ready, In progress, Review, and Done columns. Each member commits to concrete weekly
+outputs rather than fixed hours or commit quotas. Dependencies and risks are recorded on issues.
 The team aims for one primary active item per member and resolves blocked work at the weekly
 sync.
 
@@ -138,13 +138,13 @@ that assessment uses the repository's latest push at the deadline, without an
 Avenue upload; the knowledge base links the meeting source. Later official
 announcements take precedence.
 
-Large tasks will be divided into GitHub issues with a clear description, an assigned owner, 
-and an acceptance criteria that defines when the work will be complete. Each issue should 
+Large tasks will be divided into GitHub issues with a clear description, an assigned owner,
+and acceptance criteria that define when the work will be complete. Each issue should
 generally require hours of work instead of days. For example, instead of assigning ``write the Problem Statement''
 as one task, we will create separate issues to draft the problem statement with the requirements in mind.
 Assignments will consider members' availability, relevant experience, and dependencies on other work.
 
-Table~\ref{tab:dev-schedule} summarizes milestone overview.
+Table~\ref{tab:dev-schedule} provides an overview of the milestones.
 \begin{center}
 \begin{minipage}{\textwidth}
 \captionof{table}{Milestone overview.}\label{tab:dev-schedule}
@@ -194,7 +194,7 @@ general browser tools, report a meaningful choice, and incorporate a correction.
 The site and task are selected before the trial, without coding a dedicated workflow.
 \item \textbf{A local Mac task:} locate and open a test file or interact with a
 supported application; prepare a derived file, confirming consequential changes
-such as overwrite. Native control support is an experimental dependency.
+such as overwriting an existing file. Native control support is an experimental dependency.
 \end{enumerate}
 
 Each class exercises clarification, consequential-action approval, progress,
@@ -205,8 +205,8 @@ controlled accounts and data; no participant's real email is required.
 Ordinary speech interruption stops spoken output while the underlying task
 continues. An explicit ``stop working'' requests cancellation of execution.
 The interface first acknowledges receipt, then separately confirms whether
-execution has stopped. Acknowledgment is not proof of cancellation. Once stopped
-is confirmed, no further action may be dispatched for that task. An action
+execution has stopped. Acknowledgment is not proof of cancellation. Once execution is confirmed
+to have stopped, no further action may be dispatched for that task. An action
 already completed cannot be undone by saying stop; in-flight actions with an
 unknown outcome must be reported and reconciled before retrying.
 
@@ -217,7 +217,7 @@ and preparation can proceed autonomously, but sending, purchasing, submitting,
 and consequential account/file changes require specific approval. If the action
 or its relevant details change, the previous approval does not apply.
 
-The POC will inject a misunderstanding, interrupt speech, request stop during a
+The POC will inject a misunderstanding, interrupt speech, request a stop during a
 tool operation, and disconnect while work is active. Logs correlate task, action,
 approval, cancellation, and connection events without retaining sensitive payloads.
 The team must verify cancellation through the adapter and downstream worker;
@@ -242,9 +242,9 @@ control, and useful versus excessive spoken feedback.
 \end{itemize}
 The team seeks four to six blind participants with screen-reader experience for
 repeated discovery and evaluation. Recruitment is unconfirmed. The protocol,
-consent and institutional research requirements must be resolved before sessions.
-A personal route to an accessibility organization is a possible introduction,
-not a partnership or recruitment commitment.
+consent, and institutional research requirements must be resolved before sessions.
+A personal contact may facilitate an introduction to an accessibility organization;
+this is not a partnership or recruitment commitment.
 
 Before the main evaluation, freeze task definitions, outcome checks, allowed
 assistance, and exclusions. Report all attempted tasks and explain invalidated
@@ -260,8 +260,8 @@ Table~\ref{tab:dev-risks} summarizes POC uncertainties and failure consequences.
 \captionof{table}{POC uncertainties and failure consequences.}\label{tab:dev-risks}
 \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.25\textwidth}X}
 \toprule Uncertainty & Evidence needed and consequence if unresolved\\\midrule
-Harness supervision & Verify streamed status, approvals, steering, cancellation, and reconnect on a pinned Hermes version. If unavailable, revisit the adapter/harness before promising supervision.\\
-Tool cancellation & Test slow and in-flight account/browser operations. If outcome is unknown, expose that state and block retries; do not claim confirmed stop.\\
+Harness supervision & Verify streamed status, approvals, steering, cancellation, and reconnection on a pinned Hermes version. If unavailable, revisit the adapter/harness before promising supervision.\\
+Tool cancellation & Test slow and in-flight account/browser operations. If the outcome is unknown, expose that state and block retries; do not claim confirmed stop.\\
 Native Mac control & Prove permissions, actionable targets, and result verification. If unsuccessful, defer native control and retain general browser/account tasks.\\
 Voice and VoiceOver & Measure latency, intelligibility, and competing audio with keyboard alternatives. If remote calls fail, retain local voice.\\
 Remote continuity & Test network loss, pending approvals, and duplicate prevention. Defer telephone interaction if it cannot preserve control.\\
@@ -343,7 +343,7 @@ will be documented after a working configuration is demonstrated. A second voice
 channel connecting telephone and on-Mac interaction is the leading stretch goal.
 
 \subsection{Engineering and measurement tools}
-Git, GitHub, and GitHub projects provide version history, issues, reviews, and project tracking.
+Git, GitHub, and GitHub Projects provide version history, issues, reviews, and project tracking.
 GitHub Actions supplies repeatable checks; hosted CI cannot substitute for Mac
 permission tests or participant evaluation. Proposed Python tools are Ruff,
 pytest, and pytest-cov; proposed client tools are TypeScript strict checks,
@@ -362,12 +362,12 @@ management through small tested integration slices.
 \section{Use of AI and LLMs}
 The product uses existing models to interpret goals and operate tools. The team
 also proposes AI assistance for research, code, tests, and documentation, with
-human understanding and review. All AI-generated content must be humanly reviewed by a 
-team member who is not the author of the content. This review must be explicitly requested
-by the author of the content. Generated code must pass relevant checks and review. 
-Sources must be opened and verified, claims distinguished from assumptions, and 
-participant quotations/results never generated as evidence. Per-document disclosures 
-record material assistance, affected sections, tool versions where known, 
+human understanding and review. All AI-generated content must be reviewed by a
+team member other than the contributor who prepared it. This review must be explicitly
+requested by that contributor. Generated code must pass relevant checks and review.
+Sources must be opened and verified, claims distinguished from assumptions, and
+participant quotations/results never generated as evidence. Per-document disclosures
+record material assistance, affected sections, tool versions where known,
 and actual verification \citep{CourseOutline}.
 
 \section{Coding Standard}
@@ -403,26 +403,26 @@ These answers must come from the members' actual experience, not invented AI
 reflections.
 \begin{enumerate}
 \item Why is it important to create a development plan before starting?
-\\- Identify areas where team members should brush up knowledge.
-\\- Get all team members on same page about project and its goals/scope (helps avoid assumptions).
-\\- Clarify administrative details, including team roles, responsibilities, and communication expectation.
-\\- Set the tone. Good project starts with good plan.
-\\- Helps avoid analysis paralysis. Forces you to make decisions and start\\
+\\- Identify areas where team members should brush up on their knowledge.
+\\- Get all team members on the same page about the project and its goals and scope to help avoid assumptions.
+\\- Clarify administrative details, including team roles, responsibilities, and communication expectations.
+\\- Set the tone. A good project starts with a good plan.
+\\- Avoid analysis paralysis by making decisions and beginning concrete work.\\
 \item What are the advantages and disadvantages of continuous integration and deployment (CI/CD) in your opinion?
 \\Advantages:
-\\- Faster releases
-\\- Easier to merge work
-\\- automates the boring stuff (testing, builds, deployment)
-\\- better understanding of work(encourages many smaller changes)
+\\- Faster releases.
+\\- Easier merging of work.
+\\- Automates repetitive tasks (testing, builds, and deployment).
+\\- Encourages smaller changes that are easier to understand and review.
 \\Disadvantages:
-\\- Initial setup takes time
-\\- need to maintain/update pipeline
-\\- learning curve 
-\\- If test coverage is incomplete, automated checks can miss bugs
+\\- Initial setup takes time.
+\\- Need to maintain and update the pipeline.
+\\- Learning curve.
+\\- If test coverage is incomplete, automated checks can miss bugs.
 \item What disagreements occurred in this deliverable and how were they resolved?
-\\ No major disagreements occurred. Differences regarding ideas during brainstorming were resolved by discussion and compromise.
+\\ No major disagreements occurred. Differences in brainstorming ideas were resolved by discussion and compromise.
 \\ Minor disagreements arose over uneven work distribution for this deliverable.
-\\ For future deliverable we will divide work up better beforehand, and follow expectations laid out in this document.
+\\ For future deliverables, we will divide work more clearly beforehand and follow the expectations laid out in this document.
 \end{enumerate}
 
 \section*{Appendix C: Team Charter}
@@ -441,7 +441,7 @@ failure to contribute.
 
 \textbf{Acceptable excuses.} Illness, emergencies, accessibility needs, and
 communicated academic/work conflicts merit rescheduling or reassignment. Repeated
-unexplained silence or uncommunicated missed commitments calls for a recovery
+unexplained silence or uncommunicated missed commitments call for a recovery
 conversation, rather than an assumption about personal motivation.
 
 \textbf{Emergency process.} Notify the group when practical, identify work at
@@ -450,8 +450,8 @@ not be made public.
 
 \subsection*{Accountability and teamwork}
 \textbf{Quality.} Weekly commitments specify outputs and acceptance criteria.
-Meeting preparation includes reading the agenda and relevant drafts and any additional duties
-required by the team member's meeting role for the week. Contributions
+Meeting preparation includes reading the agenda and relevant drafts and completing
+any additional duties associated with the member's meeting role for the week. Contributions
 include evidence of checks, understandable documentation, and a reviewable change.
 Drafts are ready 48 hours before deadlines. All members must understand and be
 able to explain AI-assisted work they submit.
@@ -469,7 +469,7 @@ for the member to respond. Recognize useful contributions and help remove blocke
 
 \textbf{Team building.} Include short demos and informal check-ins in the weekly
 sync. Recognize progress; any additional social activities are optional and have
-not yet been agreed.
+not yet been agreed upon.
 
 \textbf{Decision making.} Seek evidence and run a small experiment where useful,
 then vote if discussion does not resolve the question. For a tied technical

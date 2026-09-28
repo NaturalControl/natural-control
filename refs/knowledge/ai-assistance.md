@@ -25,3 +25,5 @@ Aaron reports using Codex with GPT-6 Astra, primarily Medium reasoning and occas
 These remain working drafts for further team rewriting. Future rewriting has not been represented as already completed; the final disclosures should reflect the submitted versions and each member's actual use. Team ratification and personal reflections remain pending. The repository history will separate reference/setup work from the two deliverable drafts. No remote publication is requested in this step.
 
 At Aaron’s request, Codex replaced em dashes in LaTeX sources, rebuilt the Development Plan PDF, and checked the changed pages and both milestone PDFs for remaining em dashes.
+
+Kevin Kim used Codex to fix grammar, punctuation, and awkward wording in the Development Plan.
