@@ -1,3 +1,5 @@
+> September 28 update: PRs #1 and #2 supply team names, roles, meeting time, project-board link and reflections. The root MIT license now preserves both upstream and team notices. Lucas reports custom-document approval in PR #2. Charter ratification remains pending. Earlier unchecked items below are historical; see [current integration verification](verification-2026-09-28.md) and [current context](project-context.md).
+
 # Milestone 1 — September 28, 2026
 
 **Deadline: Monday September 28, 11:59 p.m., America/Toronto. Review drafts only.**

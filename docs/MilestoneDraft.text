@@ -15,10 +15,3 @@
 \brokenpenalty=10000
 \renewcommand{\tabularxcolumn}[1]{>{\raggedright\arraybackslash}p{#1}}
 \newcommand{\pending}[1]{\textbf{Pending team input:} #1}
-\newcommand{\draftnotice}{%
-\begin{quote}\small
-\textbf{Review draft -- September 23, 2026.}
-Prepared from Aaron Loh's planning interview. Team-wide ratification,
-remaining names, approvals, and reflections are pending. Proposed targets
-are not achieved results. This document is not ready for submission.
-\end{quote}}

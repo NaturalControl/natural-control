@@ -3,162 +3,130 @@
 \input{../Common.text}
 \title{Problem Statement and Goals\\\progname}
 \author{\authname}
-\date{September 23, 2026}
+\date{September 28, 2026}
 \begin{document}
 \maketitle
-\draftnotice
 
 \begin{table}[h]
 \centering
 \caption{Revision history.}\label{tab:ps-revisions}
 \begin{tabularx}{\textwidth}{llX}
 \toprule
-Date & Revision & Change \\
+Date & Developer(s) & Change \\
 \midrule
-2026-09-23 & Review draft & AI-assisted draft from Aaron Loh's decisions;
-whole-team review pending. \\
+2026-09-23 & Aaron & AI-assisted draft. \\
+\midrule
+2026-09-28 & Curtis & Reviewed draft for alignment with rubric and expectations. \\
 \bottomrule
 \end{tabularx}
 \end{table}
-Table~\ref{tab:ps-revisions} records this draft's origin. Natural Control is
-a working name. The accompanying Development Plan contains the proof of
-concept (POC) plan and proposed team charter.
 
 \section{Problem Statement}
-Blind computer users can encounter barriers when completing tasks across
-websites, applications, and connected services. The project addresses
-independent task completion and the ability to remain informed and in
-control when delegating digital work.
+Visually impaired individuals can face many difficulties when navigating screen-based websites and
+applications that rely on visual feedback. These barriers become especially
+challenging when completing complex, multi-step digital tasks that require the interpretation of changing
+system states. This project aims to support independent task completion while allowing users to
+remain informed of relevant system changes and maintain control when completing digital work.
 
 \subsection{Problem}
-Completing a digital task can require navigating unfamiliar interfaces,
-tracking changes, and recovering from controls or content that existing
-access tools do not expose effectively. Screen readers already provide
-selective navigation; users do not simply listen to every item on a page.
-WebAIM's self-selected survey identifies barriers including unclear
-controls and unexpected changes, but does not establish their prevalence
-among our prospective participants \citep{WebAIM2024}.
+Visually impaired individuals may encounter significant barriers when
+completing computer tasks, as many websites and applications require visual interactions
+to communicate information, present possible actions, and indicate changes in a system's state.
+Complex and unfamiliar tasks can require users to navigate multiple applications, interpret changing
+interface and application states, recover from errors and unexpected outcomes, and determine if actions
+were completed successfully. Managing these tasks can be particularly difficult without relying on
+visual feedback.
 
-Delegation to an artificial intelligence (AI) agent introduces another
-problem: the user needs to understand what is happening, make meaningful
-choices, and correct mistakes without visual monitoring. Research on Morae
-examines this issue by involving blind and low-vision users in decisions
-during agent execution \citep{Morae2025}. These sources motivate the
-project; interviews must still establish participants' actual priorities.
-
-Natural Control aims to make general digital task delegation usable
-through conversation while preserving user agency. Success means a person
-can complete and verify useful tasks independently after initial setup,
-not that they abandon their screen reader. Representative tasks span
-connected accounts, unfamiliar websites, and local computer applications.
-They are evaluation cases, not a product allowlist or fixed scripts.
+Barriers like these can make it difficult for users to complete multi-step tasks independently and
+to remain aware of what's happening while a task is being performed. This problem has become increasingly
+important as many activities depend more on websites, applications, and other digital services.
+Difficulties with nonvisual interactions can therefore limit many users' abilities to interact with
+the modern digital world.
 
 \subsection{Inputs and Outputs}
-The intended inputs are spoken goals, preferences, clarification answers,
-corrections, approvals, and stop requests. Users may also supply keyboard
-or text input. With appropriate access, the system receives relevant page,
-application, file, and connected-account state needed for the requested
-task. Initial setup supplies permitted accounts, tools, and provider
-credentials; credentials are not intended for spoken entry or public logs.
+The intended input is the individual's voice as a form of control.
+This can be expanded to spoken goals, preferences, clarification answers,
+corrections, approvals, and stop requests. Users who are able may also supply
+keyboard or text input for assistance.
 
-The intended outputs are actions on permitted services or the computer;
-concise spoken progress and results; requests for clarification or
-approval; and an accessible, reviewable task history. Completion feedback
+The intended outputs are actions on permitted services or the computer,
+concise spoken progress and results, requests for clarification or
+approval, and an accessible, reviewable task history. Completion feedback
 must distinguish verified results, partial work, and unresolved failures.
-An acknowledgment of a stop request is not a claim that execution has
-already stopped or that prior actions were undone.
 
 \subsection{Stakeholders}
 \begin{description}[style=nextline]
-\item[Primary users.]
-Blind people with screen-reader experience who want to delegate digital
-tasks while retaining control. Initial evaluation is with English-speaking
-Mac users; this is a development boundary, not a claim that these users
-represent all blind people.
-\item[Research collaborators and accessibility organizations.]
-Potential participants and advisers can identify barriers and evaluate
-interaction choices. A team connection may facilitate a CNIB introduction;
-no partnership, participation, or endorsement is confirmed.
-\item[Setup helpers and open-source contributors.]
-Trusted helpers may assist with initial installation and account setup.
-Maintainers need understandable code, documented limitations, and a
-reproducible default configuration.
-\item[Course team and assessors.]
-Four student contributors, the teaching assistant (TA), and instructor
-need a feasible project and evidence that the team understands its work.
-People receiving messages or invitations are also affected by the
-system's actions, which makes accurate user authorization important.
+\item[Visually impaired individuals]
+Primary stakeholders are visually impaired, English-speaking individuals who want to complete digital
+tasks while retaining control through non-visual interactions. Initial evaluation
+will recruit blind Mac users with screen-reader experience; the broader
+stakeholder group does not imply evaluation of every user population.
+\item[Users Wanting Non-Visual Interactions]
+Secondary stakeholders are non-visually impaired individuals who still want the ability to complete
+digital tasks without relying on visual feedback. They may be unable to view their computer screens
+for other reasons, or may simply have a desire not to rely on their screen.
 \end{description}
 
-\subsection{Environment and Boundaries}
-The initial evaluated environment is macOS with Chrome, English speech,
-a microphone, audio output, internet access, and existing accessibility
-tools such as VoiceOver and keyboard navigation. A web voice interface is
-planned; its location in a browser does not restrict the agent to web
-tasks. Cloud processing is permitted, and users provide their own account
-connections and provider credentials.
-
-A local component is necessary for local Mac tasks. An always-available
-Mac or Mac mini is one deployment option; hosted execution is another for
-tasks that do not require a local device. A hosted service cannot operate
-an offline Mac. Independent everyday use is the initial goal; assisted
-setup is acceptable. Telephone access will be compared with on-Mac voice,
-with support for both channels treated as an extension.
-
-Unrestricted success on every website or application, guaranteed
-reversibility, universal provider compatibility, and replacement of all
-screen-reader functions are not promised. The project will build on an
-existing agent rather than train a new foundation model. User needs and
-provider constraints may change the evaluated scope, with changes
-recorded rather than hidden.
+\subsection{Environment}
+The expected environment is a Mac computer running macOS with Google Chrome,
+a microphone, audio output, and internet access. Some tasks may also require access to the local Mac
+environment. Users may also have existing accessibility tools like VoiceOver and keyboard navigation enabled.
 
 \section{Goals}
-The following four goals describe benefits to users. Numerical targets
-are provisional design commitments accepted for this draft, not measured
-results. A pilot will inform revisions before the main evaluation; changes
-will be justified and retained in the revision history. Detailed task
-selection and measurement procedures belong in the Development Plan and
-later verification and validation plan.
+The Development Plan, Section 9.3, specifies provisional targets and the
+evaluation method for these goals. The goals below describe intended outcomes,
+not achieved results.
 
 \begin{enumerate}[label=G\arabic*.,leftmargin=*]
-\item \textbf{Complete useful digital tasks independently.}
-After assisted setup, users should complete at least 80\% of a declared,
-representative task set correctly without sighted assistance. The set will
-cover connected-account, browser, and local-Mac tasks. Report results per
-category and overall, including failed attempts. This target applies to
-the evaluated tasks, not arbitrary computer use.
+\item \textbf{Complete complex digital tasks independently.}
+Users should be able to complete common, multi-step tasks across websites and applications without
+relying on visual feedback or sighted assistance. Success can be measured by task completion rate
+and the amount of sighted assistance that is required.
 
-\item \textbf{Retain control over delegated work.}
-Users should be able to stop work and decide whether consequential
-actions proceed. In the evaluation, explicit stop requests should be
-acknowledged within two seconds, and every tested consequential action
-must require explicit approval. Verified stopping is separately checked:
-no new action may be issued after the system confirms execution stopped.
+\item \textbf{Maintain awareness and control during digital tasks.}
+Users should be able to understand relevant task progress and state changes, provide input when required,
+and stop or redirect tasks when necessary. Measure successful corrections, explicit stop acknowledgment and execution-stop
+confirmation, and approval before consequential actions. Clarification counts
+provide context; fewer questions alone do not establish better control.
 
-\item \textbf{Understand and correct the assistant without visual help.}
-In each evaluated scenario, check whether the participant can identify the
-actual outcome or blocker and, in a seeded-misunderstanding scenario,
-correct the request without sighted assistance. Report successful cases
-and failure reasons. Brief feedback and access to details should support
-awareness without requiring constant narration.
+\item \textbf{Accurately receive results and execute commands.}
+Users should be able to have confidence that the program is correctly tracking the system's state,
+retrieving results, and executing their desired actions and commands. Compare reported outcomes and executed actions against independently verified
+application state and the user's request. Report incorrect or unsupported
+completion claims separately from successful actions.
 
-\item \textbf{Make the system usable beyond the development team.}
-Release an open-source implementation with one documented default
-configuration, user-provided credentials, and extension points. Verify
-that a person outside the implementation team can follow the setup guide
-on a clean supported environment, with assistance documented, and run the
-reference tasks. Stars or downloads alone are not evidence of usefulness.
+\item \textbf{Recover from errors and unexpected outcomes.}
+Users should be able to identify unexpected, misunderstood, or failed actions and recover without restarting
+the entire task or relying on sighted assistance. Measure whether recovery succeeds without sighted help or a full restart,
+along with recovery time and clarification turns.
+
+\item \textbf{Easy, understandable, and stable installation setup.}
+Individuals responsible for setting up the interface should have a smooth setup process. They should also not be required to
+assist or intervene after the initial setup is performed. Success can be measured by the number of clicks or commands needed,
+the setup time before the program can be used, as well as how many times the setup helper is required to assist after installation.
 \end{enumerate}
 
 \section{Stretch Goals}
-The leading extension is a second voice channel: let a user access the
-same task context through telephone and on-Mac voice. Later possibilities
-include messaging continuity and evaluated Safari support. These must not
-displace a reliable initial experience or be presented as completed work.
+\begin{enumerate}[label=SG\arabic*.,leftmargin=*]
+\item \textbf{Support additional applications and operating systems.}
+If time permits, it would be beneficial to extend the implementation to multiple browsers and operating systems in order
+to have the maximal amount of user access.
+
+\item \textbf{Support a second voice channel.}
+A useful extension is to allow users access the same task context through their computer as well as their cell phone. This extension
+could allow for them to interact with their computer through voice-controlled interactions without being directly in front of it.
+
+\item \textbf{Support saving workflows.}
+Allowing users to save common workflows, such as paying one's credit card bill, would be helpful and improve their efficiency in
+interacting with the computer. Users could have the option to complete a task or interaction, and save it to a collection of frequent workflows
+that they can quickly request when desired. Saving a workflow does not grant
+standing approval: consequential actions still require confirmation of their
+current details.
+
+\end{enumerate}
 
 \section{Custom Documents (CDs)}
-Two custom documents are proposed under the course outline
-\citep{CourseOutline}. \textbf{Instructor approval is pending.}
+Two custom documents are proposed to be completed over the course of the project's development.
 \begin{itemize}
 \item \textbf{Fall: User/Stakeholder Interview Report.} Record recruitment,
 participant needs, methods, findings, and resulting design decisions.
@@ -168,39 +136,52 @@ awareness, correction, and user control against participants' usual
 workflows. Report limitations and unsuccessful cases as well as benefits.
 \end{itemize}
 
-\section*{Appendix A: Generative AI Use Disclosure}
-\addcontentsline{toc}{section}{Appendix A: Generative AI Use Disclosure}
-\textbf{Tool and use.} Aaron Loh used OpenAI Codex with GPT-6 Astra,
+\section*{Appendix A: Reflection}
+\begin{enumerate}
+\item \textbf{What went well while writing this deliverable?}
+Overall, the team communication was well-established and effective. There was consistent communication
+within the group's Discord server about the deliverable, how the initial draft would be completed, and how review would be
+handled. The process of using Git for branches and GitHub Pull Requests to foster discussion on changes was also organized
+and easy to manage.
+
+\item \textbf{What pain points arose and how were they resolved?}
+The group had initially determined that transparently using AI assistance for writing the draft of the document before manually
+reviewing would be effective and efficient, but Curtis found this to be rather time-consuming when it came down to the review
+process. Some sections didn't fully align with expectations, were slightly difficult to understand, and were rather vague due to the nature of LLM's and
+their writing style, so the next process to try moving forward will be primarily manual writing first, then use AI assistance to proofread and
+expand on anything needing elaboration. This should be beneficial as a whole for the group's effectiveness when it comes to writing
+proposals and further documents.
+
+\item \textbf{How did the team adjust scope?}
+During the team's planning, the scope was limited to only the visually impaired, as well as only handling web page interactions.
+After a conversation over email with Dr. Spencer Smith, the scope was suggested to be expanded to general users who might desire the
+project's functionality, as well as ensuring to handle more applications and complex state changes than just creating a simple screen reader.
+After meeting with Teaching Assistant Rebecca DiFilippo, this scope was confirmed as sufficient as of the initial time of writing; the team
+was reminded, however, to be open to further widening the scope or limiting the scope to a small subset of tasks, according to how the development process moves along.
+
+\end{enumerate}
+
+\section*{Appendix B: Generative AI Use Disclosure}
+\addcontentsline{toc}{section}{Appendix B: Generative AI Use Disclosure}
+\textbf{Tool and use}
+\begin{enumerate}
+\item Aaron Loh: OpenAI Codex was used with GPT-6 Astra,
 primarily at Medium reasoning and occasionally High (settings reported by
 Aaron). Codex helped extract questions from course requirements, challenge
 assumptions, research options, and develop ideas through discussion. It also
 assisted with drafting and revising text throughout this document, organizing
 references, and LaTeX/PDF formatting. Aaron made the judgment calls and reviewed
-the work. These are working drafts for further team revision, not evidence of
-team-wide agreement or completed participant research.
+the work. During integration, Codex also helped reconcile team revisions,
+clarify measurements, and check the PDFs. No participant research results are
+claimed.
+\item Curtis Vos: For each section, after performing a manual review and update
+of the initial draft, OpenAI's GPT-5.6 Luna was used for general feedback and for grammatical
+assistance. Each response was read through fully and worked from if deemed applicable, with no
+generated responses being copied, and no generated feedback being used without full review.
 
-\textbf{Verification and responsibility.} The assistant checked cited sources,
-course requirements, document consistency, and PDF rendering. These checks do
-not establish that the proposed system works. Team review, ratification, and
-personal reflections remain pending. Before submission, the team will verify
-the final content and update this disclosure to reflect subsequent revisions
-and any additional AI use. The team remains responsible for the submitted work.
-
-\section*{Appendix B: Reflection}
-These prompts require the team's own account of producing the deliverable.
-They have deliberately not been answered on behalf of absent contributors.
-\begin{enumerate}
-\item \textbf{What went well?} \pending{Describe actual collaboration and
-what helped produce this deliverable.}
-\item \textbf{What pain points arose and how were they resolved?}
-\pending{Supply actual experiences and actions, not hypothetical lessons.}
-\item \textbf{How did the team adjust scope?} \pending{Reflect on the
-scope decision. The planning record establishes a general-agent interface
-with bounded evaluation, but does not establish every member's reasoning
-or agreement.}
 \end{enumerate}
 
+\textbf{The team maintains responsibility for all submitted work.}
+
 \clearpage
-\bibliographystyle{plainnat}
-\bibliography{../../refs/CapstoneSources}
 \end{document}
