@@ -1,10 +1,6 @@
-%% Shared course-document identity. Unknown names are deliberate draft markers.
+%% Shared course-document identity. Names reconciled from both team reviews.
 \newcommand{\progname}{Natural Control}
-\newcommand{\authname}{Group 7\\Aaron Loh\\
-Lucas DeBoer\\
-Kevin Kim\\
-Curtis Vos
-}
+\newcommand{\authname}{\textbf{Group 7}\\Lucas DeBoer\\Kevin Kim\\Aaron Loh\\Curtis Vos}
 
 \usepackage{hyperref}
 \hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue,
