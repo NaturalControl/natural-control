@@ -26,7 +26,7 @@ These remain working drafts for further team rewriting. Future rewriting has not
 
 At Aaron’s request, Codex replaced em dashes in LaTeX sources, rebuilt the Development Plan PDF, and checked the changed pages and both milestone PDFs for remaining em dashes.
 
-Kevin Kim used Codex to fix grammar, punctuation, and awkward wording in the Development Plan.
+Kevin Kim used Codex to fix grammar, punctuation, and awkward wording in the Development Plan. Kevin also used Codex to clarify wording in the Problem Statement's Inputs and Outputs, Goal 5, and stretch goals; personal reflections were unchanged.
 
 ## September 28, 2026: review integration
 
