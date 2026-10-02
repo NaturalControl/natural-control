@@ -1,3 +1,14 @@
+# Scope revision: October 2, 2026
+
+Aaron selected a smaller initial scope while addressing [issue 11](https://github.com/NaturalControl/natural-control/issues/11) and [issue 12](https://github.com/NaturalControl/natural-control/issues/12). This supersedes conflicting scope and POC statements in the historical records below. Team review of the revised documents is pending.
+
+- Initial supported tasks: connected-account tools and general browser interaction. Native Mac application control, general local-file tasks, and macOS accessibility integration are deferred, including from the initial POC.
+- Mac/Chrome/English remains the initial evaluation environment. The product remains a general-purpose agent interface within these tool categories, not scripted website workflows.
+- POC now uses two task classes: email/calendar tools and an unfamiliar website. Existing supervision conditions still apply across the demonstration.
+- Environment inputs include connected-account data, structured browser content/state, screenshots where supported, and action results. The proposed Browser Use integration must be tested for actual context exposure, approval boundaries, cancellation, and authentication.
+- Primary source: https://github.com/browser-use/browser-use (checked October 2). Open-source library/local-browser option is documented; no integration or usability success is claimed.
+- Aaron subsequently authorized committing and pushing these revisions and closing issues 11 and 12. The synchronized team edits retain the two-to-four-participant recruitment target and removal of charter placeholders; no new team agreement is inferred.
+
 # Current review update: September 28, 2026
 
 This update supersedes conflicting pending items in the September 23 record below. Aaron authorized integration and merging of PRs #1 and #2.

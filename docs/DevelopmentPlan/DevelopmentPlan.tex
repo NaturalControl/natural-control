@@ -13,7 +13,8 @@ Table~\ref{tab:dev-revisions} summarizes the revision history.
 \begin{tabularx}{\textwidth}{llX}
 \toprule Date & Contributor & Change\\\midrule
 2026-09-23 & Aaron Loh / AI assistance & Initial review draft based on Aaron's planning interview; team ratification pending.\\
-2026-09-27 & Lucas DeBoer & Reviewed the contents.\\\bottomrule
+2026-09-27 & Lucas DeBoer & Reviewed the contents.\\
+2026-10-02 & Aaron Loh / AI assistance & Draft revisions for issues 11 and 12; browser/account scope.\\\bottomrule
 \end{tabularx}
 \end{minipage}
 \end{center}
@@ -23,7 +24,9 @@ general-purpose, voice-supervised agent interface for blind users. It covers
 team operations, technical choices, the proof of concept (POC), and evaluation.
 It does not promise a universal replacement for screen readers. Initial use
 will be on a Mac, in English, alongside VoiceOver and keyboard access. The companion
-Problem Statement and Goals defines the user outcomes.
+Problem Statement and Goals defines the user outcomes. The initial supported
+scope is browser interaction and connected-account tools; native Mac application
+and general local-file control are deferred.
 
 \section{Confidential Information?}
 No external confidentiality agreements are present for any team members.
@@ -79,7 +82,7 @@ Table~\ref{tab:dev-roles} summarizes proposed workstreams.
 \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.29\textwidth}X}
 \toprule Proposed workstream & Responsibility and assignment\\\midrule
 Voice and accessible client & Conversation controls, keyboard access, VoiceOver compatibility. Owner: Lucas DeBoer. Cross-reviewer: Curtis Vos.\\
-Agent and tool integration & Hermes adapter, account/browser tools, local execution control. Owner: Aaron Loh. Cross-reviewer: Kevin Kim.\\
+Agent and tool integration & Hermes adapter, account/browser tools, execution control. Owner: Aaron Loh. Cross-reviewer: Kevin Kim.\\
 Deployment and reliability & Configuration, credentials, CI, reconnection, observability. Owner: Kevin Kim. Cross-reviewer: Aaron Loh.\\
 Evaluation and quality & Recruitment coordination, task protocol, outcome measurement, accessibility checks. Owner: Curtis Vos. Cross-reviewer: Lucas DeBoer.\\
 \bottomrule
@@ -172,7 +175,7 @@ a technical demonstration, separate from the later participant evaluation.
 The central risk is whether a visually impaired user can understand and control a running
 general-purpose agent through voice without visually monitoring it. Individual
 speech and agent components do not establish that their integration works.
-The POC will test the supervision interface across three task classes, rather
+The POC will test the supervision interface across two task classes, rather
 than implement a set of website-specific scripts:
 \begin{enumerate}
 \item \textbf{Email/calendar tools:} use synthetic correspondence to prepare a
@@ -181,9 +184,6 @@ sending or creating the event.
 \item \textbf{An unfamiliar website:} locate and compare information through
 general browser tools, report a meaningful choice, and incorporate a correction.
 The site and task are selected before the trial, without coding a dedicated workflow.
-\item \textbf{A local Mac task:} locate and open a test file or interact with a
-supported application; prepare a derived file, confirming consequential changes
-such as overwriting an existing file. Native control support is an experimental dependency.
 \end{enumerate}
 
 The demonstration uses one short task from each class. Across these tasks,
@@ -212,7 +212,7 @@ The POC will inject a misunderstanding, interrupt speech, request a stop during 
 tool operation, and disconnect while work is active. Logs correlate task, action,
 approval, cancellation, and connection events without retaining sensitive payloads.
 The team must verify cancellation through the adapter and downstream worker;
-a browser or native action may have different cancellation behavior.
+account and browser actions may have different cancellation behavior.
 
 \subsection{Later evaluation and provisional targets}\label{sec:evaluation}
 The following participant study and performance targets guide subsequent
@@ -255,7 +255,7 @@ Table~\ref{tab:dev-risks} summarizes POC uncertainties and failure consequences.
 \toprule Uncertainty & Evidence needed and consequence if unresolved\\\midrule
 Harness supervision & Verify streamed status, approvals, steering, cancellation, and reconnection on a pinned Hermes version. If unavailable, revisit the adapter/harness before promising supervision.\\
 Tool cancellation & Test slow and in-flight account/browser operations. If the outcome is unknown, expose that state and block retries; do not claim confirmed stop.\\
-Native Mac control & Prove permissions, actionable targets, and result verification. If unsuccessful, defer native control and retain general browser/account tasks.\\
+Browser context & Test structured page information and screenshots on unfamiliar sites. Missing labels or ambiguous visuals may prevent reliable action; report the limitation and request clarification rather than assume success.\\
 Voice and VoiceOver & Measure latency, intelligibility, and competing audio with keyboard alternatives. If remote calls fail, retain local voice.\\
 Remote continuity & Test network loss, pending approvals, and duplicate prevention. Defer telephone interaction if it cannot preserve control.\\
 Recruitment & Confirm access early. Without participants, report technical feasibility only and disclose the missing usability evidence.\\\bottomrule
@@ -267,7 +267,7 @@ Recruitment & Confirm access early. Without participants, report technical feasi
 The proposed architecture is:
 \begin{quote}
 Accessible TypeScript/React web client $\rightarrow$ LiveKit/Python integration
-$\rightarrow$ Hermes $\rightarrow$ account tools, Browser Use, and local Mac tools.
+$\rightarrow$ Hermes $\rightarrow$ account tools and Browser Use.
 \end{quote}
 The team will implement the accessible task/decision presentation and supervision
 adapter, reusing existing speech, agent, and tool implementations. One supported
@@ -295,11 +295,28 @@ APIs can offer clearer structured outcomes than visual clicking; browser tools
 remain necessary where suitable APIs are unavailable. Account connectors must
 be selected and verified individually, including scopes and credential handling.
 
-\textbf{Local Mac tools} require an adapter with explicit permissions and
-observable action outcomes. Screenshot/accessibility-based drivers, including
-approaches used by OpenClicky, are candidates for investigation. No native driver
-has been selected or validated. Broad shell access is not a substitute for a
-verified consequential-action boundary.
+\textbf{Environment inputs and browser perception.} Account tools provide
+structured service data and action results. For websites, the proposed Browser
+Use integration will obtain structured page information (such as text, controls,
+and document object model (DOM) state) and screenshots where supported by the
+selected integration. Structured information helps identify controls and values;
+screenshots can provide visual context when structure is insufficient. Neither
+source guarantees correct interpretation of an arbitrary website.
+
+The Browser Use library is open source under the MIT license and can run with a
+local browser; model inference and optional hosted services have separate costs
+\citep{BrowserUseSource}. The POC must verify which context the Hermes adapter
+actually exposes, how it reports action results, and whether it permits approval
+before consequential actions and cancellation during delegated browser work.
+An instruction to ask for approval is not evidence of an enforced action boundary.
+Relevant progress, choices, and uncertainty will be spoken to the user; receiving
+page context does not require reading every page element aloud.
+
+\textbf{Deferred native control.} Direct control of native Mac applications,
+general local-file tasks, and macOS accessibility API integration are outside the
+initial supported scope and POC. They may be investigated later, with separate
+permission, perception, and action-verification tests. Using a local browser does
+not imply permission to control the rest of the computer.
 
 \subsection{Voice, client, and deployment}
 \textbf{LiveKit with Python} is proposed for audio sessions and tool integration
@@ -329,8 +346,9 @@ alternative for mandatory approval rules. Promotional pricing is not a basis
 for the project budget.
 
 Deployment remains hybrid: a local Mac, hosted services, or their combination.
-Native tasks require an online local component with user-granted permissions.
-Hosting the voice/agent services does not remotely confer access to a Mac.
+A locally controlled browser requires an online local component; a hosted browser
+is an alternative. Hosting the voice/agent services does not remotely confer
+access to the user's Mac or existing signed-in browser sessions.
 The default topology, secret storage, provider retention, and network requirements
 will be documented after a working configuration is demonstrated. A second voice
 channel connecting telephone and on-Mac interaction is the leading stretch goal.
@@ -383,7 +401,9 @@ assisted with drafting and revising text throughout this document, organizing
 references, and LaTeX/PDF formatting. Aaron made the judgment calls and reviewed
 the work. During integration, Codex also helped reconcile both reviews, clarify
 evaluation wording, and check formatting. No participant research results are
-claimed.
+claimed. Codex also assisted with the October 2 revisions addressing peer-review
+issues 11 and 12 and Aaron's browser/account scope decision. Review of these
+revisions by another team member is pending.
 
 Kevin Kim used Codex for grammar, punctuation, and wording revisions. His
 exact model and reasoning settings were not specified in his contribution.
