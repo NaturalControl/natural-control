@@ -31,3 +31,11 @@ Kevin Kim used Codex to fix grammar, punctuation, and awkward wording in the Dev
 ## September 28, 2026: review integration
 
 At Aaron's request, Codex reviewed and integrated PRs #1 and #2, reconciled the author list, preserved the upstream copyright, clarified POC versus later evaluation, made goal measurements more concrete, retained approvals for saved workflows, separated contributor AI disclosures, and corrected stale status text. Team-authored reflections were preserved apart from spelling/grammar corrections. Charter ratification is not inferred from merge authorization. The updated PDFs are compiled and visually checked before merging.
+
+## October 2, 2026: peer-review issues 11 and 12
+
+Aaron chose browser interaction and connected-account tools as the smaller initial scope and requested local document fixes without commits. Codex assisted with wording, consistent scope/POC revisions, environment-input descriptions, browser-perception tradeoffs, the Browser Use source reference, and PDF checks. Earlier team reflections remain unchanged. This entry does not claim implementation testing or approval by other team members. Human review of the revisions is pending.
+
+Verification: both PDFs compiled with Tectonic. All 5 Problem Statement pages and 13 Development Plan pages were rendered and visually inspected. Development Plan citations resolve after reruns; existing caption-package hypcap warnings remain. No overfull boxes were reported in its build log. Source diff checks passed; no em dashes or stale three-category/native-task POC commitments remain in either source. No runtime integration tests, commits, pushes, issue comments, or issue closures were performed.
+
+Aaron subsequently authorized publication and closure of issues 11 and 12. Codex synchronized newer team changes, preserved the two-to-four-participant target and wording revisions, and resolved the overlapping stretch-goal wording before rebuilding the PDFs. No additional human review is claimed.
