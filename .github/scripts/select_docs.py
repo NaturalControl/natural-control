@@ -24,7 +24,7 @@ DOC_SUFFIXES = (".tex", ".md")
 # Instructor-owned prose and things this pipeline never builds from.  Changes
 # to these must not trigger the full-rebuild fallback.
 IGNORED_BASENAMES = {"README.md", "README.txt", ".gitignore"}
-IGNORED_PREFIXES = ("pdfs/", "docs/SRS-Meyer/", ".github/")
+IGNORED_PREFIXES = ("pdfs/", ".github/")
 
 # Changing how documents are built can change every document, even though no
 # document source changed: the package list decides which LaTeX packages are
@@ -42,8 +42,6 @@ def is_document(rel_path):
     if not rel_path.endswith(DOC_SUFFIXES):
         return False
     if base in IGNORED_BASENAMES or base.startswith("Expectations"):
-        return False
-    if rel_path.startswith("docs/SRS-Meyer/"):
         return False
     return True
 
@@ -64,7 +62,7 @@ def discover_documents(root):
     by_stem = {}
     docs_dir = os.path.join(root, "docs")
     for dirpath, dirnames, filenames in os.walk(docs_dir):
-        dirnames[:] = [d for d in dirnames if d != "SRS-Meyer"]
+        dirnames[:] = [d for d in dirnames]
         for name in filenames:
             rel = os.path.relpath(os.path.join(dirpath, name), root)
             if not is_document(rel):
