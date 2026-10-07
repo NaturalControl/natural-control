@@ -18,10 +18,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # Create a token for the GitHub App we created. The app is on the
+      # branch protection bypass list, so pushes made with this token can go
+      # straight to main. This allows us to keep branch protections and the 
+      # auto-generation of pdfs. Fall back is the regular token 
+      - name: Create app token
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: Checkout repo
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
+          # CHANGED: use the app token when we have one, otherwise the default.
+          token: ${{ steps.app-token.outputs.token || github.token }}
       - name: Restore PDF cache
         uses: actions/cache@v5
         with:
