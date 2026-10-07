@@ -164,7 +164,7 @@ jobs:
           mkdir -p pdfs
           rsync -av --delete build-pdf/ pdfs/
       - name: Commit PDFs to repo
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !github.ref_protected
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
