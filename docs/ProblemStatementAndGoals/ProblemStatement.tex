@@ -17,6 +17,7 @@ Date & Developer(s) & Change \\
 2026-09-23 & Aaron & AI-assisted draft. \\
 \midrule
 2026-09-28 & Curtis & Reviewed draft for alignment with rubric and expectations. \\
+2026-10-02 & Aaron / AI assistance & Draft revisions for peer-review issues 11 and 12; narrow initial scope. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -49,7 +50,13 @@ Spoken input includes goals, preferences, clarification answers,
 corrections, approvals, and stop requests. Users who are able may also supply
 keyboard or text input for assistance.
 
-The intended outputs are actions on permitted services or the computer,
+The system also receives relevant digital-environment context: connected-account
+data, browser page content and state, and the results of previous tool actions.
+Available context depends on the connected tools and permissions granted by
+the user. Browser context may include structured page information and screenshots;
+it is not limited to information supplied through the user's voice.
+
+The intended outputs are actions on permitted connected accounts and websites,
 concise spoken progress and results, requests for clarification or
 approval, and an accessible, reviewable task history. Completion feedback
 must distinguish verified results, partial work, and unresolved failures.
@@ -69,8 +76,10 @@ for other reasons, or may simply have a desire not to rely on their screen.
 
 \subsection{Environment}
 The expected environment is a Mac computer running macOS with Google Chrome,
-a microphone, audio output, and internet access. Some tasks may also require access to the local Mac
-environment. Users may also have existing accessibility tools like VoiceOver and keyboard navigation enabled.
+a microphone, audio output, and internet access. Initial supported tasks are
+limited to browser interaction and connected-account tools. Native Mac application
+and general local-file control are deferred. Users may also have existing
+accessibility tools like VoiceOver and keyboard navigation enabled.
 
 \section{Goals}
 The Development Plan, Section 9.3, specifies provisional targets and the
@@ -79,7 +88,8 @@ not achieved results.
 
 \begin{enumerate}[label=G\arabic*.,leftmargin=*]
 \item \textbf{Complete complex digital tasks independently.}
-Users should be able to complete common, multi-step tasks across websites and applications without
+Within the initial browser and connected-account scope, users should be able to
+complete common, multi-step tasks without
 relying on visual feedback or sighted assistance. Success can be measured by task completion rate
 and the amount of sighted assistance that is required.
 
@@ -109,7 +119,8 @@ the setup time before the program can be used, as well as how many times the set
 \section{Stretch Goals}
 \begin{enumerate}[label=SG\arabic*.,leftmargin=*]
 \item \textbf{Support additional applications and operating systems.}
-If time permits, it would be beneficial to extend the implementation to multiple browsers and operating systems to make the system accessible to more users.
+If time permits, extend support to native applications, local-file tasks,
+additional browsers, and operating systems to make the system accessible to more users.
 
 \item \textbf{Support a second voice channel.}
 A useful extension is to allow users to access the same task context through their computer as well as their cell phone. This extension
@@ -172,7 +183,9 @@ assisted with drafting and revising text throughout this document, organizing
 references, and LaTeX/PDF formatting. Aaron made the judgment calls and reviewed
 the work. During integration, Codex also helped reconcile team revisions,
 clarify measurements, and check the PDFs. No participant research results are
-claimed.
+claimed. Codex also assisted with the October 2 revisions addressing peer-review
+issues 11 and 12 and Aaron's decision to narrow the initial scope to browser and
+account tasks. Review of these revisions by another team member is pending.
 \item Curtis Vos: For each section, after performing a manual review and update
 of the initial draft, OpenAI's GPT-5.6 Luna was used for general feedback and for grammatical
 assistance. Each response was read through fully and worked from if deemed applicable, with no
