@@ -136,4 +136,4 @@ Timing values are named constants, set after POC measurements (see the SRS const
 - Check consistency with the SRS once drafted: every FR.Sa/NFR.Sa should appear in, or link from, the SRS.
 - Diagram and LaTeX FMEA table formatting. AlgoCatan's team said the multi-page table took as long to format as to write, so start this early.
 - Reflection answers (Appendix B) must come from each member's own experience.
-- AI disclosure: Aaron used Claude Code (Claude Opus 5.5) to question decisions, research Hermes, LiveKit and Browser Use documentation, and draft these answers. Aaron made the decisions; the team reviews and rewrites.
+- AI disclosure: Aaron used Claude Code (Claude Opus 5.5) to work through the questions, summarize the Hermes, LiveKit and Browser Use documentation, and translate his decisions into these written answers. Aaron made and reviewed every decision; the team reviews and rewrites.
