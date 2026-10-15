@@ -27,3 +27,8 @@ The briefs are working notes, not submitted deliverables. Discuss and validate a
 - [TA submission guidance](ta-meeting-2026-09-23.md)
 - [Verification record](verification-2026-09-23.md)
 - [MIT proposal](license-proposal.md)
+
+## Hazard Analysis (due October 19)
+
+- [Working draft answers](hazard-analysis-draft.md)
+- [Glossary](../../GLOSSARY.md)
