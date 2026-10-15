@@ -83,6 +83,7 @@ We do **not** assume that speech recognition, the AI model, websites, or externa
 | H5-a | Action gate | A consequential action slips through without approval | Unwanted action | Action not recognized as consequential (e.g. a browser click that submits a form); new tool not classified | Default-deny: anything not known to be read-only requires approval; if browser writes can't be intercepted reliably, make the browser read-only | FR.Sa.13 |
 | H5-b | Action gate | A stale approval is reused | Action runs with details the user never approved | Details changed after approval (time, recipient) | Bind each approval to its exact details; approvals are single-use; any change requires new approval | FR.Sa.14 |
 | H5-c | Action gate | An approval request expires or is withdrawn without a clear result | User unsure whether the action happened | Timeout; disconnect; request superseded | Tell the user explicitly that the action did not happen and what is still pending | FR.Sa.15 |
+| H5-d | Action gate | An irreversible delete is approved by mistake | Email or event permanently lost | Misheard approval; wrong item matched; user assumes the action can be undone | For deletes, read back identifying details (sender, subject, date, or event title and time) and say it cannot be undone; use recoverable deletion (trash) where the service supports it | FR.Sa.19 |
 | H6-a | Browser Use | Acts on the wrong page element | Wrong item chosen or wrong field filled | Poor labels; unusual layout; page changed after reading | Re-check the target against the approved details immediately before acting; verify the result afterward | FR.Sa.10, FR.Sa.14 |
 | H6-b | Browser Use | Follows instructions injected by a webpage | Unwanted action or private data sent elsewhere | Page or email text written to manipulate agents | Treat page and email content as data, never as commands; consequential actions must trace to the user's request; tell the user when content tries to give instructions | FR.Sa.16 |
 | H7-a | Account tools | Access is broader than needed | Any other failure can do more damage | Requesting broad OAuth permissions for convenience | Request the narrowest permissions each tool needs; keep tokens out of the repository and logs | FR.Sa.17 |
@@ -110,27 +111,28 @@ We do **not** assume that speech recognition, the AI model, websites, or externa
 - **FR.Sa.16:** The system shall treat webpage and email content as data, and shall only perform consequential actions that trace to the user's request. (H6-b)
 - **FR.Sa.17:** The system shall request only the account permissions each tool needs, and shall keep credentials out of source control and logs. (H7-a)
 - **FR.Sa.18:** The system shall check the real account state before retrying an action whose outcome is unknown, and shall ask the user if it remains unknown. (H7-b)
+- **FR.Sa.19:** For delete actions, the system shall read back the item's identifying details, state that the action cannot be undone, and use recoverable deletion (such as moving to trash) where the service supports it. (H5-d)
 
 ### Non-functional
 
-Numbers are proposals; NFR.Sa.1 matches the Development Plan's existing target.
+Timing values are named constants, set after POC measurements (see the SRS constants table), per instructor guidance not to fix numbers before building.
 
-- **NFR.Sa.1:** The system shall audibly acknowledge a stop request within 2 seconds of the end of the utterance or key press. (H2-b)
-- **NFR.Sa.2:** The system shall notify the user of a lost connection within 5 seconds, by sound if speech is unavailable. (H3-b)
-- **NFR.Sa.3:** While a task is running, the system shall give a spoken status update at least every 20 seconds. (H4-c)
+- **NFR.Sa.1:** The system shall audibly acknowledge a stop request within `STOP_ACK_TIME` of the end of the utterance or key press. (H2-b)
+- **NFR.Sa.2:** The system shall notify the user of a lost connection within `CONNECTION_NOTICE_TIME`, by sound if speech is unavailable. (H3-b)
+- **NFR.Sa.3:** While a task is running, the system shall give a spoken status update after `IDLE_PROMPT_TIME` without spoken progress. (H4-c)
 
 ## 7. Roadmap
 
 **For the POC (November):** the safeguards the POC is meant to prove: FR.Sa.3, FR.Sa.4, FR.Sa.5, FR.Sa.13, FR.Sa.14, NFR.Sa.1. FR.Sa.13 includes the test of whether browser actions can be intercepted.
 
-**Before Rev 0 / the participant evaluation:** FR.Sa.1, 2, 6, 7, 8, 9, 10, 12, 15, 16, 17, 18, NFR.Sa.2. These matter as soon as real participants use real-looking accounts.
+**Before Rev 0 / the participant evaluation:** FR.Sa.1, 2, 6, 7, 8, 9, 10, 12, 15, 16, 17, 18, 19, NFR.Sa.2. These matter as soon as real participants use real-looking accounts.
 
 **Delayed (stretch):** FR.Sa.11 and NFR.Sa.3 tuning. Basic updates exist earlier, but tuned limits need usability evidence. (Team to confirm.)
 
 ## Open for the team
 
-- Cut or merge rows. The table has 18 hazards; AlgoCatan had 15.
-- Confirm proposed numbers (5 s connection notice, 20 s status interval).
+- Cut or merge rows. The table has 19 hazards; AlgoCatan had 15.
+- Timing constants get values after POC measurements.
 - Check consistency with the SRS once drafted: every FR.Sa/NFR.Sa should appear in, or link from, the SRS.
 - Diagram and LaTeX FMEA table formatting. AlgoCatan's team said the multi-page table took as long to format as to write, so start this early.
 - Reflection answers (Appendix B) must come from each member's own experience.
