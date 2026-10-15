@@ -12,9 +12,13 @@ _Avoid_: Client, operator, speaker
 A person who completes the initial assisted setup (connecting accounts, granting permissions) for the user.
 _Avoid_: Admin, caregiver
 
+**Session**:
+The period during which the user is talking with the system, started from the client's start control and ended by the user or by disconnection. A session can contain several tasks.
+_Avoid_: Call, conversation, voice session
+
 **Task**:
 One job the user asks for, such as "add this meetup to my calendar", from request until it is done, failed, or stopped.
-_Avoid_: Session, job, run
+_Avoid_: Job, run
 
 **Consequential action**:
 Any action that changes something outside our system: sending, submitting, purchasing, posting, or creating, editing, or deleting an email or event. Reading, navigating, searching, and drafting are not consequential actions.
