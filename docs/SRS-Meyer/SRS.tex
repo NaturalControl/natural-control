@@ -12,13 +12,16 @@
 \usepackage{minitoc}	% For table of content in chapters
 \usepackage{listings}
 \usepackage{underscore}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{float}
 \usepackage[bookmarks=true]{hyperref}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \hypersetup{
     bookmarks=false,    % show bookmarks bar?
     pdftitle={Software Requirement Specification},    % title
-    pdfauthor={Jean-Philippe Eisenbarth},                     % author
+    pdfauthor={Group 7},                     % author
     pdfsubject={TeX and LaTeX},                        % subject of the document
     pdfkeywords={TeX, LaTeX, graphics, images}, % list of keywords
     colorlinks=true,       % false: boxed links; true: colored links
@@ -28,7 +31,7 @@
     urlcolor=purple,        % color of external links
     linktoc=page            % only page is linked
 }%
-\def\myversion{1.24.8 }
+\def\myversion{0.1 }
 \date{}
 %\title{%
 
@@ -65,21 +68,20 @@
         \vspace{1.9cm}
         for\\
         \vspace{1.9cm}
-        $<$Project$>$\\
+        Natural Control\\
         \vspace{1.9cm}
-        \LARGE{Version \myversion approved}\\
+        \LARGE{Version \myversion (draft)}\\
         \vspace{1.9cm}
-        Prepared by $<$author$>$\\
+        Prepared by Group 7\\
+        \Large{Lucas DeBoer, Kevin Kim, Aaron Loh, Curtis Vos}\\
         \vspace{1.9cm}
-        $<$Organization$>$\\
+        Group 7, SFWRENG 4G06, McMaster University\\
         \vspace{1.9cm}
         \today\\
     \end{bfseries}
 \end{flushright}
 
-%===============================================================
 \chapter*{Revision History}
-%===============================================================
 
 \begin{center}
     \begin{tabular}{|c|c|c|c|}
@@ -87,181 +89,481 @@
 	    Name        & Date          & Reason For Changes & Version\\
         \hline
         \hline
-	    J.-M. Bruel & 2021-01-22    & First Draft & 1.0\\
-        \hline
-	    J.-M. Bruel & 2023-01-28    & Check after publication of the Handbook & 1.23\\
-        \hline
-	    J.-M. Bruel & 2023-06-12    & Add reqs automated numbering & 1.23.1 \\
-        \hline
-	    J.-M. Bruel & 2023-08-25    & Add Minimum Requirements Outcome Principle & 1.23.8 \\
-        \hline
-	    J.-M. Bruel & 2023-12-22    & Remove section numbers & 1.23.12 \\
-        \hline
-	    J.-M. Bruel & 2024-08-01    & Add warning about non empty chapters  & \myversion \\
+	    Aaron Loh & 2026-10-14    & First draft from team planning decisions & 0.1\\
         \hline
     \end{tabular}
 \end{center}
 
-This document follows the requirements documentation structure presented in the \href{ https://link.springer.com/content/pdf/10.1007/978-3-031-06739-6.pdf}{Handbook of requirements and business analysis}, by Bertrand Meyer.
+This document follows the requirements documentation structure presented in the \href{ https://link.springer.com/content/pdf/10.1007/978-3-031-06739-6.pdf}{Handbook of requirements and business analysis}, by Bertrand Meyer, with the changes listed in the first chapter.
 
-%===============================================================
+\comment{Working draft. Red comment boxes mark decisions and writing the team still owns. Goals G1 to G5 refer to the Problem Statement goals.}
+
 \dominitoc% Initialization
 \tableofcontents
 \adjustmtc
-%===============================================================
 
-%===============================================================
+\chapter*{Changes from the Meyer template}
+\addcontentsline{toc}{chapter}{Changes from the Meyer template}
+
+\begin{itemize}
+    \item Glossary moved to the front, so every term is defined before first use (rubric Level 4).
+    \item Added G.8 User profiles, to describe distinct user groups and their needs.
+    \item Added E.7 Standards and legal/regulatory factors, plus environment requirements.
+    \item S.2 split into one subsection per component, with safety requirements ported from the Hazard Analysis.
+    \item Added S.4 Normal operation, S.5 Undesired event handling, and S.9 Formalization (task state machine).
+    \item Added requirement dependencies (traceability) and References.
+\end{itemize}
+
+\chapter*{Glossary}
+\addcontentsline{toc}{chapter}{Glossary}
+
+Project terms (from GLOSSARY.md):
+
+\begin{itemize}
+    \item User: the person who owns the connected accounts and gives commands. Other voices in the room are not users.
+    \item Setup helper: a person who completes the initial assisted setup for the user.
+    \item Session: the period during which the user is talking with the system, started from the client's start control and ended by the user or by disconnection. A session can contain several tasks.
+    \item Task: one job the user asks for, from request until it is done, failed, or stopped.
+    \item Consequential action: any action that changes something outside the system: sending, submitting, purchasing, posting, or creating, editing, or deleting an email or event. Reading, navigating, searching, and drafting are not consequential.
+    \item Approval: the user's explicit consent to one consequential action with its specific details, used once and void if any detail changes.
+    \item Barge-in: the user speaking while the system is speaking; it stops the speech only.
+    \item Stop request: an explicit ``stop working'' command (spoken or by key) to end a task's execution.
+    \item Stop acknowledged / stop confirmed: the system has received a stop request / has verified that no further actions will run.
+    \item Verified outcome: a result checked against the real account or page state. Unknown outcome: a consequential action whose result cannot be determined.
+\end{itemize}
+
+Technical terms: LiveKit, Hermes, Browser Use, MCP (Model Context Protocol), OAuth, VoiceOver, STT (speech-to-text), TTS (text-to-speech), LLM (large language model), POC (proof of concept).
+
+\comment{Add a one-line definition and an online reference link for each technical term, as AlgoCatan did.}
+
 \addcontentsline{toc}{chapter}{Goals book}
 \chapter*{Goals}
-
-\minitoc% Creating an actual minitoc
-%===============================================================
-
-\comment{Goals are "needs of the target organization, which the system will address". While the development team is the principal user of the other books, the Goals book addresses a wider audience: essentially, all stakeholders.}
+\minitoc
 
 \nsection{G.1 Context and overall objective}
-\comment{High-level view of the project: organizational context and reason for building a system.}
-%---------------------------------
-\notEmpty{}
-%---------------------------------
 
-\begin{goal}\label{goal:first}
-This is a goal example. If you need explicit (and automatic) numbering, you can use the definitions in the \texttt{.tex} template.
-Is is refined by \ref{req:memo}
-\end{goal}
-
-\begin{req}\label{req:cross}
-This is a requirement example. It illustrates how numbering is continuous and cross-types (if this is what you need).
-\end{req}
+Many websites and applications communicate information, choices, and state changes visually. Blind users can face barriers completing multi-step digital tasks and knowing whether those tasks succeeded. Natural Control is a voice interface that lets a blind user delegate tasks in a web browser and in Gmail and Google Calendar to an AI agent, while staying informed and in control.
 
 \nsection{G.2 Current situation}
-\comment{Current state of processes to be addressed by the project and the resulting system.}
 
-\begin{req}\label{req:memo}
-This is a requirement example.
-It refines \ref{goal:first}
-\end{req}
+Today, blind users complete these tasks with screen readers such as VoiceOver, navigating each interface element by element, or with help from a sighted person. Existing AI computer-use agents assume the user can watch the screen to monitor and correct them.
+
+\comment{Add findings from the CNIB interview (Aaron) and any participant conversations: which tasks people get stuck on, which tools they use, and where those tools break down.}
 
 \nsection{G.3 Expected benefits}
-\comment{New processes, or improvement to existing processes, made possible by the projectâ€™s results.}
-%---------------------------------
-\notEmpty{}
-%---------------------------------
+
+\begin{itemize}
+    \item Delegate, don't navigate: the user states an outcome (``reply to Alex'') instead of navigating the interface step by step. (G1)
+    \item Control without sight: the user can understand, approve, correct, and stop the agent without seeing the screen. (G2, G4)
+    \item Trustworthy results: results are checked against the real account or page before being reported, so the user does not need sighted help to confirm what happened. (G3)
+\end{itemize}
+
+\comment{Support each benefit with evidence (interview findings, prior research).}
 
 \nsection{G.4 Functionality overview}
-\comment{Overview of the functions (behavior) of the system. Principal properties only (details are in the System book).}
+
+The user starts a session from the web client and speaks a task. The system clarifies missing details, carries out read-only steps on its own, asks for approval before every consequential action, reports progress and verified results by voice, and accepts corrections and stop requests at any time. A task history records what happened.
 
 \nsection{G.5 High-level usage scenarios}
-\comment{Fundamental usage paths through the system.}
+
+\begin{itemize}
+    \item Reply to an email.
+    \item Add an event found on a webpage to the calendar.
+    \item Compare information on an unfamiliar website.
+    \item Correct or stop a running task.
+    \item Reconnect after a dropped connection without duplicating an action.
+\end{itemize}
+
+\comment{Draw a use case or activity diagram for these scenarios.}
 
 \nsection{G.6 Limitations and exclusions}
-\comment{Aspects that the system need not address.}
+
+\begin{itemize}
+    \item Native Mac application control and general local-file tasks.
+    \item Platforms other than Mac with Chrome; languages other than English.
+    \item Phone calling and saved workflows (stretch goals).
+    \item Fully local model inference; the system uses cloud AI and speech providers.
+\end{itemize}
 
 \nsection{G.7 Stakeholders and requirements sources}
-\comment{Groups of people who can affect the project or be affected by it, and other places to consider for information about the project and system.}
-%---------------------------------
-\notEmpty{}
-%---------------------------------
 
-%===============================================================
-\chapter*{Environment}
+\begin{itemize}
+    \item Primary: blind and visually impaired people who want to complete digital tasks without visual feedback. Initial evaluation: blind Mac users with screen-reader experience.
+    \item Secondary: other people who want nonvisual interaction.
+    \item Setup helper: a person who completes the assisted setup.
+    \item Requirements sources: the Problem Statement, Development Plan, and Hazard Analysis; TA and instructor guidance; prior research (WebAIM survey, Morae); the planned CNIB interview and participant sessions.
+\end{itemize}
+
+\comment{Record the CNIB interview date once done.}
+
+\nsection{G.8 User profiles}
+
+\begin{itemize}
+    \item Experienced screen-reader user: fluent with VoiceOver or JAWS and keyboard navigation; wants speed on multi-step tasks and keeps their screen reader for everything else. Primary evaluation group.
+    \item Less experienced or recently blind user: limited screen-reader skill; benefits most from delegation and clear spoken confirmation.
+    \item Sighted user wanting nonvisual interaction: can see the screen but prefers or needs voice (busy hands, away from the screen); can verify visually, so has lower risk.
+    \item Setup helper: comfortable with computers; connects accounts and grants permissions once, then is not needed for daily use.
+\end{itemize}
+
+\comment{Validate these profiles with the CNIB interview; drop or adjust any that do not hold up.}
+
 \addcontentsline{toc}{chapter}{Environment book}
-\minitoc% Creating an actual minitoc
-%===============================================================
-
-\comment{The Environment book describes the application domain and external context, physical or virtual (or a mix), in which the system will operate.}
+\chapter*{Environment}
+\minitoc
 
 \nsection{E.1 Glossary}
-\comment{Clear and precise definitions of all the vocabulary specific to the application domain, including technical terms, words from ordinary language used in a special meaning, and acronyms.
-This chapter should not be empty!}
+
+See the Glossary at the front of this document.
 
 \nsection{E.2 Components}
-\comment{List of elements of the environment that may affect or be affected by the system and project. Includes other systems to which the system must be interfaced.}
+
+\begin{itemize}
+    \item Websites the user asks about (unmodified, not under our control).
+    \item Google services: Gmail and Google Calendar APIs.
+    \item LiveKit (real-time audio and speech pipeline).
+    \item AI model and speech providers.
+    \item The Hermes agent and Browser Use (reused open-source components).
+    \item VoiceOver and the Mac's microphone and speakers.
+    \item Network access.
+\end{itemize}
 
 \nsection{E.3 Constraints}
-\comment{Obligations and limits imposed on the project and system by the environment.}
-%---------------------------------
-\notEmpty{}
-%---------------------------------
 
+\begin{itemize}
+    \item Mac with Chrome, English, as decided in the Development Plan.
+    \item Team budget ceiling of CAD 500.
+    \item Course schedule: POC demonstration November 23 to December 3; final demonstration and EXPO in April.
+    \item Gmail access uses restricted Google OAuth permissions; an unverified app is limited to a small number of registered test users.
+    \item Provider terms of use and data retention policies apply to anything sent to them.
+\end{itemize}
+
+\comment{Verify Google's current limits for unverified apps (number of test users, token expiry) before final submission.}
 
 \nsection{E.4 Assumptions}
-\comment{Properties of the environment that may be assumed, with the goal of facilitating the project and simplifying the system.}
+
+\begin{itemize}
+    \item A setup helper completed setup correctly (accounts connected, permissions granted).
+    \item Only the user gives commands; other voices are noise.
+    \item Connected accounts belong to the user; development and evaluation use test accounts.
+\end{itemize}
+
+Speech recognition, the AI model, websites, and external services are not assumed to work correctly; their failures are covered by the Hazard Analysis and S.5.
 
 \nsection{E.5 Effects}
-\comment{Elements and properties of the environment that the system will affect.}
+
+\begin{itemize}
+    \item Emails are searched, read, drafted, sent, replied to, archived, labelled, or deleted.
+    \item Calendar events are read, created, updated, or deleted.
+    \item Website forms may be filled and submitted, subject to approval.
+    \item Data is sent to AI and speech providers.
+\end{itemize}
 
 \nsection{E.6 Invariants}
-\comment{Properties of the environment that the systemâ€™s operation must preserve.}
 
-%===============================================================
-\chapter*{System}
+\begin{itemize}
+    \item No consequential action changes the user's accounts or websites without an approval of its exact details.
+    \item The user's existing accessibility tools (VoiceOver, keyboard navigation) keep working while the system runs.
+    \item Credentials are never written to source control, logs, or task history.
+\end{itemize}
+
+\nsection{E.7 Standards and legal/regulatory factors}
+
+\begin{itemize}
+    \item WCAG 2.2 Level AA: accessibility standard for the web client.
+    \item AODA (Accessibility for Ontarians with Disabilities Act): Ontario accessibility law that references WCAG.
+    \item PIPEDA: Canadian privacy law for personal information such as email and calendar contents.
+    \item Google API Services User Data Policy: limits how Gmail and Calendar data may be used and stored.
+    \item Open-source licenses: our code is MIT; reused components keep their own licenses and notices.
+    \item Coding standards: PEP 8 for Python; strict TypeScript with a shared linter for the client.
+\end{itemize}
+
+\comment{Confirm which of these apply to a student prototype and cite each one.}
+
+\subsection*{Environment requirements}
+\addcontentsline{toc}{subsection}{Environment requirements}
+
+\begin{itemize}
+    \item NFR.E.1: The system shall run on macOS with Google Chrome.
+    \item NFR.E.2: The web client shall meet WCAG 2.2 Level AA.
+    \item NFR.E.3: The system shall use Gmail and Calendar data only to perform the user's requested tasks, consistent with the Google API Services User Data Policy.
+    \item NFR.E.4: Python code shall pass the team's PEP 8 linter checks; TypeScript code shall pass strict type checks and the shared linter.
+\end{itemize}
+
 \addcontentsline{toc}{chapter}{System book}
-\minitoc% Creating an actual minitoc
-%===============================================================
-
-\comment{The System book refines the Goal one by focusing on more detailed requirements about the system under development, mainly its constituents, behaviors and properties.}
+\chapter*{System}
+\minitoc
 
 \nsection{S.1 Components}
-\comment{Overall structure expressed by the list of major software and, if applicable, hardware parts.}
-%---------------------------------
-\notEmpty{}
-%---------------------------------
+
+Seven components, matching the Hazard Analysis: accessible client (built); voice interface (LiveKit plus our voice agent); task bridge (built); Hermes agent (reused); action gate (built); Browser Use (reused); account tools (built or adapted MCP server for Gmail and Calendar).
+
+\comment{Insert the component diagram.}
 
 \nsection{S.2 Functionality}
-\comment{One section, S.2.n, for each of the components identified in S.2, describing the corresponding behaviors (functional and non-functional properties).}
-%---------------------------------
-\notEmpty{}
-%---------------------------------
+
+Each requirement lists the goals (G1 to G5) or Hazard Analysis requirements (FR.Sa) it traces to.
+
+\subsection*{S.2.1 Voice interface}
+\addcontentsline{toc}{subsection}{S.2.1 Voice interface}
+
+\begin{itemize}
+    \item FR1: The system shall accept spoken input during a session. (G1)
+    \item FR2: When the user speaks while the system is speaking (barge-in), the system shall stop speaking; the task continues unless the input changes or cancels it. (G2)
+    \item FR3: On a bare ``stop'', the system shall stop speaking, pause new actions, and ask whether to cancel the task. A stop request (``stop working'' or the stop key) shall cancel the task. (G2; FR.Sa.1, FR.Sa.4)
+\end{itemize}
+
+\subsection*{S.2.2 Task bridge}
+\addcontentsline{toc}{subsection}{S.2.2 Task bridge}
+
+\begin{itemize}
+    \item FR4: When required details are missing or ambiguous, the system shall ask instead of guessing, and recheck relevant information before resuming. (G3; FR.Sa.9)
+    \item FR5: After IDLE\_PROMPT\_TIME without speech while a question is pending or a task is running, the system shall give one prompt or status update, waiting while the user is speaking. (G2; FR.Sa.11)
+    \item FR6: The system shall accept corrections during a task without requiring a restart. (G4)
+    \item FR7: On disconnection, the system shall pause new actions unless background work was authorized. On reconnection, it shall report the task state, reconcile uncertain outcomes, and wait for the user to continue. (G2, G4; FR.Sa.7)
+    \item FR8: After a stop request, the system shall run no further consequential actions for the task, and shall report ``stopping'' and ``stopped'' separately, along with any actions that completed or are uncertain. (G2; FR.Sa.5)
+\end{itemize}
+
+\subsection*{S.2.3 Action gate}
+\addcontentsline{toc}{subsection}{S.2.3 Action gate}
+
+\begin{itemize}
+    \item FR9: Every action not classified as read-only shall require approval of its exact details. Approval is an explicit affirmative answer to the pending approval question; silence or uncertainty is not approval. Changed details require new approval. (G2, G3; FR.Sa.3, FR.Sa.13, FR.Sa.14)
+    \item FR10: Read-only information gathering and preparation shall proceed without approval. A failed read-only lookup may be retried once before it is reported as a blocker. (G1)
+    \item FR11: The system shall never repeat an approved action, and shall check the real account state before retrying an action whose outcome is unknown. (G3; FR.Sa.6, FR.Sa.18)
+    \item FR12: The system shall report each result as verified, partial, failed, or unknown, based on checking the real state. (G3; FR.Sa.10)
+\end{itemize}
+
+\subsection*{S.2.4 Browser and account tools}
+\addcontentsline{toc}{subsection}{S.2.4 Browser and account tools}
+
+\begin{itemize}
+    \item FR13: The system shall treat webpage and email content as data, never as instructions. (FR.Sa.16)
+    \item FR14: The system shall request only the account permissions it needs, and explain them during setup, including which providers receive which data. (G5; FR.Sa.17)
+\end{itemize}
+
+\subsection*{S.2.5 Accessible client}
+\addcontentsline{toc}{subsection}{S.2.5 Accessible client}
+
+\begin{itemize}
+    \item FR15: The system shall provide an accessible task history and spoken summaries built from recorded events, which the user can delete. (G2; FR.Sa.2)
+\end{itemize}
+
+\subsection*{S.2.6 Safety requirements}
+\addcontentsline{toc}{subsection}{S.2.6 Safety requirements}
+
+Ported from the Hazard Analysis: FR.Sa.1 to FR.Sa.19 and NFR.Sa.1 to NFR.Sa.3. Most are covered by FR1 to FR15 above; the rest (for example FR.Sa.8, saving task state across restarts, and FR.Sa.12, pausing on provider outages) apply as written.
+
+\comment{Copy the full FR.Sa table in during the LaTeX port, with links to the Hazard Analysis.}
+
+\subsection*{S.2.7 Non-functional requirements}
+\addcontentsline{toc}{subsection}{S.2.7 Non-functional requirements}
+
+\begin{itemize}
+    \item NFR1 (accessibility): Starting a session, stopping, approving, and reviewing history shall work with VoiceOver and the keyboard alone.
+    \item NFR2 (effectiveness): At least TARGET\_COMPLETION of tasks in the declared task suite shall be completed correctly without sighted help.
+    \item NFR3 (stop responsiveness): A stop request shall be acknowledged within STOP\_ACK\_TIME; the time to confirmed stop is measured separately. (NFR.Sa.1)
+    \item NFR4 (conversation responsiveness): The system shall begin responding to ordinary speech within RESPONSE\_TIME.
+    \item NFR5 (privacy): No raw microphone audio is retained, and no credentials appear in task history, logs, or source control.
+\end{itemize}
+
+Constants (values set after POC measurements, per instructor guidance not to fix numbers before building):
+
+\begin{table}[H]
+\centering
+\caption{Constants}\label{tab:constants}
+\begin{tabularx}{\textwidth}{lXX}
+\toprule
+\textbf{Constant} & \textbf{Meaning} & \textbf{Value}\\
+\midrule
+STOP\_ACK\_TIME & Time to audibly acknowledge a stop request & TBD after POC (Development Plan provisional: 2 s)\\
+RESPONSE\_TIME & Time to begin responding to ordinary speech & TBD after POC\\
+IDLE\_PROMPT\_TIME & Silence before a prompt or status update & TBD after POC\\
+CONNECTION\_NOTICE\_TIME & Time to tell the user a connection was lost (NFR.Sa.2) & TBD after POC\\
+TARGET\_COMPLETION & Share of the declared task suite completed correctly without sighted help & TBD (Development Plan provisional: 80\%)\\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \nsection{S.3 Interfaces}
-\comment{How the system makes the functionality of S.2 available to the rest of the world, particularly user interfaces and program interfaces (APIs).}
 
-\nsection{S.4 Detailed usage scenarios}
-\comment{Examples of interaction between the environment (or human users) and the system: use cases, user stories.}
+\begin{itemize}
+    \item User interface: a web client opened in Chrome; the user presses its start control to begin a session. Spoken input and output, with a keyboard stop control and an accessible task history.
+    \item Program interfaces: LiveKit (audio and speech), Hermes custom-client interface (tasks, events, approvals, interrupts), Browser Use (web actions), Gmail and Google Calendar APIs through MCP and OAuth.
+\end{itemize}
 
-\nsection{S.5 Prioritization}
-\comment{Classification of the behaviors, interfaces and scenarios (S.2, S.3 and S.4) by their degree of criticality.}
+\comment{Describe the client screens and keyboard shortcuts once the voice/client owner has a design.}
 
-\nsection{S.6 Verification and acceptance criteria}
-\comment{Specification of the conditions under which an implementation will be deemed satisfactory.}
+\nsection{S.4 Normal operation}
 
-%===============================================================
-\chapter*{Project}
+The user opens the web client and starts a session. They speak a task; the voice interface transcribes it and hands it to the task bridge, which starts it in Hermes. Hermes gathers information with read-only tools while the system gives spoken progress updates. When a consequential action is ready, the action gate holds it and the user hears its details read back; after an explicit approval the action runs, its result is verified, and the user hears the verified outcome. The task history records each step.
+
+\nsection{S.5 Undesired event handling}
+
+\begin{itemize}
+    \item Misheard or ambiguous request: the system asks instead of guessing; read-back before approval catches remaining errors. (H2-a, H4-a)
+    \item Stop not recognized or not effective: stop key as backup; no consequential actions after a stop request. (H2-b, H3-a)
+    \item Disconnection: new actions pause; on reconnect, state is reported and nothing is repeated. (H3-b)
+    \item Provider outage or timeout: the task pauses and the user hears what was and was not done. (H4-d)
+    \item Unknown outcome: the real account state is checked before any retry. (H7-b)
+    \item Instructions injected by a webpage or email: treated as data and reported to the user. (H6-b)
+\end{itemize}
+
+\nsection{S.6 Detailed usage scenarios}
+
+Email reply: The user says ``Reply to Alex Chen's invitation and say Friday at 2 works for me.'' The agent finds the invitation and reads back ``Send Alex Chen: Thanks for the invitation, Friday at 2 works for me?'' The user says ``Yes, send it'', and the agent sends, verifies, and reports ``Your reply was sent to Alex Chen.'' The history records request, approval, action, and outcome.
+
+Unfamiliar website: The user asks to compare standard and student tickets on a conference site. The agent navigates with general browser tools, reports prices and what each includes, says which details it could not verify, and incorporates the correction ``compare only tickets that include workshops.'' Nothing is purchased.
+
+Ambiguous request: The user says ``Reply to Alex and say I can attend'' and two Alexes have sent invitations. The agent asks which one, waits, gives one reminder after IDLE\_PROMPT\_TIME, then proceeds with read-back and approval after the user answers.
+
+\comment{Rewrite these in use-case format (actor, preconditions, main flow, success and failure postconditions), as AlgoCatan did, and add the two missing scenarios: stop or correct a running task, and reconnect without duplicating an action.}
+
+\nsection{S.7 Prioritization}
+
+\begin{itemize}
+    \item Must (POC): FR1 to FR3, FR8, FR9, NFR3.
+    \item Must (before participant evaluation): FR4 to FR7, FR10 to FR15, NFR1, NFR5, NFR.E.1 to NFR.E.4.
+    \item Should (tune with usability evidence): FR5 timing, NFR2, NFR4.
+\end{itemize}
+
+\nsection{S.8 Verification and acceptance criteria}
+
+\begin{itemize}
+    \item Each functional requirement is checked by at least one scripted test using test accounts.
+    \item The state machine properties P1 to P4 (S.9) are checked against recorded task and action logs.
+    \item NFR2 is measured on a declared task suite during participant evaluation, reporting all attempts and failures.
+    \item Details belong in the V\&V Plan (due November 2).
+\end{itemize}
+
+\nsection{S.9 Formalization: task state machine}
+
+A task is in exactly one state $q \in Q$, where $Q = \{$Working, AwaitingClarification, AwaitingApproval, Executing, Paused, Stopping, Stopped, Done, Failed$\}$. Events from $\Sigma$ move it by the partial transition function $\delta : Q \times \Sigma \to Q$ in Table~\ref{tab:fsm}. Active states: Working, AwaitingClarification, AwaitingApproval, Executing, Paused. Final states (Stopped, Done, Failed) are absorbing.
+
+\begin{table}[H]
+\centering
+\caption{Task state transitions}\label{tab:fsm}
+\begin{tabularx}{\textwidth}{lXl}
+\toprule
+\textbf{From} & \textbf{Event} & \textbf{To}\\
+\midrule
+Working & details missing or ambiguous, or a bare ``stop'' & AwaitingClarification\\
+AwaitingClarification & user answers & Working\\
+Working & agent proposes a consequential action & AwaitingApproval\\
+AwaitingApproval & approve (explicit yes) & Executing\\
+AwaitingApproval & reject, change, or expiry (user told it did not happen) & Working\\
+Executing & result verified as ok, failed, or unknown & Working\\
+Working & task verified complete & Done\\
+Working & unrecoverable error & Failed\\
+Any active state & stop request & Stopping\\
+Stopping & in-flight work settled & Stopped\\
+Any active state & disconnect (pending approval withdrawn) & Paused\\
+Paused & reconnect and user continues & Working\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Required properties:
+
+\begin{itemize}
+    \item P1: Executing is reachable only from AwaitingApproval through approve. Every consequential action therefore has an approval.
+    \item P2: Leaving AwaitingApproval consumes the approval, so an approval is used at most once.
+    \item P3: From every active state, a stop request leads to Stopping and then Stopped.
+    \item P4: No transition leaves a final state.
+\end{itemize}
+
+\comment{Draw the state diagram; confirm the expiry rule for pending approvals and whether clarification questions should ever expire.}
+
 \addcontentsline{toc}{chapter}{Project book}
-\minitoc% Creating an actual minitoc
-%===============================================================
-
-\comment{The Project book describes all the constraints and expectations not about the system itself, but about how to develop and produce it.}
+\chapter*{Project}
+\minitoc
 
 \nsection{P.1 Roles and personnel}
-\comment{Main responsibilities in the project; required project staff and their needed qualifications.}
+
+As in the Development Plan: voice and client (Lucas, reviewed by Curtis); agent and tools (Aaron, reviewed by Kevin); deployment and reliability (Kevin, reviewed by Aaron); evaluation and quality (Curtis, reviewed by Lucas).
+
+\comment{Decide who writes which SRS sections.}
 
 \nsection{P.2 Imposed technical choices}
-\comment{Any a priori choices binding the project to specific tools, hardware, languages or other technical parameters.}
+
+\begin{itemize}
+    \item Hermes agent harness, LiveKit, Browser Use, Gmail and Google Calendar.
+    \item Mac, Chrome, English for the initial release.
+    \item LaTeX documents in the course template repository; GitHub for issues and reviews.
+\end{itemize}
 
 \nsection{P.3 Schedule and milestones}
-\comment{List of tasks to be carried out and their scheduling.}
-%---------------------------------
-\notEmpty{}
-%---------------------------------
+
+\begin{itemize}
+    \item October 19: SRS and Hazard Analysis.
+    \item November 2: V\&V Plan.
+    \item November 16: Design document revision minus one; Interview Report.
+    \item November 23 to December 3: POC demonstration.
+    \item January 18: Design document.
+    \item March 8: V\&V Report and Usability Report.
+    \item March 31: Final documentation. April 6: EXPO.
+\end{itemize}
 
 \nsection{P.4 Tasks and deliverables}
-\comment{Details of individual tasks listed under P.3 and their expected outcomes.}
-%---------------------------------
-\notEmpty{}
-%---------------------------------
+
+\comment{Break the POC into tasks on the GitHub project board (owner, acceptance criteria, due date) and summarize them here in a table.}
 
 \nsection{P.5 Required technology elements}
-\comment{External systems, hardware and software, expected to be necessary for building the system.}
 
-\nsection{P.6 Risks and mitigation analysis}
-\comment{Potential obstacles to meeting the schedule of P.4, and measures for adapting the plan if they do arise.}
+\begin{itemize}
+    \item LiveKit Agents (Python) and a speech-to-text and text-to-speech provider.
+    \item Hermes agent and an AI model provider.
+    \item Browser Use with Chromium.
+    \item Gmail and Google Calendar APIs, OAuth credentials, test accounts.
+    \item TypeScript and React for the web client.
+\end{itemize}
+
+\nsection{P.6 Risk and mitigation analysis}
+
+\begin{itemize}
+    \item Supervision through Hermes may not work as documented: test approvals, interrupts, and reconnection on a pinned version first.
+    \item Browser actions may not be interceptable for approval: if not, the browser becomes read-only for the initial release.
+    \item Recruitment of blind participants may fail: report technical feasibility only and disclose missing usability evidence.
+    \item Provider costs may exceed the budget: meter usage and reconcile monthly.
+\end{itemize}
 
 \nsection{P.7 Requirements process and report}
-\comment{Initially, description of what the requirements process will be; later, report on its steps.}
 
+Requirements come from the Problem Statement, Development Plan, Hazard Analysis, TA guidance, prior research, and interviews. A CNIB interview is planned before submission, and blind participants will be recruited for repeated feedback. Requirements will be revised as POC results and interview findings arrive.
 
-%===============================================================
+\comment{Report which requirements came from the interview (the SRS reflection asks how many came from talking to users).}
+
+\chapter*{Requirement dependencies}
+\addcontentsline{toc}{chapter}{Requirement dependencies}
+
+\comment{Build a traceability matrix: goals G1 to G5 against FR1 to FR15, NFRs, and FR.Sa requirements.}
+
+\chapter*{Likely and unlikely changes}
+\addcontentsline{toc}{chapter}{Likely and unlikely changes}
+
+\begin{itemize}
+    \item Likely: replacing the AI model, speech provider, or agent harness; adding account services; changing timing constants after measurement.
+    \item Unlikely: dropping the approval rule for consequential actions; dropping voice as the main interaction.
+\end{itemize}
+
+\chapter*{References}
+\addcontentsline{toc}{chapter}{References}
+
+\comment{List every source cited (WCAG, AODA, PIPEDA, Google policy, LiveKit, Hermes, Browser Use, WebAIM, Morae, Meyer handbook).}
+
+\chapter*{Appendix: AI use disclosure}
+\addcontentsline{toc}{chapter}{Appendix: AI use disclosure}
+
+Aaron Loh used Claude Code (Claude Opus 5.5) to work through the requirements. It asked questions, summarized tool documentation, and translated the team's decisions and Kevin's requirements draft into this structured draft. Aaron made and reviewed every decision. The team will review, verify, and rewrite this draft before submission.
+
+\comment{Other members: add the tools you used.}
+
+\chapter*{Appendix: Reflection}
+\addcontentsline{toc}{chapter}{Appendix: Reflection}
+
+\comment{Each member answers the SRS reflection questions from their own experience.}
+
+\input{../Reflection.text}
+
+\input{../SRS_Reflection.text}
+
 \end{document}
-%===============================================================
