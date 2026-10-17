@@ -240,6 +240,7 @@ See the Glossary at the front of this document.
     \item Course schedule: POC demonstration November 23 to December 3; final demonstration and EXPO in April.
     \item Gmail access uses restricted Google OAuth permissions; an unverified app is limited to a small number of registered test users.
     \item Provider terms of use and data retention policies apply to anything sent to them.
+    \item Secrets (passwords, account sign-ins, payment details) never go through voice or the conversation; they are entered through a private page or the user's own device, so they never reach the speech provider or the AI model.
 \end{itemize}
 
 \comment{Verify Google's current limits for unverified apps (number of test users, token expiry) before final submission.}
@@ -416,7 +417,7 @@ FR12 & The system shall report each result as verified, partial, failed, or unkn
 \midrule
 FR14 & The system shall request only the account permissions it needs, and explain them during setup, including which providers receive which data. & Narrow permissions limit the damage any other failure can do. & G5; FR.Sa.17\\
 FR17 & The system shall let the user mark topics or accounts as off-limits; it shall not read, use, or act on them. & Interview: users may not want health or banking details handled by AI. & G2\\
-FR23 & Website passwords shall be entered only once per site, through a private setup page, never by voice or in the conversation, and stored encrypted. A saved login shall be used only on the site it was saved for; using it anywhere else requires approval. When a site asks for a one-time code or push approval, the system shall ask the user for that single step. If a site only accepts a passkey on the user's own device, the system shall say so before starting and describe the manual route. & Speaking a password exposes it to people nearby and to the speech provider. The model never sees credentials (Browser Use placeholders). & G2, G5; FR.Sa.17\\
+FR23 & Website passwords shall be entered only once per site, through a private setup page, never by voice or in the conversation, and stored encrypted. A saved login shall be used only on the site it was saved for; using it anywhere else requires approval. When a site asks for a one-time code or push approval, the system shall ask the user for that single step, preferring a push approval on the user's phone or a code typed into the client; speaking a code aloud is a fallback the user must choose. If a site only accepts a passkey on the user's own device, the system shall say so before starting and describe the manual route. & Speaking a password exposes it to people nearby and to the speech provider. The model never sees credentials (Browser Use placeholders). & G2, G5; FR.Sa.17\\
 FR24 & The system shall reject non-essential cookies and close consent prompts automatically, choosing only ``reject'' or ``necessary only''. Accepting cookies, terms, or any other consent shall be treated as a consequential action. & Consent banners appear on most sites; asking every time causes approval fatigue, while letting the agent accept would consent on the user's behalf. & G2, G3\\
 \bottomrule
 \end{tabularx}
