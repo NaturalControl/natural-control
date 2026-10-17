@@ -1,6 +1,6 @@
 # Capstone knowledge base
 
-Last updated: September 23, 2026.
+Last updated: October 17, 2026.
 
 ## Start here
 
@@ -27,3 +27,10 @@ The briefs are working notes, not submitted deliverables. Discuss and validate a
 - [TA submission guidance](ta-meeting-2026-09-23.md)
 - [Verification record](verification-2026-09-23.md)
 - [MIT proposal](license-proposal.md)
+
+## October 17 review
+
+- [Voice supervision decisions and proposed requirements](voice-supervision-2026-10-17.md)
+- [Current SRS and Hazard Analysis review](review-2026-10-17.md)
+- [Hazard Analysis draft PR](https://github.com/NaturalControl/natural-control/pull/25): separate work excluded from this SRS update.
+- [Shared glossary](../../GLOSSARY.md)
