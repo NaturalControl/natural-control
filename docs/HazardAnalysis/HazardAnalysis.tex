@@ -164,7 +164,7 @@ These requirements come from the recommended actions in Table~\ref{TblFMEA} and 
   \item \textbf{FR.Sa.4:} The system shall recognize stop requests with a fixed rule that does not depend on model interpretation. (H2-b)
   \item \textbf{FR.Sa.5:} After a stop request, the system shall refuse all further consequential actions for that task and announce stop acknowledged and stop confirmed as separate messages. (H3-a)
   \item \textbf{FR.Sa.6:} The system shall assign each approved consequential action a unique ID and shall not repeat an action with the same ID. (H3-b)
-  \item \textbf{FR.Sa.7:} The system shall pause new actions while the user is disconnected, unless background continuation was authorized for that task. (H3-b)
+  \item \textbf{FR.Sa.7:} The system shall pause the task while the user is disconnected. (H3-b)
   \item \textbf{FR.Sa.8:} The system shall save task state and pending approvals, and after a restart shall announce interrupted tasks with their last known status. (H8-b)
   \item \textbf{FR.Sa.9:} The system shall ask a clarifying question when details required for an action are missing or ambiguous. (H4-a)
   \item \textbf{FR.Sa.10:} The system shall report a task as complete only after verifying its outcome, and shall distinguish verified, partial, and unverified results. (H4-b, H6-a, H7-a)
