@@ -15,6 +15,7 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{float}
+\usepackage{graphicx}
 \usepackage[bookmarks=true]{hyperref}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
@@ -125,7 +126,7 @@ Project terms (from GLOSSARY.md):
     \item Session: the period during which the user is talking with the system, started from the client's start control and ended by the user or by disconnection. A session can contain several tasks.
     \item Task: one job the user asks for, from request until it is done, failed, or stopped.
     \item Consequential action: any action that changes something outside the system: sending, submitting, purchasing, posting, or creating, editing, or deleting an email or event. Reading, navigating, searching, and drafting are not consequential.
-    \item Approval: the user's explicit consent to one consequential action with its specific details, used once and void if any detail changes.
+    \item Approval: the user's explicit consent to one consequential action, or to a listed batch of similar actions, with their specific details; used once and void if any detail changes.
     \item Barge-in: the user speaking while the system is speaking; it stops the speech only.
     \item Stop request: an explicit ``stop working'' command (spoken or by key) to end a task's execution.
     \item Stop acknowledged / stop confirmed: the system has received a stop request / has verified that no further actions will run.
@@ -222,6 +223,7 @@ See the Glossary at the front of this document.
 \begin{itemize}
     \item Websites the user asks about (unmodified, not under our control).
     \item Google services: Gmail and Google Calendar APIs.
+    \item Composio: hosted service that stores OAuth tokens and runs Gmail and Calendar tool calls. Its ``Don't store data'' setting is turned on so tool inputs and outputs are not logged.
     \item LiveKit (real-time audio and speech pipeline).
     \item AI model and speech providers.
     \item The Hermes agent and Browser Use (reused open-source components).
@@ -298,9 +300,25 @@ Speech recognition, the AI model, websites, and external services are not assume
 
 \nsection{S.1 Components}
 
-Eight components, matching the Hazard Analysis: accessible client; voice interface (LiveKit plus our voice agent); task manager; AI agent (Hermes, reused); action gate; outcome verification; action tools and integrations (Browser Use plus Gmail and Calendar tools); task history layer.
+The system has eight components, matching the Hazard Analysis. Figure~\ref{fig:components} shows them, the external services they depend on, and what flows between them.
 
-\comment{Insert the component diagram.}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/component-diagram.png}
+\caption{Component diagram. Green components are built by the team, grey ones are reused open source, and white boxes are external services.}
+\label{fig:components}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Accessible client (built):} web page the user opens to start a session; start and stop keys and the task history. Works alongside VoiceOver.
+    \item \textbf{Voice interface (built on LiveKit):} captures and transcribes speech, classifies what the user said (new task, answer, approval, correction, or stop), and speaks updates and questions.
+    \item \textbf{Task manager (built):} the only path between the voice interface and the AI agent. Starts, steers, stops, and resumes tasks, and owns the task state machine (S.9).
+    \item \textbf{AI agent (Hermes, reused):} plans each task and chooses tool calls. It has no direct access to tools; every call goes through the action gate.
+    \item \textbf{Action gate (built):} wraps every tool call. Read-only calls pass through. Consequential calls are held until the user approves the exact action, read back from the actual call rather than from the agent's description. Several similar actions in one task may share one approval, read back with a count and summary. Tool outputs are screened for instructions injected by websites or emails.
+    \item \textbf{Outcome verification (built):} after each consequential action, re-reads the real account or page state and reports the result as verified, partial, failed, or unknown.
+    \item \textbf{Action tools and integrations (reused):} Browser Use for websites, and Gmail and Google Calendar tools through the Composio SDK. Composio handles OAuth sign-in and stores the tokens, so credentials never reach our code or the model. The agent never connects to Composio directly; the gate runs in the SDK's before-execute and after-execute hooks.
+    \item \textbf{Task history layer (built):} stores task state, approvals, action IDs, and verified outcomes, to support recovery after disconnects and the accessible history.
+\end{itemize}
 
 \nsection{S.2 Functionality}
 
@@ -332,7 +350,7 @@ Each requirement lists the goals (G1 to G5) or Hazard Analysis requirements (FR.
 \addcontentsline{toc}{subsection}{S.2.3 Action gate}
 
 \begin{itemize}
-    \item FR9: Every action not classified as read-only shall require approval of its exact details. Approval is an explicit affirmative answer to the pending approval question; silence or uncertainty is not approval. Changed details require new approval. (G2, G3; FR.Sa.3, FR.Sa.13, FR.Sa.14)
+    \item FR9: Every action not classified as read-only shall require approval of its exact details. Approval is an explicit affirmative answer to the pending approval question; silence or uncertainty is not approval. Changed details require new approval. Several similar actions in one task (for example, deleting several listed emails) may share one approval if the read-back states their number and a summary, with full detail on request. (G2, G3; FR.Sa.3, FR.Sa.13, FR.Sa.14)
     \item FR10: Read-only information gathering and preparation shall proceed without approval. A failed read-only lookup may be retried once before it is reported as a blocker. (G1)
     \item FR11: The system shall never repeat an approved action, and shall check the real account state before retrying an action whose outcome is unknown. (G3; FR.Sa.6, FR.Sa.18)
 \end{itemize}
@@ -498,7 +516,7 @@ As in the Development Plan: voice and client (Lucas, reviewed by Curtis); agent 
 \nsection{P.2 Imposed technical choices}
 
 \begin{itemize}
-    \item Hermes agent harness, LiveKit, Browser Use, Gmail and Google Calendar.
+    \item Hermes agent harness, LiveKit, Browser Use, Composio (for Gmail and Google Calendar).
     \item Mac, Chrome, English for the initial release.
     \item LaTeX documents in the course template repository; GitHub for issues and reviews.
 \end{itemize}
@@ -525,7 +543,7 @@ As in the Development Plan: voice and client (Lucas, reviewed by Curtis); agent 
     \item LiveKit Agents (Python) and a speech-to-text and text-to-speech provider.
     \item Hermes agent and an AI model provider.
     \item Browser Use with Chromium.
-    \item Gmail and Google Calendar APIs, OAuth credentials, test accounts.
+    \item Gmail and Google Calendar APIs through the Composio SDK, our own Google OAuth app before participant sessions, and test accounts.
     \item TypeScript and React for the web client.
 \end{itemize}
 
