@@ -1,0 +1,51 @@
+@startuml state-diagram
+!pragma layout smetana
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam defaultFontSize 12
+skinparam state {
+  BackgroundColor #E8F4EF
+  BorderColor #1D7A5C
+  BackgroundColor<<final>> #F2F2F0
+  BorderColor<<final>> #6B6B66
+}
+hide empty description
+
+[*] --> Working : user request
+
+state Active {
+  state Running {
+    state Working
+    state AwaitingClarification
+    state AwaitingApproval
+    state Executing
+
+    Working --> AwaitingClarification : details missing\nor ambiguous,\nor bare "stop"
+    AwaitingClarification --> Working : user answers
+    Working --> Working : correction
+    Working --> AwaitingApproval : consequential\naction or batch
+    AwaitingApproval --> Executing : explicit yes
+    AwaitingApproval --> Working : no or change\n(approval dropped)
+    Executing --> Executing : next batch item
+    Executing --> Working : last result\nverified
+  }
+  state Paused
+  Running --> Paused : disconnect or\nprovider outage
+  Paused --> Working : reconnect and\nuser continues
+}
+
+state Stopping
+state Stopped <<final>>
+state Done <<final>>
+state Failed <<final>>
+
+Active --> Stopping : stop request
+Stopping --> Stopped : in-flight work\nsettled
+Working --> Done : task complete
+Working --> Failed : agent cannot\ncontinue
+
+Stopped --> [*]
+Done --> [*]
+Failed --> [*]
+@enduml

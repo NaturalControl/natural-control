@@ -185,6 +185,7 @@ The user starts a session from the web client and speaks a task. The system clar
     \item Native Mac application control and general local-file tasks.
     \item Platforms other than Mac with Chrome; languages other than English.
     \item Phone calling and saved workflows (stretch goals).
+    \item Background continuation: tasks always pause when the user disconnects; continuing unattended is a possible extension.
     \item Fully local model inference; the system uses cloud AI and speech providers.
     \item Users who cannot hear spoken output, including many deafblind users. Braille output through VoiceOver is a possible extension.
 \end{itemize}
@@ -342,7 +343,7 @@ Each requirement lists the goals (G1 to G5) or Hazard Analysis requirements (FR.
     \item FR4: When required details are missing or ambiguous, the system shall ask instead of guessing, and recheck relevant information before resuming. (G3; FR.Sa.9)
     \item FR5: After IDLE\_PROMPT\_TIME without speech while a question is pending or a task is running, the system shall give one prompt or status update, waiting while the user is speaking. (G2; FR.Sa.11)
     \item FR6: The system shall accept corrections during a task without requiring a restart. (G4)
-    \item FR7: On disconnection, the system shall pause new actions unless background work was authorized. On reconnection, it shall report the task state, reconcile uncertain outcomes, and wait for the user to continue. (G2, G4; FR.Sa.7)
+    \item FR7: On disconnection, the system shall pause the task. On reconnection, it shall report the task state, reconcile uncertain outcomes, and wait for the user to continue. (G2, G4; FR.Sa.7)
     \item FR8: After a stop request, the system shall run no further consequential actions for the task, and shall report ``stopping'' and ``stopped'' separately, along with any actions that completed or are uncertain. (G2; FR.Sa.5)
 \end{itemize}
 
@@ -467,7 +468,12 @@ Ambiguous request: The user says ``Reply to Alex and say I can attend'' and two 
 
 \nsection{S.9 Formalization: task state machine}
 
-A task is in exactly one state $q \in Q$, where $Q = \{$Working, AwaitingClarification, AwaitingApproval, Executing, Paused, Stopping, Stopped, Done, Failed$\}$. Events from $\Sigma$ move it by the partial transition function $\delta : Q \times \Sigma \to Q$ in Table~\ref{tab:fsm}. Active states: Working, AwaitingClarification, AwaitingApproval, Executing, Paused. Final states (Stopped, Done, Failed) are absorbing.
+Each task is in exactly one state $q \in Q$, where
+$Q = \{$Working, AwaitingClarification, AwaitingApproval, Executing, Paused, Stopping, Stopped, Done, Failed$\}$.
+Events from $\Sigma$ move it by the partial transition function $\delta : Q \times \Sigma \to Q$ in Table~\ref{tab:fsm} and Figure~\ref{fig:states}.
+The \emph{running} states are Working, AwaitingClarification, AwaitingApproval, and Executing; together with Paused they are the \emph{active} states. Stopped, Done, and Failed are \emph{final}.
+
+A session runs at most one active task. A new request during a task is treated as a correction when it clearly is one; otherwise the system asks whether to do it after the current task or change the current one. Pending questions and approvals do not time out while the user is connected; the user gets one reminder after IDLE\_PROMPT\_TIME. A task left Paused when a session ends is announced at the start of the next session, and the user can continue or cancel it.
 
 \begin{table}[H]
 \centering
@@ -478,30 +484,39 @@ A task is in exactly one state $q \in Q$, where $Q = \{$Working, AwaitingClarifi
 \midrule
 Working & details missing or ambiguous, or a bare ``stop'' & AwaitingClarification\\
 AwaitingClarification & user answers & Working\\
-Working & agent proposes a consequential action & AwaitingApproval\\
-AwaitingApproval & approve (explicit yes) & Executing\\
-AwaitingApproval & reject, change, or expiry (user told it did not happen) & Working\\
-Executing & result verified as ok, failed, or unknown & Working\\
-Working & task verified complete & Done\\
-Working & unrecoverable error & Failed\\
-Any active state & stop request & Stopping\\
+Working & correction & Working\\
+Working & agent proposes a consequential action or batch & AwaitingApproval\\
+AwaitingApproval & explicit yes & Executing\\
+AwaitingApproval & no, or a change (approval dropped; user told nothing happened) & Working\\
+Executing & result verified (ok, failed, or unknown); batch items remain & Executing\\
+Executing & last result verified & Working\\
+Working & task complete & Done\\
+Working & agent cannot continue and the user has no way forward & Failed\\
+any active state & stop request & Stopping\\
 Stopping & in-flight work settled & Stopped\\
-Any active state & disconnect (pending approval withdrawn) & Paused\\
-Paused & reconnect and user continues & Working\\
+any running state & disconnect, or AI or speech provider outage (pending question or approval withdrawn) & Paused\\
+Paused & user reconnects, hears the state, and says continue & Working\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-Required properties:
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/state-diagram.png}
+\caption{Task state machine. Final states are grey.}
+\label{fig:states}
+\end{figure}
+
+Required properties. For P5, let $A$ be the consequential actions a task executed and $P$ its approvals. Each approval $p$ lists the exact details $C(p)$ of the action or batch it approves; $d(a)$ is the details of action $a$, and $\tau$ gives the time of an event.
 
 \begin{itemize}
-    \item P1: Executing is reachable only from AwaitingApproval through approve. Every consequential action therefore has an approval.
-    \item P2: Leaving AwaitingApproval consumes the approval, so an approval is used at most once.
-    \item P3: From every active state, a stop request leads to Stopping and then Stopped.
+    \item P1: Executing is reachable only from AwaitingApproval through an explicit yes.
+    \item P2: Leaving AwaitingApproval for any state other than Executing discards the approval.
+    \item P3: From every active state, a stop request leads to Stopping and then Stopped, and no consequential action starts after the stop request.
     \item P4: No transition leaves a final state.
+    \item P5: There is a function $f : A \to P$ with $d(a) \in C(f(a))$ and $\tau(f(a)) < \tau(a)$ for every $a \in A$, and the map $a \mapsto (f(a), d(a))$ is injective. Every executed action was approved beforehand with its exact details, and no approved item runs twice.
+    \item P6: At any time, at most one task in a session is in an active state.
 \end{itemize}
-
-\comment{Draw the state diagram; confirm the expiry rule for pending approvals and whether clarification questions should ever expire.}
 
 \addcontentsline{toc}{chapter}{Project book}
 \chapter*{Project}
