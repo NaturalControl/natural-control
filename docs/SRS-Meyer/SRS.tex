@@ -148,7 +148,9 @@ Many websites and applications communicate information, choices, and state chang
 
 Today, blind users complete these tasks with screen readers such as VoiceOver, navigating each interface element by element, or with help from a sighted person. Existing AI computer-use agents assume the user can watch the screen to monitor and correct them.
 
-\comment{Add findings from the CNIB interview (Aaron) and any participant conversations: which tasks people get stuck on, which tools they use, and where those tools break down.}
+In an interview with a former CNIB Deafblind Community Services (DBCS) staff member on October 17, 2026, the participant observed that screen readers are hard to learn for older, newly diagnosed users and often read irrelevant content, and that everyday tasks such as booking appointments often need a friend's help.
+
+\comment{Add findings from blind participants once sessions start.}
 
 \nsection{G.3 Expected benefits}
 
@@ -183,6 +185,7 @@ The user starts a session from the web client and speaks a task. The system clar
     \item Platforms other than Mac with Chrome; languages other than English.
     \item Phone calling and saved workflows (stretch goals).
     \item Fully local model inference; the system uses cloud AI and speech providers.
+    \item Users who cannot hear spoken output, including many deafblind users. Braille output through VoiceOver is a possible extension.
 \end{itemize}
 
 \nsection{G.7 Stakeholders and requirements sources}
@@ -191,21 +194,20 @@ The user starts a session from the web client and speaks a task. The system clar
     \item Primary: blind and visually impaired people who want to complete digital tasks without visual feedback. Initial evaluation: blind Mac users with screen-reader experience.
     \item Secondary: other people who want nonvisual interaction.
     \item Setup helper: a person who completes the assisted setup.
-    \item Requirements sources: the Problem Statement, Development Plan, and Hazard Analysis; TA and instructor guidance; prior research (WebAIM survey, Morae); the planned CNIB interview and participant sessions.
+    \item Requirements sources: the Problem Statement, Development Plan, and Hazard Analysis; TA and instructor guidance; prior research (WebAIM survey, Morae); an interview with a former CNIB Deafblind Community Services (DBCS) staff member on October 17, 2026; and planned participant sessions.
+    \item Intervenors: support workers who may help deafblind users with setup and recovery.
 \end{itemize}
-
-\comment{Record the CNIB interview date once done.}
 
 \nsection{G.8 User profiles}
 
 \begin{itemize}
     \item Experienced screen-reader user: fluent with VoiceOver or JAWS and keyboard navigation; wants speed on multi-step tasks and keeps their screen reader for everything else. Primary evaluation group.
-    \item Less experienced or recently blind user: limited screen-reader skill; benefits most from delegation and clear spoken confirmation.
+    \item Less experienced or recently blind user: often older, with acquired vision loss, limited screen-reader skill, and possibly an older device; benefits most from delegation and clear spoken confirmation.
     \item Sighted user wanting nonvisual interaction: can see the screen but prefers or needs voice (busy hands, away from the screen); can verify visually, so has lower risk.
     \item Setup helper: comfortable with computers; connects accounts and grants permissions once, then is not needed for daily use.
 \end{itemize}
 
-\comment{Validate these profiles with the CNIB interview; drop or adjust any that do not hold up.}
+\comment{Validate these profiles with blind participants; drop or adjust any that do not hold up.}
 
 \addcontentsline{toc}{chapter}{Environment book}
 \chapter*{Environment}
@@ -245,6 +247,7 @@ See the Glossary at the front of this document.
     \item A setup helper completed setup correctly (accounts connected, permissions granted).
     \item Only the user gives commands; other voices are noise.
     \item Connected accounts belong to the user; development and evaluation use test accounts.
+    \item The user can hear spoken output (see G.6).
 \end{itemize}
 
 Speech recognition, the AI model, websites, and external services are not assumed to work correctly; their failures are covered by the Hazard Analysis and S.5.
@@ -310,6 +313,8 @@ Each requirement lists the goals (G1 to G5) or Hazard Analysis requirements (FR.
     \item FR1: The system shall accept spoken input during a session. (G1)
     \item FR2: When the user speaks while the system is speaking (barge-in), the system shall stop speaking; the task continues unless the input changes or cancels it. (G2)
     \item FR3: On a bare ``stop'', the system shall stop speaking, pause new actions, and ask whether to cancel the task. A stop request (``stop working'' or the stop key) shall cancel the task. (G2; FR.Sa.1, FR.Sa.4)
+    \item FR16: The system shall let the user correct part of a read-back (for example, one sentence or one detail) by voice without restarting the request. (G4)
+    \item FR18: Spoken updates and summaries shall include only information relevant to the current task, with more detail available on request. (G2)
 \end{itemize}
 
 \subsection*{S.2.2 Task manager}
@@ -345,6 +350,7 @@ Each requirement lists the goals (G1 to G5) or Hazard Analysis requirements (FR.
 \begin{itemize}
     \item FR13: The system shall treat webpage and email content as data, never as instructions. (FR.Sa.16)
     \item FR14: The system shall request only the account permissions it needs, and explain them during setup, including which providers receive which data. (G5; FR.Sa.17)
+    \item FR17: The system shall let the user mark topics or accounts as off-limits; it shall not read, use, or act on them.
 \end{itemize}
 
 \subsection*{S.2.6 Accessible client and task history layer}
@@ -428,8 +434,8 @@ Ambiguous request: The user says ``Reply to Alex and say I can attend'' and two 
 
 \begin{itemize}
     \item Must (POC): FR1 to FR3, FR8, FR9, NFR3.
-    \item Must (before participant evaluation): FR4 to FR7, FR10 to FR15, NFR1, NFR5, NFR.E.1 to NFR.E.4.
-    \item Should (tune with usability evidence): FR5 timing, NFR2, NFR4.
+    \item Must (before participant evaluation): FR4 to FR7, FR10 to FR16, FR18, NFR1, NFR5, NFR.E.1 to NFR.E.4.
+    \item Should (tune with usability evidence): FR5 timing, FR17, NFR2, NFR4.
 \end{itemize}
 
 \nsection{S.8 Verification and acceptance criteria}
@@ -534,14 +540,12 @@ As in the Development Plan: voice and client (Lucas, reviewed by Curtis); agent 
 
 \nsection{P.7 Requirements process and report}
 
-Requirements come from the Problem Statement, Development Plan, Hazard Analysis, TA guidance, prior research, and interviews. A CNIB interview is planned before submission, and blind participants will be recruited for repeated feedback. Requirements will be revised as POC results and interview findings arrive.
-
-\comment{Report which requirements came from the interview (the SRS reflection asks how many came from talking to users).}
+Requirements come from the Problem Statement, Development Plan, Hazard Analysis, TA guidance, prior research, and interviews. An interview with a former DBCS staff member was held on October 17, 2026; FR16 to FR18, the G.8 profile change, and intervenors as stakeholders came from it. Blind participants will be recruited for repeated feedback. Requirements will be revised as POC results and interview findings arrive.
 
 \chapter*{Requirement dependencies}
 \addcontentsline{toc}{chapter}{Requirement dependencies}
 
-\comment{Build a traceability matrix: goals G1 to G5 against FR1 to FR15, NFRs, and FR.Sa requirements.}
+\comment{Build a traceability matrix: goals G1 to G5 against FR1 to FR18, NFRs, and FR.Sa requirements.}
 
 \chapter*{Likely and unlikely changes}
 \addcontentsline{toc}{chapter}{Likely and unlikely changes}
