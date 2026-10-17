@@ -295,13 +295,13 @@ Speech recognition, the AI model, websites, and external services are not assume
 
 \nsection{S.1 Components}
 
-Seven components, matching the Hazard Analysis: accessible client (built); voice interface (LiveKit plus our voice agent); task bridge (built); Hermes agent (reused); action gate (built); Browser Use (reused); account tools (built or adapted MCP server for Gmail and Calendar).
+Eight components, matching the Hazard Analysis: accessible client; voice interface (LiveKit plus our voice agent); task manager; AI agent (Hermes, reused); action gate; outcome verification; action tools and integrations (Browser Use plus Gmail and Calendar tools); task history layer.
 
 \comment{Insert the component diagram.}
 
 \nsection{S.2 Functionality}
 
-Each requirement lists the goals (G1 to G5) or Hazard Analysis requirements (FR.Sa) it traces to.
+Each requirement lists the goals (G1 to G5) or Hazard Analysis requirements (FR.Sa) it traces to. The AI agent has no requirements of its own; the task manager, action gate, and outcome verification constrain it.
 
 \subsection*{S.2.1 Voice interface}
 \addcontentsline{toc}{subsection}{S.2.1 Voice interface}
@@ -312,8 +312,8 @@ Each requirement lists the goals (G1 to G5) or Hazard Analysis requirements (FR.
     \item FR3: On a bare ``stop'', the system shall stop speaking, pause new actions, and ask whether to cancel the task. A stop request (``stop working'' or the stop key) shall cancel the task. (G2; FR.Sa.1, FR.Sa.4)
 \end{itemize}
 
-\subsection*{S.2.2 Task bridge}
-\addcontentsline{toc}{subsection}{S.2.2 Task bridge}
+\subsection*{S.2.2 Task manager}
+\addcontentsline{toc}{subsection}{S.2.2 Task manager}
 
 \begin{itemize}
     \item FR4: When required details are missing or ambiguous, the system shall ask instead of guessing, and recheck relevant information before resuming. (G3; FR.Sa.9)
@@ -330,33 +330,39 @@ Each requirement lists the goals (G1 to G5) or Hazard Analysis requirements (FR.
     \item FR9: Every action not classified as read-only shall require approval of its exact details. Approval is an explicit affirmative answer to the pending approval question; silence or uncertainty is not approval. Changed details require new approval. (G2, G3; FR.Sa.3, FR.Sa.13, FR.Sa.14)
     \item FR10: Read-only information gathering and preparation shall proceed without approval. A failed read-only lookup may be retried once before it is reported as a blocker. (G1)
     \item FR11: The system shall never repeat an approved action, and shall check the real account state before retrying an action whose outcome is unknown. (G3; FR.Sa.6, FR.Sa.18)
+\end{itemize}
+
+\subsection*{S.2.4 Outcome verification}
+\addcontentsline{toc}{subsection}{S.2.4 Outcome verification}
+
+\begin{itemize}
     \item FR12: The system shall report each result as verified, partial, failed, or unknown, based on checking the real state. (G3; FR.Sa.10)
 \end{itemize}
 
-\subsection*{S.2.4 Browser and account tools}
-\addcontentsline{toc}{subsection}{S.2.4 Browser and account tools}
+\subsection*{S.2.5 Action tools and integrations}
+\addcontentsline{toc}{subsection}{S.2.5 Action tools and integrations}
 
 \begin{itemize}
     \item FR13: The system shall treat webpage and email content as data, never as instructions. (FR.Sa.16)
     \item FR14: The system shall request only the account permissions it needs, and explain them during setup, including which providers receive which data. (G5; FR.Sa.17)
 \end{itemize}
 
-\subsection*{S.2.5 Accessible client}
-\addcontentsline{toc}{subsection}{S.2.5 Accessible client}
+\subsection*{S.2.6 Accessible client and task history layer}
+\addcontentsline{toc}{subsection}{S.2.6 Accessible client and task history layer}
 
 \begin{itemize}
     \item FR15: The system shall provide an accessible task history and spoken summaries built from recorded events, which the user can delete. (G2; FR.Sa.2)
 \end{itemize}
 
-\subsection*{S.2.6 Safety requirements}
-\addcontentsline{toc}{subsection}{S.2.6 Safety requirements}
+\subsection*{S.2.7 Safety requirements}
+\addcontentsline{toc}{subsection}{S.2.7 Safety requirements}
 
 Ported from the Hazard Analysis: FR.Sa.1 to FR.Sa.19 and NFR.Sa.1 to NFR.Sa.3. Most are covered by FR1 to FR15 above; the rest (for example FR.Sa.8, saving task state across restarts, and FR.Sa.12, pausing on provider outages) apply as written.
 
 \comment{Copy the full FR.Sa table in during the LaTeX port, with links to the Hazard Analysis.}
 
-\subsection*{S.2.7 Non-functional requirements}
-\addcontentsline{toc}{subsection}{S.2.7 Non-functional requirements}
+\subsection*{S.2.8 Non-functional requirements}
+\addcontentsline{toc}{subsection}{S.2.8 Non-functional requirements}
 
 \begin{itemize}
     \item NFR1 (accessibility): Starting a session, stopping, approving, and reviewing history shall work with VoiceOver and the keyboard alone.
@@ -395,7 +401,7 @@ TARGET\_COMPLETION & Share of the declared task suite completed correctly withou
 
 \nsection{S.4 Normal operation}
 
-The user opens the web client and starts a session. They speak a task; the voice interface transcribes it and hands it to the task bridge, which starts it in Hermes. Hermes gathers information with read-only tools while the system gives spoken progress updates. When a consequential action is ready, the action gate holds it and the user hears its details read back; after an explicit approval the action runs, its result is verified, and the user hears the verified outcome. The task history records each step.
+The user opens the web client and starts a session. They speak a task; the voice interface transcribes it and hands it to the task manager, which starts it in the AI agent (Hermes). The agent gathers information with read-only tools while the system gives spoken progress updates. When a consequential action is ready, the action gate holds it and the user hears its details read back; after an explicit approval the action runs, its result is verified, and the user hears the verified outcome. The task history records each step.
 
 \nsection{S.5 Undesired event handling}
 
@@ -404,8 +410,8 @@ The user opens the web client and starts a session. They speak a task; the voice
     \item Stop not recognized or not effective: stop key as backup; no consequential actions after a stop request. (H2-b, H3-a)
     \item Disconnection: new actions pause; on reconnect, state is reported and nothing is repeated. (H3-b)
     \item Provider outage or timeout: the task pauses and the user hears what was and was not done. (H4-d)
-    \item Unknown outcome: the real account state is checked before any retry. (H7-b)
-    \item Instructions injected by a webpage or email: treated as data and reported to the user. (H6-b)
+    \item Unknown outcome: the real account state is checked before any retry. (H7-d)
+    \item Instructions injected by a webpage or email: treated as data and reported to the user. (H7-b)
 \end{itemize}
 
 \nsection{S.6 Detailed usage scenarios}
