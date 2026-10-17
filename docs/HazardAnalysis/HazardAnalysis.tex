@@ -39,7 +39,8 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-2026-10-14 & Aaron Loh & First draft from team planning decisions\\
+2026-10-14 & All & First draft from team discussion\\
+2026-10-16 & Lucas DeBoer & Revise initial draft\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -54,65 +55,60 @@
 
 \section{Introduction}
 
-Natural Control lets blind users delegate tasks in a web browser and in Gmail and Google Calendar to an AI agent by voice. The user stays informed through spoken progress and results, and stays in control through clarification, approval, correction, and stopping.
+The purpose of this project is to create a voice-based interface for a computer-use agent that aims to help visually impaired users operate their computer while receiving accessible feedback and retaining control. 
+For the purpose of this project, a hazard is defined as any property, condition, or event that could lead to harm or loss. 
+Physical harm is not expected, so harm is defined as a loss of the user's intended outcome, control, awareness, privacy, or account security. 
 
-\paragraph{Hazard definition.} A hazard is a property or condition of the system, together with a condition in its environment, that can lead to a loss (see section 2). Physical harm is not expected.
-
-\paragraph{Purpose.} To find how each component could fail before we build it, and turn the safeguards into safety requirements for the SRS. A sighted user can glance at the screen to catch a mistake; a blind user often cannot, so detection has to be built into the system.
 
 \section{Scope and Purpose of Hazard Analysis}
 
-\paragraph{Included.} Voice interaction, task execution through the Hermes agent, browser tasks through Browser Use, and Gmail/Google Calendar actions, on a Mac in English, alongside VoiceOver.
-
-\paragraph{Excluded.} Native Mac application control, general local-file tasks, phone calling, and saved workflows. These are deferred; each would add hazards to analyze if built.
-
-\paragraph{Losses.} The hazards below can lead to these losses:
-
+The purpose of this document is to identify and evaluate the hazards that may arise from the use of the system by considering the potential failure modes and their effects and causes, and then mitigating these risks through relevant software requirements. 
+The hazards below could lead to these losses:
 \begin{itemize}
-  \item Unwanted action: something sent, submitted, purchased, created, or deleted that the user did not intend, including duplicates.
-  \item Missed or failed task: not done while the user believes it was.
-  \item Loss of control or awareness: the user cannot tell what the agent is doing, cannot stop it, or is told something false.
-  \item Privacy or account misuse: private information exposed, or account access used beyond what the user intended.
+  \item \textbf{Unwanted action:} Something could be sent, submitted, purchased, created, or deleted that the user did not intend. This may be costly, impossible to undo, or affect other people.
+  \item \textbf{Missed or failed task:} An action that the user believes happened does not happen, or happens incorrectly.
+  \item \textbf{Loss of control or awareness:} The user cannot tell what the agent is doing, cannot stop it, or is told something false.
+  \item \textbf{Privacy Leak:} Private information or credentials could be exposed.
+  \item \textbf{Loss of Independence:} If the tool slows down, stalls, or stops, the user may no longer be able to operate their computer because they may need sighted help.
 \end{itemize}
+These losses are amplified as a sighted user can glance at the screen to catch a mistake; a visually impaired user often cannot, so detection has to be built into the system.
 
 \section{System Boundaries and Components}
+The list below outlines the major components of the system and their roles. This is a high-level view of the system that is used to brainstorm potential hazards and is used to complete the Failure Mode and Effects Analysis (FMEA) in Section~\ref{sec:FMEA}.
 
-Inputs are the user's voice and keyboard input. Outputs are actions on accounts and websites, and spoken feedback; no visual output is relied on. The system has seven components:
-
-\begin{table}[h]
-\centering
-\caption{System components}\label{TblComponents}
-\begin{tabularx}{\textwidth}{lX}
-\toprule
-\textbf{Component} & \textbf{Role}\\
-\midrule
-Accessible client (built) & Mic, stop key, and task history; runs alongside VoiceOver\\
-Voice interface (LiveKit + our voice agent) & Hears, transcribes, interprets intent, and speaks responses\\
-Task bridge (built) & Starts, tracks, stops, and resumes tasks in Hermes; keeps the task log\\
-Hermes agent (reused) & Plans the task and calls tools, using an external AI model\\
-Action gate (built) & Holds consequential actions for approval; verifies outcomes after acting\\
-Browser Use (reused) & Reads and acts on websites\\
-Account tools (built or adapted MCP server) & Gmail and Calendar access through OAuth\\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-Websites, Google services (Gmail, Calendar), LiveKit, AI model and speech providers, network access, and VoiceOver. In: the user's voice and keyboard input. Out: actions on accounts and websites, and spoken feedback.
-
-\todo{Add the component diagram.}
+\begin{itemize}
+  \item \textbf{Accessible client:} Start and stop keys, viewing task history \todo{What else is in here}.
+  \item \textbf{Voice interface:} Captures and transcribes user voice input, and provides text-to-speech audio feedback.
+  \item \textbf{Task manager:} Starts, stops, and tracks tasks.
+  \item \textbf{AI agent:} Plans tasks and calls tools.
+  \item \textbf{Action gate:} Handles approval of consequential actions.
+  \item \textbf{Outcome verification:} Verifies completed actions match what the user asked for.
+  \item \textbf{Action tools and integrations:} Tools the agent uses to gather information and perform actions.
+  \item \textbf{Task history layer:} Stores relevant information to support recovery after disconnects.
+\end{itemize}
+The following are outside the system boundary: the user, laptop hardware (including the microphone and speakers), the operating system (macOS), the network, AI and speech service providers, websites, and external accounts and services. Failures of these are not analyzed internally, but the system's response to them is.
+\todo{Add the component diagram (?).}
 
 \section{Critical Assumptions}
 
-\begin{itemize}
-  \item Setup done correctly. A setup helper completed the assisted setup (accounts connected, permissions granted). Limits the analysis: setup errors are not analyzed as runtime hazards.
-  \item One authorized speaker. Only the user gives commands; other voices are noise. Limits the analysis: we do not verify who is speaking.
-  \item User's own accounts. Connected accounts belong to the user, who may act on them. Development and evaluation use test accounts.
-\end{itemize}
-
-We do not assume that speech recognition, the AI model, websites, or external services work correctly. Their failures appear in the FMEA.
+\begin{enumerate}
+  \item Setup done correctly. 
+    \\A setup helper completed the assisted setup (accounts connected, permissions granted), so setup errors are not analyzed as runtime hazards.
+  \item One authorized speaker. 
+    \\There is only one user giving commands; other voices are noise. We do not need to verify who is speaking.
+  \item User's own accounts. 
+    \\Connected accounts belong to the user, who may act on them. Development and evaluation use test accounts.
+  \item Good faith user. 
+    \\The user does not try to misuse the system or cause harm or loss. The user also does not try to give misleading or vague commands; they always strive to give instructions to the best of their ability.
+  \item Compatible device. 
+    \\The user has a functioning laptop with a microphone and speakers running macOS with chrome installed. Note that we will consider scenarios where the laptop has a microphone and speakers that fail mid-usage, but all laptops must are assumed to have these components.
+  \item User's can understand spoken output. 
+    \\We assume that the user can understand the spoken output of the system. We do not analyze scenarios where the user has both vision and hearing loss.
+\end{enumerate}
+We do not assume that the network, speech recognition, the AI model, websites, or other external services work correctly. Their failures are analyzed in the FMEA.
 
 \section{Failure Mode and Effect Analysis}
-
+\label{sec:FMEA}
 Each row is one failure mode of one component. Hazard IDs are H\textless{}component\textgreater{}-\textless{}letter\textgreater{}. How a failure is detected without sight is part of the recommended action, since a blind user often cannot notice a failure visually.
 
 \begin{landscape}
