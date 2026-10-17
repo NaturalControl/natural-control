@@ -494,18 +494,43 @@ TARGET\_COMPLETION & Share of the declared task suite completed correctly withou
 
 \nsection{S.4 Normal operation}
 
-The user opens the web client and starts a session. They speak a task; the voice interface transcribes it and hands it to the task manager, which starts it in the AI agent (Hermes). The agent gathers information with read-only tools while the system gives spoken progress updates. When a consequential action is ready, the action gate holds it and the user hears its details read back; after an explicit approval the action runs, its result is verified, and the user hears the verified outcome. The task history records each step.
+Figure~\ref{fig:seqnormal} follows one request from start to finish: the user asks to add an event found on a webpage to their calendar.
+
+\begin{enumerate}
+    \item The user starts a session from the client (FR22) and speaks the request. The voice interface passes it to the task manager, which records the task and starts it in the AI agent (state Working). The user hears a short acknowledgment.
+    \item The agent reads the page. The action gate lets this read-only call through to Browser Use and screens the returned content for injected instructions (FR10, FR13).
+    \item The agent asks to create the event. Because this is a consequential action, the gate holds it and sends an approval request with the exact details to the task manager (state AwaitingApproval).
+    \item The voice interface reads the details back. The user says ``yes''; the task manager records the approval and releases the call (state Executing, FR9).
+    \item The gate runs the call through the account tools with a unique action ID (FR11). Outcome verification reads the event back and reports it as verified (FR12).
+    \item The agent finishes the task (state Done). The task history records each step (FR15), and the user hears the verified result.
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/sequence-normal.png}
+\caption{Normal operation: adding an event from a webpage to the calendar.}
+\label{fig:seqnormal}
+\end{figure}
 
 \nsection{S.5 Undesired event handling}
 
 \begin{itemize}
     \item Misheard or ambiguous request: the system asks instead of guessing; read-back before approval catches remaining errors. (H2-a, H4-a)
     \item Stop not recognized or not effective: stop key as backup; no consequential actions after a stop request. (H2-b, H3-a)
-    \item Disconnection: new actions pause; on reconnect, state is reported and nothing is repeated. (H3-b)
+    \item Disconnection: the task pauses; on reconnect, state is reported and nothing is repeated. (H3-b)
     \item Provider outage or timeout: the task pauses and the user hears what was and was not done. (H4-d)
     \item Unknown outcome: the real account state is checked before any retry. (H7-d)
     \item Instructions injected by a webpage or email: treated as data and reported to the user. (H7-b)
 \end{itemize}
+
+Figure~\ref{fig:seqstop} shows the most important of these: a stop request while an approved action is in flight. The user hears that the stop was received right away (NFR3), the gate refuses any further consequential calls, the in-flight action is allowed to settle and is verified, and only then does the user hear that the task has stopped and what was completed (FR8, S.9 P3).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/sequence-stop.png}
+\caption{Stopping a task while an approved action is in flight.}
+\label{fig:seqstop}
+\end{figure}
 
 \nsection{S.6 Detailed usage scenarios}
 
