@@ -13,7 +13,7 @@ A person who completes the initial assisted setup (connecting accounts, granting
 _Avoid_: Admin, caregiver
 
 **Session**:
-The period during which the user is talking with the system, started from the client's start control and ended by the user or by disconnection. A session can contain several tasks.
+The period during which the user is talking with the system, started and ended with the client's start control or a keyboard shortcut, or ended by disconnection. A session can contain several tasks.
 _Avoid_: Call, conversation, voice session
 
 **Task**:
