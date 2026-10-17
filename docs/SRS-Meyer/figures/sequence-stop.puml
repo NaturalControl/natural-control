@@ -1,0 +1,61 @@
+@startuml sequence-stop
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam defaultFontSize 11
+skinparam sequenceMessageAlign left
+skinparam ParticipantBackgroundColor #E8F4EF
+skinparam ParticipantBorderColor #1D7A5C
+skinparam NoteBackgroundColor #FFFFFF
+skinparam NoteBorderColor #999999
+hide footbox
+
+actor User as user
+participant "Voice\ninterface" as voice
+participant "Task\nmanager" as tm
+participant "Task\nhistory" as hist
+participant "AI agent" as agent
+participant "Action\ngate" as gate
+participant "Outcome\nverification" as verify
+participant "Account\ntools" as accounts #F2F2F0
+
+note over tm : Executing: approved event\ncreation is already submitted
+gate -> accounts : create event (in flight)
+
+user -> voice : "Stop working" (or stop key)
+voice -> tm : work-stop request
+voice -> user : "Pausing work."\n(within STOP_ACK_TIME)
+hnote over tm : Pausing
+tm -> gate : block new task actions;\nwithdraw unused approvals
+tm -> agent : interrupt where safe
+tm -> hist : preserve context;\nrecord outstanding operation
+
+alt earlier submission returns evidence
+  accounts --> gate : created event with details
+  gate -> verify : match result to approved action
+  verify --> tm : creation verified
+else result not yet known
+  accounts --> gate : timeout or pending
+  gate -> verify : reconcile earlier submission
+  verify --> tm : outcome unknown
+end
+
+agent -> gate : next tool call
+gate --> agent : refused: work paused
+hnote over tm : Paused
+tm -> hist : record result or uncertainty
+tm -> voice : pause summary
+voice -> user : "Paused. Here is what completed\nand what remains."
+note over tm, accounts
+  This example receives the result before the summary.
+  The task may also pause while that result is pending.
+  A pause does not cancel an earlier external submission.
+end note
+
+user -> voice : "Continue working"
+voice -> tm : explicit resume request
+tm -> verify : check relevant state\nand blocking uncertainty
+verify --> tm : safe to continue
+hnote over tm : Working
+tm -> agent : resume context\n(new approval for remaining writes)
+@enduml

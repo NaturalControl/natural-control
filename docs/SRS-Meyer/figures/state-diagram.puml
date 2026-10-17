@@ -1,0 +1,44 @@
+@startuml state-diagram
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam defaultFontSize 13
+skinparam nodesep 65
+skinparam ranksep 65
+skinparam state {
+  BackgroundColor #E8F4EF
+  BorderColor #1D7A5C
+  BackgroundColor<<final>> #F2F2F0
+  BorderColor<<final>> #6B6B66
+}
+hide empty description
+state "Running" as Running
+state Pausing
+state Paused
+state Cancelling
+state Cancelled <<final>>
+state Done <<final>>
+state Failed <<final>>
+
+[*] --> Running : request
+Running -down-> Pausing : pause
+Pausing -down-> Paused : recorded
+Paused -left-> Running : resume
+Running -up-> Done : complete
+Running -right-> Failed : fail
+Running -left-> Cancelling : cancel
+Pausing -left-> Cancelling : cancel
+Paused -left-> Cancelling : cancel
+Cancelling -down-> Cancelled : recorded
+
+legend bottom
+  Running groups Working, AwaitingClarification,
+  AwaitingApproval, and Executing. See the transition table.
+  Active includes Running, Pausing, Paused, and Cancelling.
+  Stop, disconnection, or provider failure pauses work.
+  Pause and cancellation block new task actions.
+  Resumption requires user intent and a state check.
+  Paused work does not resume on reconnection alone.
+  Earlier external operations may settle after a pause.
+endlegend
+@enduml
