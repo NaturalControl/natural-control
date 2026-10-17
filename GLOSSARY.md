@@ -25,7 +25,7 @@ Any action that changes something outside our system: sending, submitting, purch
 _Avoid_: Risky action, dangerous action, write
 
 **Approval**:
-The user's explicit consent to one consequential action with its specific details. It is used once and stops applying if any of those details change.
+The user's explicit consent to one consequential action, or to a listed batch of similar actions read back with their number and a summary, with their specific details. It is used once and stops applying if any of those details change.
 _Avoid_: Confirmation, permission
 
 ## Control
