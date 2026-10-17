@@ -22,11 +22,11 @@ state Active {
     state Executing
 
     Working --> AwaitingClarification : details missing\nor ambiguous,\nor bare "stop"
-    AwaitingClarification --> Working : user answers
+    AwaitingClarification --> Working : user answers\nor new request
     Working --> Working : correction
     Working --> AwaitingApproval : consequential\naction or batch
     AwaitingApproval --> Executing : explicit yes
-    AwaitingApproval --> Working : no or change\n(approval dropped)
+    AwaitingApproval --> Working : no, change, or\nnew request\n(approval dropped)
     Executing --> Executing : next batch item
     Executing --> Working : last result\nverified
   }
