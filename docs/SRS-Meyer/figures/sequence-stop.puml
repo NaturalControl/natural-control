@@ -19,30 +19,43 @@ participant "Action\ngate" as gate
 participant "Outcome\nverification" as verify
 participant "Account\ntools" as accounts #F2F2F0
 
-note over tm : Executing: an approved\n"create event" call is in flight
+note over tm : Executing: approved event\ncreation is already submitted
 gate -> accounts : create event (in flight)
 
 user -> voice : "Stop working" (or stop key)
-voice -> tm : stop request (fixed rule,\nnot model interpretation)
-voice -> user : "Stopping." (within STOP_ACK_TIME)
-hnote over tm : Stopping
-tm -> hist : record stop request
-tm -> gate : refuse further consequential\ncalls for this task
-tm -> agent : interrupt
+voice -> tm : work-stop request
+voice -> user : "Pausing work."\n(within STOP_ACK_TIME)
+hnote over tm : Pausing
+tm -> gate : block new task actions;\nwithdraw unused approvals
+tm -> agent : interrupt where safe
+tm -> hist : preserve context;\nrecord outstanding operation
 
-accounts --> gate : created
-gate -> verify : check outcome
-verify -> accounts : read event back
-accounts --> verify : event found
-verify --> gate : verified
-gate --> tm : in-flight action settled: verified
+alt earlier submission returns evidence
+  accounts --> gate : created event with details
+  gate -> verify : match result to approved action
+  verify --> tm : creation verified
+else result not yet known
+  accounts --> gate : timeout or pending
+  gate -> verify : reconcile earlier submission
+  verify --> tm : outcome unknown
+end
 
 agent -> gate : next tool call
-gate --> agent : refused: task stopping
-agent --> tm : interrupted
+gate --> agent : refused: work paused
+hnote over tm : Paused
+tm -> hist : record result or uncertainty
+tm -> voice : pause summary
+voice -> user : "Paused. Here is what completed\nand what remains."
+note over tm, accounts
+  This example receives the result before the summary.
+  The task may also pause while that result is pending.
+  A pause does not cancel an earlier external submission.
+end note
 
-hnote over tm : Stopped
-tm -> hist : record stop, completed\nand uncertain actions
-tm -> voice : confirmed stop and summary
-voice -> user : "Stopped. The event was already\nadded; nothing else will run."
+user -> voice : "Continue working"
+voice -> tm : explicit resume request
+tm -> verify : check relevant state\nand blocking uncertainty
+verify --> tm : safe to continue
+hnote over tm : Working
+tm -> agent : resume context\n(new approval for remaining writes)
 @enduml

@@ -44,11 +44,12 @@ hnote over tm : Executing
 tm -> gate : approved
 
 gate -> accounts : create event (unique action ID)
-accounts --> gate : created
-gate -> verify : check outcome
-verify -> accounts : read event back
-accounts --> verify : event found
-verify --> gate : verified
+accounts --> gate : created event with details
+gate -> verify : match response to approved action
+verify --> gate : creation verified
+note over verify, accounts
+  Use a separate lookup if the response is unclear.
+end note
 gate --> agent : result: verified
 tm -> hist : record verified outcome
 hnote over tm : Working

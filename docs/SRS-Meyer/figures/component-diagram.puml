@@ -1,7 +1,7 @@
 @startuml component-diagram
-!pragma layout smetana
 skinparam dpi 200
 skinparam componentStyle rectangle
+left to right direction
 skinparam shadowing false
 skinparam defaultFontName Helvetica
 skinparam defaultFontSize 12
@@ -41,7 +41,7 @@ user --> client : speech, keys
 user ..> vo
 client <--> voice : audio
 voice ..> speech
-voice <--> tm : requests, stop, answers /\nupdates, questions
+voice <--> tm : requests, pause, answers /\nupdates, questions
 tm <--> hist : task state,\napprovals, outcomes
 tm <--> agent : tasks, steering, interrupts /\nprogress events
 agent ..> model
@@ -49,9 +49,9 @@ agent --> gate : every tool call
 gate --> tm : approval requests
 gate --> browser : allowed calls
 gate --> accounts : allowed calls
-gate --> verify : after each\nconsequential action
-verify --> browser : re-read state
-verify --> accounts : re-read state
+gate --> verify : action results
+verify --> browser : check when needed
+verify --> accounts : check when needed
 browser --> web
 accounts --> composio
 composio --> google
@@ -63,8 +63,8 @@ note bottom of agent
 end note
 
 legend right
-  green = built by us
-  grey = reused open source
+  green = planned team work
+  grey = reused component
   white = external service
 endlegend
 @enduml

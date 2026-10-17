@@ -1,6 +1,8 @@
 # The action gate wraps every tool call
 
-The AI agent (Hermes) never calls tools, Composio, or Google directly. Every tool call goes through our action gate, which lets read-only calls through and holds consequential ones until the user approves the exact action, read back from the call itself rather than from the agent's description. We chose this over relying on the agent's own approval requests because a check outside the model is the only way "approval before every consequential action" is a guarantee rather than a hope; Anthropic's Claude Code auto mode puts its permission check in the harness for the same reason.
+The proposed Hermes integration sends every tool call through our action gate. Navigation and temporary preparation may proceed when they have no consequential effect. Writes and consequential commitments require approval of exact details from the proposed call. FR24 defines the narrow exception for rejecting non-essential cookies. The gate blocks new task actions while work is paused.
+
+This check belongs outside the planning model. The POC must verify that the integration enforces it on every action path.
 
 ## Consequences
 

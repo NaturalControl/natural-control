@@ -1,9 +1,10 @@
 @startuml state-diagram
-!pragma layout smetana
 skinparam dpi 200
 skinparam shadowing false
 skinparam defaultFontName Helvetica
-skinparam defaultFontSize 12
+skinparam defaultFontSize 13
+skinparam nodesep 65
+skinparam ranksep 65
 skinparam state {
   BackgroundColor #E8F4EF
   BorderColor #1D7A5C
@@ -11,41 +12,33 @@ skinparam state {
   BorderColor<<final>> #6B6B66
 }
 hide empty description
-
-[*] --> Working : user request
-
-state Active {
-  state Running {
-    state Working
-    state AwaitingClarification
-    state AwaitingApproval
-    state Executing
-
-    Working --> AwaitingClarification : details missing\nor ambiguous,\nor bare "stop"
-    AwaitingClarification --> Working : user answers\nor new request
-    Working --> Working : correction
-    Working --> AwaitingApproval : consequential\naction or batch
-    AwaitingApproval --> Executing : explicit yes
-    AwaitingApproval --> Working : no, change, or\nnew request\n(approval dropped)
-    Executing --> Executing : next batch item
-    Executing --> Working : last result\nverified
-  }
-  state Paused
-  Running --> Paused : disconnect or\nprovider outage
-  Paused --> Working : reconnect and\nuser continues
-}
-
-state Stopping
-state Stopped <<final>>
+state "Running" as Running
+state Pausing
+state Paused
+state Cancelling
+state Cancelled <<final>>
 state Done <<final>>
 state Failed <<final>>
 
-Active --> Stopping : stop request
-Stopping --> Stopped : in-flight work\nsettled
-Working --> Done : task complete
-Working --> Failed : agent cannot\ncontinue
+[*] --> Running : request
+Running -down-> Pausing : pause
+Pausing -down-> Paused : recorded
+Paused -left-> Running : resume
+Running -up-> Done : complete
+Running -right-> Failed : fail
+Running -left-> Cancelling : cancel
+Pausing -left-> Cancelling : cancel
+Paused -left-> Cancelling : cancel
+Cancelling -down-> Cancelled : recorded
 
-Stopped --> [*]
-Done --> [*]
-Failed --> [*]
+legend bottom
+  Running groups Working, AwaitingClarification,
+  AwaitingApproval, and Executing. See the transition table.
+  Active includes Running, Pausing, Paused, and Cancelling.
+  Stop, disconnection, or provider failure pauses work.
+  Pause and cancellation block new task actions.
+  Resumption requires user intent and a state check.
+  Paused work does not resume on reconnection alone.
+  Earlier external operations may settle after a pause.
+endlegend
 @enduml
