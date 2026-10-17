@@ -42,6 +42,7 @@
 2026-10-14 & All & First draft from team discussion\\
 2026-10-16 & Lucas DeBoer & Revise initial draft\\
 2026-10-17 & Aaron Loh & Align FMEA and safety requirements with revised components\\
+2026-10-17 & Aaron Loh & Add interview findings to assumptions and H2-a\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -94,7 +95,7 @@ The following are outside the system boundary: the user, laptop hardware (includ
 
 \begin{enumerate}
   \item Setup done correctly. 
-    \\A setup helper completed the assisted setup (accounts connected, permissions granted), so setup errors are not analyzed as runtime hazards.
+    \\A setup helper completed the assisted setup (accounts connected, permissions granted), so setup errors are not analyzed as runtime hazards. Setup help may only be available weekly (for example, from an intervenor), so recovery after setup should not depend on it.
   \item One authorized speaker. 
     \\There is only one user giving commands; other voices are noise. We do not need to verify who is speaking.
   \item User's own accounts. 
@@ -104,7 +105,7 @@ The following are outside the system boundary: the user, laptop hardware (includ
   \item Compatible device. 
     \\The user has a functioning laptop with a microphone and speakers running macOS with Chrome installed. Note that we will consider scenarios where the laptop has a microphone and speakers that fail mid-usage, but all laptops are assumed to have these components.
   \item Users can understand spoken output. 
-    \\We assume that the user can understand the spoken output of the system. We do not analyze scenarios where the user has both vision and hearing loss.
+    \\We assume that the user can understand the spoken output of the system. We do not analyze scenarios where the user has both vision and hearing loss. This excludes many deafblind users, such as the clients of CNIB Deafblind Community Services (from our October 17 interview); braille output through VoiceOver is a possible future extension.
 \end{enumerate}
 We do not assume that the network, speech recognition, the AI model, websites, or other external services work correctly. Their failures are analyzed in the FMEA.
 
@@ -128,7 +129,7 @@ Each row is one failure mode of one component. Hazard IDs are H\textless{}compon
 \bottomrule
 \endfoot
 H1-a & Accessible client & Stop control can't be reached without voice & User can't halt the agent if voice fails; loss of control & Shortcut clashes with VoiceOver; focus in another app; client frozen & Provide a stop shortcut that works whenever the client runs and doesn't clash with VoiceOver; test with VoiceOver on & FR.Sa.1\\
-H2-a & Voice interface & Misunderstands the user: wrong words, names, numbers, a cut-off sentence, or another voice & Wrong task or wrong details acted on & Background noise, accents, turn detection ending too early, TV or other people & Noise cancellation; read back key details (recipient, time, content summary) before every consequential action; allow spoken correction & FR.Sa.3\\
+H2-a & Voice interface & Misunderstands the user: wrong words, names, numbers, a cut-off sentence, or another voice & Wrong task or wrong details acted on & Background noise, accents, turn detection ending too early, TV or other people & Noise cancellation; read back key details (recipient, time, content summary) before every consequential action; let the user correct one part of the read-back without restarting & FR.Sa.3\\
 H2-b & Voice interface & A stop request isn't recognized & Task keeps running; loss of control & Stop classified as chatter; mistranscription; user talking over the system & Recognize stop phrases with a fixed rule before any model interprets them; keyboard stop as backup; acknowledge quickly & FR.Sa.4, NFR.Sa.1\\
 H3-a & Task manager & Stop is acknowledged but execution continues & Actions happen after the user said stop; false sense of safety & Hermes interrupts only at tool boundaries; an action is already in progress & Say ``stopping'' and ``stopped'' as separate messages; once a stop is requested, the gate refuses all further consequential actions for that task; report anything completed after the request & FR.Sa.5\\
 H3-b & Task manager & A consequential action is repeated after reconnecting & Duplicate email or event & Automatic retry after a dropped connection when the first attempt actually succeeded & Unique ID per approved action; never retry a consequential action automatically; pause new actions while disconnected; on reconnect, report pending items & FR.Sa.6, FR.Sa.7, NFR.Sa.2\\
