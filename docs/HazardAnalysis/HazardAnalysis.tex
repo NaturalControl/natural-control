@@ -136,7 +136,7 @@ H1-a & Accessible client & Stop control can't be reached without voice & User ca
 H2-a & Voice interface & Misunderstands the user: wrong words, names, numbers, a cut-off sentence, or another voice & Wrong task or wrong details acted on & Background noise, accents, turn detection ending too early, TV or other people & Read back key details before every consequential action; let the user correct one part of the read-back without restarting & FR.Sa.3\\
 H2-b & Voice interface & A stop request isn't recognized & Task keeps running; loss of control & Stop request classified as chatter; mistranscription; user talking over the system & Recognize stop phrases with a fixed rule before any model interprets them; keyboard stop as backup; acknowledge quickly & FR.Sa.4, NFR.Sa.1\\
 H2-c & Voice interface & Cannot receive or transcribe voice input or give voice output & User can't give commands, approvals, or stop, or can't hear feedback while the agent is working; loss of control and awareness & Transcription or speech service failure; input or output device disconnected or removed & Detect loss of input or output where possible; stop the current task and allow no further requests until everything is functioning & FR.Sa.20, FR.Sa.5\\
-H3-a & Task manager & Stop is acknowledged but execution continues & Actions happen after the user said stop; false sense of safety & Interuption only done at tool boundaries; an action is already in progress & Say ``stopping'' and ``stopped'' as separate messages; once a stop is requested, refuses all further actions for the current task; report anything completed after the request & FR.Sa.5\\
+H3-a & Task manager & Stop is acknowledged but new work starts & Unwanted actions after stop; false sense of control & Interruption occurs only at tool boundaries; an operation is already submitted & Treat ``stop working'' as pause. Block new task actions and preserve context. Report acknowledgment and confirmed pause separately. Explain what completed and what remains uncertain. Resume only on a clear user request. ``Cancel'' ends the task. Earlier actions are not undone. & FR.Sa.5\\
 H3-b & Task manager & A consequential action is repeated after reconnecting & Duplicate task & Automatic retry after a dropped connection when the first attempt actually succeeded & Unique ID per approved action; never retry a consequential action automatically; pause new actions while disconnected; on reconnect, report pending items & FR.Sa.6, FR.Sa.7, NFR.Sa.2\\
 H4-a & AI agent & Does the wrong task or picks the wrong target & Wrong action prepared (wrong thread, wrong date) & Ambiguous request; model error & Ask a clarifying question when required details are missing or ambiguous; the approval read-back (H2-a) catches the rest & FR.Sa.9\\
 H4-b & AI agent & Claims outcome that didn't happen & Missed task; duplicated task; user misinformed & Model hallucination; partial failure reported as success; partial success reported as failure & Report completion only from verified outcomes; distinguish verified, partial, and unverified results & FR.Sa.10\\
@@ -168,7 +168,7 @@ These requirements come from the recommended actions in Table~\ref{TblFMEA} and 
   \item \textbf{FR.Sa.2:} The system shall build the task history only from recorded actions and verified outcomes, labelling unverified entries. (H8-a)
   \item \textbf{FR.Sa.3:} Before each consequential action, the system shall read back its key details, allow users to change parts of the request, and proceed only after explicit approval. (H2-a)
   \item \textbf{FR.Sa.4:} The system shall recognize stop requests with a fixed rule that does not depend on model interpretation. (H2-b)
-  \item \textbf{FR.Sa.5:} After a stop request, the system shall refuse all further actions for the current task and announce stop acknowledged and stop confirmed as separate messages. (H2-c, H3-a)
+  \item \textbf{FR.Sa.5:} ``Stop working'' shall pause the task and block new task actions. The system shall preserve context and distinguish acknowledgment from confirmed pause. Already-submitted operations may still finish. The system shall report completed work, unfinished work, and uncertain outcomes. Only checks of earlier outcomes may continue while paused. Work shall resume only on a clear user request. ``Cancel'' shall end the task without undoing earlier actions. (H2-c, H3-a)
   \item \textbf{FR.Sa.6:} The system shall assign each approved consequential action a unique ID and shall not repeat an action with the same ID. (H3-b)
   \item \textbf{FR.Sa.7:} The system shall pause the task while the user is disconnected. (H3-b)
   \item \textbf{FR.Sa.8:} The system shall save task state and pending approvals, and after a restart shall announce interrupted tasks with their last known status. (H8-b)
@@ -208,6 +208,8 @@ These requirements come from the recommended actions in Table~\ref{TblFMEA} and 
 \subsection{AI Tools Used}
 
 Aaron Loh: Claude Code with Claude Opus 5.5.
+
+OpenAI Codex helped revise H3-a and FR.Sa.5 from Aaron's decisions and Kevin's review.
 
 \todo{Other members: add the tools you used.}
 
