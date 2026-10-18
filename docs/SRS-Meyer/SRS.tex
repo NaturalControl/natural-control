@@ -22,6 +22,7 @@
 \usepackage{needspace}
 \usepackage{pdflscape}
 \usepackage{graphicx}
+\usepackage[numbers]{natbib}
 \usepackage[bookmarks=true]{hyperref}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
@@ -117,7 +118,7 @@ This document follows the requirements documentation structure presented in the 
 \addcontentsline{toc}{chapter}{Changes from the Meyer template}
 
 \begin{itemize}
-    \item Glossary moved to the front, so every term is defined before first use (rubric Level 4).
+    \item Glossary moved to the front, so every term is defined before first use.
     \item Added G.8 User profiles, to describe distinct user groups and their needs.
     \item Added E.7 Standards and legal/regulatory factors, plus environment requirements.
     \item S.2 split into one subsection per component, with safety requirements ported from the Hazard Analysis.
@@ -128,7 +129,7 @@ This document follows the requirements documentation structure presented in the 
 \chapter*{Glossary}
 \addcontentsline{toc}{chapter}{Glossary}
 
-Project terms (from GLOSSARY.md):
+Project terms:
 
 \begin{itemize}
     \item User: the person who owns the connected accounts and gives commands. Other voices in the room are not users.
@@ -166,7 +167,7 @@ In an interview with a former CNIB Deafblind Community Services (DBCS) staff mem
 \nsection{G.3 Expected benefits}
 
 \begin{itemize}
-    \item Delegate, don't navigate: the user states an outcome (``reply to Alex'') instead of navigating the interface step by step. (G1)
+    \item Delegate, don't navigate: the user simply states an outcome (``reply to Alex'') instead of visually navigating the interface step by step. (G1)
     \item Control without sight: the user can understand, approve, correct, and stop the agent without seeing the screen. (G2, G4)
     \item Trustworthy results: results are checked against the real account or page before being reported, so the user does not need sighted help to confirm what happened. (G3)
 \end{itemize}
@@ -247,14 +248,12 @@ See the Glossary at the front of this document.
 
 \begin{itemize}
     \item Mac with Chrome, English, as decided in the Development Plan.
-    \item Team budget ceiling of CAD 500.
+    \item Team budget ceiling of \$500 CAD.
     \item Course schedule: POC demonstration November 23 to December 3; final demonstration and EXPO in April.
-    \item Gmail access uses restricted Google OAuth permissions; an unverified app is limited to a small number of registered test users.
+    \item Gmail and Calendar access uses restricted Google OAuth permissions. An app in Testing status is capped at 100 registered test users, and its issued refresh tokens expire after 7 days, requiring re-authorization until the app is verified or published \citep{GoogleOAuthLimits}.
     \item Provider terms of use and data retention policies apply to anything sent to them.
     \item Passwords and payment details are entered through a private page or the user's own device. One-time authentication codes may be spoken. Spoken codes pass through the configured speech and conversation services. Provider handling must be checked before claiming stronger privacy guarantees.
 \end{itemize}
-
-\comment{Verify Google's current limits for unverified apps (number of test users, token expiry) before final submission.}
 
 \nsection{E.4 Assumptions}
 
@@ -287,15 +286,12 @@ Speech recognition, the AI model, websites, and external services are not assume
 \nsection{E.7 Standards and legal/regulatory factors}
 
 \begin{itemize}
-    \item WCAG 2.2 Level AA: accessibility standard for the web client.
-    \item AODA (Accessibility for Ontarians with Disabilities Act): Ontario accessibility law that references WCAG.
-    \item PIPEDA: Canadian privacy law for personal information such as email and calendar contents.
-    \item Google API Services User Data Policy: limits how Gmail and Calendar data may be used and stored.
-    \item Open-source licenses: our code is MIT; reused components keep their own licenses and notices.
+    \item WCAG 2.2 Level AA: accessibility standard for the web client, adopted voluntarily \citep{WCAG22}.
+    \item AODA (Accessibility for Ontarians with Disabilities Act): Ontario accessibility law referencing WCAG; its compliance obligations are not required as they apply to organizations with Ontario employees (20+ for reporting, 50+ for website compliance), but it is a relevant reference for our team \citep{AODAFactSheet}.
+    \item Google API Services User Data Policy: binds the project as a condition of using Gmail and Calendar APIs regardless of organizational status; limits how that data may be used and stored \citep{GoogleAPIDataPolicy}.
+    \item Open-source licenses: our code uses MIT licensing; reused components keep their own licenses and notices.
     \item Coding standards: PEP 8 for Python; strict TypeScript with a shared linter for the client.
 \end{itemize}
-
-\comment{Confirm which of these apply to a student prototype and cite each one.}
 
 \subsection*{Environment requirements}
 \addcontentsline{toc}{subsection}{Environment requirements}
@@ -942,7 +938,11 @@ Requirements come from the Problem Statement, Development Plan, Hazard Analysis,
 \chapter*{References}
 \addcontentsline{toc}{chapter}{References}
 
-\comment{List every source cited (WCAG, AODA, PIPEDA, Google policy, LiveKit, Hermes, Browser Use, WebAIM, Morae, Meyer handbook).}
+\renewcommand{\bibsection}{}
+\bibliographystyle{plainnat}
+\bibliography{../../refs/CapstoneSources}
+
+\comment{WCAG, AODA, and the Google API policy are now cited in E.7/E.3. LiveKit, Hermes, Browser Use, WebAIM, and Morae are named in the Glossary, P.2, P.5, and the System book but not yet marked with \textbackslash citep; add those where each is first mentioned. The Meyer handbook is already linked inline on the first page.}
 
 \chapter*{Appendix: AI use disclosure}
 \addcontentsline{toc}{chapter}{Appendix: AI use disclosure}
