@@ -194,12 +194,18 @@ controlled accounts and data; no participant's real email is required.
 
 \subsection{Control semantics}
 Ordinary speech interruption stops spoken output while the underlying task
-continues. An explicit ``stop working'' requests cancellation of execution.
-The interface first acknowledges receipt, then separately confirms whether
-execution has stopped. Acknowledgment is not proof of cancellation. Once execution is confirmed
-to have stopped, no further action may be dispatched for that task. An action
-already completed cannot be undone by saying stop; in-flight actions with an
-unknown outcome must be reported and reconciled before retrying.
+continues. An explicit ``stop working'' command or the stop key requests a pause,
+preserving task context for later resumption. An explicit request to cancel or
+abandon the task ends it. The interface first acknowledges the work-stop request,
+then separately confirms the pause once new task actions are blocked and context
+is preserved. Acknowledgment is not proof that an external operation was cancelled.
+The system requests interruption of ongoing work where safe and supported;
+an operation already submitted may still settle. While paused, checks may only
+reconcile earlier actions, not advance the task. Feedback distinguishes completed,
+unfinished, and uncertain work. Resumption requires a clear user request and a
+check of relevant state. Pausing withdraws unused approvals; remaining consequential
+actions require fresh approval. Cancellation ends the task without undoing earlier
+actions. Unknown outcomes must be reported and reconciled before retrying.
 
 Disconnection pauses new actions unless the user previously authorized background
 continuation for that task. Reconnection presents current state and pending
