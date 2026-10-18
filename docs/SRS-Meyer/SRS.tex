@@ -527,7 +527,7 @@ The following requirements are SRS revisions based on the Hazard Analysis. Hazar
 \bottomrule
 \endfoot
 NFR1 & Session controls, work pause, approval, and task history shall work with VoiceOver and the keyboard alone. & Users rely on their existing assistive tools. & G2, G5\\\addlinespace[4pt]
-NFR2 & At least TARGET\_COMPLETION of tasks in the declared task suite shall be completed correctly without sighted help. & Measures the main benefit: independent task completion. & G1\\\addlinespace[4pt]
+NFR2 & At least TARGET\_COMPLETION of tasks in the declared task suite shall be completed correctly without sighted help. The task suite shall include representative Gmail, Google Calendar, and unfamiliar website tasks. & Measures the main benefit: independent task completion. & G1\\\addlinespace[4pt]
 NFR3 & A work-stop request shall be acknowledged within STOP\_ACK\_TIME. Time to block new actions and time to reconcile in-flight work shall be measured separately. & A quick acknowledgment does not prove earlier actions ended. & G2; NFR.Sa.1\\\addlinespace[4pt]
 NFR4 & The system shall begin its response within RESPONSE\_TIME after the selected turn detector commits an ordinary request. Premature replies and missed interruptions shall also be evaluated. & Fast replies must not cut off unfinished thoughts. & G2\\\addlinespace[4pt]
 NFR5 & The application shall not retain raw microphone audio. It shall exclude credentials and authentication codes from task history, logs, and source control. Setup shall explain provider processing and retention separately. & Application storage rules do not establish provider privacy guarantees. & G5; FR.Sa.17\\\addlinespace[4pt]
