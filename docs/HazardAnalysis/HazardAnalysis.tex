@@ -47,6 +47,7 @@
 \bottomrule
 \end{tabularx}
 \end{table}
+\todo{update this.}
 
 ~\newpage
 
@@ -79,16 +80,16 @@ These losses are amplified as a sighted user can glance at the screen to catch a
 \section{System Boundaries and Components}
 The list below outlines the major components of the system and their roles. This is a high-level view of the system that is used to brainstorm potential hazards and is used to complete the Failure Mode and Effects Analysis (FMEA) in Section~\ref{sec:FMEA}.
 
-\begin{itemize}
-  \item \textbf{Accessible client:} Start and stop keys, viewing task history \todo{What else is in here}.
+\begin{enumerate}
+  \item \textbf{Accessible client:} The layer that supports app functions outside voice control and task execution, such as start and stop keyboard shortcuts and viewing task history.
   \item \textbf{Voice interface:} Captures and transcribes user voice input, and provides text-to-speech audio feedback.
   \item \textbf{Task manager:} Starts, stops, and tracks tasks.
   \item \textbf{AI agent:} Plans tasks and calls tools.
   \item \textbf{Action gate:} Handles approval of consequential actions.
   \item \textbf{Outcome verification:} Verifies completed actions match what the user asked for.
   \item \textbf{Action tools and integrations:} Tools the agent uses to gather information and perform actions.
-  \item \textbf{Task history layer:} Stores relevant information to support recovery after disconnects.
-\end{itemize}
+  \item \textbf{Task history layer:} Stores pending approvals, action history, task state, and any other relevant information needed to support recovery after disconnects.
+\end{enumerate}
 The following are outside the system boundary: the user, laptop hardware (including the microphone and speakers), the operating system (macOS), the network, AI and speech service providers, websites, and external accounts and services. Failures of these are not analyzed internally, but the system's response to them is.
 \todo{Add the component diagram (?).}
 
@@ -102,17 +103,19 @@ The following are outside the system boundary: the user, laptop hardware (includ
   \item User's own accounts. 
     \\Connected accounts belong to the user, who may act on them. Development and evaluation use test accounts.
   \item Good faith user. 
-    \\The user does not try to misuse the system or cause harm or loss. The user also does not try to give misleading or vague commands; they always strive to give instructions to the best of their ability.
+    \\The user does not purposely misuse the system or cause harm or loss. The user also does not intentionally give misleading or vague commands; they always strive to give instructions to the best of their ability.
   \item Compatible device. 
     \\The user has a functioning laptop with a microphone and speakers running macOS with Chrome installed. Note that we will consider scenarios where the laptop has a microphone and speakers that fail mid-usage, but all laptops are assumed to have these components.
   \item Users can understand spoken output. 
-    \\We assume that the user can understand the spoken output of the system. We do not analyze scenarios where the user has both vision and hearing loss. This excludes many deafblind users, such as the clients of CNIB Deafblind Community Services (from our October 17 interview); braille output through VoiceOver is a possible future extension.
+    \\We assume that the user can understand the spoken output of the system. We do not analyze scenarios where the user has both vision and hearing loss. This excludes many deafblind users, such as the clients of CNIB Deafblind Community Services (from our October 17 interview \todo{link to interview?}); braille output through VoiceOver is a possible future extension.
 \end{enumerate}
 We do not assume that the network, speech recognition, the AI model, websites, or other external services work correctly. Their failures are analyzed in the FMEA.
 
 \section{Failure Mode and Effect Analysis}
 \label{sec:FMEA}
-Each row is one failure mode of one component. Hazard IDs are H\textless{}component\textgreater{}-\textless{}letter\textgreater{}. How a failure is detected without sight is part of the recommended action, since a blind user often cannot notice a failure visually.
+The following table lists potential failure modes of each component, their effects and causes, recommended actions to mitigate the hazards, and the associated safety requirements.
+Each row is one failure mode of one component. Hazard IDs are \texttt{H<component>-<letter>}. How a failure is detected without sight is part of the recommended action, since a blind user often cannot notice a failure visually.
+
 
 \begin{landscape}
 \footnotesize
@@ -130,23 +133,25 @@ Each row is one failure mode of one component. Hazard IDs are H\textless{}compon
 \bottomrule
 \endfoot
 H1-a & Accessible client & Stop control can't be reached without voice & User can't halt the agent if voice fails; loss of control & Shortcut clashes with VoiceOver; focus in another app; client frozen & Provide a stop shortcut that works whenever the client runs and doesn't clash with VoiceOver; test with VoiceOver on & FR.Sa.1\\
-H2-a & Voice interface & Misunderstands the user: wrong words, names, numbers, a cut-off sentence, or another voice & Wrong task or wrong details acted on & Background noise, accents, turn detection ending too early, TV or other people & Noise cancellation; read back key details (recipient, time, content summary) before every consequential action; let the user correct one part of the read-back without restarting & FR.Sa.3\\
-H2-b & Voice interface & A stop request isn't recognized & Task keeps running; loss of control & Stop classified as chatter; mistranscription; user talking over the system & Recognize stop phrases with a fixed rule before any model interprets them; keyboard stop as backup; acknowledge quickly & FR.Sa.4, NFR.Sa.1\\
-H3-a & Task manager & Stop is acknowledged but execution continues & Actions happen after the user said stop; false sense of safety & Hermes interrupts only at tool boundaries; an action is already in progress & Say ``stopping'' and ``stopped'' as separate messages; once a stop is requested, the gate refuses all further consequential actions for that task; report anything completed after the request & FR.Sa.5\\
-H3-b & Task manager & A consequential action is repeated after reconnecting & Duplicate email or event & Automatic retry after a dropped connection when the first attempt actually succeeded & Unique ID per approved action; never retry a consequential action automatically; pause new actions while disconnected; on reconnect, report pending items & FR.Sa.6, FR.Sa.7, NFR.Sa.2\\
+H2-a & Voice interface & Misunderstands the user: wrong words, names, numbers, a cut-off sentence, or another voice & Wrong task or wrong details acted on & Background noise, accents, turn detection ending too early, TV or other people & Read back key details before every consequential action; let the user correct one part of the read-back without restarting & FR.Sa.3\\
+H2-b & Voice interface & A stop request isn't recognized & Task keeps running; loss of control & Stop request classified as chatter; mistranscription; user talking over the system & Recognize stop phrases with a fixed rule before any model interprets them; keyboard stop as backup; acknowledge quickly & FR.Sa.4, NFR.Sa.1\\
+H2-c & Voice interface & Cannot receive or transcribe voice input or give voice output & User can't give commands, approvals, or stop, or can't hear feedback while the agent is working; loss of control and awareness & Transcription or speech service failure; input or output device disconnected or removed & Detect loss of input or output where possible; stop the current task and allow no further requests until everything is functioning & FR.Sa.20, FR.Sa.5\\
+H3-a & Task manager & Stop is acknowledged but execution continues & Actions happen after the user said stop; false sense of safety & Interuption only done at tool boundaries; an action is already in progress & Say ``stopping'' and ``stopped'' as separate messages; once a stop is requested, refuses all further actions for the current task; report anything completed after the request & FR.Sa.5\\
+H3-b & Task manager & A consequential action is repeated after reconnecting & Duplicate task & Automatic retry after a dropped connection when the first attempt actually succeeded & Unique ID per approved action; never retry a consequential action automatically; pause new actions while disconnected; on reconnect, report pending items & FR.Sa.6, FR.Sa.7, NFR.Sa.2\\
 H4-a & AI agent & Does the wrong task or picks the wrong target & Wrong action prepared (wrong thread, wrong date) & Ambiguous request; model error & Ask a clarifying question when required details are missing or ambiguous; the approval read-back (H2-a) catches the rest & FR.Sa.9\\
-H4-b & AI agent & Claims success that didn't happen & Missed task; user misinformed & Model hallucination; partial failure reported as success & Report completion only from verified outcomes; distinguish verified, partial, and unverified results & FR.Sa.10\\
+H4-b & AI agent & Claims outcome that didn't happen & Missed task; duplicated task; user misinformed & Model hallucination; partial failure reported as success; partial success reported as failure & Report completion only from verified outcomes; distinguish verified, partial, and unverified results & FR.Sa.10\\
 H4-c & AI agent & Stalls or loops & Silence or repeated steps; user unsure what's happening; cost grows & Model loop; slow or broken website & Speak a status update at a regular interval while a task runs; after a step or time limit, pause and ask the user & FR.Sa.11, NFR.Sa.3\\
-H4-d & AI agent & AI provider outage or timeout & Task halts partway & Provider down; network loss & Pause, tell the user what was and wasn't done, never claim success & FR.Sa.12\\
-H5-a & Action gate & A consequential action slips through without approval & Unwanted action & Action not recognized as consequential (e.g. a browser click that submits a form); new tool not classified & Default-deny: anything not known to be read-only requires approval, including accepting cookies or terms (non-essential cookies are rejected automatically); if browser writes can't be intercepted reliably, make the browser read-only & FR.Sa.13\\
+H4-d & AI agent & AI provider outage or timeout & Task halts partway & Provider down; network loss & Pause and tell the user what was and wasn't done; never claim success & FR.Sa.12\\
+H5-a & Action gate & A consequential action slips through without approval & Unwanted action & Action not recognized as consequential (e.g. a browser click that submits a form); new tool not classified & Default-deny: anything not known to be read-only requires approval & FR.Sa.13\\
 H5-b & Action gate & A stale approval is reused & Action runs with details the user never approved & Details changed after approval (time, recipient) & Bind each approval to its exact details; approvals are single-use; any change requires new approval & FR.Sa.14\\
 H5-c & Action gate & An approval request expires or is withdrawn without a clear result & User unsure whether the action happened & Timeout; disconnect; request superseded & Tell the user explicitly that the action did not happen and what is still pending & FR.Sa.15\\
-H5-d & Action gate & An irreversible delete is approved by mistake & Email or event permanently lost & Misheard approval; wrong item matched; user assumes the action can be undone & For deletes, read back identifying details (sender, subject, date, or event title and time) and say it cannot be undone; use recoverable deletion (trash) where the service supports it & FR.Sa.19\\
+H5-d & Action gate & A delete is approved by mistake & Item or data lost, potentially permanently & Misheard approval; wrong item matched; user assumes the action can be undone & For deletes, read back identifying details and say it cannot be undone; use recoverable deletion (trash) where the service supports it & FR.Sa.19\\
 H6-a & Outcome verification & Verification wrongly confirms success, or cannot check and reports success anyway & User believes a task succeeded when it did not; missed task & Checking the wrong item or a stale copy of the page or account; the service does not expose the result & Re-read the specific item the action changed after acting; if it cannot be checked, report the result as unverified & FR.Sa.10\\
+H6-b & Outcome verification & Verification wrongly reports failure, or cannot check and reports failure anyway & User retries, causing a duplicate action; user loses trust in verification & Checking a stale copy or the wrong item; the service updates slowly after the action & Before reporting failure re-check the item; if the result is still uncertain, report it as unverified, not failed & FR.Sa.10\\
 H7-a & Action tools and integrations & Acts on the wrong page element & Wrong item chosen or wrong field filled & Poor labels; unusual layout; page changed after reading & Re-check the target against the approved details immediately before acting; verify the result afterward & FR.Sa.10, FR.Sa.14\\
 H7-b & Action tools and integrations & Follows instructions injected by a webpage & Unwanted action or private data sent elsewhere & Page or email text written to manipulate agents & Treat page and email content as data, never as commands; consequential actions must trace to the user's request; tell the user when content tries to give instructions & FR.Sa.16\\
-H7-c & Action tools and integrations & Access is broader than needed & Any other failure can do more damage & Requesting broad OAuth permissions for convenience & Request the narrowest permissions each tool needs; keep tokens out of the repository and logs; store website passwords in an encrypted vault, entered once per site through a private page and never by voice & FR.Sa.17\\
-H7-d & Action tools and integrations & Outcome unknown after a timeout & Retrying risks a duplicate; not retrying risks a missed task & Network or API timeout & Check the real account state before any retry; if still unknown, tell the user and ask & FR.Sa.18\\
+H7-c & Action tools and integrations & Access is broader than needed & Any other failure can do more damage & Requesting broad OAuth permissions for convenience & Request the narrowest permissions each tool needs; keep tokens out of the repository and logs; store and use passwords securely & FR.Sa.17\\
+H7-d & Action tools and integrations & Outcome unknown after a timeout & Retrying risks a duplicate; not retrying risks a missed task & Network or API timeout & Check the service or item state directly and get user approval before any retry & FR.Sa.18\\
 H8-a & Task history layer & Task history doesn't match what happened & User can't review or catch wrong actions afterward & History written from the agent's claims instead of recorded events; events lost during disconnects & Build history only from recorded actions and verified outcomes; label anything unverified & FR.Sa.2\\
 H8-b & Task history layer & Task state or pending approvals lost & User never asked, or told the wrong status & Crash or restart of the task manager or agent & Save task state and pending approvals; after a restart, announce interrupted tasks and their last known status & FR.Sa.8\\
 \end{longtable}
@@ -154,32 +159,32 @@ H8-b & Task history layer & Task state or pending approvals lost & User never as
 
 \section{Safety and Security Requirements}
 
-These requirements come from the recommended actions in Table~\ref{TblFMEA} and are also part of the SRS. FR.Sa marks functional safety requirements and NFR.Sa non-functional ones. Timing values are named constants, set after POC measurements (see the SRS constants table).
+These requirements come from the recommended actions in Table~\ref{TblFMEA} and are also part of the SRS. FR.Sa marks functional safety requirements and NFR.Sa non-functional ones. Timing values are named constants, set after POC measurements (see the SRS constants table \todo{link to srs constant table ?}).
 
 \subsection{Functional Safety Requirements}
 
 \begin{itemize}
   \item \textbf{FR.Sa.1:} The system shall provide a keyboard stop control that works whenever the client is running and does not conflict with VoiceOver commands. (H1-a)
   \item \textbf{FR.Sa.2:} The system shall build the task history only from recorded actions and verified outcomes, labelling unverified entries. (H8-a)
-  \item \textbf{FR.Sa.3:} Before each consequential action, the system shall read back its key details and proceed only after explicit approval. (H2-a)
+  \item \textbf{FR.Sa.3:} Before each consequential action, the system shall read back its key details, allow users to change parts of the request, and proceed only after explicit approval. (H2-a)
   \item \textbf{FR.Sa.4:} The system shall recognize stop requests with a fixed rule that does not depend on model interpretation. (H2-b)
-  \item \textbf{FR.Sa.5:} After a stop request, the system shall refuse all further consequential actions for that task and announce stop acknowledged and stop confirmed as separate messages. (H3-a)
+  \item \textbf{FR.Sa.5:} After a stop request, the system shall refuse all further actions for the current task and announce stop acknowledged and stop confirmed as separate messages. (H2-c, H3-a)
   \item \textbf{FR.Sa.6:} The system shall assign each approved consequential action a unique ID and shall not repeat an action with the same ID. (H3-b)
   \item \textbf{FR.Sa.7:} The system shall pause the task while the user is disconnected. (H3-b)
   \item \textbf{FR.Sa.8:} The system shall save task state and pending approvals, and after a restart shall announce interrupted tasks with their last known status. (H8-b)
   \item \textbf{FR.Sa.9:} The system shall ask a clarifying question when details required for an action are missing or ambiguous. (H4-a)
-  \item \textbf{FR.Sa.10:} The system shall report a task as complete only after verifying its outcome, and shall distinguish verified, partial, and unverified results. (H4-b, H6-a, H7-a)
+  \item \textbf{FR.Sa.10:} The system shall report a task as a success or failure only after verifying its outcome, and otherwise shall report it as partial or unverified. (H4-b, H6-a, H6-b, H7-a)
   \item \textbf{FR.Sa.11:} The system shall pause a task and ask the user after a configured step or time limit is reached. (H4-c)
   \item \textbf{FR.Sa.12:} If an external service fails mid-task, the system shall pause and tell the user what was and was not completed. (H4-d)
   \item \textbf{FR.Sa.13:} The system shall require approval for any action not classified as read-only. (H5-a)
   \item \textbf{FR.Sa.14:} The system shall bind each approval to the action's exact details, use it once, and require new approval if any detail changes. (H5-b, H7-a)
   \item \textbf{FR.Sa.15:} When an approval request expires or is withdrawn, the system shall tell the user that the action did not happen. (H5-c)
   \item \textbf{FR.Sa.16:} The system shall treat webpage and email content as data, and shall only perform consequential actions that trace to the user's request. (H7-b)
-  \item \textbf{FR.Sa.17:} The system shall request only the account permissions each tool needs, and shall keep credentials out of source control and logs. (H7-c)
-  \item \textbf{FR.Sa.18:} The system shall check the real account state before retrying an action whose outcome is unknown, and shall ask the user if it remains unknown. (H7-d)
+  \item \textbf{FR.Sa.17:} The system shall request only the account permissions each tool needs, and shall store and use credentials securely, keeping them out of source control, logs, and the AI model input. (H7-c)
+  \item \textbf{FR.Sa.18:} The system shall check the service or item state directly and confirm the user's approval before retrying an action whose outcome is unknown. (H7-d)
   \item \textbf{FR.Sa.19:} For delete actions, the system shall read back the item's identifying details, state that the action cannot be undone, and use recoverable deletion (such as moving to trash) where the service supports it. (H5-d)
+  \item \textbf{FR.Sa.20:} If voice input, voice output, or speech services are unavailable, the system shall immediately stop the current task, take no further actions until voice is restored, and notify the user when the system is functional again. (H2-c)
 \end{itemize}
-
 \subsection{Non-Functional Safety Requirements}
 
 \begin{itemize}
@@ -192,7 +197,7 @@ These requirements come from the recommended actions in Table~\ref{TblFMEA} and 
 
 \paragraph{POC (November).} FR.Sa.3, 4, 5, 13, 14; NFR.Sa.1. The safeguards the demo is meant to prove. FR.Sa.13 includes testing whether browser actions can be intercepted.
 
-\paragraph{Before Rev 0 / participant evaluation.} FR.Sa.1, 2, 6, 7, 8, 9, 10, 12, 15, 16, 17, 18, 19; NFR.Sa.2. These matter as soon as real participants use real-looking accounts.
+\paragraph{Before Rev 0 / participant evaluation.} FR.Sa.1, 2, 6, 7, 8, 9, 10, 12, 15, 16, 17, 18, 19, 20; NFR.Sa.2. These matter as soon as real participants use real-looking accounts.
 
 \paragraph{Later.} FR.Sa.11; NFR.Sa.3. Basic status updates exist earlier, but tuned step/time limits and update frequency need usability evidence. (Team to confirm.)
 
