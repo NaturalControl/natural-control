@@ -1016,16 +1016,16 @@ EXPO demo preparation & Package and rehearse the end-to-end demonstration. & EXP
 \nsection{P.5 Required technology elements}
 
 \begin{itemize}
-      \item LiveKit Agents (Python) and a speech-to-text/text-to-speech provider: ElevenLabs is the TTS candidate via LiveKit's plugin\citep{ElevenLabsPlugin}.
-      \item Hermes agent and an AI model provider: Hermes is not model-specific, so a specific model is not required on its side.
-      One candidate is currently Claude Sonnet because of its tool-call reliability under the approval-gate constraints in the Hazard Analysis, but there is flexibility 
-      to change this after POC testing or from the team's budget.
+    \item LiveKit Agents (Python) and a speech-to-text/text-to-speech provider: ElevenLabs is the TTS candidate via LiveKit's plugin\citep{ElevenLabsPlugin}.
+    \item Hermes agent and an AI model provider: Hermes is not model-specific, so a specific model is not required on its side.
+    One candidate is currently Claude Sonnet because of its tool-call reliability under the approval-gate constraints in the Hazard Analysis, but there is flexibility 
+    to change this after POC testing or from the team's budget.
     \item Browser Use with Chromium.
     \item Gmail and Google Calendar APIs through the Composio SDK, our own Google OAuth app before participant sessions, and test accounts.
     \item TypeScript and React for the web client.
-      \item A Mac running VoiceOver for development and testing: hosted CI cannot substitute for on-device permission or accessibility checks.
-      \item GitHub for source control and project tracking; GitHub Actions for automated Python and TypeScript checks.
-      \item Hosting for the voice/agent backend: a hybrid of a local Mac and hosted services. A local component is required because a hosted backend cannot reach the user's Mac or its signed-in browser sessions (E.3). The default topology, secret storage, and network requirements are finalized once a working configuration is demonstrated.
+    \item A Mac running VoiceOver for development and testing: hosted CI cannot substitute for on-device permission or accessibility checks.
+    \item GitHub for source control and project tracking; GitHub Actions for automated Python and TypeScript checks.
+    \item Hosting for the voice/agent backend: a hybrid of a local Mac and hosted services. A local component is required because a hosted backend cannot reach the user's Mac or its signed-in browser sessions (E.3). The default topology, secret storage, and network requirements are finalized once a working configuration is demonstrated.
 \end{itemize}
 
 \nsection{P.6 Risk and mitigation analysis}
@@ -1110,11 +1110,14 @@ Interview with a former CNIB Deafblind Community Services (DBCS) staff member.
 \chapter*{Appendix: AI use disclosure}
 \addcontentsline{toc}{chapter}{Appendix: AI use disclosure}
 
-Aaron Loh used Claude Code (Claude Opus 5.5) to work through the requirements. It asked questions, summarized tool documentation, and translated the team's decisions and Kevin's requirements draft into this structured draft. Aaron made and reviewed every decision. The team will review, verify, and rewrite this draft before submission.
+Aaron Loh: Claude Code (Claude Opus 5.5) was used to work through the requirements. It asked questions, summarized tool documentation, and translated the team's decisions and Kevin's requirements draft into a structured draft. Aaron made and reviewed every decision. The team later reviewed, verified, and rewrote the draft as necessary before submission.
 
-OpenAI Codex assisted with the October 17 layout and consistency review. It also helped revise the supervision requirements and simplify the System section from Aaron's decisions. Team review is pending.
+Kevin Kim: OpenAI Codex assisted with the October 17 layout and consistency review. It also helped revise the supervision requirements and simplify the System section from Aaron's decisions.
 
-\comment{Other members: add the tools you used.}
+Curtis Vos: Claude Code (Claude Sonnet 5) was used alongside a manual review, helping with wording choices 
+and cross-checking/verifying claims alongside other sections of the documents. All responses and suggestions were fully read through and followed up
+with concerns or clarifications before implementing any feedback. At the end of the review session, Claude Opus 5 was used for a more in-depth scan to 
+verify correctness and appropriateness of section contents.
 
 \chapter*{Appendix: Reflection}
 \addcontentsline{toc}{chapter}{Appendix: Reflection}
