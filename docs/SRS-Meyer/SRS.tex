@@ -178,7 +178,7 @@ Natural Control is a voice interface that lets a blind user delegate tasks in a 
 
 Today, blind users complete these tasks with screen readers such as VoiceOver, navigating each interface element by element, or with help from a sighted person. Existing AI computer-use agents assume the user can watch the screen to monitor and correct them.
 
-In an interview with a former CNIB Deafblind Community Services (DBCS) staff member on October 17, 2026, the participant observed that screen readers are hard to learn for older, newly diagnosed users and often read irrelevant content, and that everyday tasks such as booking appointments often need a friend's help.
+In an interview with a former CNIB Deafblind Community Services (DBCS) staff member on October 17, 2026 (\hyperref[app:interview]{transcript in the appendix}), the participant observed that screen readers are hard to learn for older, newly diagnosed users and often read irrelevant content, and that everyday tasks such as booking appointments often need a friend's help.
 
 \comment{Add findings from blind participants once sessions start.}
 
@@ -241,7 +241,7 @@ Figure~\ref{fig:activityhighlevel} shows the common high-level flow behind Scena
     \item Tertiary: website and application developers who affect the system's operational limits.
     \item Setup helper: a person who completes the assisted setup.
     \item Intervenors: support workers who may help deafblind users with setup and recovery.
-    \item Requirements sources: the Problem Statement, Development Plan, and Hazard Analysis; TA and instructor guidance; prior research (WebAIM survey \citep{WebAIM2024}, Morae \citep{Morae2025}, Azenkot and Lee \citep{AzenkotLee2013}); an interview with a former CNIB Deafblind Community Services (DBCS) staff member on October 17, 2026; and planned participant sessions.
+    \item Requirements sources: the Problem Statement, Development Plan, and Hazard Analysis documents; TA and instructor guidance; prior research (WebAIM survey \citep{WebAIM2024}, Morae \citep{Morae2025}, Azenkot and Lee \citep{AzenkotLee2013}); an interview with a former CNIB Deafblind Community Services (DBCS) staff member on October 17, 2026 (\hyperref[app:interview]{transcript in the appendix}); and planned participant sessions.
 \end{itemize}
 
 \nsection{G.8 User profiles}
@@ -397,8 +397,8 @@ Requirements are grouped by their responsible component (S.1). Each has a ration
 FR1 & The system shall accept spoken input during a session. It shall support pauses within a thought through the selected voice framework's turn handling. & Voice is the main input for everyday use. Turn timing needs POC and user evaluation. & G1\\\addlinespace[4pt]
 FR2 & The user shall be able to interrupt spoken output. This shall not restart the task or pause its execution by itself. A correction or explicit work-stop request shall follow its own handling. & Users need to cut off long speech without losing work. & G2\\\addlinespace[4pt]
 FR3 & An explicit ``stop working'' command or the stop key shall pause the task (FR8). A bare ``stop'' shall stop speech and pause work. The system shall clarify what the user wants next. An explicit request to cancel or abandon the task shall end it. & Speech interruption, work pause, and cancellation have different effects. The key provides a backup when voice fails. & G2; FR.Sa.1, FR.Sa.4\\\addlinespace[4pt]
-FR16 & The system shall let the user correct part of a read-back (for example, one sentence or one detail) by voice without restarting the request. & Interview: fixing a read-back usually means starting over. Correcting speech input is slow for blind users \citep{AzenkotLee2013}. & G4\\\addlinespace[4pt]
-FR18 & Spoken updates and summaries shall include only information relevant to the current task, with more detail available on request. & Interview and WebAIM survey \citep{WebAIM2024}: screen readers read too much irrelevant content. & G2\\\addlinespace[4pt]
+FR16 & The system shall let the user correct part of a read-back (for example, one sentence or one detail) by voice without restarting the request. & \hyperref[app:interview]{Interview}: fixing a read-back usually means starting over. Correcting speech input is slow for blind users \citep{AzenkotLee2013}. & G4\\\addlinespace[4pt]
+FR18 & Spoken updates and summaries shall include only information relevant to the current task, with more detail available on request. & \hyperref[app:interview]{Interview} and WebAIM survey \citep{WebAIM2024}: screen readers read too much irrelevant content. & G2\\\addlinespace[4pt]
 \end{xltabular}
 \endgroup
 
@@ -501,7 +501,7 @@ FR12 & Each consequential result shall be reported as verified, partial, failed,
 \bottomrule
 \endfoot
 FR14 & The system shall request only the account permissions it needs, and explain them during setup, including which providers receive which data. & Narrow permissions limit the damage any other failure can do. & G5; FR.Sa.17\\\addlinespace[4pt]
-FR17 & The user shall be able to mark topics or accounts as off-limits. The system shall not read or act on them. & The former CNIB staff interview raised concerns about sensitive account data. & G2\\\addlinespace[4pt]
+FR17 & The user shall be able to mark topics or accounts as off-limits. The system shall not read or act on them. & The \hyperref[app:interview]{former CNIB staff interview} raised concerns about sensitive account data. & G2\\\addlinespace[4pt]
 FR23 & Website passwords shall be entered through a private setup page and stored encrypted. They shall not be spoken or placed in the conversation. Saved credentials shall be used only for their intended site. The user may speak a one-time authentication code or approve a push on their device. The system shall explain that spoken codes pass through the configured speech and conversation services. A site that requires a device-bound passkey shall use a manual handoff. & Spoken codes can be heard nearby and processed by providers. Private typed code input is a proposed alternative. & G2, G5; FR.Sa.17\\\addlinespace[4pt]
 FR24 & The system may automatically choose a clearly identified ``reject non-essential cookies'' or ``necessary only'' option. Any ambiguous consent choice shall require explicit user approval. This is a narrow exception to FR9. Accepting cookies or terms shall require approval. & A limited exception reduces repeated consent prompts. It does not authorize accepting terms. & G2, G3; FR.Sa.13\\\addlinespace[4pt]
 \end{xltabular}
@@ -1019,7 +1019,7 @@ EXPO demo preparation & Package and rehearse the end-to-end demonstration. & EXP
 \nsection{P.7 Requirements process and report}
 
 Requirements come from the Problem Statement, Development Plan, Hazard Analysis, TA guidance, prior research, and interviews. 
-An interview with a former DBCS staff member was held on October 17, 2026; FR16 to FR18 as well as intervenors as stakeholders came as relevant additions from it. 
+An interview with a former DBCS staff member was held on October 17, 2026 (\hyperref[app:interview]{transcript in the appendix}); FR16 to FR18 as well as intervenors as stakeholders came as relevant additions from it. 
 Blind participants will be recruited for repeated feedback. Requirements will be revised as POC results and interview findings arrive.
 
 \chapter*{Requirement dependencies}
@@ -1042,6 +1042,14 @@ Blind participants will be recruited for repeated feedback. Requirements will be
 \bibliographystyle{plainnat}
 \bibliography{../../refs/CapstoneSources}
 
+
+\chapter*{Appendix: Interview transcript}
+\addcontentsline{toc}{chapter}{Appendix: Interview transcript}
+\label{app:interview}
+
+Interview with a former CNIB Deafblind Community Services (DBCS) staff member.
+
+\input{InterviewTranscript.text}
 
 \chapter*{Appendix: AI use disclosure}
 \addcontentsline{toc}{chapter}{Appendix: AI use disclosure}
