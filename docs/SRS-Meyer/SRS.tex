@@ -120,10 +120,11 @@ This document follows the requirements documentation structure presented in the 
 \begin{itemize}
     \item Glossary moved to the front, so every term is defined before first use.
     \item Added G.8 User profiles, to describe distinct user groups and their needs.
+    \item Added G.9 Goals, copying the Problem Statement's goals so that the requirement traces resolve within this document.
     \item Added E.7 Standards and legal/regulatory factors, plus environment requirements.
     \item S.2 split into one subsection per component, with safety requirements ported from the Hazard Analysis.
     \item Added S.4 Normal operation, S.5 Undesired event handling, and S.9 Formalization (task state machine).
-    \item Added requirement dependencies (traceability) and References.
+    \item Added requirement dependencies (traceability), likely and unlikely changes, and References.
 \end{itemize}
 
 \chapter*{Glossary}
@@ -252,6 +253,40 @@ Figure~\ref{fig:activityhighlevel} shows the common high-level flow behind Scena
 \end{itemize}
 
 \comment{Validate these profiles with blind participants; drop or adjust any that do not hold up.}
+
+\nsection{G.9 Goals}
+
+The goals below are copied from the Problem Statement. Their identifiers (G1 to G5) are the trace targets used in the requirement tables of S.2, and are distinct from the section numbers of this book (G.1 to G.9). The goals below describe intended outcomes, not achieved results.
+
+\begin{description}
+    \item[G1.]\label{goal:G1} \textbf{Complete complex digital tasks independently.}
+    Within the initial browser and connected-account scope, users should be able to
+    complete common, multi-step tasks without
+    relying on visual feedback or sighted assistance. Success can be measured by task completion rate
+    and the amount of sighted assistance that is required.
+
+    \item[G2.]\label{goal:G2} \textbf{Maintain awareness and control during digital tasks.}
+    Users should be able to understand relevant task progress and state changes, provide input when required,
+    and stop or redirect tasks when necessary. Measure successful corrections, explicit stop acknowledgment and execution-stop
+    confirmation, and approval before consequential actions. Clarification counts
+    provide context; fewer questions alone do not establish better control.
+
+    \item[G3.]\label{goal:G3} \textbf{Accurately receive results and execute commands.}
+    Users should be able to have confidence that the program is correctly tracking the system's state,
+    retrieving results, and executing their desired actions and commands. Compare reported outcomes and executed actions against independently verified
+    application state and the user's request. Report incorrect or unsupported
+    completion claims separately from successful actions.
+
+    \item[G4.]\label{goal:G4} \textbf{Recover from errors and unexpected outcomes.}
+    Users should be able to identify unexpected, misunderstood, or failed actions and recover without restarting
+    the entire task or relying on sighted assistance. Measure whether recovery succeeds without sighted help or a full restart,
+    along with recovery time and clarification turns.
+
+    \item[G5.]\label{goal:G5} \textbf{Provide a straightforward and reliable setup process.}
+    Individuals responsible for setting up the interface should have a smooth setup process.
+    Routine use after initial setup should not require assistance from the setup helper. Success can be measured by the number of clicks or commands needed,
+    the setup time before the program can be used, as well as how many times the setup helper is required to assist after installation.
+\end{description}
 
 \chapter*{Environment}
 \addcontentsline{toc}{chapter}{Environment book}
@@ -952,6 +987,10 @@ Each task lists the milestone it supports and the date it must be complete. Prep
 \toprule
 \textbf{Task} & \textbf{Description} & \textbf{Deliverable} & \textbf{Complete by}\\
 \midrule
+\endfirsthead
+\toprule
+\textbf{Task} & \textbf{Description} & \textbf{Deliverable} & \textbf{Complete by}\\
+\midrule
 \endhead
 \bottomrule
 \endfoot
@@ -1033,10 +1072,24 @@ Blind participants will be recruited for repeated feedback. Requirements will be
 \chapter*{Likely and unlikely changes}
 \addcontentsline{toc}{chapter}{Likely and unlikely changes}
 
-\begin{itemize}
-    \item Likely: replacing the AI model, speech provider, or agent harness; adding account services; changing timing constants after measurement.
-    \item Unlikely: dropping the approval rule for consequential actions; dropping voice as the main interaction.
-\end{itemize}
+\paragraph{Likely changes}
+
+\begin{description}
+    \item[LC1.]\label{chg:LC1} AI model provider: not yet selected; Claude Sonnet is a candidate but Hermes is model-agnostic and can allow adjustments as needed (P.5).
+    \item[LC2.]\label{chg:LC2} Speech-to-text and text-to-speech providers: ElevenLabs is a candidate through LiveKit's plugin (P.5).
+    \item[LC3.]\label{chg:LC3} Agent harness: P.6 commits the team to revisiting the adapter if Hermes supervision does not match its documentation.
+    \item[LC4.]\label{chg:LC4} Set of connected apps: Gmail and Google Calendar are the first two integrations, not a limit on eventual scope (G.4, E.2).
+    \item[LC5.]\label{chg:LC5} Backend topology, secret storage, and network requirements: finalized once a working configuration has been demonstrated (E.3, P.5).
+    \item[LC6.]\label{chg:LC6} Browser action coverage: the browser becomes read-only for the initial release if consequential browser actions cannot be intercepted for approval (P.6).
+\end{description}
+
+\paragraph{Unlikely changes} These carry the system's safety case and its reason for existing.
+
+\begin{description}
+    \item[ULC1.]\label{chg:ULC1} Approval of exact details before a consequential action. This is the central safety property (property P1 in S.9, FR9, FR.Sa.13) and a mitigation the Hazard Analysis relies on for H5-a. Without it the system is an unsupervised agent acting for a user who cannot see what it did.
+    \item[ULC2.]\label{chg:ULC2} Voice as the primary interaction mode. G.1 defines the system as a voice interface and G.7 selects the primary stakeholder group on that basis; replacing it would not be a revision of this project.
+    \item[ULC3.]\label{chg:ULC3} Reporting outcomes only against matching evidence. A blind user cannot visually confirm a result, so an unverified success claim is precisely the harm that hazards H4-b and H6-a exist to prevent (FR12, FR.Sa.10).
+\end{description}
 
 \chapter*{References}
 \addcontentsline{toc}{chapter}{References}
