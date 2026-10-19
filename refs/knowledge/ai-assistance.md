@@ -40,7 +40,25 @@ Verification: both PDFs compiled with Tectonic. All 5 Problem Statement pages an
 
 Aaron subsequently authorized publication and closure of issues 11 and 12. Codex synchronized newer team changes, preserved the two-to-four-participant target and wording revisions, and resolved the overlapping stretch-goal wording before rebuilding the PDFs. No additional human review is claimed.
 
+## October 17, 2026: local requirements review
+
+Codex fetched the latest branches, inspected PRs #25 and #27, copied the hazard draft and glossary into a local review branch, and reviewed SRS/HA consistency and course checklists. It revised table layout, margins, figure sizing, navigation, and PDF metadata and added a review checklist. No new stakeholder evidence, legal verification, team agreement, or runtime validation is claimed. Product decisions and reflection placeholders remain for human review. No commits or pushes were made.
+
+Follow-up: Aaron clarified pause/resume, approval scope, spoken authentication codes, natural conversation, and task-dependent verification. Codex recorded those decisions, drafted proposed requirement wording, and researched public LiveKit documentation. Local implementation source was inspected privately for architectural context; no private implementation code or configuration was copied into the shared notes. No voice system was run or evaluated. Aaron then authorized applying the content revision. Codex revised both documents and the shared glossary, simplified System prose, updated diagrams and acceptance coverage, and moved identical safety text into shared input files. It preserved visible human-input placeholders. Rebuilt PDFs were checked for layout and em dashes. No runtime validation, new stakeholder evidence, commit, or push is claimed.
+
+Scope correction: Aaron then instructed Codex not to edit Hazard Analysis. Its source and PDF were restored byte-for-byte to the pulled hazard-analysis-draft branch at 194a1d8. Revised safety input files were moved into the SRS folder and detached from Hazard Analysis. The SRS changes were retained and rebuilt. No commit or push was made.
+
+Aaron subsequently authorized pushing the SRS updates to PR #27 for peer review. The publication includes the SRS disclosure and supporting notes. Hazard Analysis files are excluded. Team review and missing human-authored material remain pending.
+
+
+## October 18, 2026: SRS consent wording
+
+Aaron authorized Kevin's clarification in PR #27. Codex aligned FR24 and FR.Sa.13: clearly identified cookie rejection or necessary-only choices may be automatic. Ambiguous consent choices require explicit user approval. It rebuilt and inspected the affected PDF pages. Hazard Analysis files were not changed.
 
 ## October 18, 2026: hazard pause clarification
 
 Aaron authorized addressing Kevin's comment on PR #25. Codex revised H3-a and FR.Sa.5 to distinguish pausing from cancellation. It preserved the latest team changes on hazard-analysis-draft. It added a brief disclosure and rebuilt the PDF for review. No other hazard requirements were revised. This is a documentation clarification, not runtime validation.
+
+## October 18, 2026: PR 27 merge resolution
+
+Aaron authorized resolving PR #27 against main. Codex retained the SRS glossary definitions and combined the knowledge index and AI-assistance entries. The merged Hazard Analysis files were preserved from main. The SRS PDF was regenerated from its current source. The Development Plan PDF was also rebuilt because its source combines main's role-handoff updates with Kevin's SRS-branch revisions. No new product behavior was introduced by the conflict resolution.

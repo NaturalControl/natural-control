@@ -17,11 +17,11 @@ The period during which the user is talking with the system, started and ended w
 _Avoid_: Call, conversation, voice session
 
 **Task**:
-One job the user asks for, such as "add this meetup to my calendar", from request until it is done, failed, or stopped.
+One job the user asks for, such as "add this meetup to my calendar", from request until completion, cancellation, or failure. A task may pause and resume.
 _Avoid_: Job, run
 
 **Consequential action**:
-Any action that changes something outside our system: sending, submitting, purchasing, posting, or creating, editing, or deleting an email or event. Reading, navigating, searching, and drafting are not consequential actions.
+A write to user or account data, a submission, an external message, or a commitment such as accepting terms or granting access. Reading and navigation may proceed without approval if they have no such effect. Preparing text in memory is different from saving a draft. FR24 defines a narrow exception for rejecting non-essential cookies.
 _Avoid_: Risky action, dangerous action, write
 
 **Approval**:
@@ -35,20 +35,20 @@ The user speaking while the system is speaking. It stops the speech only; the ta
 _Avoid_: Interrupt, stop
 
 **Stop request**:
-An explicit "stop working" command (spoken or by key) asking for the task's execution to end.
-_Avoid_: Interrupt, cancel, pause
+An explicit "stop working" command (spoken or by key) asking to pause task execution and preserve its context. A separate cancellation request ends the task.
+_Avoid_: Cancel (when pause is intended)
 
 **Stop acknowledged**:
-The system has received a stop request. It does not mean execution has ended.
+The system has received a stop request. It does not mean every earlier external operation ended.
 
 **Stop confirmed**:
-The system has verified that no further actions will run for the task.
+New task actions are blocked until explicit resumption. Earlier external operations may still settle. Their outcomes must be reported separately. This is a confirmed pause.
 _Avoid_: Cancelled, stopped (without qualification)
 
 ## Outcomes
 
 **Verified outcome**:
-A result the system checked against the real account or page state after acting, rather than taking the agent's word for it.
+A result supported by evidence matching the intended action. Evidence may be a meaningful connector response, an account record, or a website confirmation. The agent's unsupported claim is not evidence.
 _Avoid_: Success, done
 
 **Unknown outcome**:
