@@ -40,7 +40,7 @@
     urlcolor=purple,        % color of external links
     linktoc=page            % only page is linked
 }%
-\def\myversion{0.1 }
+\def\myversion{1.0 }
 \date{}
 %\title{%
 
@@ -108,8 +108,6 @@
 
 This document follows the requirements documentation structure presented in the \href{ https://link.springer.com/content/pdf/10.1007/978-3-031-06739-6.pdf}{Handbook of requirements and business analysis}, by Bertrand Meyer, with the changes listed in the first chapter.
 
-\comment{Working draft. Red comment boxes mark decisions and writing the team still owns. Goals G1 to G5 refer to the Problem Statement goals.}
-
 \dominitoc% Initialization
 \tableofcontents
 \adjustmtc
@@ -144,7 +142,26 @@ Project terms:
     \item Verified outcome: a result supported by a matching tool response, account record, or website confirmation. Unknown outcome: an action whose result cannot be determined.
 \end{itemize}
 
-Technical terms: LiveKit, Hermes, Browser Use, MCP (Model Context Protocol), OAuth, VoiceOver, STT (speech-to-text), TTS (text-to-speech), LLM (large language model), POC (proof of concept).
+Technical terms:
+
+\begin{itemize}
+    \item \href{https://docs.livekit.io/intro/overview/}{LiveKit}: an open-source platform for building real-time audio and video applications. \citep{LiveKitOverview}
+    \item \href{https://hermes-agent.nousresearch.com/docs/developer-guide/programmatic-integration}{Hermes}: an AI agent framework that plans multi-step tasks and calls external tools. \citep{HermesIntegration}
+    \item \href{https://github.com/browser-use/browser-use}{Browser Use}: an open-source library that lets an AI agent control a web browser to complete tasks. \citep{BrowserUseSource}
+    \item \href{https://modelcontextprotocol.io/}{MCP} (Model Context Protocol): an open standard for connecting AI applications to external tools and data sources. \citep{MCPSpec}
+    \item \href{https://oauth.net/2/}{OAuth}: an open standard for delegated authorization, letting a user grant an application limited access to their account without sharing a password. \citep{OAuth2}
+    \item \href{https://support.apple.com/guide/voiceover/welcome/mac}{VoiceOver}: Apple's built-in screen reader for macOS and iOS. \citep{VoiceOverGuide}
+    \item \href{https://www.ibm.com/think/topics/speech-to-text}{STT} (speech-to-text): technology that converts spoken audio into written text. \citep{IBMSTT}
+    \item \href{https://www.ibm.com/think/topics/text-to-speech}{TTS} (text-to-speech): technology that converts written text into spoken audio. \citep{IBMTTS}
+    \item \href{https://www.ibm.com/think/topics/large-language-models}{LLM} (large language model): a machine learning model trained on large amounts of text to understand and generate natural language. \citep{IBMLLM}
+    \item \href{https://en.wikipedia.org/wiki/Proof_of_concept}{POC} (proof of concept): a small-scale demonstration built to test whether an idea is feasible before full development. \citep{POCWiki}
+    \item \href{https://composio.dev/}{Composio}: a hosted platform that connects AI agents to third-party applications through managed authentication and tool APIs. \citep{ComposioSite}
+    \item \href{https://www.cnib.ca/en/about-us}{CNIB} (Canadian National Institute for the Blind): a Canadian non-profit organization providing programs and support for people who are blind, deafblind, or have low vision. \citep{CNIBAbout}
+    \item \href{https://en.wikipedia.org/wiki/Failure_mode_and_effects_analysis}{FMEA} (Failure Mode and Effects Analysis): a systematic method for identifying potential failure modes in a system and analyzing their causes and effects. \citep{FMEAWiki}
+    \item \href{https://en.wikipedia.org/wiki/JAWS_(screen_reader)}{JAWS}: a screen reader for Windows that converts on-screen content to speech or braille. \citep{JAWSWiki}
+    \item \href{https://elevenlabs.io/}{ElevenLabs}: a company providing AI-generated speech and audio, including text-to-speech and speech-to-text APIs. \citep{ElevenLabsSite}
+\end{itemize}
+
 
 \comment{Add a one-line definition and an online reference link for each technical term, as AlgoCatan did.}
 
@@ -890,17 +907,28 @@ Required properties:
 \minitoc
 
 \nsection{P.1 Roles and personnel}
+Our team consists of four group members: Aaron Loh, Curtis Vos, Kevin Kim, and Lucas DeBoer.
+A dedicated teaching assistant, Rebecca Di Filippo, will meet with the team about once per month to provide
+guidance and progress check-ins.
 
-As in the Development Plan: voice and client (Lucas, reviewed by Curtis); agent and tools (Aaron, reviewed by Kevin); deployment and reliability (Kevin, reviewed by Aaron); evaluation and quality (Curtis, reviewed by Lucas).
+As presented in section 6 of the Development Plan, we have agreed to rotate several project management roles among all members as follows: 
+Meeting chair, note taker, and release coordinator. Curtis is the team's external liaison for communicating 
+with McMaster's Capstone course staff, professors, TAs, etc.
 
-\comment{Decide who writes which SRS sections.}
+Regarding ownership/focus on certain aspects of the system's code, the following split has been agreed upon: 
+voice and client (Lucas, reviewed by Curtis); agent and tools (Aaron, reviewed by Kevin); 
+deployment and reliability (Kevin, reviewed by Aaron); evaluation and quality (Curtis, reviewed by Lucas).
+A guideline on managing conflicts or changes in development roles has been described in the aforementioned Development Plan documentation.
 
 \nsection{P.2 Imposed technical choices}
 
 \begin{itemize}
-    \item Hermes agent harness, LiveKit, Browser Use, Composio (for Gmail and Google Calendar).
-    \item Mac, Chrome, English for the initial release.
-    \item LaTeX documents in the course template repository; GitHub for issues and reviews.
+    \item Voice and agent stack: LiveKit, Hermes, and Browser Use are all used for connecting the system's inputs, agent, and outputs.
+    \item Languages: Python for the agent/voice backend, TypeScript and React for the client, fixed by the same Development Plan analysis.
+    \item Target platform: Mac, Chrome, English only for the initial release, fixed by the primary evaluation group (Mac VoiceOver users).
+    \item Connected apps: initial scope focuses on Gmail and Google Calendar through Composio; Google's OAuth and API policies (testing-app caps, data-use terms) 
+    bind how account actions must be implemented.
+    \item Documentation and process: LaTeX in the template repository, GitHub for issues, reviews, and version control.
 \end{itemize}
 
 \nsection{P.3 Schedule and milestones}
@@ -912,35 +940,87 @@ As in the Development Plan: voice and client (Lucas, reviewed by Curtis); agent 
     \item November 23 to December 3: POC demonstration.
     \item January 18: Design document.
     \item March 8: V\&V Report and Usability Report.
-    \item March 31: Final documentation. April 6: EXPO.
+    \item March 31: Final documentation. 
+    \item April 6: EXPO.
 \end{itemize}
 
 \nsection{P.4 Tasks and deliverables}
 
-\comment{Break the POC into tasks on the GitHub project board (owner, acceptance criteria, due date) and summarize them here in a table.}
+\begingroup
+\small
+\begin{xltabular}{\textwidth}{>{\raggedright\arraybackslash}p{3cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{3cm}>{\raggedright\arraybackslash}p{1.8cm}}
+\caption{Tasks and deliverables}\label{tab:tasks}\\
+\toprule
+\textbf{Task} & \textbf{Description} & \textbf{Deliverable} & \textbf{Due}\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Component skeleton & Pin Hermes, LiveKit, and Browser Use versions; create placeholder modules for the voice interface, task manager, action gate, outcome verification, action tools, and task history layer (S.1). & V\&V Plan & Nov 2\\\addlinespace[4pt]
+Voice interface integration & Wire LiveKit Agents into the task manager for audio sessions and turn handling. & Design document revision minus one; Interview Report & Nov 16\\\addlinespace[4pt]
+Hermes harness supervision & Connect Hermes on a pinned version; verify streamed status, approvals, interrupts, and reconnection. & Design document revision minus one; Interview Report & Nov 16\\\addlinespace[4pt]
+Action gate and approval flow & Implement the gate that requires explicit approval of exact details before any consequential action executes. & POC demonstration & Nov 23 - Dec 3\\\addlinespace[4pt]
+Browser and account tools & Integrate Browser Use (Chromium) and Composio (Gmail/Calendar via OAuth) as action tools behind the gate. & POC demonstration & Nov 23 - Dec 3\\\addlinespace[4pt]
+POC demonstration & Demonstrate approval and work-stop controls for the selected email/calendar and browser workflows (S.7). & POC demonstration & Nov 23 - Dec 3\\\addlinespace[4pt]
+Issue remediation & Address problems surfaced during the POC demonstration before design revision. & Design document & Jan 18\\\addlinespace[4pt]
+Outcome verification & Check consequential-action results against tool responses or account/page state; record verified, partial, failed, or unknown. & Design document & Jan 18\\\addlinespace[4pt]
+Accessible client and task history & Build keyboard- and VoiceOver-compatible session controls and the accessible task history layer. & Design document & Jan 18\\\addlinespace[4pt]
+Participant evaluation integration & Incorporate interview and discovery findings. & V\&V Report and Usability Report & Mar 8\\\addlinespace[4pt]
+Final integration and polish & Complete remaining FR/NFR coverage; finalize documentation and the known-limitations list. & Final documentation & Mar 31\\\addlinespace[4pt]
+EXPO demo preparation & Package and rehearse the end-to-end demonstration. & EXPO & Apr 6\\\addlinespace[4pt]
+\end{xltabular}
+\endgroup
 
 \nsection{P.5 Required technology elements}
 
 \begin{itemize}
-    \item LiveKit Agents (Python) and a speech-to-text and text-to-speech provider.
-    \item Hermes agent and an AI model provider.
+      \item LiveKit Agents (Python) and a speech-to-text/text-to-speech provider: ElevenLabs is the TTS candidate via LiveKit's plugin\citep{ElevenLabsPlugin}.
+      \item Hermes agent and an AI model provider: Hermes is not model-specific, so a specific model is not required on its side.
+      One candidate is currently Claude Sonnet because of its tool-call reliability under the approval-gate constraints in the Hazard Analysis, but there is flexibility 
+      to change this after POC testing or from the team's budget.
     \item Browser Use with Chromium.
     \item Gmail and Google Calendar APIs through the Composio SDK, our own Google OAuth app before participant sessions, and test accounts.
     \item TypeScript and React for the web client.
+      \item A Mac running VoiceOver for development and testing: hosted CI cannot substitute for on-device permission or accessibility checks.
+      \item GitHub for source control and project tracking; GitHub Actions for automated Python and TypeScript checks.
+      \item Hosting for the voice/agent backend: local Mac, a hosted service, or a hybrid, to be finalized once a working configuration is demonstrated.
 \end{itemize}
 
 \nsection{P.6 Risk and mitigation analysis}
 
 \begin{itemize}
-    \item Supervision through Hermes may not work as documented: test approvals, interrupts, and reconnection on a pinned version first.
-    \item Browser actions may not be interceptable for approval: if not, the browser becomes read-only for the initial release.
-    \item Recruitment of blind participants may fail: report technical feasibility only and disclose missing usability evidence.
-    \item Provider costs may exceed the budget: meter usage and reconcile monthly.
+    \item Risk: Supervision through Hermes may not work as documented.
+    \begin{itemize}
+        \item Description: Hermes's documented approval, interrupt, and reconnection behavior may not match its actual behavior once integrated.
+        \item Mitigation: Test approvals, interrupts, and reconnection on a pinned version first; revisit the adapter/harness before promising supervision if unavailable.
+    \end{itemize}
+    \item Risk: Browser actions may not be interceptable for approval.
+    \begin{itemize}
+        \item Description: Browser Use may not expose a reliable point to pause and request approval before a consequential action executes.
+        \item Mitigation: If interception is not possible, the browser becomes read-only for the initial release.
+    \end{itemize}
+    \item Risk: Recruitment of blind participants may fail.
+    \begin{itemize}
+        \item Description: The team aims to recruit two to four blind participants with screen-reader experience; recruitment is unconfirmed.
+        \item Mitigation: Report technical feasibility only and disclose missing usability evidence.
+    \end{itemize}
+    \item Risk: Provider costs may exceed the budget.
+    \begin{itemize}
+        \item Description: Cloud AI, speech, and hosting costs scale with usage and are not fully known in advance.
+        \item Mitigation: Monitor usage and reconcile monthly.
+    \end{itemize}
+    \item Risk: Tasks may take longer than expected, or workload may become unbalanced across the team.
+    \begin{itemize}
+        \item Description: Our four members aim to cover distinct workstreams (voice/client, agent/tools, deployment/reliability, evaluation/quality) during development; scheduling difficulties in one area can cascade into others.
+        \item Mitigation: Use the GitHub Kanban board to track tasks and milestones; check-in and redistribute blocked work at the weekly sync.
+    \end{itemize}
 \end{itemize}
 
 \nsection{P.7 Requirements process and report}
 
-Requirements come from the Problem Statement, Development Plan, Hazard Analysis, TA guidance, prior research, and interviews. An interview with a former DBCS staff member was held on October 17, 2026; FR16 to FR18, the G.8 profile change, and intervenors as stakeholders came from it. Blind participants will be recruited for repeated feedback. Requirements will be revised as POC results and interview findings arrive.
+Requirements come from the Problem Statement, Development Plan, Hazard Analysis, TA guidance, prior research, and interviews. 
+An interview with a former DBCS staff member was held on October 17, 2026; FR16 to FR18 as well as intervenors as stakeholders came as relevant additions from it. 
+Blind participants will be recruited for repeated feedback. Requirements will be revised as POC results and interview findings arrive.
 
 \chapter*{Requirement dependencies}
 \addcontentsline{toc}{chapter}{Requirement dependencies}
@@ -962,7 +1042,6 @@ Requirements come from the Problem Statement, Development Plan, Hazard Analysis,
 \bibliographystyle{plainnat}
 \bibliography{../../refs/CapstoneSources}
 
-\comment{WCAG, AODA, the Google API policy, WebAIM, and Morae are now cited where first mentioned. LiveKit, Hermes, and Browser Use are named in the Glossary, P.2, P.5, and the System book but not yet marked with \textbackslash citep; add those where each is first mentioned. The Meyer handbook is already linked inline on the first page.}
 
 \chapter*{Appendix: AI use disclosure}
 \addcontentsline{toc}{chapter}{Appendix: AI use disclosure}
