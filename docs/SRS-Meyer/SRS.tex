@@ -176,19 +176,34 @@ In an interview with a former CNIB Deafblind Community Services (DBCS) staff mem
 
 \nsection{G.4 Functionality overview}
 
-The user starts a session from the web client and speaks a task. The system clarifies missing details, carries out read-only steps on its own, asks for approval before every consequential action, reports progress and verified results by voice, and accepts corrections and stop requests at any time. A task history records what happened.
+\begin{itemize}
+    \item \textbf{Delegated task execution:} carries out multi-step tasks in a web browser, Gmail, or Google Calendar from a single spoken goal, instead of the user navigating each step.
+    \item \textbf{Clarification on demand:} asks for clarification when required details are missing or ambiguous rather than guessing about the user's intent.
+    \item \textbf{Approval-gated actions:} requires explicit approval of exact details before completing consequential actions, such as sending, saving, or submitting.
+    \item \textbf{Verified reporting:} checks task outcomes against the real account or page before reporting them as complete, rather than assuming a success after actions are taken.
+    \item \textbf{Mid-task control:} accepts corrections, stop requests, barge-ins, and cancellation at any point during a task.
+    \item \textbf{Accessible task history:} records what happens and makes the system's history reviewable by voice or through the keyboard and VoiceOver.
+\end{itemize}
 
 \nsection{G.5 High-level usage scenarios}
 
 \begin{itemize}
-    \item Reply to an email.
-    \item Add an event found on a webpage to the calendar.
-    \item Compare information on an unfamiliar website.
-    \item Correct or stop a running task.
-    \item Reconnect after a dropped connection without duplicating an action.
+    \item \textbf{Scenario 1: Reply to an email.} A user asks the system to find a specific email and reply with a short message, approving the exact reply before it sends.
+    \item \textbf{Scenario 2: Add a webpage event to the calendar.} A user asks the system to read an event off a webpage and add it to their calendar, hearing the details read back before it is created.
+    \item \textbf{Scenario 3: Compare information on an unfamiliar website.} A sighted user who wants nonvisual interaction asks the system to compare prices for something on an unfamiliar website.
+    \item \textbf{Scenario 4: Ask a clarifying question.} The system encounters an ambiguous request, such as finding two matching contact names in a messaging task, and asks the user to choose before continuing.
+    \item \textbf{Scenario 5: Correct or stop a running task.} A user interrupts an in-progress task with a correction or an explicit stop request, and the system reports what has and has not completed.
+    \item \textbf{Scenario 6: Reconnect after a dropped connection.} A user reconnects after losing their connection mid-task and resumes only after hearing the current state, without duplicating any action.
 \end{itemize}
 
-\comment{Draw a use case or activity diagram for these scenarios.}
+Figure~\ref{fig:activityhighlevel} shows the common high-level flow behind Scenarios 1 to 4. Scenarios 5 and 6 are interruptions to this flow and are diagrammed separately in S.4 and S.5.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth,height=.78\textheight,keepaspectratio]{figures/activity-highlevel.png}
+\caption{High-level activity diagram for the common usage pattern across Scenarios 1 to 4, showing the components (S.1) responsible for each step.}
+\label{fig:activityhighlevel}
+\end{figure}
 
 \nsection{G.6 Limitations and exclusions}
 

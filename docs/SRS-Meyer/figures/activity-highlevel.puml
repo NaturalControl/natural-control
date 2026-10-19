@@ -1,0 +1,53 @@
+@startuml activity-highlevel
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam defaultFontSize 11
+skinparam ActivityBackgroundColor #E8F4EF
+skinparam ActivityBorderColor #1D7A5C
+skinparam ActivityDiamondBackgroundColor #F2F2F0
+skinparam ActivityDiamondBorderColor #666666
+skinparam SwimlaneBorderColor #999999
+
+|User|
+start
+:Speak a task;
+
+|Task manager|
+:Ask a clarifying question,\nif details are missing\nor ambiguous;
+
+|User|
+:Answer;
+
+|Action gate|
+:Allow the read-only call\n(no approval needed);
+
+if (consequential action required?) then (yes)
+  :Request approval\nwith exact details;
+  |Task manager|
+  :Read back exact\naction details;
+  |User|
+  :Approve;
+  |Task manager|
+  :Record approval;
+  |Action gate|
+  :Execute approved action;
+  |Outcome verification|
+  :Verify outcome;
+  |Task manager|
+  :Record verified outcome;
+else (no)
+  |Task manager|
+endif
+
+:Report verified result;
+|User|
+:Hear result;
+stop
+
+note right
+  A decline, stop request, or disconnection
+  can change this flow at any point.
+  See S.5, S.6, and S.9 for those cases.
+end note
+@enduml
