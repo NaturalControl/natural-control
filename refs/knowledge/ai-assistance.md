@@ -49,3 +49,8 @@ Follow-up: Aaron clarified pause/resume, approval scope, spoken authentication c
 Scope correction: Aaron then instructed Codex not to edit Hazard Analysis. Its source and PDF were restored byte-for-byte to the pulled hazard-analysis-draft branch at 194a1d8. Revised safety input files were moved into the SRS folder and detached from Hazard Analysis. The SRS changes were retained and rebuilt. No commit or push was made.
 
 Aaron subsequently authorized pushing the SRS updates to PR #27 for peer review. The publication includes the SRS disclosure and supporting notes. Hazard Analysis files are excluded. Team review and missing human-authored material remain pending.
+
+
+## October 18, 2026: SRS consent wording
+
+Aaron authorized Kevin's clarification in PR #27. Codex aligned FR24 and FR.Sa.13: clearly identified cookie rejection or necessary-only choices may be automatic. Ambiguous consent choices require explicit user approval. It rebuilt and inspected the affected PDF pages. Hazard Analysis files were not changed.
