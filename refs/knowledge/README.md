@@ -1,6 +1,6 @@
 # Capstone knowledge base
 
-Last updated: October 17, 2026.
+Last updated: October 18, 2026.
 
 ## Start here
 
@@ -32,5 +32,9 @@ The briefs are working notes, not submitted deliverables. Discuss and validate a
 
 - [Voice supervision decisions and proposed requirements](voice-supervision-2026-10-17.md)
 - [Current SRS and Hazard Analysis review](review-2026-10-17.md)
-- [Hazard Analysis draft PR](https://github.com/NaturalControl/natural-control/pull/25): separate work excluded from this SRS update.
+- [Hazard Analysis PR](https://github.com/NaturalControl/natural-control/pull/25): merged into main.
 - [Shared glossary](../../GLOSSARY.md)
+
+## Hazard Analysis (due October 19)
+
+- [Working draft answers](hazard-analysis-draft.md)

@@ -54,3 +54,11 @@ Aaron subsequently authorized pushing the SRS updates to PR #27 for peer review.
 ## October 18, 2026: SRS consent wording
 
 Aaron authorized Kevin's clarification in PR #27. Codex aligned FR24 and FR.Sa.13: clearly identified cookie rejection or necessary-only choices may be automatic. Ambiguous consent choices require explicit user approval. It rebuilt and inspected the affected PDF pages. Hazard Analysis files were not changed.
+
+## October 18, 2026: hazard pause clarification
+
+Aaron authorized addressing Kevin's comment on PR #25. Codex revised H3-a and FR.Sa.5 to distinguish pausing from cancellation. It preserved the latest team changes on hazard-analysis-draft. It added a brief disclosure and rebuilt the PDF for review. No other hazard requirements were revised. This is a documentation clarification, not runtime validation.
+
+## October 18, 2026: PR 27 merge resolution
+
+Aaron authorized resolving PR #27 against main. Codex retained the SRS glossary definitions and combined the knowledge index and AI-assistance entries. The merged Hazard Analysis files were preserved from main. The SRS PDF was regenerated from its current source. The Development Plan PDF was also rebuilt because its source combines main's role-handoff updates with Kevin's SRS-branch revisions. No new product behavior was introduced by the conflict resolution.
