@@ -94,7 +94,7 @@
         \vspace{1.1cm}
         Natural Control\\
         \vspace{1.1cm}
-        \LARGE{Version \myversion (draft)}\\
+        \LARGE{Version \myversion}\\
         \vspace{1.1cm}
         Prepared by Group 7\\
         \Large{Lucas DeBoer, Kevin Kim, Aaron Loh, Curtis Vos}\\
@@ -108,16 +108,18 @@
 
 \chapter*{Revision History}
 
+Table~\ref{tab:srs-revisions} summarizes the revision history.
 \begin{center}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-	    Name        & Date          & Reason For Changes & Version\\
-        \hline
-        \hline
-	    Aaron Loh & 2026-10-14    & First draft from team planning decisions & 0.1\\
-        Aaron Loh & 2026-10-17 & Supervision rules and layout review & 0.1\\
-        \hline
-    \end{tabular}
+\begin{minipage}{\textwidth}
+\captionof{table}{Revision history.}\label{tab:srs-revisions}
+\begin{tabularx}{\textwidth}{llX}
+\toprule Date & Contributor & Change\\
+\midrule
+2026-10-14 & All & Initial draft of SRS.\\
+2026-10-19 & All & Completed for Rev0 submission.\\
+\bottomrule
+\end{tabularx}
+\end{minipage}
 \end{center}
 
 This document follows the requirements documentation structure presented in the \href{ https://link.springer.com/content/pdf/10.1007/978-3-031-06739-6.pdf}{Handbook of requirements and business analysis}, by Bertrand Meyer, with the changes listed in the first chapter.
@@ -134,10 +136,11 @@ This document follows the requirements documentation structure presented in the 
 \begin{itemize}
     \item Glossary moved to the front, so every term is defined before first use.
     \item Added G.8 User profiles, to describe distinct user groups and their needs.
+    \item Added G.9 Goals, copying the Problem Statement's goals so that the requirement traces resolve within this document.
     \item Added E.7 Standards and legal/regulatory factors, plus environment requirements.
     \item S.2 split into one subsection per component, with safety requirements ported from the Hazard Analysis.
     \item Added S.4 Normal operation, S.5 Undesired event handling, and S.9 Formalization (task state machine).
-    \item Added requirement dependencies (traceability) and References.
+    \item Added requirement dependencies (traceability), likely and unlikely changes, and References.
 \end{itemize}
 
 \chapter*{Glossary}
@@ -201,10 +204,8 @@ In an interview with a former CNIB Deafblind Community Services (DBCS) staff mem
 \begin{itemize}
     \item Delegate, don't navigate: the user simply states an outcome (``reply to Alex'') instead of visually navigating the interface step by step. (G1)
     \item Control without sight: the user can understand, approve, correct, and stop the agent without seeing the screen. (G2, G4)
-    \item Trustworthy results: results are checked against the real account or page before being reported, so the user does not need sighted help to confirm what happened. (G3)
+    \item Trustworthy results: results are checked against the real account or page before being reported, so the user does not need sighted help to confirm what happened. (G3) Correcting a wrong result after the fact is slow and costly for blind users \citep{AzenkotLee2013}.
 \end{itemize}
-
-\comment{Support each benefit with evidence (interview findings, prior research).}
 
 \nsection{G.4 Functionality overview}
 
@@ -269,6 +270,40 @@ Figure~\ref{fig:activityhighlevel} shows the common high-level flow behind Scena
 
 \comment{Validate these profiles with blind participants; drop or adjust any that do not hold up.}
 
+\nsection{G.9 Goals}
+
+The goals below are copied from the Problem Statement. Their identifiers (G1 to G5) are the trace targets used in the requirement tables of S.2, and are distinct from the section numbers of this book (G.1 to G.9). The goals below describe intended outcomes, not achieved results.
+
+\begin{description}
+    \item[G1.]\label{goal:G1} \textbf{Complete complex digital tasks independently.}
+    Within the initial browser and connected-account scope, users should be able to
+    complete common, multi-step tasks without
+    relying on visual feedback or sighted assistance. Success can be measured by task completion rate
+    and the amount of sighted assistance that is required.
+
+    \item[G2.]\label{goal:G2} \textbf{Maintain awareness and control during digital tasks.}
+    Users should be able to understand relevant task progress and state changes, provide input when required,
+    and stop or redirect tasks when necessary. Measure successful corrections, explicit stop acknowledgment and execution-stop
+    confirmation, and approval before consequential actions. Clarification counts
+    provide context; fewer questions alone do not establish better control.
+
+    \item[G3.]\label{goal:G3} \textbf{Accurately receive results and execute commands.}
+    Users should be able to have confidence that the program is correctly tracking the system's state,
+    retrieving results, and executing their desired actions and commands. Compare reported outcomes and executed actions against independently verified
+    application state and the user's request. Report incorrect or unsupported
+    completion claims separately from successful actions.
+
+    \item[G4.]\label{goal:G4} \textbf{Recover from errors and unexpected outcomes.}
+    Users should be able to identify unexpected, misunderstood, or failed actions and recover without restarting
+    the entire task or relying on sighted assistance. Measure whether recovery succeeds without sighted help or a full restart,
+    along with recovery time and clarification turns.
+
+    \item[G5.]\label{goal:G5} \textbf{Provide a straightforward and reliable setup process.}
+    Individuals responsible for setting up the interface should have a smooth setup process.
+    Routine use after initial setup should not require assistance from the setup helper. Success can be measured by the number of clicks or commands needed,
+    the setup time before the program can be used, as well as how many times the setup helper is required to assist after installation.
+\end{description}
+
 \chapter*{Environment}
 \addcontentsline{toc}{chapter}{Environment}
 \minitoc
@@ -284,25 +319,24 @@ the system must interface with.
 
 \begin{itemize}
     \item Users: the person giving spoken commands and acting on the system's results; see the Glossary and G.7--G.8 for roles and profiles.
-    \item Websites the user asks about (unmodified, not under our control).
-    \item Connected-app services: initially Gmail and Google Calendar APIs. These are the first two integrations, not a limit on the system's eventual scope; other connected apps may be added as tools permit.
-    \item Composio: a hosted service that stores OAuth tokens and runs Gmail and Calendar tool calls. Its ``Don't store data'' setting is turned on so tool inputs and outputs are not logged.
-    \item LiveKit (real-time audio and speech pipeline).
+    \item Laptop hardware: the user's Mac, including its microphone and speakers.
+    \item Platform: macOS with Google Chrome, and the user's existing VoiceOver screen reader.
+    \item Network: required for cloud speech, AI, and Google API traffic.
     \item AI model and speech providers: cloud services for language understanding, speech-to-text, and text-to-speech.
-    \item The Hermes agent and Browser Use (reused open-source components).
-    \item VoiceOver and the Mac's microphone and speakers: the user's existing screen reader and audio hardware.
-    \item Network access: required for cloud speech, AI, and Google API traffic.
+    \item Websites the user asks about (unmodified, not under our control).
+    \item External accounts and services: initially Gmail and Google Calendar APIs. These are the first two integrations, not a limit on the system's eventual scope; other connected apps may be added as tools permit.
+    \item Composio cloud: an external hosted service that stores OAuth tokens for our Gmail and Calendar integration. Its ``Don't store data'' setting is turned on so tool inputs and outputs are not logged. Our own code calls it through the Composio SDK (S.1).
 \end{itemize}
 
 \nsection{E.3 Constraints}
 
+The following is a list of obligations and limits imposed by the environment.
+
 \begin{itemize}
     \item Mac with Google Chrome, in English.
-    \item Team budget ceiling of \$500 CAD.
-    \item Development timeline: POC demonstration occurs November 23 to December 3; final demonstration and EXPO occur in April.
     \item Gmail and Calendar access uses restricted Google OAuth permissions. An app in Testing status is capped at 100 registered test users, and its issued refresh tokens expire after 7 days, requiring re-authorization until the app is verified or published \citep{GoogleOAuthLimits}.
     \item Provider terms of use and data retention policies apply to anything sent to them.
-    \item Passwords must be properly setup and safely preserved. One-time authentication codes may be spoken. Spoken codes pass through the configured speech and conversation services. Provider handling must be checked before claiming stronger privacy guarantees.
+    \item A hosted backend cannot reach the user's Mac or its signed-in browser sessions, so controlling the user's own browser requires a component running locally.
 \end{itemize}
 
 \nsection{E.4 Assumptions}
@@ -827,8 +861,8 @@ The five use cases below expand the high-level scenarios in G.5. Each lists the 
 
 \begin{itemize}
     \item Must (POC, by November 23, 2026): \reqlink{FR1} to \reqlink{FR3}, \reqlink{FR8}, \reqlink{FR9}, \reqlink{NFR3}.
-    \item Must (before participant evaluation): \reqlink{FR4} to \reqlink{FR7}, \reqlink{FR10} to \reqlink{FR16}, \reqlink{FR18} to \reqlink{FR24}, \reqlink{NFR1}, \reqlink{NFR5}, \reqlink{NFR.E.1} to \reqlink{NFR.E.4}.
-    \item Should (tune with usability evidence): conversational timing, \reqlink{FR17}, \reqlink{NFR2}, \reqlink{NFR4}.
+    \item Must (before participant evaluation sessions, which must complete before the March 8, 2027 V\&V Report and Usability Report): \reqlink{FR4} to \reqlink{FR7}, \reqlink{FR10} to \reqlink{FR16}, \reqlink{FR18} to \reqlink{FR24}, \reqlink{NFR1}, \reqlink{NFR5}, \reqlink{NFR.E.1} to \reqlink{NFR.E.4}.
+    \item Should (tune with usability evidence from those sessions, reflected in the March 8, 2027 report): conversational timing, \reqlink{FR17}, \reqlink{NFR2}, \reqlink{NFR4}.
 \end{itemize}
 
 The POC shall demonstrate approval and work-stop controls for its selected email/calendar and browser workflows. This demonstrates feasibility for the tested action paths; it does not establish coverage of every integration or website action.
@@ -924,7 +958,7 @@ Our team consists of four group members: Aaron Loh, Curtis Vos, Kevin Kim, and L
 A dedicated teaching assistant, Rebecca Di Filippo, will meet with the team about once per month to provide
 guidance and progress check-ins.
 
-As presented in section 6 of the Development Plan, we have agreed to rotate several project management roles among all members as follows: 
+As presented in Section 6 of the Development Plan, we have agreed to rotate several project management roles among all members as follows: 
 Meeting chair, note taker, and release coordinator. Curtis is the team's external liaison for communicating 
 with McMaster's Capstone course staff, professors, TAs, etc.
 
@@ -947,11 +981,11 @@ A guideline on managing conflicts or changes in development roles has been descr
 \nsection{P.3 Schedule and milestones}
 
 \begin{itemize}
-    \item October 19: SRS and Hazard Analysis.
+    \item October 19, 2026: SRS and Hazard Analysis.
     \item November 2: V\&V Plan.
     \item November 16: Design document revision minus one; Interview Report.
     \item November 23 to December 3: POC demonstration.
-    \item January 18: Design document.
+    \item January 18, 2027: Design document.
     \item March 8: V\&V Report and Usability Report.
     \item March 31: Final documentation. 
     \item April 6: EXPO.
@@ -959,25 +993,35 @@ A guideline on managing conflicts or changes in development roles has been descr
 
 \nsection{P.4 Tasks and deliverables}
 
+Each task lists the milestone it supports and the date it must be complete. Preparatory work should be complete before the milestone it supports.
+
 \begingroup
 \small
-\begin{xltabular}{\textwidth}{>{\raggedright\arraybackslash}p{3cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{3cm}>{\raggedright\arraybackslash}p{1.8cm}}
+\begin{xltabular}{\textwidth}{>{\raggedright\arraybackslash}p{2.8cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{3cm}>{\raggedright\arraybackslash}p{2.2cm}}
 \caption{Tasks and deliverables}\label{tab:tasks}\\
 \toprule
-\textbf{Task} & \textbf{Description} & \textbf{Deliverable} & \textbf{Due}\\
+\textbf{Task} & \textbf{Description} & \textbf{Deliverable} & \textbf{Complete by}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Task} & \textbf{Description} & \textbf{Deliverable} & \textbf{Complete by}\\
 \midrule
 \endhead
 \bottomrule
 \endfoot
-Component skeleton & Pin Hermes, LiveKit, and Browser Use versions; create placeholder modules for the voice interface, task manager, action gate, outcome verification, action tools, and task history layer (S.1). & V\&V Plan & Nov 2\\\addlinespace[4pt]
+Component skeleton & Pin Hermes, LiveKit, and Browser Use versions; create placeholder modules for the voice interface, task manager, action gate, outcome verification, action tools, and task history layer (S.1). & V\&V Plan & Nov 2, 2026\\\addlinespace[4pt]
+Deployment and CI setup & Configure GitHub Actions checks for Python and TypeScript; establish credential handling that keeps secrets out of source control and logs (NFR5). & V\&V Plan & Nov 2\\\addlinespace[4pt]
 Voice interface integration & Wire LiveKit Agents into the task manager for audio sessions and turn handling. & Design document revision minus one; Interview Report & Nov 16\\\addlinespace[4pt]
+Task manager and state machine & Implement task state tracking and transitions (S.9) (FR8, FR19 to FR21). & POC demonstration & Nov 16\\\addlinespace[4pt]
 Hermes harness supervision & Connect Hermes on a pinned version; verify streamed status, approvals, interrupts, and reconnection. & Design document revision minus one; Interview Report & Nov 16\\\addlinespace[4pt]
-Action gate and approval flow & Implement the gate that requires explicit approval of exact details before any consequential action executes. & POC demonstration & Nov 23 - Dec 3\\\addlinespace[4pt]
-Browser and account tools & Integrate Browser Use (Chromium) and Composio (Gmail/Calendar via OAuth) as action tools behind the gate. & POC demonstration & Nov 23 - Dec 3\\\addlinespace[4pt]
+Participant recruitment & Recruit two to four blind participants with screen-reader experience; resolve protocol, consent, and institutional research requirements before any session (P.6). & Design document revision minus one; Interview Report & Nov 16\\\addlinespace[4pt]
+Action gate and approval flow & Implement the gate that requires explicit approval of exact details before any consequential action executes. Ready before the demonstration window opens. & POC demonstration & Nov 16\\\addlinespace[4pt]
+Browser and account tools & Integrate Browser Use and Composio as action tools behind the gate. Ready before the demonstration window opens. & POC demonstration & Nov 16\\\addlinespace[4pt]
 POC demonstration & Demonstrate approval and work-stop controls for the selected email/calendar and browser workflows (S.7). & POC demonstration & Nov 23 - Dec 3\\\addlinespace[4pt]
-Issue remediation & Address problems surfaced during the POC demonstration before design revision. & Design document & Jan 18\\\addlinespace[4pt]
-Outcome verification & Check consequential-action results against tool responses or account/page state; record verified, partial, failed, or unknown. & Design document & Jan 18\\\addlinespace[4pt]
-Accessible client and task history & Build keyboard- and VoiceOver-compatible session controls and the accessible task history layer. & Design document & Jan 18\\\addlinespace[4pt]
+Issue remediation & Address problems surfaced during the POC demonstration before design revision. & Design document & Jan 18, 2027\\\addlinespace[4pt]
+Outcome verification & Check consequential-action results against tool responses or account/page state; record verified, partial, failed, or unknown. & Design document & Jan 18, 2027\\\addlinespace[4pt]
+Accessible client and task history & Build keyboard- and VoiceOver-compatible session controls and the accessible task history layer. & Design document & Jan 18, 2027\\\addlinespace[4pt]
+Backend hosting configuration & Finalize the default topology, secret storage, and network requirements for the hybrid deployment once a working configuration has been demonstrated (P.5). & Design document & Jan 18, 2027\\\addlinespace[4pt]
 Participant evaluation integration & Incorporate interview and discovery findings. & V\&V Report and Usability Report & Mar 8\\\addlinespace[4pt]
 Final integration and polish & Complete remaining FR/NFR coverage; finalize documentation and the known-limitations list. & Final documentation & Mar 31\\\addlinespace[4pt]
 EXPO demo preparation & Package and rehearse the end-to-end demonstration. & EXPO & Apr 6\\\addlinespace[4pt]
@@ -987,16 +1031,16 @@ EXPO demo preparation & Package and rehearse the end-to-end demonstration. & EXP
 \nsection{P.5 Required technology elements}
 
 \begin{itemize}
-      \item LiveKit Agents (Python) and a speech-to-text/text-to-speech provider: ElevenLabs is the TTS candidate via LiveKit's plugin\citep{ElevenLabsPlugin}.
-      \item Hermes agent and an AI model provider: Hermes is not model-specific, so a specific model is not required on its side.
-      One candidate is currently Claude Sonnet because of its tool-call reliability under the approval-gate constraints in the Hazard Analysis, but there is flexibility 
-      to change this after POC testing or from the team's budget.
+    \item LiveKit Agents (Python) and a speech-to-text/text-to-speech provider: ElevenLabs is the TTS candidate via LiveKit's plugin\citep{ElevenLabsPlugin}.
+    \item Hermes agent and an AI model provider: Hermes is not model-specific, so a specific model is not required on its side.
+    One candidate is currently Claude Sonnet because of its tool-call reliability under the approval-gate constraints in the Hazard Analysis, but there is flexibility 
+    to change this after POC testing or from the team's budget.
     \item Browser Use with Chromium.
     \item Gmail and Google Calendar APIs through the Composio SDK, our own Google OAuth app before participant sessions, and test accounts.
     \item TypeScript and React for the web client.
-      \item A Mac running VoiceOver for development and testing: hosted CI cannot substitute for on-device permission or accessibility checks.
-      \item GitHub for source control and project tracking; GitHub Actions for automated Python and TypeScript checks.
-      \item Hosting for the voice/agent backend: local Mac, a hosted service, or a hybrid, to be finalized once a working configuration is demonstrated.
+    \item A Mac running VoiceOver for development and testing: hosted CI cannot substitute for on-device permission or accessibility checks.
+    \item GitHub for source control and project tracking; GitHub Actions for automated Python and TypeScript checks.
+    \item Hosting for the voice/agent backend: a hybrid of a local Mac and hosted services. A local component is required because a hosted backend cannot reach the user's Mac or its signed-in browser sessions (E.3). The default topology, secret storage, and network requirements are finalized once a working configuration is demonstrated.
 \end{itemize}
 
 \nsection{P.6 Risk and mitigation analysis}
@@ -1014,7 +1058,7 @@ EXPO demo preparation & Package and rehearse the end-to-end demonstration. & EXP
     \end{itemize}
     \item Risk: Recruitment of blind participants may fail.
     \begin{itemize}
-        \item Description: The team aims to recruit two to four blind participants with screen-reader experience; recruitment is unconfirmed.
+        \item Description: The team aims to recruit two to four blind participants with screen-reader experience; recruitment is not yet complete.
         \item Mitigation: Report technical feasibility only and disclose missing usability evidence.
     \end{itemize}
     \item Risk: Provider costs may exceed the budget.
@@ -1103,10 +1147,24 @@ G5 &
 \chapter*{Likely and unlikely changes}
 \addcontentsline{toc}{chapter}{Likely and unlikely changes}
 
-\begin{itemize}
-    \item Likely: replacing the AI model, speech provider, or agent harness; adding account services; changing timing constants after measurement.
-    \item Unlikely: dropping the approval rule for consequential actions; dropping voice as the main interaction.
-\end{itemize}
+\paragraph{Likely changes}
+
+\begin{description}
+    \item[LC1.]\label{chg:LC1} AI model provider: not yet selected; Claude Sonnet is a candidate but Hermes is model-agnostic and can allow adjustments as needed (P.5).
+    \item[LC2.]\label{chg:LC2} Speech-to-text and text-to-speech providers: ElevenLabs is a candidate through LiveKit's plugin (P.5).
+    \item[LC3.]\label{chg:LC3} Agent harness: P.6 commits the team to revisiting the adapter if Hermes supervision does not match its documentation.
+    \item[LC4.]\label{chg:LC4} Set of connected apps: Gmail and Google Calendar are the first two integrations, not a limit on eventual scope (G.4, E.2).
+    \item[LC5.]\label{chg:LC5} Backend topology, secret storage, and network requirements: finalized once a working configuration has been demonstrated (E.3, P.5).
+    \item[LC6.]\label{chg:LC6} Browser action coverage: the browser becomes read-only for the initial release if consequential browser actions cannot be intercepted for approval (P.6).
+\end{description}
+
+\paragraph{Unlikely changes} These carry the system's safety case and its reason for existing.
+
+\begin{description}
+    \item[ULC1.]\label{chg:ULC1} Approval of exact details before a consequential action. This is the central safety property (property P1 in S.9, FR9, FR.Sa.13) and a mitigation the Hazard Analysis relies on for H5-a. Without it the system is an unsupervised agent acting for a user who cannot see what it did.
+    \item[ULC2.]\label{chg:ULC2} Voice as the primary interaction mode. G.1 defines the system as a voice interface and G.7 selects the primary stakeholder group on that basis; replacing it would not be a revision of this project.
+    \item[ULC3.]\label{chg:ULC3} Reporting outcomes only against matching evidence. A blind user cannot visually confirm a result, so an unverified success claim is precisely the harm that hazards H4-b and H6-a exist to prevent (FR12, FR.Sa.10).
+\end{description}
 
 \chapter*{References}
 \addcontentsline{toc}{chapter}{References}
@@ -1127,11 +1185,14 @@ Interview with a former CNIB Deafblind Community Services (DBCS) staff member.
 \chapter*{Appendix: AI use disclosure}
 \addcontentsline{toc}{chapter}{Appendix: AI use disclosure}
 
-Aaron Loh used Claude Code (Claude Opus 5.5) to work through the requirements. It asked questions, summarized tool documentation, and translated the team's decisions and Kevin's requirements draft into this structured draft. Aaron made and reviewed every decision. The team will review, verify, and rewrite this draft before submission.
+Aaron Loh: Claude Code (Claude Opus 5.5) was used to work through the requirements. It asked questions, summarized tool documentation, and translated the team's decisions and Kevin's requirements draft into a structured draft. Aaron made and reviewed every decision. The team later reviewed, verified, and rewrote the draft as necessary before submission.
 
-OpenAI Codex assisted with the October 17 layout and consistency review. It also helped revise the supervision requirements and simplify the System section from Aaron's decisions. Team review is pending.
+Kevin Kim: OpenAI Codex assisted with the October 17 layout and consistency review. It also helped revise the supervision requirements and simplify the System section from Aaron's decisions.
 
-\comment{Other members: add the tools you used.}
+Curtis Vos: Claude Code (Claude Sonnet 5) was used alongside a manual review, helping with wording choices 
+and cross-checking/verifying claims alongside other sections of the documents. All responses and suggestions were fully read through and followed up
+with concerns or clarifications before implementing any feedback. At the end of the review session, Claude Opus 5 was used for a more in-depth scan to 
+verify correctness and appropriateness of section contents.
 
 \chapter*{Appendix: Reflection}
 \addcontentsline{toc}{chapter}{Appendix: Reflection}
