@@ -247,26 +247,31 @@ See the Glossary at the front of this document.
 
 \nsection{E.2 Components}
 
+This section contains a list of elements of the environment that may affect or be affected by the system, including other systems
+the system must interface with.
+
 \begin{itemize}
+    \item Users: the person giving spoken commands and acting on the system's results; see the Glossary and G.7--G.8 for roles and profiles.
     \item Websites the user asks about (unmodified, not under our control).
     \item Google services: Gmail and Google Calendar APIs.
-    \item Composio: hosted service that stores OAuth tokens and runs Gmail and Calendar tool calls. Its ``Don't store data'' setting is turned on so tool inputs and outputs are not logged.
+    \comment{Just to clarify; should we be narrowing the scope of the project so much to focus heavily on Google services? I thought we weren't narrowing down that far, but the current state of the SRS seems to imply otherwise.}
+    \item Composio: a hosted service that stores OAuth tokens and runs Gmail and Calendar tool calls. Its ``Don't store data'' setting is turned on so tool inputs and outputs are not logged.
     \item LiveKit (real-time audio and speech pipeline).
-    \item AI model and speech providers.
+    \item AI model and speech providers: cloud services for language understanding, speech-to-text, and text-to-speech.
     \item The Hermes agent and Browser Use (reused open-source components).
-    \item VoiceOver and the Mac's microphone and speakers.
-    \item Network access.
+    \item VoiceOver and the Mac's microphone and speakers: the user's existing screen reader and audio hardware.
+    \item Network access: required for cloud speech, AI, and Google API traffic.
 \end{itemize}
 
 \nsection{E.3 Constraints}
 
 \begin{itemize}
-    \item Mac with Chrome, English, as decided in the Development Plan.
+    \item Mac with Google Chrome, in English.
     \item Team budget ceiling of \$500 CAD.
-    \item Course schedule: POC demonstration November 23 to December 3; final demonstration and EXPO in April.
+    \item Development timeline: POC demonstration occurs November 23 to December 3; final demonstration and EXPO occur in April.
     \item Gmail and Calendar access uses restricted Google OAuth permissions. An app in Testing status is capped at 100 registered test users, and its issued refresh tokens expire after 7 days, requiring re-authorization until the app is verified or published \citep{GoogleOAuthLimits}.
     \item Provider terms of use and data retention policies apply to anything sent to them.
-    \item Passwords and payment details are entered through a private page or the user's own device. One-time authentication codes may be spoken. Spoken codes pass through the configured speech and conversation services. Provider handling must be checked before claiming stronger privacy guarantees.
+    \item Passwords must be properly setup and safely preserved. One-time authentication codes may be spoken. Spoken codes pass through the configured speech and conversation services. Provider handling must be checked before claiming stronger privacy guarantees.
 \end{itemize}
 
 \nsection{E.4 Assumptions}
@@ -292,9 +297,10 @@ Speech recognition, the AI model, websites, and external services are not assume
 \nsection{E.6 Invariants}
 
 \begin{itemize}
-    \item Writes and consequential commitments require approval of their exact details. FR24 defines the narrow exception for rejecting non-essential cookies.
+    \item External account and page states (emails, calendar events, website content) can change outside the system at any time, through other devices, other users, or the provider itself; the system's last known state should not be assumed current.
+    \item A delivered message or submitted form cannot be withdrawn by the system after the fact; only the provider or recipient can undo it, if at all.
+    \item OAuth-issued credentials and authentication codes are controlled by the provider: they expire, can be revoked, and may require re-authorization independent of the system's own state.
     \item The user's existing accessibility tools (VoiceOver, keyboard navigation) keep working while the system runs.
-    \item Credentials are never written to source control, logs, or task history.
 \end{itemize}
 
 \nsection{E.7 Standards and legal/regulatory factors}
