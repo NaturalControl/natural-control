@@ -546,7 +546,7 @@ For email the read-back shall name the recipients and subject. It shall read the
 \bottomrule
 \endfoot
 \reqtarget{FR14} & The system shall request only the account permissions it needs, and explain them during setup, including which providers receive which data. & Narrow permissions limit the damage any other failure can do. & \reqlink{G5}; \reqlink{FR.Sa.17}\\\addlinespace[4pt]
-\reqtarget{FR17} & The user shall be able to mark topics or accounts as off-limits. The system shall not read or act on them. & The \hyperref[app:interview]{former CNIB staff interview} raised concerns about sensitive account data. & \reqlink{G2}\\\addlinespace[4pt]
+\reqtarget{FR17} & The user shall be able to restrict access to specific accounts, senders, folders, or resources. The system shall not access or act on restricted resources. & The \hyperref[app:interview]{former CNIB staff interview} raised concerns about sensitive account data. & \reqlink{G2}\\\addlinespace[4pt]
 \reqtarget{FR23} & Website passwords shall be entered through a private setup page and stored encrypted. They shall not be spoken or placed in the conversation. Saved credentials shall be used only for their intended site. The user may speak a one-time authentication code or approve a push on their device. The system shall explain that spoken codes pass through the configured speech and conversation services. A site that requires a device-bound passkey shall use a manual handoff. & Spoken codes can be heard nearby and processed by providers. Private typed code input is a proposed alternative. & \reqlink{G2}, \reqlink{G5}; \reqlink{FR.Sa.17}\\\addlinespace[4pt]
 \reqtarget{FR24} & The system may automatically choose a clearly identified ``reject non-essential cookies'' or ``necessary only'' option. Any ambiguous consent choice shall require explicit user approval. This is a narrow exception to \reqlink{FR9}. Accepting cookies or terms shall require approval. & A limited exception reduces repeated consent prompts. It does not authorize accepting terms. & \reqlink{G2}, \reqlink{G3}; \reqlink{FR.Sa.13}\\\addlinespace[4pt]
 \end{xltabular}
@@ -889,6 +889,8 @@ The partial transition function $\delta : Q \times \Sigma \to Q$ uses the events
 
 The running states are Working, AwaitingClarification, AwaitingApproval, and Executing. Pausing, Paused, and Cancelling are also active states. Cancelled, Done, and Failed are final. A session has at most one active task.
 
+The maximum silence timer in \reqlink{NFR.Sa.3} counts active work in both Working and Executing, including read-only work; it excludes time awaiting user clarification or approval and time paused or cancelled.
+
 A work-stop request blocks new task actions as soon as it is recognized. Pausing records this change and requests safe interruption. It then enters Paused. An earlier external operation may still be pending. Its outcome is tracked separately. Reconciliation checks may continue while paused. They may not advance the task. The report distinguishes unfinished work from unknown outcomes.
 
 Cancellation uses Cancelling to block new actions and preserve earlier results. It then enters Cancelled. Earlier operations are not undone. An unresolved external submission does not justify repeating it.
@@ -1113,9 +1115,9 @@ support the five project goals defined in the Problem Statement.
 \reqlink{FR2}, \reqlink{FR3}, \reqlink{FR5}, \reqlink{FR7}, \reqlink{FR8}, \reqlink{FR9}, \reqlink{FR10}, \reqlink{FR15},
 \reqlink{FR17}, \reqlink{FR18}, \reqlink{FR19}, \reqlink{FR20}, \reqlink{FR21}, \reqlink{FR22}, \reqlink{FR23}, \reqlink{FR24} &
 \reqlink{NFR1}, \reqlink{NFR3}, \reqlink{NFR4} &
-\reqlink{FR.Sa.1}, \reqlink{FR.Sa.2}, \reqlink{FR.Sa.3}, \reqlink{FR.Sa.4}, \reqlink{FR.Sa.5}, \reqlink{FR.Sa.7}, \reqlink{FR.Sa.8},
-\reqlink{FR.Sa.13}, \reqlink{FR.Sa.14}, \reqlink{FR.Sa.15}, \reqlink{FR.Sa.17}, \reqlink{FR.Sa.20},
-\reqlink{NFR.Sa.1}, \reqlink{NFR.Sa.3} \\
+\reqlink{FR.Sa.1}, \reqlink{FR.Sa.2}, \reqlink{FR.Sa.3}, \reqlink{FR.Sa.4}, \reqlink{FR.Sa.5}, \reqlink{FR.Sa.7}, \reqlink{FR.Sa.8}, \reqlink{FR.Sa.11},
+\reqlink{FR.Sa.13}, \reqlink{FR.Sa.14}, \reqlink{FR.Sa.15}, \reqlink{FR.Sa.17}, \reqlink{FR.Sa.19}, \reqlink{FR.Sa.20},
+\reqlink{NFR.Sa.1}, \reqlink{NFR.Sa.2}, \reqlink{NFR.Sa.3} \\
 
 \addlinespace[6pt]
 
@@ -1130,7 +1132,7 @@ support the five project goals defined in the Problem Statement.
 \reqlink{G4} &
 \reqlink{FR6}, \reqlink{FR7}, \reqlink{FR8}, \reqlink{FR16}, \reqlink{FR21} &
 --- &
-\reqlink{FR.Sa.5}, \reqlink{FR.Sa.7}, \reqlink{FR.Sa.8} \\
+\reqlink{FR.Sa.5}, \reqlink{FR.Sa.7}, \reqlink{FR.Sa.8}, \reqlink{FR.Sa.12} \\
 
 \addlinespace[6pt]
 
