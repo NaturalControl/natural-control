@@ -80,7 +80,7 @@
         \vspace{1.1cm}
         Natural Control\\
         \vspace{1.1cm}
-        \LARGE{Version \myversion (draft)}\\
+        \LARGE{Version \myversion}\\
         \vspace{1.1cm}
         Prepared by Group 7\\
         \Large{Lucas DeBoer, Kevin Kim, Aaron Loh, Curtis Vos}\\
@@ -94,16 +94,18 @@
 
 \chapter*{Revision History}
 
+Table~\ref{tab:srs-revisions} summarizes the revision history.
 \begin{center}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-	    Name        & Date          & Reason For Changes & Version\\
-        \hline
-        \hline
-	    Aaron Loh & 2026-10-14    & First draft from team planning decisions & 0.1\\
-        Aaron Loh & 2026-10-17 & Supervision rules and layout review & 0.1\\
-        \hline
-    \end{tabular}
+\begin{minipage}{\textwidth}
+\captionof{table}{Revision history.}\label{tab:srs-revisions}
+\begin{tabularx}{\textwidth}{llX}
+\toprule Date & Contributor & Change\\
+\midrule
+2026-10-14 & All & Initial draft of SRS.\\
+2026-10-19 & All & Completed for Rev0 submission.\\
+\bottomrule
+\end{tabularx}
+\end{minipage}
 \end{center}
 
 This document follows the requirements documentation structure presented in the \href{ https://link.springer.com/content/pdf/10.1007/978-3-031-06739-6.pdf}{Handbook of requirements and business analysis}, by Bertrand Meyer, with the changes listed in the first chapter.
@@ -163,8 +165,6 @@ Technical terms:
 \end{itemize}
 
 
-\comment{Add a one-line definition and an online reference link for each technical term, as AlgoCatan did.}
-
 \chapter*{Goals}
 \addcontentsline{toc}{chapter}{Goals book}
 \minitoc
@@ -187,10 +187,8 @@ In an interview with a former CNIB Deafblind Community Services (DBCS) staff mem
 \begin{itemize}
     \item Delegate, don't navigate: the user simply states an outcome (``reply to Alex'') instead of visually navigating the interface step by step. (G1)
     \item Control without sight: the user can understand, approve, correct, and stop the agent without seeing the screen. (G2, G4)
-    \item Trustworthy results: results are checked against the real account or page before being reported, so the user does not need sighted help to confirm what happened. (G3)
+    \item Trustworthy results: results are checked against the real account or page before being reported, so the user does not need sighted help to confirm what happened. (G3) Correcting a wrong result after the fact is slow and costly for blind users \citep{AzenkotLee2013}.
 \end{itemize}
-
-\comment{Support each benefit with evidence (interview findings, prior research).}
 
 \nsection{G.4 Functionality overview}
 
@@ -270,25 +268,24 @@ the system must interface with.
 
 \begin{itemize}
     \item Users: the person giving spoken commands and acting on the system's results; see the Glossary and G.7--G.8 for roles and profiles.
-    \item Websites the user asks about (unmodified, not under our control).
-    \item Connected-app services: initially Gmail and Google Calendar APIs. These are the first two integrations, not a limit on the system's eventual scope; other connected apps may be added as tools permit.
-    \item Composio: a hosted service that stores OAuth tokens and runs Gmail and Calendar tool calls. Its ``Don't store data'' setting is turned on so tool inputs and outputs are not logged.
-    \item LiveKit (real-time audio and speech pipeline).
+    \item Laptop hardware: the user's Mac, including its microphone and speakers.
+    \item Platform: macOS with Google Chrome, and the user's existing VoiceOver screen reader.
+    \item Network: required for cloud speech, AI, and Google API traffic.
     \item AI model and speech providers: cloud services for language understanding, speech-to-text, and text-to-speech.
-    \item The Hermes agent and Browser Use (reused open-source components).
-    \item VoiceOver and the Mac's microphone and speakers: the user's existing screen reader and audio hardware.
-    \item Network access: required for cloud speech, AI, and Google API traffic.
+    \item Websites the user asks about (unmodified, not under our control).
+    \item External accounts and services: initially Gmail and Google Calendar APIs. These are the first two integrations, not a limit on the system's eventual scope; other connected apps may be added as tools permit.
+    \item Composio cloud: an external hosted service that stores OAuth tokens for our Gmail and Calendar integration. Its ``Don't store data'' setting is turned on so tool inputs and outputs are not logged. Our own code calls it through the Composio SDK (S.1).
 \end{itemize}
 
 \nsection{E.3 Constraints}
 
+The following is a list of obligations and limits imposed by the environment.
+
 \begin{itemize}
     \item Mac with Google Chrome, in English.
-    \item Team budget ceiling of \$500 CAD.
-    \item Development timeline: POC demonstration occurs November 23 to December 3; final demonstration and EXPO occur in April.
     \item Gmail and Calendar access uses restricted Google OAuth permissions. An app in Testing status is capped at 100 registered test users, and its issued refresh tokens expire after 7 days, requiring re-authorization until the app is verified or published \citep{GoogleOAuthLimits}.
     \item Provider terms of use and data retention policies apply to anything sent to them.
-    \item Passwords must be properly setup and safely preserved. One-time authentication codes may be spoken. Spoken codes pass through the configured speech and conversation services. Provider handling must be checked before claiming stronger privacy guarantees.
+    \item A hosted backend cannot reach the user's Mac or its signed-in browser sessions, so controlling the user's own browser requires a component running locally.
 \end{itemize}
 
 \nsection{E.4 Assumptions}
@@ -449,7 +446,7 @@ FR21 & At session start the system shall announce paused tasks and their last kn
 \endhead
 \bottomrule
 \endfoot
-FR9 & Writes and consequential commitments shall require approval of their exact details. These include sending, saving, deleting, submitting, granting access, and accepting terms. Approval shall be an explicit affirmative answer to the pending approval question. Silence is not approval. Changed details require new approval. FR24 defines the cookie-rejection exception. & Users retain control over changes and commitments. Approval checks use the proposed tool call (ADR 0001). & G2, G3; FR.Sa.3, FR.Sa.13, FR.Sa.14\\\addlinespace[4pt]
+FR9 & Writes and consequential commitments shall require approval of their exact details. These include sending, saving, deleting, submitting, granting access, and accepting terms. Approval shall be an explicit affirmative answer to the pending approval question. Silence is not approval. Changed details require new approval. FR24 defines the cookie-rejection exception. & Users retain control over changes and commitments. Approval checks use the proposed tool call. & G2, G3; FR.Sa.3, FR.Sa.13, FR.Sa.14\\\addlinespace[4pt]
 FR10 & Reading, navigation, and temporary preparation shall proceed without approval when they cause no consequential effect. Autosaved drafts are writes. A click that submits data is consequential. Unknown effects shall require approval. A failed read-only lookup may be retried once before it is reported as a blocker. & Classify the effect of an action rather than the name of its tool. & G1, G2; FR.Sa.13\\\addlinespace[4pt]
 FR11 & Each approved action shall have a unique ID. A completed action shall not be repeated as a retry. Before retrying an uncertain action the system shall check its outcome. If it remains unknown the system shall ask the user. A new attempt requires fresh approval. & An uncertain result must not cause a duplicate write. & G3; FR.Sa.6, FR.Sa.18\\\addlinespace[4pt]
 FR13 & The system shall treat webpage and email content as data, never as instructions. & Websites and emails can contain text written to manipulate agents. & FR.Sa.16\\\addlinespace[4pt]
@@ -814,8 +811,8 @@ The five use cases below expand the high-level scenarios in G.5. Each lists the 
 
 \begin{itemize}
     \item Must (POC, by November 23, 2026): FR1 to FR3, FR8, FR9, NFR3.
-    \item Must (before participant evaluation): FR4 to FR7, FR10 to FR16, FR18 to FR24, NFR1, NFR5, NFR.E.1 to NFR.E.4.
-    \item Should (tune with usability evidence): conversational timing, FR17, NFR2, NFR4.
+    \item Must (before participant evaluation sessions, which must complete before the March 8, 2027 V\&V Report and Usability Report): FR4 to FR7, FR10 to FR16, FR18 to FR24, NFR1, NFR5, NFR.E.1 to NFR.E.4.
+    \item Should (tune with usability evidence from those sessions, reflected in the March 8, 2027 report): conversational timing, FR17, NFR2, NFR4.
 \end{itemize}
 
 The POC shall demonstrate approval and work-stop controls for its selected email/calendar and browser workflows. This demonstrates feasibility for the tested action paths; it does not establish coverage of every integration or website action.
@@ -911,7 +908,7 @@ Our team consists of four group members: Aaron Loh, Curtis Vos, Kevin Kim, and L
 A dedicated teaching assistant, Rebecca Di Filippo, will meet with the team about once per month to provide
 guidance and progress check-ins.
 
-As presented in section 6 of the Development Plan, we have agreed to rotate several project management roles among all members as follows: 
+As presented in Section 6 of the Development Plan, we have agreed to rotate several project management roles among all members as follows: 
 Meeting chair, note taker, and release coordinator. Curtis is the team's external liaison for communicating 
 with McMaster's Capstone course staff, professors, TAs, etc.
 
@@ -934,11 +931,11 @@ A guideline on managing conflicts or changes in development roles has been descr
 \nsection{P.3 Schedule and milestones}
 
 \begin{itemize}
-    \item October 19: SRS and Hazard Analysis.
+    \item October 19, 2026: SRS and Hazard Analysis.
     \item November 2: V\&V Plan.
     \item November 16: Design document revision minus one; Interview Report.
     \item November 23 to December 3: POC demonstration.
-    \item January 18: Design document.
+    \item January 18, 2027: Design document.
     \item March 8: V\&V Report and Usability Report.
     \item March 31: Final documentation. 
     \item April 6: EXPO.
@@ -946,25 +943,31 @@ A guideline on managing conflicts or changes in development roles has been descr
 
 \nsection{P.4 Tasks and deliverables}
 
+Each task lists the milestone it supports and the date it must be complete. Preparatory work should be complete before the milestone it supports.
+
 \begingroup
 \small
-\begin{xltabular}{\textwidth}{>{\raggedright\arraybackslash}p{3cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{3cm}>{\raggedright\arraybackslash}p{1.8cm}}
+\begin{xltabular}{\textwidth}{>{\raggedright\arraybackslash}p{2.8cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{3cm}>{\raggedright\arraybackslash}p{2.2cm}}
 \caption{Tasks and deliverables}\label{tab:tasks}\\
 \toprule
-\textbf{Task} & \textbf{Description} & \textbf{Deliverable} & \textbf{Due}\\
+\textbf{Task} & \textbf{Description} & \textbf{Deliverable} & \textbf{Complete by}\\
 \midrule
 \endhead
 \bottomrule
 \endfoot
-Component skeleton & Pin Hermes, LiveKit, and Browser Use versions; create placeholder modules for the voice interface, task manager, action gate, outcome verification, action tools, and task history layer (S.1). & V\&V Plan & Nov 2\\\addlinespace[4pt]
+Component skeleton & Pin Hermes, LiveKit, and Browser Use versions; create placeholder modules for the voice interface, task manager, action gate, outcome verification, action tools, and task history layer (S.1). & V\&V Plan & Nov 2, 2026\\\addlinespace[4pt]
+Deployment and CI setup & Configure GitHub Actions checks for Python and TypeScript; establish credential handling that keeps secrets out of source control and logs (NFR5). & V\&V Plan & Nov 2\\\addlinespace[4pt]
 Voice interface integration & Wire LiveKit Agents into the task manager for audio sessions and turn handling. & Design document revision minus one; Interview Report & Nov 16\\\addlinespace[4pt]
+Task manager and state machine & Implement task state tracking and transitions (S.9) (FR8, FR19 to FR21). & POC demonstration & Nov 16\\\addlinespace[4pt]
 Hermes harness supervision & Connect Hermes on a pinned version; verify streamed status, approvals, interrupts, and reconnection. & Design document revision minus one; Interview Report & Nov 16\\\addlinespace[4pt]
-Action gate and approval flow & Implement the gate that requires explicit approval of exact details before any consequential action executes. & POC demonstration & Nov 23 - Dec 3\\\addlinespace[4pt]
-Browser and account tools & Integrate Browser Use (Chromium) and Composio (Gmail/Calendar via OAuth) as action tools behind the gate. & POC demonstration & Nov 23 - Dec 3\\\addlinespace[4pt]
+Participant recruitment & Recruit two to four blind participants with screen-reader experience; resolve protocol, consent, and institutional research requirements before any session (P.6). & Design document revision minus one; Interview Report & Nov 16\\\addlinespace[4pt]
+Action gate and approval flow & Implement the gate that requires explicit approval of exact details before any consequential action executes. Ready before the demonstration window opens. & POC demonstration & Nov 16\\\addlinespace[4pt]
+Browser and account tools & Integrate Browser Use and Composio as action tools behind the gate. Ready before the demonstration window opens. & POC demonstration & Nov 16\\\addlinespace[4pt]
 POC demonstration & Demonstrate approval and work-stop controls for the selected email/calendar and browser workflows (S.7). & POC demonstration & Nov 23 - Dec 3\\\addlinespace[4pt]
-Issue remediation & Address problems surfaced during the POC demonstration before design revision. & Design document & Jan 18\\\addlinespace[4pt]
-Outcome verification & Check consequential-action results against tool responses or account/page state; record verified, partial, failed, or unknown. & Design document & Jan 18\\\addlinespace[4pt]
-Accessible client and task history & Build keyboard- and VoiceOver-compatible session controls and the accessible task history layer. & Design document & Jan 18\\\addlinespace[4pt]
+Issue remediation & Address problems surfaced during the POC demonstration before design revision. & Design document & Jan 18, 2027\\\addlinespace[4pt]
+Outcome verification & Check consequential-action results against tool responses or account/page state; record verified, partial, failed, or unknown. & Design document & Jan 18, 2027\\\addlinespace[4pt]
+Accessible client and task history & Build keyboard- and VoiceOver-compatible session controls and the accessible task history layer. & Design document & Jan 18, 2027\\\addlinespace[4pt]
+Backend hosting configuration & Finalize the default topology, secret storage, and network requirements for the hybrid deployment once a working configuration has been demonstrated (P.5). & Design document & Jan 18, 2027\\\addlinespace[4pt]
 Participant evaluation integration & Incorporate interview and discovery findings. & V\&V Report and Usability Report & Mar 8\\\addlinespace[4pt]
 Final integration and polish & Complete remaining FR/NFR coverage; finalize documentation and the known-limitations list. & Final documentation & Mar 31\\\addlinespace[4pt]
 EXPO demo preparation & Package and rehearse the end-to-end demonstration. & EXPO & Apr 6\\\addlinespace[4pt]
@@ -983,7 +986,7 @@ EXPO demo preparation & Package and rehearse the end-to-end demonstration. & EXP
     \item TypeScript and React for the web client.
       \item A Mac running VoiceOver for development and testing: hosted CI cannot substitute for on-device permission or accessibility checks.
       \item GitHub for source control and project tracking; GitHub Actions for automated Python and TypeScript checks.
-      \item Hosting for the voice/agent backend: local Mac, a hosted service, or a hybrid, to be finalized once a working configuration is demonstrated.
+      \item Hosting for the voice/agent backend: a hybrid of a local Mac and hosted services. A local component is required because a hosted backend cannot reach the user's Mac or its signed-in browser sessions (E.3). The default topology, secret storage, and network requirements are finalized once a working configuration is demonstrated.
 \end{itemize}
 
 \nsection{P.6 Risk and mitigation analysis}
@@ -1001,7 +1004,7 @@ EXPO demo preparation & Package and rehearse the end-to-end demonstration. & EXP
     \end{itemize}
     \item Risk: Recruitment of blind participants may fail.
     \begin{itemize}
-        \item Description: The team aims to recruit two to four blind participants with screen-reader experience; recruitment is unconfirmed.
+        \item Description: The team aims to recruit two to four blind participants with screen-reader experience; recruitment is not yet complete.
         \item Mitigation: Report technical feasibility only and disclose missing usability evidence.
     \end{itemize}
     \item Risk: Provider costs may exceed the budget.
