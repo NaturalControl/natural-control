@@ -1,0 +1,59 @@
+```latex
+\subsection*{Kevin Kim}
+
+\begin{enumerate}
+
+\item \textbf{What went well while writing this deliverable?}
+
+One thing that went well while writing the SRS was how our team divided up the responsibilities. Aaron and I were responsible for the System section, while other team members worked on sections such as the goals and Hazard Analysis. This allowed us to focus on specific parts of the document and made the workload more manageable.
+
+Another thing that worked well was using AI tools to help review our work and identify potential issues. These tools helped us check whether our requirements were complete, consistent, and aligned with other sections of the document. I also spent time reviewing the requirements to make sure they were realistic and feasible for our project. During this process, we identified and resolved several discrepancies between the SRS and Hazard Analysis. Overall, I think dividing responsibilities and reviewing each other's work helped us produce a clearer and more consistent deliverable.
+
+\item \textbf{What pain points did you experience during this deliverable, and how did you resolve them?}
+
+One of the main challenges I experienced while working on the SRS was dealing with inconsistencies between the SRS and Hazard Analysis. Since different team members were responsible for different sections and documents, some requirements ended up describing slightly different system behaviors. To resolve this, I compared the requirements in both documents and reviewed which approaches were more realistic, feasible, and appropriate for our project. This helped us make decisions about how the system should handle situations such as task interruptions, user approvals, and failures.
+
+Another challenge was making sure that our requirements were specific enough to implement and test. Some requirements were initially too broad or difficult to guarantee, so I worked on refining them to better reflect what our team could realistically develop. I also helped review the relationships between requirements and project goals to make sure the document was consistent and that important safety requirements were not overlooked.
+
+Overall, these challenges taught me that writing requirements is not just about describing what we want the system to do, but also making sure that the requirements are achievable, clear, and consistent with the rest of the project.
+
+\item \textbf{How many of your requirements were inspired by speaking to clients or their proxies?}
+
+I did not personally participate in any client or stakeholder interviews while working on the SRS. Most of the requirements I worked on were developed through team discussions, where we collectively considered the needs and challenges that blind users might face when interacting with our system. We used these discussions, along with our project goals and technical considerations, to determine what features and safety measures would be important.
+
+Although some of our requirements may have been influenced by stakeholder feedback gathered by other team members, I cannot confidently identify an exact number that came directly from those conversations. Many of our initial requirements were based on assumptions that we believe are reasonable but still need to validate with actual users.
+
+Moving forward, I think gathering more direct feedback from blind users will be important to confirm that our requirements address their needs and to identify anything we may have overlooked.
+
+\item \textbf{Which courses will help your team succeed with the capstone project?}
+
+I think Software Requirements, Human-Computer Interfaces, and Software Testing are three of the most useful courses we have taken that will help our team succeed with this capstone project.
+
+Software Requirements was particularly helpful when developing our SRS document, since it taught us how to identify, organize, and write clear requirements for a software system. Human-Computer Interfaces is also very relevant to our project because Natural Control is designed primarily for blind users. The concepts we learned in that course can help us design an interface that is accessible, easy to navigate, and suitable for users who rely on voice interaction.
+
+Finally, Software Testing will help us verify that our system behaves as expected and that the features we implement meet the requirements we have defined. This will be especially important for testing safety-related features such as user approvals, task interruptions, and error handling.
+
+Overall, I think these courses provide a strong foundation for designing, implementing, and evaluating Natural Control.
+
+\item \textbf{What knowledge and skills will the team need to acquire?}
+
+To successfully complete our capstone project, I think our team will need to develop a better understanding of AI agent development, backend systems, security, voice interfaces, and accessibility. Since Natural Control combines several different technologies, it will be important for everyone to have a general understanding of how the system works, while also focusing on the areas they are responsible for.
+
+Based on our Development Plan, my main area is deployment and reliability. I will need to improve my understanding of backend systems, secure credential handling, and how to make sure the system can recover from errors or connection failures. I also want to develop my knowledge of AI agent integration so I can contribute to other parts of the project.
+
+Aaron is responsible for agent and tool integration, so he will need to develop a stronger understanding of AI agent frameworks, browser automation, and integrating services such as Gmail and Google Calendar. Curtis is focusing on evaluation and quality, so he will need to learn more about accessibility testing and how to evaluate whether our system is effective for blind users. Lucas is responsible for the voice interface and accessible client, so he will need to gain experience with speech technologies, VoiceOver compatibility, and designing accessible interactions.
+
+Although we have different responsibilities, I think sharing what we learn with each other will be important so we can integrate everything into one reliable and accessible system.
+
+\item \textbf{How will each team member acquire the necessary knowledge and skills?}
+
+I think the most effective way for our team to acquire the knowledge and skills needed for this project is through hands-on experience. Two approaches we can use are studying documentation and tutorials, and learning by building prototypes and experimenting with the technologies ourselves. We can also use AI tools to ask questions, understand unfamiliar concepts, and troubleshoot issues, while verifying the information through documentation and testing.
+
+Personally, I prefer learning by doing. For deployment and reliability, I plan to experiment with backend services, deployment configurations, and error-handling mechanisms rather than relying only on reading documentation. I will still refer to documentation and tutorials whenever I need guidance, but I find that actually implementing something helps me understand it better.
+
+For Aaron, I think building small prototypes with AI agent frameworks and external service integrations would be an effective way to learn, alongside reading framework documentation. Curtis could learn more about accessibility testing and evaluation by reviewing accessibility guidelines and then applying them through practical testing sessions. Lucas could develop his knowledge of voice interfaces by studying speech technology and accessibility documentation, then building and testing voice interactions with VoiceOver.
+
+Overall, I think our team will benefit most from combining independent research with practical development. Building and testing the system will help us identify gaps in our understanding, while documentation, tutorials, and AI-assisted research can help us resolve problems as they arise. Sharing what we learn with each other will also help us work more effectively as a team.
+
+\end{enumerate}
+```
