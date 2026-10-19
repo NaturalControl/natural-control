@@ -154,7 +154,8 @@ Technical terms: LiveKit, Hermes, Browser Use, MCP (Model Context Protocol), OAu
 
 \nsection{G.1 Context and overall objective}
 
-Many websites and applications communicate information, choices, and state changes visually. Blind users can face barriers completing multi-step digital tasks and knowing whether those tasks succeeded. Natural Control is a voice interface that lets a blind user delegate tasks in a web browser and in Gmail and Google Calendar to an AI agent, while staying informed and in control.
+Many websites and applications communicate information, choices, and state changes visually. Blind users can face barriers completing multi-step digital tasks and knowing whether those tasks succeeded. 
+Natural Control is a voice interface that lets a blind user delegate tasks in a web browser and in connected apps to an AI agent, while staying informed and in control. 
 
 \nsection{G.2 Current situation}
 
@@ -177,7 +178,7 @@ In an interview with a former CNIB Deafblind Community Services (DBCS) staff mem
 \nsection{G.4 Functionality overview}
 
 \begin{itemize}
-    \item \textbf{Delegated task execution:} carries out multi-step tasks in a web browser, Gmail, or Google Calendar from a single spoken goal, instead of the user navigating each step.
+    \item \textbf{Delegated task execution:} carries out multi-step tasks in a web browser or a connected app (initially Gmail and Google Calendar) from a single spoken goal, instead of the user navigating each step.
     \item \textbf{Clarification on demand:} asks for clarification when required details are missing or ambiguous rather than guessing about the user's intent.
     \item \textbf{Approval-gated actions:} requires explicit approval of exact details before completing consequential actions, such as sending, saving, or submitting.
     \item \textbf{Verified reporting:} checks task outcomes against the real account or page before reporting them as complete, rather than assuming a success after actions are taken.
@@ -222,8 +223,8 @@ Figure~\ref{fig:activityhighlevel} shows the common high-level flow behind Scena
     \item Secondary: other people who want nonvisual interaction.
     \item Tertiary: website and application developers who affect the system's operational limits.
     \item Setup helper: a person who completes the assisted setup.
-    \item Requirements sources: the Problem Statement, Development Plan, and Hazard Analysis; TA and instructor guidance; prior research (WebAIM survey, Morae); an interview with a former CNIB Deafblind Community Services (DBCS) staff member on October 17, 2026; and planned participant sessions.
     \item Intervenors: support workers who may help deafblind users with setup and recovery.
+    \item Requirements sources: the Problem Statement, Development Plan, and Hazard Analysis; TA and instructor guidance; prior research (WebAIM survey \citep{WebAIM2024}, Morae \citep{Morae2025}, Azenkot and Lee \citep{AzenkotLee2013}); an interview with a former CNIB Deafblind Community Services (DBCS) staff member on October 17, 2026; and planned participant sessions.
 \end{itemize}
 
 \nsection{G.8 User profiles}
@@ -253,8 +254,7 @@ the system must interface with.
 \begin{itemize}
     \item Users: the person giving spoken commands and acting on the system's results; see the Glossary and G.7--G.8 for roles and profiles.
     \item Websites the user asks about (unmodified, not under our control).
-    \item Google services: Gmail and Google Calendar APIs.
-    \comment{Just to clarify; should we be narrowing the scope of the project so much to focus heavily on Google services? I thought we weren't narrowing down that far, but the current state of the SRS seems to imply otherwise.}
+    \item Connected-app services: initially Gmail and Google Calendar APIs. These are the first two integrations, not a limit on the system's eventual scope; other connected apps may be added as tools permit.
     \item Composio: a hosted service that stores OAuth tokens and runs Gmail and Calendar tool calls. Its ``Don't store data'' setting is turned on so tool inputs and outputs are not logged.
     \item LiveKit (real-time audio and speech pipeline).
     \item AI model and speech providers: cloud services for language understanding, speech-to-text, and text-to-speech.
@@ -381,7 +381,7 @@ FR1 & The system shall accept spoken input during a session. It shall support pa
 FR2 & The user shall be able to interrupt spoken output. This shall not restart the task or pause its execution by itself. A correction or explicit work-stop request shall follow its own handling. & Users need to cut off long speech without losing work. & G2\\\addlinespace[4pt]
 FR3 & An explicit ``stop working'' command or the stop key shall pause the task (FR8). A bare ``stop'' shall stop speech and pause work. The system shall clarify what the user wants next. An explicit request to cancel or abandon the task shall end it. & Speech interruption, work pause, and cancellation have different effects. The key provides a backup when voice fails. & G2; FR.Sa.1, FR.Sa.4\\\addlinespace[4pt]
 FR16 & The system shall let the user correct part of a read-back (for example, one sentence or one detail) by voice without restarting the request. & Interview: fixing a read-back usually means starting over. Correcting speech input is slow for blind users \citep{AzenkotLee2013}. & G4\\\addlinespace[4pt]
-FR18 & Spoken updates and summaries shall include only information relevant to the current task, with more detail available on request. & Interview and WebAIM survey: screen readers read too much irrelevant content. & G2\\\addlinespace[4pt]
+FR18 & Spoken updates and summaries shall include only information relevant to the current task, with more detail available on request. & Interview and WebAIM survey \citep{WebAIM2024}: screen readers read too much irrelevant content. & G2\\\addlinespace[4pt]
 \end{xltabular}
 \endgroup
 
@@ -962,7 +962,7 @@ Requirements come from the Problem Statement, Development Plan, Hazard Analysis,
 \bibliographystyle{plainnat}
 \bibliography{../../refs/CapstoneSources}
 
-\comment{WCAG, AODA, and the Google API policy are now cited in E.7/E.3. LiveKit, Hermes, Browser Use, WebAIM, and Morae are named in the Glossary, P.2, P.5, and the System book but not yet marked with \textbackslash citep; add those where each is first mentioned. The Meyer handbook is already linked inline on the first page.}
+\comment{WCAG, AODA, the Google API policy, WebAIM, and Morae are now cited where first mentioned. LiveKit, Hermes, and Browser Use are named in the Glossary, P.2, P.5, and the System book but not yet marked with \textbackslash citep; add those where each is first mentioned. The Meyer handbook is already linked inline on the first page.}
 
 \chapter*{Appendix: AI use disclosure}
 \addcontentsline{toc}{chapter}{Appendix: AI use disclosure}
