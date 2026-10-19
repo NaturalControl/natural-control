@@ -452,8 +452,7 @@ FR21 & At session start the system shall announce paused tasks and their last kn
 FR9 & Writes and consequential commitments shall require approval of their exact details. These include sending, saving, deleting, submitting, granting access, and accepting terms. Approval shall be an explicit affirmative answer to the pending approval question. Silence is not approval. Changed details require new approval. FR24 defines the cookie-rejection exception. & Users retain control over changes and commitments. Approval checks use the proposed tool call (ADR 0001). & G2, G3; FR.Sa.3, FR.Sa.13, FR.Sa.14\\\addlinespace[4pt]
 FR10 & Reading, navigation, and temporary preparation shall proceed without approval when they cause no consequential effect. Autosaved drafts are writes. A click that submits data is consequential. Unknown effects shall require approval. A failed read-only lookup may be retried once before it is reported as a blocker. & Classify the effect of an action rather than the name of its tool. & G1, G2; FR.Sa.13\\\addlinespace[4pt]
 FR11 & Each approved action shall have a unique ID. A completed action shall not be repeated as a retry. Before retrying an uncertain action the system shall check its outcome. If it remains unknown the system shall ask the user. A new attempt requires fresh approval. & An uncertain result must not cause a duplicate write. & G3; FR.Sa.6, FR.Sa.18\\\addlinespace[4pt]
-FR13 & The system shall treat webpage and email content as data, never as instructions. & Websites and emails can contain text written to manipulate agents. & FR.Sa.16\\\addlinespace[4pt]
-\end{xltabular}
+FR13 & The system shall treat webpage and email content as data, never as instructions. & Websites and emails can contain text written to manipulate agents. & G3; FR.Sa.16\\\addlinespace[4pt]\end{xltabular}
 \endgroup
 
 \paragraph{Approval details.} Similar actions may share one approval. The read-back shall state the number of actions, the intended changes, and a concise description identifying the affected items. Full item details shall be available on request. The approved batch shall retain each item's identity and exact details. Each item may run once. Partial failures shall be reported per item. A pause shall block remaining items and withdraw their unused approvals.
@@ -1025,7 +1024,76 @@ Blind participants will be recruited for repeated feedback. Requirements will be
 \chapter*{Requirement dependencies}
 \addcontentsline{toc}{chapter}{Requirement dependencies}
 
-\comment{Build a traceability matrix: goals G1 to G5 against FR1 to FR24, NFRs, and FR.Sa requirements.}
+Table~\ref{tab:goal-traceability} shows how the system requirements
+support the five project goals defined in the Problem Statement.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Goal-to-requirement traceability matrix}
+\label{tab:goal-traceability}
+\begin{tabularx}{\textwidth}{
+    >{\raggedright\arraybackslash}p{0.8cm}
+    >{\raggedright\arraybackslash}p{4.8cm}
+    >{\raggedright\arraybackslash}p{2.0cm}
+    >{\raggedright\arraybackslash}X
+}
+\toprule
+\textbf{Goal} &
+\textbf{Functional} &
+\textbf{Non-functional} &
+\textbf{Linked safety requirements} \\
+\midrule
+
+G1 &
+FR1, FR10 &
+NFR2 &
+FR.Sa.13 \\
+
+\addlinespace[6pt]
+
+G2 &
+FR2--FR3, FR5, FR7--FR10, FR15,
+FR17--FR24 &
+NFR1, NFR3, NFR4 &
+FR.Sa.1--FR.Sa.5, FR.Sa.7--FR.Sa.8,
+FR.Sa.13--FR.Sa.15, FR.Sa.17,
+NFR.Sa.1, NFR.Sa.3 \\
+
+\addlinespace[6pt]
+
+G3 &
+FR4, FR9, FR11, FR12, FR20, FR24 &
+--- &
+FR.Sa.3, FR.Sa.6, FR.Sa.9--FR.Sa.10,
+FR.Sa.13--FR.Sa.15, FR.Sa.18 \\
+
+\addlinespace[6pt]
+
+G4 &
+FR6, FR7, FR8, FR16, FR21 &
+--- &
+FR.Sa.5, FR.Sa.7--FR.Sa.8 \\
+
+\addlinespace[6pt]
+
+G5 &
+FR14, FR22, FR23 &
+NFR1, NFR5 &
+FR.Sa.17 \\
+
+\bottomrule
+\end{tabularx}
+\end{table}
+
+FR13 currently traces to FR.Sa.16 but has no direct
+G1--G5 goal link. FR.Sa.11, FR.Sa.12,
+FR.Sa.19, and NFR.Sa.2 have hazard-analysis
+trace links but no direct goal links through
+the requirements above. Environment requirements
+NFR.E.1--NFR.E.4 also lack explicit goal links.
+These mappings require review.
+
 
 \chapter*{Likely and unlikely changes}
 \addcontentsline{toc}{chapter}{Likely and unlikely changes}
