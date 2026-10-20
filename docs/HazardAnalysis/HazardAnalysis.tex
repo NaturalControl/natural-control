@@ -39,19 +39,16 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-2026-10-14 & All & First draft from team discussion\\
-2026-10-16 & Lucas DeBoer & Revise initial draft\\
-2026-10-17 & Aaron Loh & Align FMEA and safety requirements with revised components\\
-2026-10-17 & Aaron Loh & Add interview findings to assumptions and H2-a\\
-2026-10-17 & Aaron Loh & Add consent and credential vault to H5-a and H7-c\\
+2026-10-19 & All & Initial version from team discussion\\
 \bottomrule
 \end{tabularx}
 \end{table}
-\todo{update this.}
 
 ~\newpage
 
 \tableofcontents
+
+\listoftables
 
 ~\newpage
 
@@ -91,7 +88,6 @@ The list below outlines the major components of the system and their roles. This
   \item \textbf{Task history layer:} Stores pending approvals, action history, task state, and any other relevant information needed to support recovery after disconnects.
 \end{enumerate}
 The following are outside the system boundary: the user, laptop hardware (including the microphone and speakers), the operating system (macOS), the network, AI and speech service providers, websites, and external accounts and services. Failures of these are not analyzed internally, but the system's response to them is.
-\todo{Add the component diagram (?).}
 
 \section{Critical Assumptions}
 
@@ -107,7 +103,7 @@ The following are outside the system boundary: the user, laptop hardware (includ
   \item Compatible device. 
     \\The user has a functioning laptop with a microphone and speakers running macOS with Chrome installed. Note that we will consider scenarios where the laptop has a microphone and speakers that fail mid-usage, but all laptops are assumed to have these components.
   \item Users can understand spoken output. 
-    \\We assume that the user can understand the spoken output of the system. We do not analyze scenarios where the user has both vision and hearing loss. This excludes many deafblind users, such as the clients of CNIB Deafblind Community Services (from our October 17 interview \todo{link to interview?}); braille output through VoiceOver is a possible future extension.
+    \\We assume that the user can understand the spoken output of the system. We do not analyze scenarios where the user has both vision and hearing loss. This excludes many deafblind users, such as the clients of CNIB Deafblind Community Services (from our \href{https://github.com/NaturalControl/natural-control/blob/main/refs/interviews/2026-10-17-dbcs-transcript.md}{October 17 interview}); braille output through VoiceOver is a possible future extension.
 \end{enumerate}
 We do not assume that the network, speech recognition, the AI model, websites, or other external services work correctly. Their failures are analyzed in the FMEA.
 
@@ -159,7 +155,7 @@ H8-b & Task history layer & Task state or pending approvals lost & User never as
 
 \section{Safety and Security Requirements}
 
-These requirements come from the recommended actions in Table~\ref{TblFMEA} and are also part of the SRS. FR.Sa marks functional safety requirements and NFR.Sa non-functional ones. Timing values are named constants, set after POC measurements (see the SRS constants table \todo{link to srs constant table ?}).
+These requirements come from the recommended actions in Table~\ref{TblFMEA} and are also part of the SRS. FR.Sa marks functional safety requirements and NFR.Sa marks non-functional ones. Timing values are named constants, set after POC measurements (see the constants table in section S.2.8 of the SRS).
 
 \subsection{Functional Safety Requirements}
 
@@ -197,7 +193,7 @@ These requirements come from the recommended actions in Table~\ref{TblFMEA} and 
 
 \section{Roadmap}
 
-\paragraph{POC (November).} FR.Sa.3, 4, 5, 13, 14; NFR.Sa.1. The safeguards the demo is meant to prove. FR.Sa.13 includes testing whether browser actions can be intercepted.
+\paragraph{POC (November).} FR.Sa.3, 4, 5 (i, ii, iii), 13, 14; NFR.Sa.1. The safeguards the demo is meant to prove. FR.Sa.13 includes testing whether browser actions can be intercepted.
 
 \paragraph{Before Rev 0 / participant evaluation.} FR.Sa.1, 2, 6, 7, 8, 9, 10, 12, 15, 16, 17, 18, 19, 20; NFR.Sa.2. These matter as soon as real participants use real-looking accounts.
 
@@ -208,20 +204,19 @@ These requirements come from the recommended actions in Table~\ref{TblFMEA} and 
 \section{Appendix: Generative AI Use Disclosure}
 
 \subsection{AI Tools Used}
-
-Aaron Loh: Claude Code with Claude Opus 5.5.
-
-OpenAI Codex helped revise H3-a and FR.Sa.5 from Aaron's decisions and Kevin's review.
-
-\todo{Other members: add the tools you used.}
+Aaron Loh used Claude Code with Claude Opus 5.5.
+Kevin Kim used OpenAI Codex with GPT-6.1 Sol.
+Lucas DeBoer used Claude Sonnet 5.5 through the claude.ai web interface.
 
 \subsection{How and Where Used}
-
-Aaron used Claude to work through this analysis. It asked questions about scope, losses, components, and failure modes, summarized the Hermes, LiveKit, and Browser Use documentation, and translated the decisions into written drafts of each section. Aaron made and reviewed every decision.
+Aaron's uage was representative of the whole team. The team had a meeting where they talked through the answers to all the sections of the Hazard Analysis. Using the transcript of the meeting and the rubric, Claude asked them followup questions to clarify scope, losses, components, and failure modes. Then, using the transcript and the responses to the follow up questions, Claude generated an initial draft of the Hazard Analysis.
+Kevin Kim used Codex to help improve the clarity of H3-a and FR.Sa.5 and make them more cohesive with the rest of the document.
+Lucas DeBoer used Claude for grammatical assistance throughout the document and to generate feedback on the FMEA table and the safety requirements.
 
 \subsection{Verification of AI-Generated Content}
-
-This is a first draft. Before submission the team will review every hazard and requirement, check the cited documentation, rewrite sections in our own words, and keep this disclosure up to date. The team is responsible for the submitted document.
+Kevin used AI for a very small portion, so he fully read through the suggested changes and verified their accuracy and appropriateness before accepting them.
+As Aaron's usage was to create a rough draft of the entire document, and the content was based on the transcript of the team meeting, the team read over the draft and verified that the content matched their discussion. Then, when Lucas was going through the document creating the final version, he read through everything in-depth and modified the content to ensure it was accurate and correct.
+Lucas verified all grammatical suggestions from Claude before accepting them. He also did not use Claude to generate any content in this document. Rather he used Claude as an extra set of eyes to help generate feedback on his work. Lucas fully reviewed all feedback and only implemented suggestions if he deemed them applicable. 
 
 \newpage{}
 
