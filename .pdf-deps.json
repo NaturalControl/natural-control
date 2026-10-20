@@ -84,8 +84,6 @@
   ],
   "docs/SRS-Meyer/SRS.tex": [
     "docs/Reflection.text",
-    "docs/SRS-Meyer/FunctionalSafetyRequirements.text",
-    "docs/SRS-Meyer/NonFunctionalSafetyRequirements.text",
     "docs/SRS-Meyer/SRS.mtc",
     "docs/SRS-Meyer/SRS.mtc0",
     "docs/SRS-Meyer/SRS.mtc1",
