@@ -22,6 +22,7 @@
 \usepackage{needspace}
 \usepackage{pdflscape}
 \usepackage{graphicx}
+\usepackage[numbers]{natbib}
 \usepackage[bookmarks=true]{hyperref}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
@@ -39,7 +40,7 @@
     urlcolor=purple,        % color of external links
     linktoc=page            % only page is linked
 }%
-\def\myversion{0.1 }
+\def\myversion{1.0 }
 \date{}
 %\title{%
 
@@ -67,6 +68,20 @@
 %\newcommand{\comment}[1]{}
 \newcommand{\notEmpty}{\comment{This chapter should not be empty!}}
 
+% Requirement hyperlinks: definition anchors and clickable references.
+\newcommand{\reqtarget}[1]{\hypertarget{req:#1}{#1}}
+\newcommand{\reqlink}[1]{\hyperlink{req:#1}{#1}}
+
+% Safety inputs use \item \textbf{ID:} labels; anchor them without editing the inputs.
+\newcommand{\inputsafetyrequirements}[1]{%
+    \begingroup
+    \let\reqsafetyitem\item
+    \def\reqsafetylabel##1:{\textbf{\reqtarget{##1}:}}%
+    \def\item\textbf##1{\reqsafetyitem\reqsafetylabel##1}%
+    \input{#1}%
+    \endgroup
+}
+
 \begin{document}
 
 \begin{titlepage}
@@ -79,7 +94,7 @@
         \vspace{1.1cm}
         Natural Control\\
         \vspace{1.1cm}
-        \LARGE{Version \myversion (draft)}\\
+        \LARGE{Version \myversion}\\
         \vspace{1.1cm}
         Prepared by Group 7\\
         \Large{Lucas DeBoer, Kevin Kim, Aaron Loh, Curtis Vos}\\
@@ -93,49 +108,51 @@
 
 \chapter*{Revision History}
 
+Table~\ref{tab:srs-revisions} summarizes the revision history.
 \begin{center}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-	    Name        & Date          & Reason For Changes & Version\\
-        \hline
-        \hline
-	    Aaron Loh & 2026-10-14    & First draft from team planning decisions & 0.1\\
-        Aaron Loh & 2026-10-17 & Supervision rules and layout review & 0.1\\
-        \hline
-    \end{tabular}
+\begin{minipage}{\textwidth}
+\captionof{table}{Revision history.}\label{tab:srs-revisions}
+\begin{tabularx}{\textwidth}{llX}
+\toprule Date & Contributor & Change\\
+\midrule
+2026-10-19 & All & Completed for Revision 0 submission.\\
+\bottomrule
+\end{tabularx}
+\end{minipage}
 \end{center}
 
 This document follows the requirements documentation structure presented in the \href{ https://link.springer.com/content/pdf/10.1007/978-3-031-06739-6.pdf}{Handbook of requirements and business analysis}, by Bertrand Meyer, with the changes listed in the first chapter.
 
-\comment{Working draft. Red comment boxes mark decisions and writing the team still owns. Goals G1 to G5 refer to the Problem Statement goals.}
-
 \dominitoc% Initialization
 \tableofcontents
+\listoftables
+\listoffigures
 \adjustmtc
 
 \chapter*{Changes from the Meyer template}
 \addcontentsline{toc}{chapter}{Changes from the Meyer template}
 
 \begin{itemize}
-    \item Glossary moved to the front, so every term is defined before first use (rubric Level 4).
+    \item Glossary moved to the front, so every term is defined before first use.
     \item Added G.8 User profiles, to describe distinct user groups and their needs.
+    \item Added G.9 Goals, copying the Problem Statement's goals so that the requirement traces resolve within this document.
     \item Added E.7 Standards and legal/regulatory factors, plus environment requirements.
     \item S.2 split into one subsection per component, with safety requirements ported from the Hazard Analysis.
     \item Added S.4 Normal operation, S.5 Undesired event handling, and S.9 Formalization (task state machine).
-    \item Added requirement dependencies (traceability) and References.
+    \item Added requirement dependencies (traceability), likely and unlikely changes, and References.
 \end{itemize}
 
 \chapter*{Glossary}
 \addcontentsline{toc}{chapter}{Glossary}
 
-Project terms (from GLOSSARY.md):
+Project terms:
 
 \begin{itemize}
     \item User: the person who owns the connected accounts and gives commands. Other voices in the room are not users.
     \item Setup helper: a person who completes the initial assisted setup for the user.
     \item Session: the period during which the user is talking with the system, started and ended with the client's start control or a keyboard shortcut, or ended by disconnection. A session can contain several tasks.
     \item Task: one job the user asks for. It may pause before it is completed, cancelled, or failed.
-    \item Consequential action: a write to user or account data, a submission, an external message, or a commitment such as accepting terms or granting access. Navigation and temporary preparation do not need approval unless they cause one of these effects. FR24 defines one exception for rejecting non-essential cookies.
+    \item Consequential action: a write to user or account data, a submission, an external message, or a commitment such as accepting terms or granting access. Navigation and temporary preparation do not need approval unless they cause one of these effects. \reqlink{FR24} defines one exception for rejecting non-essential cookies.
     \item Approval: the user's explicit consent to one consequential action, or to a listed batch of similar actions, with their specific details; used once and void if any detail changes.
     \item Barge-in: the user speaking while the system is speaking; it stops the speech only.
     \item Stop request: an explicit ``stop working'' command or stop key. It pauses work and preserves the task. Cancellation ends the task.
@@ -143,51 +160,78 @@ Project terms (from GLOSSARY.md):
     \item Verified outcome: a result supported by a matching tool response, account record, or website confirmation. Unknown outcome: an action whose result cannot be determined.
 \end{itemize}
 
-Technical terms: LiveKit, Hermes, Browser Use, MCP (Model Context Protocol), OAuth, VoiceOver, STT (speech-to-text), TTS (text-to-speech), LLM (large language model), POC (proof of concept).
+Technical terms:
 
-\comment{Add a one-line definition and an online reference link for each technical term, as AlgoCatan did.}
+\begin{itemize}
+    \item \href{https://docs.livekit.io/intro/overview/}{LiveKit}: an open-source platform for building real-time audio and video applications. \citep{LiveKitOverview}
+    \item \href{https://hermes-agent.nousresearch.com/docs/developer-guide/programmatic-integration}{Hermes}: an AI agent framework that plans multi-step tasks and calls external tools. \citep{HermesIntegration}
+    \item \href{https://github.com/browser-use/browser-use}{Browser Use}: an open-source library that lets an AI agent control a web browser to complete tasks. \citep{BrowserUseSource}
+    \item \href{https://oauth.net/2/}{OAuth}: an open standard for delegated authorization, letting a user grant an application limited access to their account without sharing a password. \citep{OAuth2}
+    \item \href{https://support.apple.com/guide/voiceover/welcome/mac}{VoiceOver}: Apple's built-in screen reader for macOS and iOS. \citep{VoiceOverGuide}
+    \item \href{https://www.ibm.com/think/topics/speech-to-text}{STT} (speech-to-text): technology that converts spoken audio into written text. \citep{IBMSTT}
+    \item \href{https://www.ibm.com/think/topics/text-to-speech}{TTS} (text-to-speech): technology that converts written text into spoken audio. \citep{IBMTTS}
+    \item \href{https://www.ibm.com/think/topics/large-language-models}{LLM} (large language model): a machine learning model trained on large amounts of text to understand and generate natural language. Also is often refered to as simply an AI model.\citep{IBMLLM}
+    \item \href{https://en.wikipedia.org/wiki/Proof_of_concept}{POC} (proof of concept): a small-scale demonstration built to test whether an idea is feasible before full development. \citep{POCWiki}
+    \item \href{https://composio.dev/}{Composio}: a hosted platform that connects AI agents to third-party applications through managed authentication and tool APIs. \citep{ComposioSite}
+    \item \href{https://www.cnib.ca/en/about-us}{CNIB} (Canadian National Institute for the Blind): a Canadian non-profit organization providing programs and support for people who are blind, deafblind, or have low vision. \citep{CNIBAbout}
+    \item \href{https://en.wikipedia.org/wiki/Failure_mode_and_effects_analysis}{FMEA} (Failure Mode and Effects Analysis): a systematic method for identifying potential failure modes in a system and analyzing their causes and effects. \citep{FMEAWiki}
+    \item \href{https://en.wikipedia.org/wiki/JAWS_(screen_reader)}{JAWS}: a screen reader for Windows that converts on-screen content to speech or braille. \citep{JAWSWiki}
+    \item \href{https://elevenlabs.io/}{ElevenLabs}: a company providing AI-generated speech and audio, including text-to-speech and speech-to-text APIs. \citep{ElevenLabsSite}
+\end{itemize}
+
 
 \chapter*{Goals}
-\addcontentsline{toc}{chapter}{Goals book}
+\addcontentsline{toc}{chapter}{Goals}
 \minitoc
 
 \nsection{G.1 Context and overall objective}
 
-Many websites and applications communicate information, choices, and state changes visually. Blind users can face barriers completing multi-step digital tasks and knowing whether those tasks succeeded. Natural Control is a voice interface that lets a blind user delegate tasks in a web browser and in Gmail and Google Calendar to an AI agent, while staying informed and in control.
+Many websites and applications communicate information, choices, and state changes visually. Blind users can face barriers completing multi-step digital tasks and knowing whether those tasks succeeded. 
+Natural Control is a voice interface that lets a blind user delegate tasks in a web browser and in connected apps to an AI agent, while staying informed and in control. 
 
 \nsection{G.2 Current situation}
 
 Today, blind users complete these tasks with screen readers such as VoiceOver, navigating each interface element by element, or with help from a sighted person. Existing AI computer-use agents assume the user can watch the screen to monitor and correct them.
 
-In an interview with a former CNIB Deafblind Community Services (DBCS) staff member on October 17, 2026, the participant observed that screen readers are hard to learn for older, newly diagnosed users and often read irrelevant content, and that everyday tasks such as booking appointments often need a friend's help.
-
-\comment{Add findings from blind participants once sessions start.}
+In an interview with a former CNIB Deafblind Community Services (DBCS) staff member on October 17, 2026 (\hyperref[app:interview]{transcript in the appendix}), the participant observed that screen readers are hard to learn for older, newly diagnosed users and often read irrelevant content, and that everyday tasks such as booking appointments often need a friend's help.
 
 \nsection{G.3 Expected benefits}
 
 \begin{itemize}
-    \item Delegate, don't navigate: the user states an outcome (``reply to Alex'') instead of navigating the interface step by step. (G1)
-    \item Control without sight: the user can understand, approve, correct, and stop the agent without seeing the screen. (G2, G4)
-    \item Trustworthy results: results are checked against the real account or page before being reported, so the user does not need sighted help to confirm what happened. (G3)
+    \item Delegate, don't navigate: the user simply states an outcome (``reply to Alex'') instead of visually navigating the interface step by step. (\reqlink{G1})
+    \item Control without sight: the user can understand, approve, correct, and stop the agent without seeing the screen. (\reqlink{G2}, \reqlink{G4})
+    \item Trustworthy results: results are checked against the real account or page before being reported, so the user does not need sighted help to confirm what happened. (\reqlink{G3}) Correcting a wrong result after the fact is slow and costly for blind users \citep{AzenkotLee2013}.
 \end{itemize}
-
-\comment{Support each benefit with evidence (interview findings, prior research).}
 
 \nsection{G.4 Functionality overview}
 
-The user starts a session from the web client and speaks a task. The system clarifies missing details, carries out read-only steps on its own, asks for approval before every consequential action, reports progress and verified results by voice, and accepts corrections and stop requests at any time. A task history records what happened.
+\begin{itemize}
+    \item \textbf{Delegated task execution:} carries out multi-step tasks in a web browser or a connected app from a single spoken goal, instead of the user navigating each step.
+    \item \textbf{Clarification on demand:} asks for clarification when required details are missing or ambiguous rather than guessing about the user's intent.
+    \item \textbf{Approval-gated actions:} requires explicit approval of exact details before completing consequential actions, such as sending, saving, or submitting.
+    \item \textbf{Verified reporting:} checks task outcomes against the real account or page before reporting them as complete, rather than assuming a success after actions are taken.
+    \item \textbf{Mid-task control:} accepts corrections, stop requests, barge-ins, and cancellation at any point during a task.
+    \item \textbf{Accessible task history:} records what happens and makes the system's history reviewable by voice or through the keyboard and VoiceOver.
+\end{itemize}
 
 \nsection{G.5 High-level usage scenarios}
 
 \begin{itemize}
-    \item Reply to an email.
-    \item Add an event found on a webpage to the calendar.
-    \item Compare information on an unfamiliar website.
-    \item Correct or stop a running task.
-    \item Reconnect after a dropped connection without duplicating an action.
+    \item \textbf{Scenario 1: Reply to an email.} A user asks the system to find a specific email and reply with a short message, approving the exact reply before it sends.
+    \item \textbf{Scenario 2: Add a webpage event to Google Calendar.} A user asks the system to read an event off a webpage and add it to their calendar, hearing the details read back before it is created.
+    \item \textbf{Scenario 3: Compare information on an unfamiliar website.} A sighted user who wants nonvisual interaction asks the system to compare different sets of prices for something on an unfamiliar website.
+    \item \textbf{Scenario 4: Correct or stop a running task.} A user interrupts an in-progress task with a correction or an explicit stop request, and the system reports what has and has not completed.
+    \item \textbf{Scenario 5: Reconnect after a dropped connection.} A user reconnects after losing their connection mid-task and resumes only after hearing the current state, without duplicating any action.
 \end{itemize}
 
-\comment{Draw a use case or activity diagram for these scenarios.}
+Figure~\ref{fig:activityhighlevel} shows the common high-level flow behind Scenarios 1 to 3. Scenarios 4 and 5 are interruptions to this flow and are diagrammed separately in S.4 and S.5.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth,height=.78\textheight,keepaspectratio]{figures/activity-highlevel.png}
+\caption{High-level activity diagram for the common usage pattern across Scenarios 1 to 3, showing the components (S.1) responsible for each step.}
+\label{fig:activityhighlevel}
+\end{figure}
 
 \nsection{G.6 Limitations and exclusions}
 
@@ -205,12 +249,16 @@ The user starts a session from the web client and speaks a task. The system clar
 \begin{itemize}
     \item Primary: blind and visually impaired people who want to complete digital tasks without visual feedback. Initial evaluation: blind Mac users with screen-reader experience.
     \item Secondary: other people who want nonvisual interaction.
+    \item Tertiary: website and application developers who affect the system's operational limits.
     \item Setup helper: a person who completes the assisted setup.
-    \item Requirements sources: the Problem Statement, Development Plan, and Hazard Analysis; TA and instructor guidance; prior research (WebAIM survey, Morae); an interview with a former CNIB Deafblind Community Services (DBCS) staff member on October 17, 2026; and planned participant sessions.
     \item Intervenors: support workers who may help deafblind users with setup and recovery.
+    \item Requirements sources: the Problem Statement, Development Plan, and Hazard Analysis documents; TA and instructor guidance; prior research (WebAIM survey \citep{WebAIM2024}, Morae \citep{Morae2025}, Azenkot and Lee \citep{AzenkotLee2013}); an interview with a former CNIB Deafblind Community Services (DBCS) staff member on October 17, 2026 (\hyperref[app:interview]{transcript in the appendix}); and planned participant sessions.
 \end{itemize}
 
 \nsection{G.8 User profiles}
+
+The following is an expansion of the stakeholder groups who will actually use and benefit from our system. They are designed to demonstrate specific examples of
+who may be interacting with our system, and are intended to be refined after proper recruitment of participants has been completed.
 
 \begin{itemize}
     \item Experienced screen-reader user: fluent with VoiceOver or JAWS and keyboard navigation; wants speed on multi-step tasks and keeps their screen reader for everything else. Primary evaluation group.
@@ -219,10 +267,42 @@ The user starts a session from the web client and speaks a task. The system clar
     \item Setup helper: comfortable with computers; connects accounts and grants permissions once, then is not needed for daily use.
 \end{itemize}
 
-\comment{Validate these profiles with blind participants; drop or adjust any that do not hold up.}
+\nsection{G.9 Goals}
+
+The goals below are copied from Section 2 of the Problem Statement document. Their identifiers (G1 to G5) are the trace targets used in the requirement tables of S.2, and are distinct from the section numbers of this book (G.1 to G.9).
+
+\begin{description}
+    \item[\reqtarget{G1}.] \textbf{Complete complex digital tasks independently.}
+    Within the initial browser and connected-account scope, users should be able to
+    complete common, multi-step tasks without
+    relying on visual feedback or sighted assistance. Success can be measured by task completion rate
+    and the amount of sighted assistance that is required.
+
+    \item[\reqtarget{G2}.] \textbf{Maintain awareness and control during digital tasks.}
+    Users should be able to understand relevant task progress and state changes, provide input when required,
+    and stop or redirect tasks when necessary. Measure successful corrections, explicit stop acknowledgment and execution-stop
+    confirmation, and approval before consequential actions. Clarification counts
+    provide context; fewer questions alone do not establish better control.
+
+    \item[\reqtarget{G3}.] \textbf{Accurately receive results and execute commands.}
+    Users should be able to have confidence that the program is correctly tracking the system's state,
+    retrieving results, and executing their desired actions and commands. Compare reported outcomes and executed actions against independently verified
+    application state and the user's request. Report incorrect or unsupported
+    completion claims separately from successful actions.
+
+    \item[\reqtarget{G4}.] \textbf{Recover from errors and unexpected outcomes.}
+    Users should be able to identify unexpected, misunderstood, or failed actions and recover without restarting
+    the entire task or relying on sighted assistance. Measure whether recovery succeeds without sighted help or a full restart,
+    along with recovery time and clarification turns.
+
+    \item[\reqtarget{G5}.] \textbf{Provide a straightforward and reliable setup process.}
+    Individuals responsible for setting up the interface should have a smooth setup process.
+    Routine use after initial setup should not require assistance from the setup helper. Success can be measured by the number of clicks or commands needed,
+    the setup time before the program can be used, as well as how many times the setup helper is required to assist after installation.
+\end{description}
 
 \chapter*{Environment}
-\addcontentsline{toc}{chapter}{Environment book}
+\addcontentsline{toc}{chapter}{Environment}
 \minitoc
 
 \nsection{E.1 Glossary}
@@ -231,29 +311,29 @@ See the Glossary at the front of this document.
 
 \nsection{E.2 Components}
 
+This section contains a list of elements of the environment that may affect or be affected by the system, including other systems
+the system must interface with.
+
 \begin{itemize}
+    \item Users: the person giving spoken commands and acting on the system's results; see the Glossary and G.7--G.8 for roles and profiles.
+    \item Laptop hardware: the user's Mac, including its microphone and speakers.
+    \item Platform: macOS with Google Chrome, and the user's existing VoiceOver screen reader.
+    \item Network: required for cloud speech, AI, and connected apps' API traffic.
+    \item AI model and speech providers: cloud services for language understanding, speech-to-text, and text-to-speech.
     \item Websites the user asks about (unmodified, not under our control).
-    \item Google services: Gmail and Google Calendar APIs.
-    \item Composio: hosted service that stores OAuth tokens and runs Gmail and Calendar tool calls. Its ``Don't store data'' setting is turned on so tool inputs and outputs are not logged.
-    \item LiveKit (real-time audio and speech pipeline).
-    \item AI model and speech providers.
-    \item The Hermes agent and Browser Use (reused open-source components).
-    \item VoiceOver and the Mac's microphone and speakers.
-    \item Network access.
+    \item External accounts and services.
+    \item Composio cloud: an external hosted service that stores OAuth tokens for our connected apps. Its ``Don't store data'' setting is turned on so tool inputs and outputs are not logged. Our own code calls it through the Composio SDK (S.1).
 \end{itemize}
 
 \nsection{E.3 Constraints}
 
-\begin{itemize}
-    \item Mac with Chrome, English, as decided in the Development Plan.
-    \item Team budget ceiling of CAD 500.
-    \item Course schedule: POC demonstration November 23 to December 3; final demonstration and EXPO in April.
-    \item Gmail access uses restricted Google OAuth permissions; an unverified app is limited to a small number of registered test users.
-    \item Provider terms of use and data retention policies apply to anything sent to them.
-    \item Passwords and payment details are entered through a private page or the user's own device. One-time authentication codes may be spoken. Spoken codes pass through the configured speech and conversation services. Provider handling must be checked before claiming stronger privacy guarantees.
-\end{itemize}
+The following is a list of obligations and limits imposed by the environment.
 
-\comment{Verify Google's current limits for unverified apps (number of test users, token expiry) before final submission.}
+\begin{itemize}
+    \item Mac with Google Chrome, in English.
+    \item Provider terms of use and data retention policies apply to anything sent to them.
+    \item A hosted backend cannot reach the user's Mac or its signed-in browser sessions, so controlling the user's own browser requires a component running locally.
+\end{itemize}
 
 \nsection{E.4 Assumptions}
 
@@ -269,45 +349,42 @@ Speech recognition, the AI model, websites, and external services are not assume
 \nsection{E.5 Effects}
 
 \begin{itemize}
-    \item Emails are searched, read, drafted, sent, replied to, archived, labelled, or deleted.
-    \item Calendar events are read, created, updated, or deleted.
-    \item Website forms may be filled and submitted, subject to approval.
-    \item Data is sent to AI and speech providers.
+    \item Users will rely less on outside help to complete computer tasks, as the system will assist in their completion.
+    \item Desired properties in connected apps are affected (e.g. read, created, updated, or deleted).
+    \item Website forms may be filled and submitted by the system, subject to user approval.
+    \item Input data can reach AI and speech vendors.
+    \item Content and progress is processed and reported back to the user through the computer's speaker hardware.
 \end{itemize}
 
 \nsection{E.6 Invariants}
 
 \begin{itemize}
-    \item Writes and consequential commitments require approval of their exact details. FR24 defines the narrow exception for rejecting non-essential cookies.
+    \item External account and page states can change outside the system at any time, through other devices, other users, or the provider itself; the system's last known state should not be assumed current.
+    \item A delivered message or submitted form cannot be withdrawn by the system after the fact; only the provider or recipient can undo it, if at all.
+    \item Authentication codes (and credentials from services like OAuth) are controlled by the provider: they expire, can be revoked, and may require re-authorization independent of the system's own state.
     \item The user's existing accessibility tools (VoiceOver, keyboard navigation) keep working while the system runs.
-    \item Credentials are never written to source control, logs, or task history.
 \end{itemize}
 
 \nsection{E.7 Standards and legal/regulatory factors}
 
 \begin{itemize}
-    \item WCAG 2.2 Level AA: accessibility standard for the web client.
-    \item AODA (Accessibility for Ontarians with Disabilities Act): Ontario accessibility law that references WCAG.
-    \item PIPEDA: Canadian privacy law for personal information such as email and calendar contents.
-    \item Google API Services User Data Policy: limits how Gmail and Calendar data may be used and stored.
-    \item Open-source licenses: our code is MIT; reused components keep their own licenses and notices.
+    \item WCAG 2.2 Level AA: accessibility standard for the web client, adopted voluntarily \citep{WCAG22}.
+    \item AODA (Accessibility for Ontarians with Disabilities Act): Ontario accessibility law referencing WCAG; its compliance obligations are not required as they apply to organizations with Ontario employees (20+ for reporting, 50+ for website compliance), but it is a relevant reference for our team \citep{AODAFactSheet}.
+    \item Open-source licenses: our code uses MIT licensing; reused components keep their own licenses and notices.
     \item Coding standards: PEP 8 for Python; strict TypeScript with a shared linter for the client.
 \end{itemize}
-
-\comment{Confirm which of these apply to a student prototype and cite each one.}
 
 \subsection*{Environment requirements}
 \addcontentsline{toc}{subsection}{Environment requirements}
 
 \begin{itemize}
-    \item NFR.E.1: The system shall run on macOS with Google Chrome.
-    \item NFR.E.2: The web client shall meet WCAG 2.2 Level AA.
-    \item NFR.E.3: The system shall use Gmail and Calendar data only to perform the user's requested tasks, consistent with the Google API Services User Data Policy.
-    \item NFR.E.4: Python code shall pass the team's PEP 8 linter checks; TypeScript code shall pass strict type checks and the shared linter.
+    \item \reqtarget{NFR.E.1}: The system shall run in English on macOS with Google Chrome.
+    \item \reqtarget{NFR.E.2}: The web client shall meet WCAG 2.2 Level AA.
+    \item \reqtarget{NFR.E.3}: Python code shall pass the team's PEP 8 linter checks; TypeScript code shall pass strict type checks and the shared linter.
 \end{itemize}
 
 \chapter*{System}
-\addcontentsline{toc}{chapter}{System book}
+\addcontentsline{toc}{chapter}{System}
 \minitoc
 
 \Needspace{8\baselineskip}
@@ -324,7 +401,7 @@ The proposed system has eight components. These match the Hazard Analysis. Figur
     \item \textbf{AI agent:} Hermes plans tasks and proposes tool calls. Each call must pass through the action gate.
     \item \textbf{Action gate:} checks every proposed action. It requests approval for writes and consequential commitments. Approval details come from the proposed call. The gate also blocks new task actions while work is paused.
     \item \textbf{Outcome verification:} checks evidence for each consequential action. Evidence may come from its tool response or a targeted account or page check. The result is recorded as verified, partial, failed, or unknown.
-    \item \textbf{Action tools and integrations:} Browser Use handles websites. Gmail and Google Calendar tools use the Composio SDK. The proposed integration places approval checks before execution and outcome checks afterward. The POC must verify that all action paths pass through these checks. Credential handling also needs verification.
+    \item \textbf{Action tools and integrations:} Browser Use handles websites. Connected app tools use the Composio SDK. The proposed integration places approval checks before execution and outcome checks afterward. The POC must verify that all action paths pass through these checks. Credential handling also needs verification.
     \item \textbf{Task history layer:} records task state and action outcomes. It also records approvals and action IDs. These records support accessible review and recovery after disconnection.
 \end{itemize}
 
@@ -360,11 +437,11 @@ Requirements are grouped by their responsible component (S.1). Each has a ration
 \endhead
 \bottomrule
 \endfoot
-FR1 & The system shall accept spoken input during a session. It shall support pauses within a thought through the selected voice framework's turn handling. & Voice is the main input for everyday use. Turn timing needs POC and user evaluation. & G1\\\addlinespace[4pt]
-FR2 & The user shall be able to interrupt spoken output. This shall not restart the task or pause its execution by itself. A correction or explicit work-stop request shall follow its own handling. & Users need to cut off long speech without losing work. & G2\\\addlinespace[4pt]
-FR3 & An explicit ``stop working'' command or the stop key shall pause the task (FR8). A bare ``stop'' shall stop speech and pause work. The system shall clarify what the user wants next. An explicit request to cancel or abandon the task shall end it. & Speech interruption, work pause, and cancellation have different effects. The key provides a backup when voice fails. & G2; FR.Sa.1, FR.Sa.4\\\addlinespace[4pt]
-FR16 & The system shall let the user correct part of a read-back (for example, one sentence or one detail) by voice without restarting the request. & Interview: fixing a read-back usually means starting over. Correcting speech input is slow for blind users [Azenkot and Lee 2013]. & G4\\\addlinespace[4pt]
-FR18 & Spoken updates and summaries shall include only information relevant to the current task, with more detail available on request. & Interview and WebAIM survey: screen readers read too much irrelevant content. & G2\\\addlinespace[4pt]
+\reqtarget{FR1} & The system shall accept spoken input during a session. It shall support pauses within a thought through the selected voice framework's turn handling. & Voice is the main input for everyday use. Turn timing needs POC and user evaluation. & \reqlink{G1}\\\addlinespace[4pt]
+\reqtarget{FR2} & The user shall be able to interrupt spoken output. This shall not restart the task or pause its execution by itself. A correction or explicit work-stop request shall follow its own handling. & Users need to cut off long speech without losing work. & \reqlink{G2}\\\addlinespace[4pt]
+\reqtarget{FR3} & An explicit ``stop working'' command or the stop key shall pause the task (\reqlink{FR8}). A bare ``stop'' shall stop speech and pause work. The system shall clarify what the user wants next. An explicit request to cancel or abandon the task shall end it. & Speech interruption, work pause, and cancellation have different effects. The key provides a backup when voice fails. & \reqlink{G2}; \reqlink{FR.Sa.1}, \reqlink{FR.Sa.4}\\\addlinespace[4pt]
+\reqtarget{FR16} & The system shall let the user correct part of a read-back (for example, one sentence or one detail) by voice without restarting the request. & \hyperref[app:interview]{Interview}: fixing a read-back usually means starting over. Correcting speech input is slow for blind users \citep{AzenkotLee2013}. & \reqlink{G4}\\\addlinespace[4pt]
+\reqtarget{FR18} & Spoken updates and summaries shall include only information relevant to the current task, with more detail available on request. & \hyperref[app:interview]{Interview} and WebAIM survey \citep{WebAIM2024}: screen readers read too much irrelevant content. & \reqlink{G2}\\\addlinespace[4pt]
 \end{xltabular}
 \endgroup
 
@@ -386,14 +463,14 @@ FR18 & Spoken updates and summaries shall include only information relevant to t
 \endhead
 \bottomrule
 \endfoot
-FR4 & The system shall ask when required details are missing or ambiguous. It shall recheck relevant information before continuing. & Guessing risks acting on the wrong item. & G3; FR.Sa.9\\\addlinespace[4pt]
-FR5 & The system shall report meaningful progress and blockers. It shall answer requests for current status. Routine updates shall follow the task and conversation rather than a fixed interval. Pending questions and approvals shall not expire while the user remains connected. & Users need awareness without constant narration. Silence is not approval. & G2; NFR.Sa.3\\\addlinespace[4pt]
-FR6 & The system shall accept corrections during a task without requiring a restart. & Restarting a long task by voice is costly. & G4\\\addlinespace[4pt]
-FR7 & Disconnection shall pause the task as in FR8. On reconnection the system shall report its state and reconcile uncertain outcomes. It shall wait for a clear request to resume work. & Reconnecting the voice session does not authorize more actions. & G2, G4; FR.Sa.7\\\addlinespace[4pt]
-FR8 & A stop request shall block new task actions and preserve task context. The system shall stop or suspend ongoing work where safe and supported. An operation already submitted may settle if it cannot be stopped safely. The system shall distinguish acknowledgment from confirmed pause. It shall report completed work and unfinished work. It shall also report any outcome still unknown. Checks during a pause shall only reconcile earlier actions. Work shall resume only on a clear user request. & Pausing does not undo a submitted action. The user needs an accurate account of what remains. & G2, G4; FR.Sa.5\\\addlinespace[4pt]
-FR19 & A new request during an active task shall be treated as a correction when that is clear. Otherwise the system shall ask whether to queue it or replace the current task. Replacement shall end the earlier task before the new one starts. & One active task keeps spoken progress easy to follow (S.9, P6). & G2\\\addlinespace[4pt]
-FR20 & When the user moves to another request the system shall withdraw pending questions and approvals. It shall state that the pending action was not executed. It shall distinguish this from earlier completed work. The new request shall follow FR19. & An abandoned approval must not be used later. & G2, G3; FR.Sa.15\\\addlinespace[4pt]
-FR21 & At session start the system shall announce paused tasks and their last known state. The user may resume or cancel. Before resuming the system shall check relevant state and reconcile earlier actions. Pending approvals shall be requested again. Reconnection alone shall not resume work. & Recovery must preserve context without repeating actions. & G2, G4; FR.Sa.8\\\addlinespace[4pt]
+\reqtarget{FR4} & The system shall ask when required details are missing or ambiguous. It shall recheck relevant information before continuing. & Guessing risks acting on the wrong item. & \reqlink{G3}; \reqlink{FR.Sa.9}\\\addlinespace[4pt]
+\reqtarget{FR5} & The system shall report meaningful progress and blockers. It shall answer requests for current status. Routine updates shall follow the task and conversation without exceeding the maximum silence interval in \reqlink{NFR.Sa.3}. Pending questions and approvals shall not expire while the user remains connected. & Users need awareness without constant narration. Silence is not approval. & \reqlink{G2}; \reqlink{NFR.Sa.3}\\\addlinespace[4pt]
+\reqtarget{FR6} & The system shall accept corrections during a task without requiring a restart. & Restarting a long task by voice is costly. & \reqlink{G4}\\\addlinespace[4pt]
+\reqtarget{FR7} & Disconnection shall pause the task as in \reqlink{FR8}. On reconnection the system shall report its state and reconcile uncertain outcomes. It shall wait for a clear request to resume work. & Reconnecting the voice session does not authorize more actions. & \reqlink{G2}, \reqlink{G4}; \reqlink{FR.Sa.7}\\\addlinespace[4pt]
+\reqtarget{FR8} & A stop request shall block new task actions and preserve task context. The system shall stop or suspend ongoing work where safe and supported. An operation already submitted may settle if it cannot be stopped safely. The system shall distinguish acknowledgment from confirmed pause. It shall report completed work and unfinished work. It shall also report any outcome still unknown. Checks during a pause shall only reconcile earlier actions. Work shall resume only on a clear user request. & Pausing does not undo a submitted action. The user needs an accurate account of what remains. & \reqlink{G2}, \reqlink{G4}; \reqlink{FR.Sa.5.i}, \reqlink{FR.Sa.5.ii}, \reqlink{FR.Sa.5.iii}\\\addlinespace[4pt]
+\reqtarget{FR19} & A new request during an active task shall be treated as a correction when that is clear. Otherwise the system shall ask whether to queue it or replace the current task. Replacement shall end the earlier task before the new one starts. & One active task keeps spoken progress easy to follow (S.9, P6). & \reqlink{G2}\\\addlinespace[4pt]
+\reqtarget{FR20} & When the user moves to another request the system shall withdraw pending questions and approvals. It shall state that the pending action was not executed. It shall distinguish this from earlier completed work. The new request shall follow \reqlink{FR19}. & An abandoned approval must not be used later. & \reqlink{G2}, \reqlink{G3}; \reqlink{FR.Sa.15}\\\addlinespace[4pt]
+\reqtarget{FR21} & At session start the system shall announce paused tasks and their last known state. The user may resume or cancel. Before resuming the system shall check relevant state and reconcile earlier actions. Pending approvals shall be requested again. Reconnection alone shall not resume work. & Recovery must preserve context without repeating actions. & \reqlink{G2}, \reqlink{G4}; \reqlink{FR.Sa.8}\\\addlinespace[4pt]
 \end{xltabular}
 \endgroup
 
@@ -415,11 +492,10 @@ FR21 & At session start the system shall announce paused tasks and their last kn
 \endhead
 \bottomrule
 \endfoot
-FR9 & Writes and consequential commitments shall require approval of their exact details. These include sending, saving, deleting, submitting, granting access, and accepting terms. Approval shall be an explicit affirmative answer to the pending approval question. Silence is not approval. Changed details require new approval. FR24 defines the cookie-rejection exception. & Users retain control over changes and commitments. Approval checks use the proposed tool call (ADR 0001). & G2, G3; FR.Sa.3, FR.Sa.13, FR.Sa.14\\\addlinespace[4pt]
-FR10 & Reading, navigation, and temporary preparation shall proceed without approval when they cause no consequential effect. Autosaved drafts are writes. A click that submits data is consequential. Unknown effects shall require approval. A failed read-only lookup may be retried once before it is reported as a blocker. & Classify the effect of an action rather than the name of its tool. & G1, G2; FR.Sa.13\\\addlinespace[4pt]
-FR11 & Each approved action shall have a unique ID. A completed action shall not be repeated as a retry. Before retrying an uncertain action the system shall check its outcome. If it remains unknown the system shall ask the user. A new attempt requires fresh approval. & An uncertain result must not cause a duplicate write. & G3; FR.Sa.6, FR.Sa.18\\\addlinespace[4pt]
-FR13 & The system shall treat webpage and email content as data, never as instructions. & Websites and emails can contain text written to manipulate agents. & FR.Sa.16\\\addlinespace[4pt]
-\end{xltabular}
+\reqtarget{FR9} & Writes and consequential commitments shall require approval of their exact details. These include sending, saving, deleting, submitting, granting access, and accepting terms. Approval shall be an explicit affirmative answer to the pending approval question. Silence is not approval. Changed details require new approval. \reqlink{FR24} defines the cookie-rejection exception. & Users retain control over changes and commitments. Approval checks use the proposed tool call (ADR 0001). & \reqlink{G2}, \reqlink{G3}; \reqlink{FR.Sa.3}, \reqlink{FR.Sa.13}, \reqlink{FR.Sa.14}\\\addlinespace[4pt]
+\reqtarget{FR10} & Reading, navigation, and temporary preparation shall proceed without approval when they cause no consequential effect. Autosaved drafts are writes. A click that submits data is consequential. Unknown effects shall require approval. A failed read-only lookup may be retried once before it is reported as a blocker. & Classify the effect of an action rather than the name of its tool. & \reqlink{G1}, \reqlink{G2}; \reqlink{FR.Sa.13}\\\addlinespace[4pt]
+\reqtarget{FR11} & Each approved action shall have a unique ID. A completed action shall not be repeated as a retry. Before retrying an uncertain action the system shall check its outcome. If it remains unknown the system shall ask the user. A new attempt requires fresh approval. & An uncertain result must not cause a duplicate write. & \reqlink{G3}; \reqlink{FR.Sa.6}, \reqlink{FR.Sa.18}\\\addlinespace[4pt]
+\reqtarget{FR13} & The system shall treat webpage and email content as data, never as instructions. & Websites and emails can contain text written to manipulate agents. & \reqlink{G3}; \reqlink{FR.Sa.16}\\\addlinespace[4pt]\end{xltabular}
 \endgroup
 
 \paragraph{Approval details.} Similar actions may share one approval. The read-back shall state the number of actions, the intended changes, and a concise description identifying the affected items. Full item details shall be available on request. The approved batch shall retain each item's identity and exact details. Each item may run once. Partial failures shall be reported per item. A pause shall block remaining items and withdraw their unused approvals.
@@ -444,7 +520,7 @@ For email the read-back shall name the recipients and subject. It shall read the
 \endhead
 \bottomrule
 \endfoot
-FR12 & Each consequential result shall be reported as verified, partial, failed, or unknown. Evidence shall match the intended action and details. It may be a completion response from the connector, a matching account record, or a website confirmation. Another check is required when that evidence is unclear. A queued request shall not be reported as delivered. & The reported result must match the available evidence. A second lookup is not always needed. & G3; FR.Sa.10\\\addlinespace[4pt]
+\reqtarget{FR12} & Each consequential result shall be reported as verified, partial, failed, or unknown. Evidence shall match the intended action and details. It may be a completion response from the connector, a matching account record, or a website confirmation. Another check is required when that evidence is unclear. A queued request shall not be reported as delivered. & The reported result must match the available evidence. A second lookup is not always needed. & \reqlink{G3}; \reqlink{FR.Sa.10}\\\addlinespace[4pt]
 \end{xltabular}
 \endgroup
 
@@ -466,10 +542,10 @@ FR12 & Each consequential result shall be reported as verified, partial, failed,
 \endhead
 \bottomrule
 \endfoot
-FR14 & The system shall request only the account permissions it needs, and explain them during setup, including which providers receive which data. & Narrow permissions limit the damage any other failure can do. & G5; FR.Sa.17\\\addlinespace[4pt]
-FR17 & The user shall be able to mark topics or accounts as off-limits. The system shall not read or act on them. & The proxy interview raised concerns about sensitive account data. & G2\\\addlinespace[4pt]
-FR23 & Website passwords shall be entered through a private setup page and stored encrypted. They shall not be spoken or placed in the conversation. Saved credentials shall be used only for their intended site. The user may speak a one-time authentication code or approve a push on their device. The system shall explain that spoken codes pass through the configured speech and conversation services. A site that requires a device-bound passkey shall use a manual handoff. & Spoken codes can be heard nearby and processed by providers. Private typed code input is a proposed alternative. & G2, G5; FR.Sa.17\\\addlinespace[4pt]
-FR24 & The system may automatically choose a clearly identified ``reject non-essential cookies'' or ``necessary only'' option. Any ambiguous consent choice shall require explicit user approval. This is a narrow exception to FR9. Accepting cookies or terms shall require approval. & A limited exception reduces repeated consent prompts. It does not authorize accepting terms. & G2, G3; FR.Sa.13\\\addlinespace[4pt]
+\reqtarget{FR14} & The system shall request only the account permissions it needs, and explain them during setup, including which providers receive which data. & Narrow permissions limit the damage any other failure can do. & \reqlink{G5}; \reqlink{FR.Sa.17}\\\addlinespace[4pt]
+\reqtarget{FR17} & The user shall be able to restrict access to specific accounts, senders, folders, or resources. The system shall not access or act on restricted resources. & The \hyperref[app:interview]{former CNIB staff interview} raised concerns about sensitive account data. & \reqlink{G2}\\\addlinespace[4pt]
+\reqtarget{FR23} & Website passwords shall be entered through a private setup page and stored encrypted. They shall not be spoken or placed in the conversation. Saved credentials shall be used only for their intended site. The user may speak a one-time authentication code or approve a push on their device. The system shall explain that spoken codes pass through the configured speech and conversation services. A site that requires a device-bound passkey shall use a manual handoff. & Spoken codes can be heard nearby and processed by providers. Private typed code input is a proposed alternative. & \reqlink{G2}, \reqlink{G5}; \reqlink{FR.Sa.17}\\\addlinespace[4pt]
+\reqtarget{FR24} & The system may automatically choose a clearly identified ``reject non-essential cookies'' or ``necessary only'' option. Any ambiguous consent choice shall require explicit user approval. This is a narrow exception to \reqlink{FR9}. Accepting cookies or terms shall require approval. & A limited exception reduces repeated consent prompts. It does not authorize accepting terms. & \reqlink{G2}, \reqlink{G3}; \reqlink{FR.Sa.13}\\\addlinespace[4pt]
 \end{xltabular}
 \endgroup
 
@@ -491,8 +567,8 @@ FR24 & The system may automatically choose a clearly identified ``reject non-ess
 \endhead
 \bottomrule
 \endfoot
-FR15 & The system shall provide accessible task history and spoken summaries from recorded events. The user shall be able to delete that history. & Users need to review what happened without sight. & G2; FR.Sa.2\\\addlinespace[4pt]
-FR22 & The client shall provide controls to start and end a voice session. A keyboard shortcut shall also be available. Ending a session shall pause active work as in FR8. & Deliberate activation avoids an always-on microphone. & G2, G5\\\addlinespace[4pt]
+\reqtarget{FR15} & The system shall provide accessible task history and spoken summaries from recorded events. The user shall be able to delete that history. & Users need to review what happened without sight. & \reqlink{G2}; \reqlink{FR.Sa.2}\\\addlinespace[4pt]
+\reqtarget{FR22} & The client shall provide controls to start and end a voice session. A keyboard shortcut shall also be available. Ending a session shall pause active work as in \reqlink{FR8}. & Deliberate activation avoids an always-on microphone. & \reqlink{G2}, \reqlink{G5}\\\addlinespace[4pt]
 \end{xltabular}
 \endgroup
 
@@ -500,13 +576,40 @@ FR22 & The client shall provide controls to start and end a voice session. A key
 \subsection*{S.2.7 Safety requirements}
 \addcontentsline{toc}{subsection}{S.2.7 Safety requirements}
 
-The following requirements are SRS revisions based on the Hazard Analysis. Hazard IDs refer to its FMEA rows. The Hazard Analysis remains unchanged. Differences need review by its owner before the documents are submitted.
+The following safety requirements are based on the Hazard Analysis. Hazard IDs refer to its FMEA rows.
 
 \paragraph{Functional safety requirements}
-\input{FunctionalSafetyRequirements.text}
+\begin{itemize}
+  \item \textbf{\reqtarget{FR.Sa.1}:} The system shall provide a keyboard stop control that works whenever the client is running and does not conflict with VoiceOver commands. (H1-a)
+  \item \textbf{\reqtarget{FR.Sa.2}:} The system shall build the task history only from recorded actions and verified outcomes, labelling unknown entries. (H8-a)
+  \item \textbf{\reqtarget{FR.Sa.3}:} Before a consequential action the system shall read back its key details. It shall proceed only after explicit approval. The cookie-rejection exception is defined in FR.Sa.13. (H2-a)
+  \item \textbf{\reqtarget{FR.Sa.4}:} Explicit stop phrases and the stop key shall use a fixed control path. They shall not depend on the planning agent choosing to pause. (H2-b)
+  \item \textbf{\reqtarget{FR.Sa.5.i}:} After a stop-work request, the system shall pause the task and block all further actions for it. Only checks of earlier outcomes may continue running. (H2-c, H3-a)
+  \item \textbf{\reqtarget{FR.Sa.5.ii}:} After a stop-work request, the system shall immediately acknowledge and confirm completion of the request as separate messages before reporting completed work, unfinished work, and uncertain outcomes. (H3-a)
+  \item \textbf{\reqtarget{FR.Sa.5.iii}:} When a task is paused, an explicit user request shall resume or terminate the task. If terminated, earlier actions are not undone. (H3-a)
+  \item \textbf{\reqtarget{FR.Sa.6}:} Each approved action shall have a unique ID. An action with that ID shall not execute twice. (H3-b)
+  \item \textbf{\reqtarget{FR.Sa.7}:} Disconnection shall block new task actions and pause the task. Reconnection alone shall not resume it. (H3-b)
+  \item \textbf{\reqtarget{FR.Sa.8}:} Task state and approval records shall survive restart. The system shall announce interrupted tasks with their last known state. Unused approvals shall be withdrawn. (H8-b)
+  \item \textbf{\reqtarget{FR.Sa.9}:} The system shall ask a clarifying question when details required for an action are missing or ambiguous. (H4-a) 
+  \item \textbf{\reqtarget{FR.Sa.10}:} The system shall report a task as verified, failed, or partial only after verifying its outcome with evidence that matches the intended action and its details, such as a connector result, an account record, or a website confirmation. If the evidence is unclear, the system shall check again or report the outcome as unknown. (H4-b, H6-a, H6-b, H7-a)
+  \item \textbf{\reqtarget{FR.Sa.11}:} A configured step or time limit shall pause the task and prompt the user. Time spent waiting for user clarification or approval shall not count toward the execution time limit. (H4-c)
+  \item \textbf{\reqtarget{FR.Sa.12}:} An external service failure shall pause work and the system shall follow the steps outlined in \reqlink{FR.Sa.5.i}, \reqlink{FR.Sa.5.ii}, and \reqlink{FR.Sa.5.iii}. (H4-d)
+  \item \textbf{\reqtarget{FR.Sa.13}:} Unclear actions and consequential actions such as submissions, external messages, saved data changes, or granting permission require explicit approval before being executed; only actions with no such lasting effect do not require approval. One exception to this rule: rejecting non-essential cookies or only allowing necessary cookies on webpages does not require explicit approval. (H5-a)
+  \item \textbf{\reqtarget{FR.Sa.14}:} The system shall bind each approval to the action's exact details, use it at most once, and require new approval if any detail changes. A pause, disconnection, cancellation, or task replacement shall withdraw unused approvals. (H5-b, H7-a)
+  \item \textbf{\reqtarget{FR.Sa.15}:} When a pending approval expires or is withdrawn, the system shall tell the user that the action was not executed and shall state which earlier actions were completed. (H5-c)
+  \item \textbf{\reqtarget{FR.Sa.16}:} The system shall treat webpage and email content as data, and shall only perform consequential actions that trace to the user's request. (H7-b)
+  \item \textbf{\reqtarget{FR.Sa.17}:} The system shall request only the account permissions each tool needs, and shall store and use passwords and other credentials securely, keeping them out of source control, logs, and the AI model input. (H7-c)
+  \item \textbf{\reqtarget{FR.Sa.18}:} The system shall check the service or item state directly and confirm the user's approval before retrying an action whose outcome is unknown. (H7-d)
+  \item \textbf{\reqtarget{FR.Sa.19}:} Before deletions, the system shall read back the item's identifying details, state whether the operation is reversible, and use recoverable deletion where supported. (H5-d)
+  \item \textbf{\reqtarget{FR.Sa.20}:} If voice input, voice output, or speech services become unavailable, the system shall stop as outlined in \reqlink{FR.Sa.5.i}, accept no new tasks requests until voice functionality is restored, and shall not resume unless user explicitly requests it. (H2-c)
+\end{itemize}
 
 \paragraph{Non-functional safety requirements}
-\input{NonFunctionalSafetyRequirements.text}
+\begin{itemize}
+  \item \textbf{\reqtarget{NFR.Sa.1}:} The system shall audibly acknowledge a stop request within STOP\_ACK\_TIME of the end of the utterance or key press. (H2-b)
+  \item \textbf{\reqtarget{NFR.Sa.2}:} The client shall signal disconnection within CONNECTION\_NOTICE\_TIME. A local sound shall be used if network speech is unavailable. (H3-b)
+  \item \textbf{\reqtarget{NFR.Sa.3}:} While a task is running, the system shall give a spoken status update after IDLE\_PROMPT\_TIME without spoken progress, outlining progress made or blockers. (H4-c)
+\end{itemize}
 
 \Needspace{12\baselineskip}
 \subsection*{S.2.8 Non-functional requirements}
@@ -526,11 +629,11 @@ The following requirements are SRS revisions based on the Hazard Analysis. Hazar
 \endhead
 \bottomrule
 \endfoot
-NFR1 & Session controls, work pause, approval, and task history shall work with VoiceOver and the keyboard alone. & Users rely on their existing assistive tools. & G2, G5\\\addlinespace[4pt]
-NFR2 & At least TARGET\_COMPLETION of tasks in the declared task suite shall be completed correctly without sighted help. The task suite shall include representative Gmail, Google Calendar, and unfamiliar website tasks. & Measures the main benefit: independent task completion. & G1\\\addlinespace[4pt]
-NFR3 & A work-stop request shall be acknowledged within STOP\_ACK\_TIME. Time to block new actions and time to reconcile in-flight work shall be measured separately. & A quick acknowledgment does not prove earlier actions ended. & G2; NFR.Sa.1\\\addlinespace[4pt]
-NFR4 & The system shall begin its response within RESPONSE\_TIME after the selected turn detector commits an ordinary request. Premature replies and missed interruptions shall also be evaluated. & Fast replies must not cut off unfinished thoughts. & G2\\\addlinespace[4pt]
-NFR5 & The application shall not retain raw microphone audio. It shall exclude credentials and authentication codes from task history, logs, and source control. Setup shall explain provider processing and retention separately. & Application storage rules do not establish provider privacy guarantees. & G5; FR.Sa.17\\\addlinespace[4pt]
+\reqtarget{NFR1} & Session controls, work pause, approval, and task history shall work with VoiceOver and the keyboard alone. & Users rely on their existing assistive tools. & \reqlink{G2}, \reqlink{G5}\\\addlinespace[4pt]
+\reqtarget{NFR2} & At least TARGET\_COMPLETION of tasks in the declared task suite shall be completed correctly without sighted help. The task suite shall include representative connected apps as well as unfamiliar website tasks. & Measures the main benefit: independent task completion. & \reqlink{G1}\\\addlinespace[4pt]
+\reqtarget{NFR3} & A work-stop request shall be acknowledged within STOP\_ACK\_TIME. Time to block new actions and time to reconcile in-flight work shall be measured separately. & A quick acknowledgment does not prove earlier actions ended. & \reqlink{G2}; \reqlink{NFR.Sa.1}\\\addlinespace[4pt]
+\reqtarget{NFR4} & The system shall begin its response within RESPONSE\_TIME after the selected turn detector commits an ordinary request. Premature replies and missed interruptions shall also be evaluated. & Fast replies must not cut off unfinished thoughts. & \reqlink{G2}\\\addlinespace[4pt]
+\reqtarget{NFR5} & The application shall not retain raw microphone audio. It shall exclude credentials and authentication codes from task history, logs, and source control. Setup shall explain provider processing and retention separately. & Application storage rules do not establish provider privacy guarantees. & \reqlink{G5}; \reqlink{FR.Sa.17}\\\addlinespace[4pt]
 \end{xltabular}
 \endgroup
 
@@ -548,7 +651,8 @@ Constants below remain provisional. The POC will inform timing choices. Routine 
 \midrule
 STOP\_ACK\_TIME & Time to audibly acknowledge a work-stop request & TBD after POC (Development Plan provisional: 2 s)\\\addlinespace[4pt]
 RESPONSE\_TIME & Time from committed user turn to response start & TBD after POC\\\addlinespace[4pt]
-CONNECTION\_NOTICE\_TIME & Time to signal connection loss (NFR.Sa.2) & TBD after POC\\\addlinespace[4pt]
+CONNECTION\_NOTICE\_TIME & Time to signal connection loss (\reqlink{NFR.Sa.2}) & TBD after POC\\\addlinespace[4pt]
+IDLE\_PROMPT\_TIME & Maximum interval without spoken progress during active task execution & TBD after POC\\\addlinespace[4pt]
 SHORT\_MESSAGE\_LENGTH & Longest email body read in full before approval & TBD after POC\\\addlinespace[4pt]
 TARGET\_COMPLETION & Share of tasks completed correctly without sighted help & TBD (Development Plan provisional: 80\%)\\
 \bottomrule
@@ -563,20 +667,18 @@ TARGET\_COMPLETION & Share of tasks completed correctly without sighted help & T
     \item \textbf{Program interfaces:} LiveKit carries audio and speech events. The Hermes integration carries task requests, corrections, and progress. The task manager controls execution separately from speech. Browser Use and Composio supply action tools. Each tool call passes through the gate.
 \end{itemize}
 
-\comment{The voice/client owner must confirm screen layouts and keyboard shortcuts. Private typed code input remains a proposed extension.}
-
 \Needspace{8\baselineskip}
 \nsection{S.4 Normal operation}
 
 Figure~\ref{fig:seqnormal} follows one request from start to finish: the user asks to add an event found on a webpage to their calendar.
 
 \begin{enumerate}
-    \item The user starts a session from the client (FR22) and speaks the request. The voice interface passes it to the task manager. It records the task and starts the agent in Working. The user hears a short acknowledgment.
-    \item The agent reads the page. The action gate lets this read-only call through to Browser Use and screens the returned content for injected instructions (FR10, FR13).
+    \item The user starts a session from the client (\reqlink{FR22}) and speaks the request. The voice interface passes it to the task manager. It records the task and starts the agent in Working. The user hears a short acknowledgment.
+    \item The agent reads the page. The action gate lets this read-only call through to Browser Use and screens the returned content for injected instructions (\reqlink{FR10}, \reqlink{FR13}).
     \item The agent proposes event creation. The gate holds the write and requests approval of its exact details. The task enters AwaitingApproval.
-    \item The voice interface reads the details back. The user says ``yes.'' The task manager records approval and releases the call. The task enters Executing (FR9).
-    \item The gate submits the call with a unique action ID (FR11). The returned event details confirm creation. Outcome verification checks those details and reports the result (FR12). A separate lookup is used if the response is unclear.
-    \item The agent finishes the task (state Done). The task history records each step (FR15), and the user hears the verified result.
+    \item The voice interface reads the details back. The user says ``yes.'' The task manager records approval and releases the call. The task enters Executing (\reqlink{FR9}).
+    \item The gate submits the call with a unique action ID (\reqlink{FR11}). The returned event details confirm creation. Outcome verification checks those details and reports the result (\reqlink{FR12}). A separate lookup is used if the response is unclear.
+    \item The agent finishes the task (state Done). The task history records each step (\reqlink{FR15}), and the user hears the verified result.
 \end{enumerate}
 
 \begin{figure}[htbp]
@@ -598,7 +700,7 @@ Figure~\ref{fig:seqnormal} follows one request from start to finish: the user as
     \item \textbf{Injected instructions:} treat webpage and email text as data. Do not let it authorize actions. (H7-b)
 \end{itemize}
 
-Figure~\ref{fig:seqstop} shows a work-stop request during event creation. The system acknowledges it within STOP\_ACK\_TIME. It blocks new task actions and pauses the task. An earlier submission may still complete. The system reports its result or marks it unknown. A pause does not promise that the external service stopped processing the submission (FR8).
+Figure~\ref{fig:seqstop} shows a work-stop request during event creation. The system acknowledges it within STOP\_ACK\_TIME. It blocks new task actions and pauses the task. An earlier submission may still complete. The system reports its result or marks it unknown. A pause does not promise that the external service stopped processing the submission (\reqlink{FR8}).
 
 \begin{figure}[htbp]
 \centering
@@ -635,11 +737,11 @@ The five use cases below expand the high-level scenarios in G.5. Each lists the 
 
 \textbf{Extensions:}
 \begin{itemize}
-    \item \textbf{2a.} Two possible contacts match. The system asks which one (FR4). It waits for the answer and repeats the question on request (FR5).
-    \item \textbf{4a.} The body exceeds SHORT\_MESSAGE\_LENGTH. The system reads the recipient and subject. It summarizes the body and offers a full read-back (FR9).
-    \item \textbf{4b.} The user says ``change Friday to Monday.'' That detail changes and is read back. Earlier approval no longer applies (FR16, FR9).
-    \item \textbf{5a.} The user declines or requests another task. Approval is withdrawn. The user hears that this reply was not sent (FR20).
-    \item \textbf{6a.} The send cannot be confirmed. The system reports failure only with evidence of failure. Otherwise it reports unknown (FR12).
+    \item \textbf{2a.} Two possible contacts match. The system asks which one (\reqlink{FR4}). It waits for the answer and repeats the question on request (\reqlink{FR5}).
+    \item \textbf{4a.} The body exceeds SHORT\_MESSAGE\_LENGTH. The system reads the recipient and subject. It summarizes the body and offers a full read-back (\reqlink{FR9}).
+    \item \textbf{4b.} The user says ``change Friday to Monday.'' That detail changes and is read back. Earlier approval no longer applies (\reqlink{FR16}, \reqlink{FR9}).
+    \item \textbf{5a.} The user declines or requests another task. Approval is withdrawn. The user hears that this reply was not sent (\reqlink{FR20}).
+    \item \textbf{6a.} The send cannot be confirmed. The system reports failure only with evidence of failure. Otherwise it reports unknown (\reqlink{FR12}).
 \end{itemize}
 
 \textbf{Success guarantee:} Only the approved reply is sent to the intended recipient. The reported result matches the sending evidence. Delivery or reading by the recipient is not claimed.
@@ -652,14 +754,14 @@ The five use cases below expand the high-level scenarios in G.5. Each lists the 
 
 \textbf{Primary actor:} User
 
-\textbf{Preconditions:} A session is active, Google Calendar is connected, and the page is public or has a saved login (FR23).
+\textbf{Preconditions:} A session is active, Google Calendar is connected, and the page is public or has a saved login (\reqlink{FR23}).
 
 \textbf{Trigger:} ``Add the meetup on this page to my calendar.''
 
 \textbf{Main success scenario:}
 \begin{enumerate}
     \item The task manager starts the task. The user hears a short acknowledgment.
-    \item The browser opens the page. A clear non-essential cookie prompt is rejected under FR24.
+    \item The browser opens the page. A clear non-essential cookie prompt is rejected under \reqlink{FR24}.
     \item The agent reads the event title, date, time, and place (read-only).
     \item The agent proposes event creation. The gate holds it. The system reads back the details.
     \item The user approves.
@@ -669,9 +771,9 @@ The five use cases below expand the high-level scenarios in G.5. Each lists the 
 
 \textbf{Extensions:}
 \begin{itemize}
-    \item \textbf{2a.} The consent prompt is unclear. The system asks the user before choosing an option (FR24).
-    \item \textbf{3a.} The page tells the agent to ignore the user or send information elsewhere. The system treats this text as data. It does not follow those instructions (FR13).
-    \item \textbf{3b.} The end time is missing. The system asks instead of guessing (FR4).
+    \item \textbf{2a.} The consent prompt is unclear. The system asks the user before choosing an option (\reqlink{FR24}).
+    \item \textbf{3a.} The page tells the agent to ignore the user or send information elsewhere. The system treats this text as data. It does not follow those instructions (\reqlink{FR13}).
+    \item \textbf{3b.} The end time is missing. The system asks instead of guessing (\reqlink{FR4}).
     \item \textbf{3c.} A matching event already exists. The system reports it before asking for approval.
     \item \textbf{5a.} The user declines. No event is created. The system reports this.
 \end{itemize}
@@ -686,32 +788,32 @@ The five use cases below expand the high-level scenarios in G.5. Each lists the 
 
 \textbf{Primary actor:} User
 
-\textbf{Preconditions:} A session is active. The site is public, or its login was saved through the vault page (FR23).
+\textbf{Preconditions:} A session is active. The site is public, or its login was saved through the vault page (\reqlink{FR23}).
 
 \textbf{Trigger:} ``On this conference site, compare the standard and student tickets.''
 
 \textbf{Main success scenario:}
 \begin{enumerate}
     \item The task manager starts the task.
-    \item The agent navigates without making a consequential change. Clear non-essential cookie prompts follow FR24.
+    \item The agent navigates without making a consequential change. Clear non-essential cookie prompts follow \reqlink{FR24}.
     \item The agent gathers each ticket's price and what it includes.
-    \item The user hears a short comparison limited to the request. Uncertain details are stated. For example, fees may be unclear (FR18, FR12).
+    \item The user hears a short comparison limited to the request. Uncertain details are stated. For example, fees may be unclear (\reqlink{FR18}, \reqlink{FR12}).
     \item The user corrects the request: ``Only compare tickets that include workshops.''
-    \item The agent rechecks and reports the corrected comparison (FR6). Nothing is purchased or submitted.
+    \item The agent rechecks and reports the corrected comparison (\reqlink{FR6}). Nothing is purchased or submitted.
 \end{enumerate}
 
 \textbf{Extensions:}
 \begin{itemize}
-    \item \textbf{2a.} A saved login exists. The agent uses it only on its intended site (FR23).
+    \item \textbf{2a.} A saved login exists. The agent uses it only on its intended site (\reqlink{FR23}).
     \item \textbf{2b.} No login is saved. The system explains the private setup route. The task pauses for setup.
-    \item \textbf{2c.} The site requests a one-time code or push approval. The user may speak the code or approve on their device (FR23).
+    \item \textbf{2c.} The site requests a one-time code or push approval. The user may speak the code or approve on their device (\reqlink{FR23}).
     \item \textbf{2d.} The site requires a device-bound passkey. The system explains the manual handoff when that requirement becomes known.
     \item \textbf{5a.} The user asks to buy a ticket. This requires approval of the purchase details. It follows the approval and verification flow in UC1.
 \end{itemize}
 
 \textbf{Success guarantee:} The comparison matches the site and the corrected request. Unconfirmed details are stated.
 
-\textbf{Failure guarantee:} No purchase or submission bypasses approval. Authentication follows FR23.
+\textbf{Failure guarantee:} No purchase or submission bypasses approval. Authentication follows \reqlink{FR23}.
 
 \Needspace{12\baselineskip}
 \subsection*{UC4: Correct or pause a running task}
@@ -726,19 +828,19 @@ The five use cases below expand the high-level scenarios in G.5. Each lists the 
 \textbf{Main success scenario:}
 \begin{enumerate}
     \item The user requests a pause while an approved event creation is in progress.
-    \item The voice interface recognizes the stop phrase and says ``Pausing work'' within STOP\_ACK\_TIME (FR3, NFR3).
+    \item The voice interface recognizes the stop phrase and says ``Pausing work'' within STOP\_ACK\_TIME (\reqlink{FR3}, \reqlink{NFR3}).
     \item The task manager enters Pausing. The gate blocks new task actions. Unused approvals are withdrawn. Safely cancellable work is interrupted.
-    \item The submitted event creation cannot be cancelled safely. It returns a matching event record. The system records that result (FR8, FR12).
+    \item The submitted event creation cannot be cancelled safely. It returns a matching event record. The system records that result (\reqlink{FR8}, \reqlink{FR12}).
     \item The task enters Paused. The user hears ``Paused. The event was already added. The remaining work has not run.''
     \item The user may ask questions while work stays paused. A clear request to continue resumes the task after state checks. Any remaining writes need fresh approval.
 \end{enumerate}
 
 \textbf{Extensions:}
 \begin{itemize}
-    \item \textbf{1a.} The user corrects the task instead. The agent receives the correction (FR6). Changed action details require fresh approval (FR9).
-    \item \textbf{1b.} The user says only ``stop.'' Speech stops and work pauses. The system asks what the user wants next (FR3).
+    \item \textbf{1a.} The user corrects the task instead. The agent receives the correction (\reqlink{FR6}). Changed action details require fresh approval (\reqlink{FR9}).
+    \item \textbf{1b.} The user says only ``stop.'' Speech stops and work pauses. The system asks what the user wants next (\reqlink{FR3}).
     \item \textbf{4a.} A form was prepared but not submitted. Its context is saved where possible. The system says it was not submitted. Resumption requires a check that the page still matches the request.
-    \item \textbf{4b.} The earlier submission times out. The task remains paused. The system reports its outcome as unknown. Reconciliation may continue without advancing the task. It does not retry blindly (FR11).
+    \item \textbf{4b.} The earlier submission times out. The task remains paused. The system reports its outcome as unknown. Reconciliation may continue without advancing the task. It does not retry blindly (\reqlink{FR11}).
     \item \textbf{6a.} The user cancels. The task enters Cancelling and then Cancelled. Earlier actions are reported and are not undone automatically.
 \end{itemize}
 
@@ -758,16 +860,16 @@ The five use cases below expand the high-level scenarios in G.5. Each lists the 
 
 \textbf{Main success scenario:}
 \begin{enumerate}
-    \item The task pauses (FR7). The client signals connection loss within CONNECTION\_NOTICE\_TIME. A local sound is used if network speech is unavailable (NFR.Sa.2).
+    \item The task pauses (\reqlink{FR7}). The client signals connection loss within CONNECTION\_NOTICE\_TIME. A local sound is used if network speech is unavailable (\reqlink{NFR.Sa.2}).
     \item The user reconnects, or starts a new session later.
-    \item The system briefly reports the task's state: what completed, what was pending, and anything uncertain (FR18, FR21).
+    \item The system briefly reports the task's state: what completed, what was pending, and anything uncertain (\reqlink{FR18}, \reqlink{FR21}).
     \item The user says ``continue.'' The system checks relevant state before resuming. Any unused approval is requested again.
 \end{enumerate}
 
 \textbf{Extensions:}
 \begin{itemize}
-    \item \textbf{1a.} Approval was pending. It is withdrawn. On reconnection the user hears that the pending action was not executed. Resumption needs fresh approval (FR20).
-    \item \textbf{1b.} An action was already submitted. Its outcome is checked before a retry. The same action ID never executes twice (FR11).
+    \item \textbf{1a.} Approval was pending. It is withdrawn. On reconnection the user hears that the pending action was not executed. Resumption needs fresh approval (\reqlink{FR20}).
+    \item \textbf{1b.} An action was already submitted. Its outcome is checked before a retry. The same action ID never executes twice (\reqlink{FR11}).
     \item \textbf{4a.} The user cancels instead of continuing. The task ends after cancellation handling. The user hears what had already completed.
 \end{itemize}
 
@@ -779,9 +881,9 @@ The five use cases below expand the high-level scenarios in G.5. Each lists the 
 \nsection{S.7 Prioritization}
 
 \begin{itemize}
-    \item Must (POC, by November 23, 2026): FR1 to FR3, FR8, FR9, NFR3.
-    \item Must (before participant evaluation): FR4 to FR7, FR10 to FR16, FR18 to FR24, NFR1, NFR5, NFR.E.1 to NFR.E.4.
-    \item Should (tune with usability evidence): conversational timing, FR17, NFR2, NFR4.
+    \item Must (POC, by November 23, 2026): \reqlink{FR1} to \reqlink{FR3}, \reqlink{FR8}, \reqlink{FR9}, \reqlink{NFR3}.
+    \item Must (before participant evaluation sessions, which must complete before the March 8, 2027 V\&V Report and Usability Report): \reqlink{FR4} to \reqlink{FR7}, \reqlink{FR10} to \reqlink{FR16}, \reqlink{FR18} to \reqlink{FR24}, \reqlink{NFR1}, \reqlink{NFR5}, \reqlink{NFR.E.1} to \reqlink{NFR.E.3}.
+    \item Should (tune with usability evidence from those sessions, reflected in the March 8, 2027 report): conversational timing, \reqlink{FR17}, \reqlink{NFR2}, \reqlink{NFR4}.
 \end{itemize}
 
 The POC shall demonstrate approval and work-stop controls for its selected email/calendar and browser workflows. This demonstrates feasibility for the tested action paths; it does not establish coverage of every integration or website action.
@@ -791,13 +893,13 @@ The POC shall demonstrate approval and work-stop controls for its selected email
 
 \begin{itemize}
     \item Each functional requirement shall have at least one test using synthetic data and test accounts. Detailed procedures belong in the V\&V Plan.
-    \item Approval tests shall check writes and consequential commitments. No tested consequential action may start without matching approval. Tests shall also cover autonomous navigation and the FR24 exception.
+    \item Approval tests shall check writes and consequential commitments. No tested consequential action may start without matching approval. Tests shall also cover autonomous navigation and the \reqlink{FR24} exception.
     \item Pause tests shall cover a lookup and a submitted write. Record acknowledgment time and the time new actions are blocked. Verify that later results are reported accurately. A voice reconnection shall not resume work by itself.
     \item Recovery tests shall cover uncertain outcomes and stale approvals. A completed action shall not be repeated as a retry.
     \item Outcome tests shall use a meaningful connector response, a matching record, and a website confirmation. A queued request shall not be reported as delivered. Insufficient evidence shall produce an unknown result.
     \item Voice tests shall cover pauses within a sentence and short acknowledgments. They shall also cover corrections, interrupted explanations, and status requests. Record premature replies and missed interruptions. Use participant feedback to tune timing.
     \item Privacy checks shall verify that application history and logs exclude authentication codes. Provider processing and retention shall be reviewed separately.
-    \item State properties P1 to P6 (S.9) shall be checked against recorded events. NFR2 shall be measured on a declared task suite. Report all attempts and failures.
+    \item State properties P1 to P6 (S.9) shall be checked against recorded events. \reqlink{NFR2} shall be measured on a declared task suite. Report all attempts and failures.
 \end{itemize}
 
 \Needspace{8\baselineskip}
@@ -809,11 +911,13 @@ The partial transition function $\delta : Q \times \Sigma \to Q$ uses the events
 
 The running states are Working, AwaitingClarification, AwaitingApproval, and Executing. Pausing, Paused, and Cancelling are also active states. Cancelled, Done, and Failed are final. A session has at most one active task.
 
+The maximum silence timer in \reqlink{NFR.Sa.3} counts active work in both Working and Executing, including read-only work; it excludes time awaiting user clarification or approval and time paused or cancelled.
+
 A work-stop request blocks new task actions as soon as it is recognized. Pausing records this change and requests safe interruption. It then enters Paused. An earlier external operation may still be pending. Its outcome is tracked separately. Reconciliation checks may continue while paused. They may not advance the task. The report distinguishes unfinished work from unknown outcomes.
 
 Cancellation uses Cancelling to block new actions and preserve earlier results. It then enters Cancelled. Earlier operations are not undone. An unresolved external submission does not justify repeating it.
 
-Pending approvals are withdrawn on pause, disconnection, or cancellation. They do not expire merely because a connected user takes time to answer. Resumption requires a clear instruction and a check of relevant state. Unused writes need fresh approval. A new voice session alone does not resume work. New requests follow FR19.
+Pending approvals are withdrawn on pause, disconnection, or cancellation. They do not expire merely because a connected user takes time to answer. Resumption requires a clear instruction and a check of relevant state. Unused writes need fresh approval. A new voice session alone does not resume work. New requests follow \reqlink{FR19}.
 
 \begingroup
 \small
@@ -853,11 +957,11 @@ Cancelling & dispatch blocked; context and outstanding operations recorded & Can
 
 Required properties:
 \begin{itemize}
-    \item P1: A write or consequential commitment starts only in Executing with matching approval. FR24 is the sole cookie-rejection exception.
+    \item P1: A write or consequential commitment starts only in Executing with matching approval. \reqlink{FR24} is the sole cookie-rejection exception.
     \item P2: Changed details invalidate approval. Pause, disconnection, cancellation, and task replacement withdraw all unused approvals.
     \item P3: A recognized work-stop request blocks new task actions until explicit resumption. Only checks of earlier outcomes may proceed. Pause feedback reports any external work still pending.
     \item P4: Final task states do not resume execution. Later evidence may update an earlier action's outcome in history.
-    \item P5: Each consequential action has a recorded approval of its exact details before execution. Each approved batch item has a unique ID and executes at most once. FR24 is the stated exception.
+    \item P5: Each consequential action has a recorded approval of its exact details before execution. Each approved batch item has a unique ID and executes at most once. \reqlink{FR24} is the stated exception.
     \item P6: A session has at most one active task. This includes Pausing and Cancelling.
 \end{itemize}
 
@@ -869,98 +973,258 @@ Required properties:
 \end{figure}
 
 \chapter*{Project}
-\addcontentsline{toc}{chapter}{Project book}
+\addcontentsline{toc}{chapter}{Project}
 \minitoc
 
 \nsection{P.1 Roles and personnel}
+Our team consists of four group members: Aaron Loh, Curtis Vos, Kevin Kim, and Lucas DeBoer.
+A dedicated teaching assistant, Rebecca Di Filippo, will meet with the team about once per month to provide
+guidance and progress check-ins.
 
-As in the Development Plan: voice and client (Lucas, reviewed by Curtis); agent and tools (Aaron, reviewed by Kevin); deployment and reliability (Kevin, reviewed by Aaron); evaluation and quality (Curtis, reviewed by Lucas).
+As presented in Section 6 of the Development Plan, we have agreed to rotate several project management roles among all members as follows: 
+Meeting chair, note taker, and release coordinator. Curtis is the team's external liaison for communicating 
+with McMaster's Capstone course staff, professors, TAs, etc.
 
-\comment{Decide who writes which SRS sections.}
+Regarding ownership/focus on certain aspects of the system's code, the following split has been agreed upon: 
+voice and client (Lucas, reviewed by Curtis); agent and tools (Aaron, reviewed by Kevin); 
+deployment and reliability (Kevin, reviewed by Aaron); evaluation and quality (Curtis, reviewed by Lucas).
+A guideline on managing conflicts or changes in development roles has been described in the aforementioned Development Plan documentation.
 
 \nsection{P.2 Imposed technical choices}
 
 \begin{itemize}
-    \item Hermes agent harness, LiveKit, Browser Use, Composio (for Gmail and Google Calendar).
-    \item Mac, Chrome, English for the initial release.
-    \item LaTeX documents in the course template repository; GitHub for issues and reviews.
+    \item Voice and agent stack: LiveKit, Hermes, and Browser Use are all used for connecting the system's inputs, agent, and outputs.
+    \item Languages: Python for the agent/voice backend, TypeScript and React for the client, fixed by the same Development Plan analysis.
+    \item Target platform: Mac, Chrome, English only for the initial release, fixed by the primary evaluation group (Mac VoiceOver users).
+    \item Connected apps and accounts: apps will be linked with Composio; app-specific API policies (testing-app caps, data-use terms) will determine how account actions must be implemented.
+    \item Documentation and process: LaTeX in the template repository, GitHub for issues, reviews, and version control.
 \end{itemize}
 
 \nsection{P.3 Schedule and milestones}
 
 \begin{itemize}
-    \item October 19: SRS and Hazard Analysis.
+    \item October 19, 2026: SRS and Hazard Analysis.
     \item November 2: V\&V Plan.
     \item November 16: Design document revision minus one; Interview Report.
     \item November 23 to December 3: POC demonstration.
-    \item January 18: Design document.
+    \item January 18, 2027: Design document.
     \item March 8: V\&V Report and Usability Report.
-    \item March 31: Final documentation. April 6: EXPO.
+    \item March 31: Final documentation. 
+    \item April 6: EXPO.
 \end{itemize}
 
 \nsection{P.4 Tasks and deliverables}
 
-\comment{Break the POC into tasks on the GitHub project board (owner, acceptance criteria, due date) and summarize them here in a table.}
+Each task lists the milestone it supports and the date it must be complete. Preparatory work should be complete before the milestone it supports.
+
+\begingroup
+\small
+\begin{xltabular}{\textwidth}{>{\raggedright\arraybackslash}p{2.8cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{3cm}>{\raggedright\arraybackslash}p{2.2cm}}
+\caption{Tasks and deliverables}\label{tab:tasks}\\
+\toprule
+\textbf{Task} & \textbf{Description} & \textbf{Deliverable} & \textbf{Complete by}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Task} & \textbf{Description} & \textbf{Deliverable} & \textbf{Complete by}\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Component skeleton & Pin Hermes, LiveKit, and Browser Use versions; create placeholder modules for the voice interface, task manager, action gate, outcome verification, action tools, and task history layer (S.1). & V\&V Plan & Nov 2, 2026\\\addlinespace[4pt]
+Deployment and CI setup & Configure GitHub Actions checks for Python and TypeScript; establish credential handling that keeps secrets out of source control and logs (NFR5). & V\&V Plan & Nov 2\\\addlinespace[4pt]
+Voice interface integration & Wire LiveKit Agents into the task manager for audio sessions and turn handling. & Design document revision minus one; Interview Report & Nov 16\\\addlinespace[4pt]
+Task manager and state machine & Implement task state tracking and transitions (S.9) (FR8, FR19 to FR21). & POC demonstration & Nov 16\\\addlinespace[4pt]
+Hermes harness supervision & Connect Hermes on a pinned version; verify streamed status, approvals, interrupts, and reconnection. & Design document revision minus one; Interview Report & Nov 16\\\addlinespace[4pt]
+Participant recruitment & Recruit two to four blind participants with screen-reader experience; resolve protocol, consent, and institutional research requirements before any session (P.6). & Design document revision minus one; Interview Report & Nov 16\\\addlinespace[4pt]
+Action gate and approval flow & Implement the gate that requires explicit approval of exact details before any consequential action executes. Ready before the demonstration window opens. & POC demonstration & Nov 16\\\addlinespace[4pt]
+Browser and account tools & Integrate Browser Use and Composio as action tools behind the gate. Ready before the demonstration window opens. & POC demonstration & Nov 16\\\addlinespace[4pt]
+POC demonstration & Demonstrate approval and work-stop controls for the selected connect app workflows (S.7). & POC demonstration & Nov 23 - Dec 3\\\addlinespace[4pt]
+Issue remediation & Address problems surfaced during the POC demonstration before design revision. & Design document & Jan 18, 2027\\\addlinespace[4pt]
+Outcome verification & Check consequential-action results against tool responses or account/page state; record verified, partial, failed, or unknown. & Design document & Jan 18, 2027\\\addlinespace[4pt]
+Accessible client and task history & Build keyboard- and VoiceOver-compatible session controls and the accessible task history layer. & Design document & Jan 18, 2027\\\addlinespace[4pt]
+Backend hosting configuration & Finalize the default topology, secret storage, and network requirements for the hybrid deployment once a working configuration has been demonstrated (P.5). & Design document & Jan 18, 2027\\\addlinespace[4pt]
+Participant evaluation integration & Incorporate interview and discovery findings. & V\&V Report and Usability Report & Mar 8\\\addlinespace[4pt]
+Final integration and polish & Complete remaining FR/NFR coverage; finalize documentation and the known-limitations list. & Final documentation & Mar 31\\\addlinespace[4pt]
+EXPO demo preparation & Package and rehearse the end-to-end demonstration. & EXPO & Apr 6\\\addlinespace[4pt]
+\end{xltabular}
+\endgroup
 
 \nsection{P.5 Required technology elements}
 
 \begin{itemize}
-    \item LiveKit Agents (Python) and a speech-to-text and text-to-speech provider.
-    \item Hermes agent and an AI model provider.
+    \item LiveKit Agents (Python) and a speech-to-text/text-to-speech provider: ElevenLabs is the TTS candidate via LiveKit's plugin\citep{ElevenLabsPlugin}.
+    \item Hermes agent and an AI model provider: Hermes is not model-specific, so a specific model is not required on its side.
+    One candidate is currently Claude Sonnet because of its tool-call reliability under the approval-gate constraints in the Hazard Analysis, but there is flexibility 
+    to change this after POC testing or from the team's budget.
     \item Browser Use with Chromium.
-    \item Gmail and Google Calendar APIs through the Composio SDK, our own Google OAuth app before participant sessions, and test accounts.
+    \item Connected app APIs through the Composio SDK, our own OAuth app connection before participant sessions, and test accounts.
     \item TypeScript and React for the web client.
+    \item A Mac running VoiceOver for development and testing: hosted CI cannot substitute for on-device permission or accessibility checks.
+    \item GitHub for source control and project tracking; GitHub Actions for automated Python and TypeScript checks.
+    \item Hosting for the voice/agent backend: a hybrid of a local Mac and hosted services. A local component is required because a hosted backend cannot reach the user's Mac or its signed-in browser sessions (E.3). The default topology, secret storage, and network requirements are finalized once a working configuration is demonstrated.
 \end{itemize}
 
 \nsection{P.6 Risk and mitigation analysis}
 
 \begin{itemize}
-    \item Supervision through Hermes may not work as documented: test approvals, interrupts, and reconnection on a pinned version first.
-    \item Browser actions may not be interceptable for approval: if not, the browser becomes read-only for the initial release.
-    \item Recruitment of blind participants may fail: report technical feasibility only and disclose missing usability evidence.
-    \item Provider costs may exceed the budget: meter usage and reconcile monthly.
+    \item Risk: Supervision through Hermes may not work as documented.
+    \begin{itemize}
+        \item Description: Hermes's documented approval, interrupt, and reconnection behavior may not match its actual behavior once integrated.
+        \item Mitigation: Test approvals, interrupts, and reconnection on a pinned version first; revisit the adapter/harness before promising supervision if unavailable.
+    \end{itemize}
+    \item Risk: Browser actions may not be interceptable for approval.
+    \begin{itemize}
+        \item Description: Browser Use may not expose a reliable point to pause and request approval before a consequential action executes.
+        \item Mitigation: If interception is not possible, the browser becomes read-only for the initial release.
+    \end{itemize}
+    \item Risk: Recruitment of blind participants may fail.
+    \begin{itemize}
+        \item Description: The team aims to recruit two to four blind participants with screen-reader experience; recruitment is not yet complete.
+        \item Mitigation: Report technical feasibility only and disclose missing usability evidence.
+    \end{itemize}
+    \item Risk: Provider costs may exceed the budget.
+    \begin{itemize}
+        \item Description: Cloud AI, speech, and hosting costs scale with usage and are not fully known in advance.
+        \item Mitigation: Monitor usage and reconcile monthly.
+    \end{itemize}
+    \item Risk: Tasks may take longer than expected, or workload may become unbalanced across the team.
+    \begin{itemize}
+        \item Description: Our four members aim to cover distinct workstreams (voice/client, agent/tools, deployment/reliability, evaluation/quality) during development; scheduling difficulties in one area can cascade into others.
+        \item Mitigation: Use the GitHub Kanban board to track tasks and milestones; check-in and redistribute blocked work at the weekly sync.
+    \end{itemize}
 \end{itemize}
 
 \nsection{P.7 Requirements process and report}
 
-Requirements come from the Problem Statement, Development Plan, Hazard Analysis, TA guidance, prior research, and interviews. An interview with a former DBCS staff member was held on October 17, 2026; FR16 to FR18, the G.8 profile change, and intervenors as stakeholders came from it. Blind participants will be recruited for repeated feedback. Requirements will be revised as POC results and interview findings arrive.
+Requirements come from the Problem Statement, Development Plan, Hazard Analysis, TA guidance, prior research, and interviews. 
+An interview with a former DBCS staff member was held on October 17, 2026 (\hyperref[app:interview]{transcript in the appendix}); \reqlink{FR16} to \reqlink{FR18} as well as intervenors as stakeholders came as relevant additions from it.
+Blind participants will be recruited for repeated feedback. Requirements will be revised as POC results and interview findings arrive.
 
 \chapter*{Requirement dependencies}
 \addcontentsline{toc}{chapter}{Requirement dependencies}
 
-\comment{Build a traceability matrix: goals G1 to G5 against FR1 to FR24, NFRs, and FR.Sa requirements.}
+Table~\ref{tab:goal-traceability} shows how the system requirements
+support the five project goals defined in the Problem Statement.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Goal-to-requirement traceability matrix}
+\label{tab:goal-traceability}
+\begin{tabularx}{\textwidth}{
+    >{\raggedright\arraybackslash}p{0.8cm}
+    >{\raggedright\arraybackslash}p{4.8cm}
+    >{\raggedright\arraybackslash}p{2.0cm}
+    >{\raggedright\arraybackslash}X
+}
+\toprule
+\textbf{Goal} &
+\textbf{Functional} &
+\textbf{Non-functional} &
+\textbf{Linked safety requirements} \\
+\midrule
+
+\reqlink{G1} &
+\reqlink{FR1}, \reqlink{FR10} &
+\reqlink{NFR2} &
+\reqlink{FR.Sa.13} \\
+
+\addlinespace[6pt]
+
+\reqlink{G2} &
+\reqlink{FR2}, \reqlink{FR3}, \reqlink{FR5}, \reqlink{FR7}, \reqlink{FR8}, \reqlink{FR9}, \reqlink{FR10}, \reqlink{FR15},
+\reqlink{FR17}, \reqlink{FR18}, \reqlink{FR19}, \reqlink{FR20}, \reqlink{FR21}, \reqlink{FR22}, \reqlink{FR23}, \reqlink{FR24} &
+\reqlink{NFR1}, \reqlink{NFR3}, \reqlink{NFR4} &
+\reqlink{FR.Sa.1}, \reqlink{FR.Sa.2}, \reqlink{FR.Sa.3}, \reqlink{FR.Sa.4}, \reqlink{FR.Sa.5.i}, \reqlink{FR.Sa.5.ii}, \reqlink{FR.Sa.5.iii}, \reqlink{FR.Sa.7}, \reqlink{FR.Sa.8}, \reqlink{FR.Sa.11},
+\reqlink{FR.Sa.13}, \reqlink{FR.Sa.14}, \reqlink{FR.Sa.15}, \reqlink{FR.Sa.17}, \reqlink{FR.Sa.19}, \reqlink{FR.Sa.20},
+\reqlink{NFR.Sa.1}, \reqlink{NFR.Sa.2}, \reqlink{NFR.Sa.3} \\
+
+\addlinespace[6pt]
+
+\reqlink{G3} &
+\reqlink{FR4}, \reqlink{FR9}, \reqlink{FR11}, \reqlink{FR12}, \reqlink{FR13}, \reqlink{FR20}, \reqlink{FR24} &
+--- &
+\reqlink{FR.Sa.3}, \reqlink{FR.Sa.6}, \reqlink{FR.Sa.9}, \reqlink{FR.Sa.10},
+\reqlink{FR.Sa.13}, \reqlink{FR.Sa.14}, \reqlink{FR.Sa.15}, \reqlink{FR.Sa.16}, \reqlink{FR.Sa.18} \\
+
+\addlinespace[6pt]
+
+\reqlink{G4} &
+\reqlink{FR6}, \reqlink{FR7}, \reqlink{FR8}, \reqlink{FR16}, \reqlink{FR21} &
+--- &
+\reqlink{FR.Sa.5.i}, \reqlink{FR.Sa.5.ii}, \reqlink{FR.Sa.5.iii}, \reqlink{FR.Sa.7}, \reqlink{FR.Sa.8}, \reqlink{FR.Sa.12} \\
+
+\addlinespace[6pt]
+
+\reqlink{G5} &
+\reqlink{FR14}, \reqlink{FR22}, \reqlink{FR23} &
+\reqlink{NFR1}, \reqlink{NFR5} &
+\reqlink{FR.Sa.17} \\
+
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \chapter*{Likely and unlikely changes}
 \addcontentsline{toc}{chapter}{Likely and unlikely changes}
 
-\begin{itemize}
-    \item Likely: replacing the AI model, speech provider, or agent harness; adding account services; changing timing constants after measurement.
-    \item Unlikely: dropping the approval rule for consequential actions; dropping voice as the main interaction.
-\end{itemize}
+\paragraph{Likely changes}
+
+\begin{description}
+    \item[LC1.]\label{chg:LC1} AI model provider: not yet selected; Claude Sonnet is a candidate but Hermes is model-agnostic and can allow adjustments as needed (P.5).
+    \item[LC2.]\label{chg:LC2} Speech-to-text and text-to-speech providers: ElevenLabs is a candidate through LiveKit's plugin (P.5).
+    \item[LC3.]\label{chg:LC3} Agent harness: P.6 commits the team to revisiting the adapter if Hermes supervision does not match its documentation.
+    \item[LC4.]\label{chg:LC4} Set of connected apps: Gmail and Google Calendar are intended to be the first two integrations, not a limit on eventual scope.
+    \item[LC5.]\label{chg:LC5} Backend topology, secret storage, and network requirements: finalized once a working configuration has been demonstrated (E.3, P.5).
+    \item[LC6.]\label{chg:LC6} Browser action coverage: the browser becomes read-only for the initial release if consequential browser actions cannot be intercepted for approval (P.6).
+\end{description}
+
+\paragraph{Unlikely changes} These carry the system's safety case and its reason for existing.
+
+\begin{description}
+    \item[ULC1.]\label{chg:ULC1} Approval of exact details before a consequential action. This is the central safety property (property P1 in S.9, \reqlink{FR9}, \reqlink{FR.Sa.13}) and a mitigation the Hazard Analysis relies on for H5-a. Without it the system is an unsupervised agent acting for a user who cannot see what it did.
+    \item[ULC2.]\label{chg:ULC2} Voice as the primary interaction mode. G.1 defines the system as a voice interface and G.7 selects the primary stakeholder group on that basis; replacing it would not be a revision of this project.
+    \item[ULC3.]\label{chg:ULC3} Reporting outcomes only against matching evidence. A blind user cannot visually confirm a result, so an unverified success claim is precisely the harm that hazards H4-b and H6-a exist to prevent (\reqlink{FR12}, \reqlink{FR.Sa.10}).
+\end{description}
 
 \chapter*{References}
 \addcontentsline{toc}{chapter}{References}
 
-\comment{List every source cited (WCAG, AODA, PIPEDA, Google policy, LiveKit, Hermes, Browser Use, WebAIM, Morae, Meyer handbook).}
+\renewcommand{\bibsection}{}
+\bibliographystyle{plainnat}
+\bibliography{../../refs/CapstoneSources}
+
+
+\chapter*{Appendix: Interview transcript}
+\addcontentsline{toc}{chapter}{Appendix: Interview transcript}
+\label{app:interview}
+
+Interview with a former CNIB Deafblind Community Services (DBCS) staff member.
+
+\input{InterviewTranscript.text}
 
 \chapter*{Appendix: AI use disclosure}
 \addcontentsline{toc}{chapter}{Appendix: AI use disclosure}
 
-Aaron Loh used Claude Code (Claude Opus 5.5) to work through the requirements. It asked questions, summarized tool documentation, and translated the team's decisions and Kevin's requirements draft into this structured draft. Aaron made and reviewed every decision. The team will review, verify, and rewrite this draft before submission.
+Aaron Loh: Claude Code (Claude Opus 5.5) was used to work through the requirements. It asked questions, summarized tool documentation, and translated the team's decisions and Kevin's requirements draft into a structured draft. Aaron made and reviewed every decision. The team later reviewed, verified, and rewrote the draft as necessary before submission.
 
-OpenAI Codex assisted with the October 17 layout and consistency review. It also helped revise the supervision requirements and simplify the System section from Aaron's decisions. Team review is pending.
+Kevin Kim: OpenAI Codex assisted with the October 17 layout and consistency review. It also helped revise the supervision requirements and simplify the System section from Aaron's decisions.
 
-\comment{Other members: add the tools you used.}
+Curtis Vos: Claude Code (Claude Sonnet 5) was used alongside a manual review, helping with wording choices 
+and cross-checking/verifying claims alongside other sections of the documents. All responses and suggestions were fully read through and followed up
+with concerns or clarifications before implementing any feedback. At the end of the review session, Claude Opus 5 was used for a more in-depth scan to 
+verify correctness and appropriateness of section contents. If any inconsistencies (typically wording or description differences) were found, they were manually verified, compared, and corrected.
 
 \chapter*{Appendix: Reflection}
 \addcontentsline{toc}{chapter}{Appendix: Reflection}
-
-\comment{Each member answers the SRS reflection questions from their own experience.}
 
 \input{../Reflection.text}
 % add reflections here
 \input{KevinSRSReflection.text}
 \input{AaronSRSReflection.text}
 \input{LucasSRSReflection.text}
+\input{CurtisSRSReflection.text}
+
 
 \end{document}

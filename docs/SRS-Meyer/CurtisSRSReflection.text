@@ -1,0 +1,29 @@
+\subsection*{Curtis Vos}
+
+\begin{enumerate}
+
+\item \textbf{What went well while writing this deliverable?}
+
+The group felt quite coordinated during this deliverable, which helped the effectiveness a lot. We made sure to stay up-to-date with each other's progress through Discord by sending progress updates throughout, and our branch and PR collaboration in Github felt smooth as well.
+
+\item \textbf{What pain points did you experience, and how did you resolve them?}
+
+A major pain point (as experienced when working on requirements documents in the past, like in 3RA3) felt like the ability to keep all the requirements and goals aligned with each other. When it comes to long documents like an SRS, the sheer number of goals, functional and non-functional requirements, and hazards feels very overwhelming and difficult to keep track of. This can also be mixed when it comes to group projects as well, as it's easier in terms of workload balancing when everyone helps out with different sections, but it also adds complexity in terms of making sure what I say is precisely consistent with the other sections that have been created. Making sure to read over existing work multiple times was essential, and though it can't be relied on, having AI tools scan over the documents as an extra source to verify consistency was helpful for extra reassurance.
+
+\item \textbf{How many requirements were inspired by speaking to clients or their proxies?}
+
+In terms of truly creating requirements directly from our clients/proxies, it didn't feel like it was as many as I'd hoped. Based on the timing of our course and progress, we were only able to get one official interview (done by groupmate Aaron) under our belt by the time of writing the SRS, which was still very helpful for gaining valuable insight into the experiences of the visually impaired with technology. Several insights were able to arise from this interview, such as evidence regarding frequently starting tasks over with existing tools, or confirming the existing importance of people needing to intervene in existing tools, their setup, and their maintenance. However, due the fact that the interviewee was sighted, the results were not able to be too personal or based on experience. Because of this limitation, we are hoping to gain more connections in the next few weeks with the visually impaired community based off this first interaction, and refine our work based on further interactions.
+
+\item \textbf{Which courses will help your team succeed?}
+
+Currently I'm taking SFWRENG 4AL3: Applications of ML, which should help a lot with understanding the inner workings of how AI can be tuned and interacted with, especially when we reach topics regarding Natural Language Processing and LLM's. I'm also taking 4HC3: Human Computer Interfaces, which seems to give great exposure to a lot of design principles, which can hopefully be applicable in making our system easily usable, especially since our capstone project focuses so heavily on accessibility. I also think I can use a lot of knowledge from 3S03: Software Testing for the evaluation and quality control portion of development.
+
+\item \textbf{What knowledge and skills will the team need to acquire?}
+
+One piece of knowledge that I think should be necessary for us to acquire is the specific tools we have settled upon for our product. Not all of us have had experience with AI harnesses like Hermes, for example, so ensuring that we are not only familiar but honestly comfortable with how AI harness tools, tools like LiveKit, etc. work will be essential for us all actually being able to contribute to a functioning system in the end. We also will need to feel comfortable with using APIs as there are multiple (e.g. for Google services in our POC) that we intend to interact with and will need to properly set up and test with.
+
+\item \textbf{How will each team member acquire these skills?}
+
+AI harness tools like Hermes are a relatively new concept in the world of software, but there still appears to be recent tutorials on YouTube for getting started. Nous Research also has official documentation, which will be a necessity in development. For a solid intro, however, I will most likely find a crash course on YouTube, as I typically can feel engaged and interested in how content gets laid out for personally new concepts like this. It appears our interaction tools, like LiveKit, also have extensive tutorials and documentation, so I will likely also seek out a crash course for familiarizing myself with that specifically. For getting re-familiarized with API's, I will likely just read the necessary documentation for each area as I've had experience at my co-op and some personal projects already.
+
+\end{enumerate}
