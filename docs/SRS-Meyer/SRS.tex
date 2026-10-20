@@ -207,7 +207,7 @@ In an interview with a former CNIB Deafblind Community Services (DBCS) staff mem
 \nsection{G.4 Functionality overview}
 
 \begin{itemize}
-    \item \textbf{Delegated task execution:} carries out multi-step tasks in a web browser or a connected app (initially Gmail and Google Calendar) from a single spoken goal, instead of the user navigating each step.
+    \item \textbf{Delegated task execution:} carries out multi-step tasks in a web browser or a connected app from a single spoken goal, instead of the user navigating each step.
     \item \textbf{Clarification on demand:} asks for clarification when required details are missing or ambiguous rather than guessing about the user's intent.
     \item \textbf{Approval-gated actions:} requires explicit approval of exact details before completing consequential actions, such as sending, saving, or submitting.
     \item \textbf{Verified reporting:} checks task outcomes against the real account or page before reporting them as complete, rather than assuming a success after actions are taken.
@@ -319,11 +319,11 @@ the system must interface with.
     \item Users: the person giving spoken commands and acting on the system's results; see the Glossary and G.7--G.8 for roles and profiles.
     \item Laptop hardware: the user's Mac, including its microphone and speakers.
     \item Platform: macOS with Google Chrome, and the user's existing VoiceOver screen reader.
-    \item Network: required for cloud speech, AI, and Google API traffic.
+    \item Network: required for cloud speech, AI, and connected apps' API traffic.
     \item AI model and speech providers: cloud services for language understanding, speech-to-text, and text-to-speech.
     \item Websites the user asks about (unmodified, not under our control).
-    \item External accounts and services: initially Gmail and Google Calendar APIs. These are the first two integrations, not a limit on the system's eventual scope; other connected apps may be added as tools permit.
-    \item Composio cloud: an external hosted service that stores OAuth tokens for our Gmail and Calendar integration. Its ``Don't store data'' setting is turned on so tool inputs and outputs are not logged. Our own code calls it through the Composio SDK (S.1).
+    \item External accounts and services.
+    \item Composio cloud: an external hosted service that stores OAuth tokens for our connected apps. Its ``Don't store data'' setting is turned on so tool inputs and outputs are not logged. Our own code calls it through the Composio SDK (S.1).
 \end{itemize}
 
 \nsection{E.3 Constraints}
@@ -332,7 +332,6 @@ The following is a list of obligations and limits imposed by the environment.
 
 \begin{itemize}
     \item Mac with Google Chrome, in English.
-    \item Gmail and Calendar access uses restricted Google OAuth permissions. An app in Testing status is capped at 100 registered test users, and its issued refresh tokens expire after 7 days, requiring re-authorization until the app is verified or published \citep{GoogleOAuthLimits}.
     \item Provider terms of use and data retention policies apply to anything sent to them.
     \item A hosted backend cannot reach the user's Mac or its signed-in browser sessions, so controlling the user's own browser requires a component running locally.
 \end{itemize}
@@ -351,18 +350,19 @@ Speech recognition, the AI model, websites, and external services are not assume
 \nsection{E.5 Effects}
 
 \begin{itemize}
-    \item Emails are searched, read, drafted, sent, replied to, archived, labelled, or deleted.
-    \item Calendar events are read, created, updated, or deleted.
-    \item Website forms may be filled and submitted, subject to approval.
-    \item Data is sent to AI and speech providers.
+    \item Users will rely less on outside help to complete computer tasks, as the system will assist in their completion.
+    \item Desired properties in connected apps are affected (e.g. read, created, updated, or deleted).
+    \item Website forms may be filled and submitted by the system, subject to user approval.
+    \item Input data can reach AI and speech vendors.
+    \item Content and progress is processed and reported back to the user through the computer's speaker hardware.
 \end{itemize}
 
 \nsection{E.6 Invariants}
 
 \begin{itemize}
-    \item External account and page states (emails, calendar events, website content) can change outside the system at any time, through other devices, other users, or the provider itself; the system's last known state should not be assumed current.
+    \item External account and page states can change outside the system at any time, through other devices, other users, or the provider itself; the system's last known state should not be assumed current.
     \item A delivered message or submitted form cannot be withdrawn by the system after the fact; only the provider or recipient can undo it, if at all.
-    \item OAuth-issued credentials and authentication codes are controlled by the provider: they expire, can be revoked, and may require re-authorization independent of the system's own state.
+    \item Authentication codes (and credentials from services like OAuth) are controlled by the provider: they expire, can be revoked, and may require re-authorization independent of the system's own state.
     \item The user's existing accessibility tools (VoiceOver, keyboard navigation) keep working while the system runs.
 \end{itemize}
 
@@ -371,7 +371,6 @@ Speech recognition, the AI model, websites, and external services are not assume
 \begin{itemize}
     \item WCAG 2.2 Level AA: accessibility standard for the web client, adopted voluntarily \citep{WCAG22}.
     \item AODA (Accessibility for Ontarians with Disabilities Act): Ontario accessibility law referencing WCAG; its compliance obligations are not required as they apply to organizations with Ontario employees (20+ for reporting, 50+ for website compliance), but it is a relevant reference for our team \citep{AODAFactSheet}.
-    \item Google API Services User Data Policy: binds the project as a condition of using Gmail and Calendar APIs regardless of organizational status; limits how that data may be used and stored \citep{GoogleAPIDataPolicy}.
     \item Open-source licenses: our code uses MIT licensing; reused components keep their own licenses and notices.
     \item Coding standards: PEP 8 for Python; strict TypeScript with a shared linter for the client.
 \end{itemize}
@@ -380,10 +379,9 @@ Speech recognition, the AI model, websites, and external services are not assume
 \addcontentsline{toc}{subsection}{Environment requirements}
 
 \begin{itemize}
-    \item \reqtarget{NFR.E.1}: The system shall run on macOS with Google Chrome.
+    \item \reqtarget{NFR.E.1}: The system shall run in English on macOS with Google Chrome.
     \item \reqtarget{NFR.E.2}: The web client shall meet WCAG 2.2 Level AA.
-    \item \reqtarget{NFR.E.3}: The system shall use Gmail and Calendar data only to perform the user's requested tasks, consistent with the Google API Services User Data Policy.
-    \item \reqtarget{NFR.E.4}: Python code shall pass the team's PEP 8 linter checks; TypeScript code shall pass strict type checks and the shared linter.
+    \item \reqtarget{NFR.E.3}: Python code shall pass the team's PEP 8 linter checks; TypeScript code shall pass strict type checks and the shared linter.
 \end{itemize}
 
 \chapter*{System}
@@ -404,7 +402,7 @@ The proposed system has eight components. These match the Hazard Analysis. Figur
     \item \textbf{AI agent:} Hermes plans tasks and proposes tool calls. Each call must pass through the action gate.
     \item \textbf{Action gate:} checks every proposed action. It requests approval for writes and consequential commitments. Approval details come from the proposed call. The gate also blocks new task actions while work is paused.
     \item \textbf{Outcome verification:} checks evidence for each consequential action. Evidence may come from its tool response or a targeted account or page check. The result is recorded as verified, partial, failed, or unknown.
-    \item \textbf{Action tools and integrations:} Browser Use handles websites. Gmail and Google Calendar tools use the Composio SDK. The proposed integration places approval checks before execution and outcome checks afterward. The POC must verify that all action paths pass through these checks. Credential handling also needs verification.
+    \item \textbf{Action tools and integrations:} Browser Use handles websites. Connected app tools use the Composio SDK. The proposed integration places approval checks before execution and outcome checks afterward. The POC must verify that all action paths pass through these checks. Credential handling also needs verification.
     \item \textbf{Task history layer:} records task state and action outcomes. It also records approvals and action IDs. These records support accessible review and recovery after disconnection.
 \end{itemize}
 
@@ -606,7 +604,7 @@ The following requirements are SRS revisions based on the Hazard Analysis. Hazar
 \bottomrule
 \endfoot
 \reqtarget{NFR1} & Session controls, work pause, approval, and task history shall work with VoiceOver and the keyboard alone. & Users rely on their existing assistive tools. & \reqlink{G2}, \reqlink{G5}\\\addlinespace[4pt]
-\reqtarget{NFR2} & At least TARGET\_COMPLETION of tasks in the declared task suite shall be completed correctly without sighted help. The task suite shall include representative Gmail, Google Calendar, and unfamiliar website tasks. & Measures the main benefit: independent task completion. & \reqlink{G1}\\\addlinespace[4pt]
+\reqtarget{NFR2} & At least TARGET\_COMPLETION of tasks in the declared task suite shall be completed correctly without sighted help. The task suite shall include representative connected apps as well as unfamiliar website tasks. & Measures the main benefit: independent task completion. & \reqlink{G1}\\\addlinespace[4pt]
 \reqtarget{NFR3} & A work-stop request shall be acknowledged within STOP\_ACK\_TIME. Time to block new actions and time to reconcile in-flight work shall be measured separately. & A quick acknowledgment does not prove earlier actions ended. & \reqlink{G2}; \reqlink{NFR.Sa.1}\\\addlinespace[4pt]
 \reqtarget{NFR4} & The system shall begin its response within RESPONSE\_TIME after the selected turn detector commits an ordinary request. Premature replies and missed interruptions shall also be evaluated. & Fast replies must not cut off unfinished thoughts. & \reqlink{G2}\\\addlinespace[4pt]
 \reqtarget{NFR5} & The application shall not retain raw microphone audio. It shall exclude credentials and authentication codes from task history, logs, and source control. Setup shall explain provider processing and retention separately. & Application storage rules do not establish provider privacy guarantees. & \reqlink{G5}; \reqlink{FR.Sa.17}\\\addlinespace[4pt]
@@ -858,7 +856,7 @@ The five use cases below expand the high-level scenarios in G.5. Each lists the 
 
 \begin{itemize}
     \item Must (POC, by November 23, 2026): \reqlink{FR1} to \reqlink{FR3}, \reqlink{FR8}, \reqlink{FR9}, \reqlink{NFR3}.
-    \item Must (before participant evaluation sessions, which must complete before the March 8, 2027 V\&V Report and Usability Report): \reqlink{FR4} to \reqlink{FR7}, \reqlink{FR10} to \reqlink{FR16}, \reqlink{FR18} to \reqlink{FR24}, \reqlink{NFR1}, \reqlink{NFR5}, \reqlink{NFR.E.1} to \reqlink{NFR.E.4}.
+    \item Must (before participant evaluation sessions, which must complete before the March 8, 2027 V\&V Report and Usability Report): \reqlink{FR4} to \reqlink{FR7}, \reqlink{FR10} to \reqlink{FR16}, \reqlink{FR18} to \reqlink{FR24}, \reqlink{NFR1}, \reqlink{NFR5}, \reqlink{NFR.E.1} to \reqlink{NFR.E.3}.
     \item Should (tune with usability evidence from those sessions, reflected in the March 8, 2027 report): conversational timing, \reqlink{FR17}, \reqlink{NFR2}, \reqlink{NFR4}.
 \end{itemize}
 
@@ -972,8 +970,7 @@ A guideline on managing conflicts or changes in development roles has been descr
     \item Voice and agent stack: LiveKit, Hermes, and Browser Use are all used for connecting the system's inputs, agent, and outputs.
     \item Languages: Python for the agent/voice backend, TypeScript and React for the client, fixed by the same Development Plan analysis.
     \item Target platform: Mac, Chrome, English only for the initial release, fixed by the primary evaluation group (Mac VoiceOver users).
-    \item Connected apps: initial scope focuses on Gmail and Google Calendar through Composio; Google's OAuth and API policies (testing-app caps, data-use terms) 
-    bind how account actions must be implemented.
+    \item Connected apps and accounts: apps will be linked with Composio; app-specific API policies (testing-app caps, data-use terms) will determine how account actions must be implemented.
     \item Documentation and process: LaTeX in the template repository, GitHub for issues, reviews, and version control.
 \end{itemize}
 
@@ -1016,7 +1013,7 @@ Hermes harness supervision & Connect Hermes on a pinned version; verify streamed
 Participant recruitment & Recruit two to four blind participants with screen-reader experience; resolve protocol, consent, and institutional research requirements before any session (P.6). & Design document revision minus one; Interview Report & Nov 16\\\addlinespace[4pt]
 Action gate and approval flow & Implement the gate that requires explicit approval of exact details before any consequential action executes. Ready before the demonstration window opens. & POC demonstration & Nov 16\\\addlinespace[4pt]
 Browser and account tools & Integrate Browser Use and Composio as action tools behind the gate. Ready before the demonstration window opens. & POC demonstration & Nov 16\\\addlinespace[4pt]
-POC demonstration & Demonstrate approval and work-stop controls for the selected email/calendar and browser workflows (S.7). & POC demonstration & Nov 23 - Dec 3\\\addlinespace[4pt]
+POC demonstration & Demonstrate approval and work-stop controls for the selected connect app workflows (S.7). & POC demonstration & Nov 23 - Dec 3\\\addlinespace[4pt]
 Issue remediation & Address problems surfaced during the POC demonstration before design revision. & Design document & Jan 18, 2027\\\addlinespace[4pt]
 Outcome verification & Check consequential-action results against tool responses or account/page state; record verified, partial, failed, or unknown. & Design document & Jan 18, 2027\\\addlinespace[4pt]
 Accessible client and task history & Build keyboard- and VoiceOver-compatible session controls and the accessible task history layer. & Design document & Jan 18, 2027\\\addlinespace[4pt]
@@ -1035,7 +1032,7 @@ EXPO demo preparation & Package and rehearse the end-to-end demonstration. & EXP
     One candidate is currently Claude Sonnet because of its tool-call reliability under the approval-gate constraints in the Hazard Analysis, but there is flexibility 
     to change this after POC testing or from the team's budget.
     \item Browser Use with Chromium.
-    \item Gmail and Google Calendar APIs through the Composio SDK, our own Google OAuth app before participant sessions, and test accounts.
+    \item Connected app APIs through the Composio SDK, our own OAuth app connection before participant sessions, and test accounts.
     \item TypeScript and React for the web client.
     \item A Mac running VoiceOver for development and testing: hosted CI cannot substitute for on-device permission or accessibility checks.
     \item GitHub for source control and project tracking; GitHub Actions for automated Python and TypeScript checks.
@@ -1152,7 +1149,7 @@ support the five project goals defined in the Problem Statement.
     \item[LC1.]\label{chg:LC1} AI model provider: not yet selected; Claude Sonnet is a candidate but Hermes is model-agnostic and can allow adjustments as needed (P.5).
     \item[LC2.]\label{chg:LC2} Speech-to-text and text-to-speech providers: ElevenLabs is a candidate through LiveKit's plugin (P.5).
     \item[LC3.]\label{chg:LC3} Agent harness: P.6 commits the team to revisiting the adapter if Hermes supervision does not match its documentation.
-    \item[LC4.]\label{chg:LC4} Set of connected apps: Gmail and Google Calendar are the first two integrations, not a limit on eventual scope (G.4, E.2).
+    \item[LC4.]\label{chg:LC4} Set of connected apps: Gmail and Google Calendar are intended to be the first two integrations, not a limit on eventual scope.
     \item[LC5.]\label{chg:LC5} Backend topology, secret storage, and network requirements: finalized once a working configuration has been demonstrated (E.3, P.5).
     \item[LC6.]\label{chg:LC6} Browser action coverage: the browser becomes read-only for the initial release if consequential browser actions cannot be intercepted for approval (P.6).
 \end{description}
