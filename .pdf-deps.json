@@ -87,15 +87,18 @@
   "docs/SRS-Meyer/SRS.tex": [
     "docs/Reflection.text",
     "docs/SRS-Meyer/AaronSRSReflection.text",
+    "docs/SRS-Meyer/InterviewTranscript.text",
     "docs/SRS-Meyer/KevinSRSReflection.text",
     "docs/SRS-Meyer/SRS.mtc",
     "docs/SRS-Meyer/SRS.mtc0",
     "docs/SRS-Meyer/SRS.mtc1",
     "docs/SRS-Meyer/SRS.tex",
+    "docs/SRS-Meyer/figures/activity-highlevel.png",
     "docs/SRS-Meyer/figures/component-diagram.png",
     "docs/SRS-Meyer/figures/sequence-normal.png",
     "docs/SRS-Meyer/figures/sequence-stop.png",
-    "docs/SRS-Meyer/figures/state-diagram.png"
+    "docs/SRS-Meyer/figures/state-diagram.png",
+    "refs/CapstoneSources.bib"
   ],
   "docs/UserGuide/UserGuide.tex": [
     "docs/Comments.text",
