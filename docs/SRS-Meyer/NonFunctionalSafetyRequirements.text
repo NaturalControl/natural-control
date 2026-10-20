@@ -1,5 +1,0 @@
-\begin{itemize}
-  \item \textbf{NFR.Sa.1:} A work-stop request shall be audibly acknowledged within STOP\_ACK\_TIME. Measure from the end of the utterance or the key press. Measure dispatch blocking and in-flight reconciliation separately. (H2-b)
-  \item \textbf{NFR.Sa.2:} The client shall signal disconnection within CONNECTION\_NOTICE\_TIME. A local sound shall be used if network speech is unavailable. (H3-b)
-  \item \textbf{NFR.Sa.3:} The system shall report meaningful progress and blockers. It shall answer status requests. Routine updates shall follow the conversation rather than a fixed interval. (H4-c)
-\end{itemize}
