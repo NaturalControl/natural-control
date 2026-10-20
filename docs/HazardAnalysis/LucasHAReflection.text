@@ -1,0 +1,31 @@
+\subsection*{Lucas DeBoer}
+
+\begin{enumerate}\nopagebreak[4]
+
+\item \textbf{What went well while writing this deliverable?}\nopagebreak[4]
+
+I found that we divided the work much better for this deliverable than the previous deliverable. We discussed as a team what we wanted each section to look like, and then divided up the roles for who was going to read over it flush it out. I was responsible for the Hazard Analysis. I felt that we had a much better plan of how to complete it and a better understanding as a team about what was in each document.
+
+
+
+\item \textbf{What pain points did you experience and how did you resolve them?}\nopagebreak[4]
+
+I think the biggest pain point was that we were a little strapped for time. Although we worked well together, we started a little later than we should've. The only way to resolve this was to keep on pushing forward. Defintely for our next deliverable we will need to start earlier. Although we had a good plan of who was doing what, some sections requried the work of other team members who hadn't done the work yet. Since we were low on time, we couldn't wait for them to finish, so we had to make some assumptions about there work. In the end, this lead to more work needing to be redone than necessary. We tried to resolved this as best as possible by communicating with each other as we were working about what the main ideas in our work were.
+
+
+
+
+\item \textbf{Which risks had you already thought of? Which came up during the analysis?}\nopagebreak[4]
+
+We had though of the very basic and obvious risks: voice commands not being understood, losing control of the system, and inadequate feedback. 
+
+Some of the risks that came up during the analysis were those related to privacy; we knew they would be necessary in the system, but we didn't initially think about them. The majority of the new ideas were about how the parts worked together though. We knew the main functionality of every component and the hazards associated with them, but we really had to flush out what the risks were between the system components (i.e. in the handoffs) which we hadn't thought of at the start.
+
+
+\item \textbf{What are at least two risks other than physical harm? Why do they matter?}\nopagebreak[4]
+
+One risk other than physical harm is wasted time. If our tool is horribly inefficient and the user would be losing time using out tool as opposed to doing it another way, then there is no point in the user using our tool. Also, as the old saying goes: ``Time is money'', so we don't want to waste any more time than necessary.
+
+Another risk is if our project is not sensitive to our users. As we are dealing with visually impaired users, if we made a product that is not built with them in mind (i.e. it they would rate it as inefficient or having a low usability score), not only would our product not be successful, but we might also cause them unnecessary psychological strain. 
+
+\end{enumerate}

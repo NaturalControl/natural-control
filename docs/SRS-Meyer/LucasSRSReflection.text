@@ -1,0 +1,36 @@
+\subsection*{Lucas DeBoer}
+
+\begin{enumerate}
+
+\item \textbf{What went well while writing this deliverable?}
+
+Like the Hazard Analysis, I found that we divided the work much better for this deliverable than the previous deliverable. We created a rough draft of the document as a team and then decided who was responsible for adding more detail to each section. As I did the Hazard analysis, I was only responsible for helping proofread the SRS document. I felt that this was a very manageable workload.
+
+
+\item \textbf{What pain points did you experience, and how did you resolve them?}
+
+Similar to the Hazard Analysis, I felt that our biggest issue was lack of time. Once again, this was a self imposed pain point that could easily be resovled for the next deliverable. As I was responsible for the Hazard Analysis, many of the sections in the SRS counted on the safety requirements that I came up with. However, the rest of the team needed to start their sections before I could finish my section, so I need to go through and update their work once I was finished. I tried to resolve this issue as best as possible by communicating what changes I was making from the rough draft we had agreed on directly to my colleagues. 
+
+
+\item \textbf{How many requirements were inspired by speaking to clients or their proxies?}
+
+I would estimate that about 25% of our requirements were inspired by speaking to clients, their proxies, or from previous experiences with simalar people. Aaron's interview directly impacted some of the requirements, so we hope to do more of that in the future. The vast majority of our requirements came from team discussions about what we thought would be applicable requirements. During those discussions, I was thinking about conservations I have had with blind friends in the past about their experiences using different technologies and what they though was done well and what needed improvement.
+
+
+
+\item \textbf{Which courses will help your team succeed?}
+
+Software Requirements, Human-Computer Interfaces, and Software Testing are three courses that I think will be especially useful. Software Requirements helped us develop and organize the SRS. Human-Computer Interfaces will help us design an accessible voice interface for blind users, while Software Testing will help us verify that the system meets its requirements, particularly for safety features such as approvals, interruptions, and error handling.
+
+Like my teammates have mentioned. I think that Software Requirements, Human-Computer Interfaces, and Software Testing are the three most useful courses. These are directly applicable to the work that we are doing. However, I also think that our discrete math courses will be useful in future stages of the project. When we get to actually developing the project, I think the logical mindset might come in handy for figuring out some problems.
+
+
+\item \textbf{What knowledge and skills will the team need to acquire?}
+
+We will need to improve our knowledge of AI agents, security, voice interfaces, and accessibility. We have a general understanding of many of these fields, but we will need to become much more technically versed in these areas. I will be specializing in the voice interfaces and VoiceOver compatibility, so that is the areas I will focus most on.
+
+\item \textbf{How will each team member acquire these skills?}
+
+I believe that reading documentation or watching tutorials of the tools we plan to use will be very valuable. As others, have mentioned hands-on prototyping will be extremely useful. Lastly, I plan on looking at existing tools that have a similar purpose to see how they work. As we have all written this section, I don't think I need to write out the best way for the others to learn.
+
+\end{enumerate}
