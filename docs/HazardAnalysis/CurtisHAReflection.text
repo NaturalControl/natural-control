@@ -1,0 +1,21 @@
+\subsection*{Curtis Vos}
+
+\begin{enumerate}
+
+\item \textbf{What went well while writing this deliverable?}
+
+The drafting process of the hazard analysis felt very productive, as all members were present in a long Discord call were we collaborated. After that drafting session, we split up the main review/finalization work between the HA/SRS documents, cross-reviewing each other's progress as we went on. The coordination and frequent updates that we maintained help make sure the work was completed as expected.
+
+\item \textbf{What pain points did you experience, and how did you resolve them?}
+
+Maintaining consistency between this document and the SRS came to be a bit of a pain point for our group. If changes were made in the SRS, they had to be reflected in the hazard analysis, and vice versa, which caused a few problems when it came to splitting up the work among the group members. We had one such occasion where some wording of requirements got mixed up between the two, so I helped with an extra PR near the end to sync these documents up.
+
+\item \textbf{Which risks were identified before and during the Hazard Analysis?}
+
+Some of the main risks that we thought of before beginning the deliverable were the system misunderstanding voice commands from the user and incorrectly claiming the results of outcomes without verifications. Working through the document presented a much larger number of risks that we didn't initially even have in mind, like the system stalling and looping, stale approvals being reused in new tasks, and following instructions that are mistakenly injected by webpages instead of the user's voice. These are more niche risks that only arise with deeper thought and exposure to our planning steps, proving the necessity of a dedicated hazard analysis.
+
+\item \textbf{What are two important types of software risk besides physical harm?}
+
+A major risk with a lot of software is privacy, as unsafe systems can expose users' private info, like banking details. Safely handling this to not be leaked or ever mishandled is vital so the user does not suffer personal hardships or financial losses, especially with systems now that deal with less-restricted AI models. Another risk with software products is performance. A slow-performing product may cause delays in completing important work for users at their jobs, may cause unnecessary stress, or may simply be inconvenient to use and cause the developers monetary losses from a poorly-performing product.
+
+\end{enumerate}
