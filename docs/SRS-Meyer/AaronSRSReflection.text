@@ -1,0 +1,35 @@
+\subsection*{Aaron Loh}
+
+\begin{enumerate}\nopagebreak[4]
+
+\item \textbf{What went well while writing this deliverable?}\nopagebreak[4]
+
+Working through the requirements really helped me and the team clarify what we are actually building. It really forced us to think through the actual use cases of how it might be used and the flows that users would go through. We were also able to work really well as a team on dividing different things, going through the important parts of our requirements together, and coming up with a shared vision for everything before we went our separate ways.
+
+\item \textbf{What pain points did you experience and how did you resolve them?}\nopagebreak[4]
+
+One of the hardest things was defining our scope and really keeping it consistent across both the Hazard Analysis and the SRS. For example we really wanted to be ambitious with what we're doing but we also needed to keep it scoped so we definitely had some discussions there.
+
+Another part that was a little bit difficult was defining what stopping work means. We had to really think through what should happen in different situations to make that clear in our requirements.
+
+\item \textbf{How many requirements were inspired by speaking to clients or their proxies?}\nopagebreak[4]
+
+I had the chance to interview a former CNIB Deafblind Community Services staff member. Their perspective on their experience and their answers to the various questions that I had were very helpful in understanding our users better, or at least a certain subset of our users. Soon we'll be planning to go through some of these things with actual blind users.
+
+\item \textbf{Which courses will help your team succeed?}\nopagebreak[4]
+
+Software Engineering 3RA3 will definitely be a big one. Human-Computer Interfaces, which I'm taking this semester, will be really helpful as well in thinking about how people are going to be interacting and interfacing with this. It is very different from any traditional interface so we will certainly be thinking from first principles.
+
+Software Design will also be an important one. The things we learned in 3A04 will help because there's certainly going to be good design that needs to happen here to make sure our system works well and is easy to build on top of.
+
+\item \textbf{What knowledge and skills will you need to acquire?}\nopagebreak[4]
+
+I think one of the biggest learnings and pieces of knowledge that I'll need to gain is in the agent ecosystem: specifically understanding the latest and greatest of how people are building these things but also how they're combining them together and designing these systems well.
+
+Understanding how our software can interact with the external world in a way that's flexible and truly agentic is definitely going to be an interesting topic to understand better. Designing that in a way that's secure and safe is also going to be something we're going to have to learn a lot about.
+
+\item \textbf{How will you acquire this knowledge and these skills?}\nopagebreak[4]
+
+I would say it's going to be a lot of prototyping as well as reading through documentation, explaining what I've learned, and seeing how it applies to our own problem. Then by prototyping and really diagramming the systems I'll be able to understand them.
+
+\end{enumerate}
