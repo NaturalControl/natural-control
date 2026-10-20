@@ -73,6 +73,7 @@
     "docs/HazardAnalysis/CurtisHAReflection.text",
     "docs/HazardAnalysis/HazardAnalysis.tex",
     "docs/HazardAnalysis/KevinHAReflection.text",
+    "docs/HazardAnalysis/LucasHAReflection.text",
     "docs/Reflection.text"
   ],
   "docs/ProblemStatementAndGoals/ProblemStatement.tex": [
@@ -91,6 +92,7 @@
     "docs/SRS-Meyer/CurtisSRSReflection.text",
     "docs/SRS-Meyer/InterviewTranscript.text",
     "docs/SRS-Meyer/KevinSRSReflection.text",
+    "docs/SRS-Meyer/LucasSRSReflection.text",
     "docs/SRS-Meyer/SRS.mtc",
     "docs/SRS-Meyer/SRS.mtc0",
     "docs/SRS-Meyer/SRS.mtc1",
