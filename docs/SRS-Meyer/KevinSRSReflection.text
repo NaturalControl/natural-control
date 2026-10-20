@@ -1,0 +1,29 @@
+\subsection*{Kevin Kim}
+
+\begin{enumerate}
+
+\item \textbf{What went well while writing this deliverable?}
+
+One thing that went well was how our team divided responsibilities. Aaron and I focused on the System section, while other members worked on areas such as the goals and Hazard Analysis. This made the workload more manageable. Using AI tools to review our work also helped identify inconsistencies and missing requirements. I focused on making the requirements realistic and feasible, which helped improve the overall consistency of the SRS.
+
+\item \textbf{What pain points did you experience, and how did you resolve them?}
+
+The main challenge was resolving inconsistencies between the SRS and Hazard Analysis. Some requirements described different system behaviors, so I compared both documents and helped determine which approaches were more feasible and appropriate. Another challenge was ensuring the requirements were specific enough to implement and test. Reviewing requirement traceability and refining overly broad requirements helped us address these issues.
+
+\item \textbf{How many requirements were inspired by speaking to clients or their proxies?}
+
+I did not personally participate in stakeholder interviews while writing the SRS. Most of the requirements I worked on came from team discussions, where we considered the needs of blind users, along with our project goals and technical constraints. I cannot confidently identify an exact number of requirements directly inspired by stakeholder interviews. Moving forward, gathering feedback from blind users will help us validate our assumptions and improve our requirements.
+
+\item \textbf{Which courses will help your team succeed?}
+
+Software Requirements, Human-Computer Interfaces, and Software Testing are three courses that I think will be especially useful. Software Requirements helped us develop and organize the SRS. Human-Computer Interfaces will help us design an accessible voice interface for blind users, while Software Testing will help us verify that the system meets its requirements, particularly for safety features such as approvals, interruptions, and error handling.
+
+\item \textbf{What knowledge and skills will the team need to acquire?}
+
+Our team will need to improve our knowledge of AI agents, backend development, security, voice interfaces, and accessibility. Based on our Development Plan, I will focus on deployment, reliability, and secure backend systems. Aaron will need to develop his knowledge of AI agent frameworks and tool integration. Curtis will focus on accessibility testing and evaluation, while Lucas will need experience with voice interfaces and VoiceOver compatibility. We will also need to share knowledge to integrate these components successfully.
+
+\item \textbf{How will each team member acquire these skills?}
+
+Two useful approaches are studying documentation and tutorials, and building practical prototypes. I prefer learning by doing, so I plan to experiment with backend services and error handling while using documentation and AI tools for guidance. Aaron can prototype AI agent integrations, Curtis can review accessibility guidelines and apply them through testing, and Lucas can build and test voice interactions with VoiceOver. Hands-on development will help us identify problems and learn from experience.
+
+\end{enumerate}

@@ -1,0 +1,21 @@
+\subsection*{Kevin Kim}
+
+\begin{enumerate}
+
+\item \textbf{What went well while writing this deliverable?}
+
+One thing that went well was using the Hazard Analysis as a foundation for the safety requirements in our SRS. Although I wasn't directly involved in writing the initial Hazard Analysis, I reviewed both documents to identify inconsistencies and ensure the requirements aligned. This helped us clarify important safety behaviors involving task interruptions, user approvals, and error handling.
+
+\item \textbf{What pain points did you experience, and how did you resolve them?}
+
+The main challenge was resolving inconsistencies between the Hazard Analysis and SRS while keeping our requirements realistic for the project. I compared conflicting requirements and helped determine which approaches were more feasible. We also had to prioritize the safety features needed for our Proof of Concept rather than attempting to implement everything immediately.
+
+\item \textbf{Which risks were identified before and during the Hazard Analysis?}
+
+Before the Hazard Analysis, our team had already considered risks such as misunderstood voice commands, missing user approvals, and insufficient spoken feedback. During the analysis, we examined more specific failure scenarios, such as duplicate actions after disconnection, incorrect completion reports, and tasks continuing after a stop request. These risks became clearer by examining how individual system components could fail and how those failures might affect users.
+
+\item \textbf{What are two important types of software risk besides physical harm?}
+
+Two important risks are privacy and security issues, and incorrect system actions. Natural Control may access sensitive emails, calendars, and account information, so protecting credentials and limiting permissions is important. The system could also perform an unintended action or incorrectly report that a task succeeded. Since users rely on spoken feedback, verifying outcomes and requiring approval for consequential actions are essential for maintaining user trust.
+
+\end{enumerate}

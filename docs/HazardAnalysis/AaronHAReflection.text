@@ -1,0 +1,29 @@
+\subsection*{Aaron Loh}
+
+\begin{enumerate}\nopagebreak[4]
+
+\item \textbf{What went well while writing this deliverable?}\nopagebreak[4]
+
+Working through the Hazard Analysis really helped me and the team in clarifying what we are actually building and being able to think about what could go wrong. I found it super helpful because it forced us to think through all of the actual use cases of how it might be used and go through the different situations users could end up in.
+
+\item \textbf{What pain points did you experience and how did you resolve them?}\nopagebreak[4]
+
+One of the hardest things we faced was in defining our scope and really making sure that we kept it consistent across both our Hazard Analysis and the SRS. We really wanted to be ambitious with what we were doing but we also really needed to keep it scoped. We had quite a few discussions there figuring that out.
+
+Another part that was a little bit difficult was when we were defining what exactly stopping work means. We had to really think through the different situations where something might already be happening and what the system should do at that point. Going through those situations together helped us make things clearer.
+
+\item \textbf{Which risks had you already thought of? Which came up during the analysis?}\nopagebreak[4]
+
+We had already thought about most of the general risks of an agent misunderstanding someone or doing something they didn't want it to do. Designing that in a way that's secure and safe was already something we knew we would have to learn a lot about.
+
+Working through the Hazard Analysis really forced us to think through some of the less obvious situations. For example we had to really think through what happens if the system says it stopped but then something is still happening in the background. Or what happens if an action worked but the system doesn't know that and tries it again? Thinking through the actual use cases helped us identify those risks.
+
+\item \textbf{What are at least two risks other than physical harm? Why do they matter?}\nopagebreak[4]
+
+One would definitely be privacy and security. Our software is going to interact with the external world and potentially have access to private information through connected accounts. Designing that in a way that's secure and safe is going to be really important.
+
+Another would be doing something the user didn't actually want like sending the wrong message or changing something without their approval. Because they're mostly interacting through voice we really need to think through how they understand what's happening and stay in control.
+
+There's also the risk of the system saying something worked when it didn't. That could leave someone thinking an important task was done when it wasn't so making sure the system reports things clearly is important.
+
+\end{enumerate}
