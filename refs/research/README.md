@@ -16,4 +16,5 @@ These broader options were explored before the user chose computer use for blind
 
 ## Current milestone evidence
 
+- [LiveKit turn-taking, October 17](livekit-turn-taking-2026-10-17.md): public documentation on speech activity, turn completion, interruptions, speech scheduling, and tool cancellation. Proposed implementation direction, not runtime validation.
 - [Agent foundations, September 23](agent-foundations-2026-09-23.md): verified documentation, user choices, proposals, and untested integration assumptions. This supersedes narrower browser-only scope in historical explorations.

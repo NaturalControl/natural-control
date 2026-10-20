@@ -1,0 +1,70 @@
+@startuml component-diagram
+skinparam dpi 200
+skinparam componentStyle rectangle
+left to right direction
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam defaultFontSize 12
+skinparam rectangle {
+  BackgroundColor<<built>> #E8F4EF
+  BorderColor<<built>> #1D7A5C
+  BackgroundColor<<reused>> #F2F2F0
+  BorderColor<<reused>> #6B6B66
+  BackgroundColor<<external>> #FFFFFF
+  BorderColor<<external>> #999999
+}
+
+actor "User" as user
+
+rectangle "Natural Control" {
+  rectangle "Accessible client" <<built>> as client
+  rectangle "Voice interface\n(LiveKit + our voice agent)" <<built>> as voice
+  rectangle "Task manager" <<built>> as tm
+  rectangle "Task history layer" <<built>> as hist
+  rectangle "AI agent\n(Hermes)" <<reused>> as agent
+  rectangle "Action gate" <<built>> as gate
+  rectangle "Outcome verification" <<built>> as verify
+  rectangle "Action tools and integrations" {
+    rectangle "Browser Use" <<reused>> as browser
+    rectangle "Account tools\n(Composio SDK)" <<reused>> as accounts
+  }
+}
+
+rectangle "VoiceOver" <<external>> as vo
+rectangle "Speech providers" <<external>> as speech
+rectangle "AI model provider" <<external>> as model
+rectangle "Websites" <<external>> as web
+rectangle "Composio cloud\n(stores OAuth tokens)" <<external>> as composio
+rectangle "Gmail and\nGoogle Calendar" <<external>> as google
+
+user --> client : speech, keys
+user ..> vo
+client <--> voice : audio
+voice ..> speech
+voice <--> tm : requests, pause, answers /\nupdates, questions
+tm <--> hist : task state,\napprovals, outcomes
+tm <--> agent : tasks, steering, interrupts /\nprogress events
+agent ..> model
+agent --> gate : every tool call
+gate --> tm : approval requests
+gate --> browser : allowed calls
+gate --> accounts : allowed calls
+gate --> verify : action results
+verify --> browser : check when needed
+verify --> accounts : check when needed
+browser --> web
+accounts --> composio
+composio --> google
+
+note bottom of agent
+  The agent never calls tools,
+  Composio, or Google directly.
+  Every call passes through the gate.
+end note
+
+legend right
+  green = planned team work
+  grey = reused component
+  white = external service
+endlegend
+@enduml

@@ -83,10 +83,18 @@
     "docs/ReflectAndTrace/ReflectAndTrace.tex"
   ],
   "docs/SRS-Meyer/SRS.tex": [
+    "docs/Reflection.text",
+    "docs/SRS-Meyer/FunctionalSafetyRequirements.text",
+    "docs/SRS-Meyer/NonFunctionalSafetyRequirements.text",
     "docs/SRS-Meyer/SRS.mtc",
     "docs/SRS-Meyer/SRS.mtc0",
     "docs/SRS-Meyer/SRS.mtc1",
-    "docs/SRS-Meyer/SRS.tex"
+    "docs/SRS-Meyer/SRS.tex",
+    "docs/SRS-Meyer/figures/component-diagram.png",
+    "docs/SRS-Meyer/figures/sequence-normal.png",
+    "docs/SRS-Meyer/figures/sequence-stop.png",
+    "docs/SRS-Meyer/figures/state-diagram.png",
+    "docs/SRS_Reflection.text"
   ],
   "docs/UserGuide/UserGuide.tex": [
     "docs/Comments.text",
@@ -106,6 +114,9 @@
     "docs/Reflection.text",
     "docs/VnVReport/VnVReport.tex",
     "refs/References.bib"
+  ],
+  "docs/adr/0001-action-gate-wraps-tools.md": [
+    "docs/adr/0001-action-gate-wraps-tools.md"
   ],
   "docs/projMngmnt/Final_Productivity_Rep.tex": [
     "docs/Comments.text",
