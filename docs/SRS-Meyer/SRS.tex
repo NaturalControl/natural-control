@@ -387,7 +387,7 @@ FR18 & Spoken updates and summaries shall include only information relevant to t
 \bottomrule
 \endfoot
 FR4 & The system shall ask when required details are missing or ambiguous. It shall recheck relevant information before continuing. & Guessing risks acting on the wrong item. & G3; FR.Sa.9\\\addlinespace[4pt]
-FR5 & The system shall report meaningful progress and blockers. It shall answer requests for current status. Routine updates shall follow the task and conversation rather than a fixed interval. Pending questions and approvals shall not expire while the user remains connected. & Users need awareness without constant narration. Silence is not approval. & G2; NFR.Sa.3\\\addlinespace[4pt]
+FR5 & The system shall report meaningful progress and blockers. It shall answer requests for current status. Routine updates shall follow the task and conversation without exceeding the maximum silence interval in NFR.Sa.3. Pending questions and approvals shall not expire while the user remains connected. & Users need awareness without constant narration. Silence is not approval. & G2; NFR.Sa.3\\\addlinespace[4pt]
 FR6 & The system shall accept corrections during a task without requiring a restart. & Restarting a long task by voice is costly. & G4\\\addlinespace[4pt]
 FR7 & Disconnection shall pause the task as in FR8. On reconnection the system shall report its state and reconcile uncertain outcomes. It shall wait for a clear request to resume work. & Reconnecting the voice session does not authorize more actions. & G2, G4; FR.Sa.7\\\addlinespace[4pt]
 FR8 & A stop request shall block new task actions and preserve task context. The system shall stop or suspend ongoing work where safe and supported. An operation already submitted may settle if it cannot be stopped safely. The system shall distinguish acknowledgment from confirmed pause. It shall report completed work and unfinished work. It shall also report any outcome still unknown. Checks during a pause shall only reconcile earlier actions. Work shall resume only on a clear user request. & Pausing does not undo a submitted action. The user needs an accurate account of what remains. & G2, G4; FR.Sa.5.i, FR.Sa.5.ii, FR.Sa.5.iii\\\addlinespace[4pt]
@@ -500,7 +500,7 @@ FR22 & The client shall provide controls to start and end a voice session. A key
 \subsection*{S.2.7 Safety requirements}
 \addcontentsline{toc}{subsection}{S.2.7 Safety requirements}
 
-The following requirements are SRS revisions based on the Hazard Analysis. Hazard IDs refer to its FMEA rows. The Hazard Analysis remains unchanged. Differences need review by its owner before the documents are submitted.
+The following safety requirements are based on the Hazard Analysis. Hazard IDs refer to its FMEA rows.
 
 \paragraph{Functional safety requirements}
 \begin{itemize}
@@ -517,7 +517,7 @@ The following requirements are SRS revisions based on the Hazard Analysis. Hazar
   \item \textbf{FR.Sa.9:} The system shall ask a clarifying question when details required for an action are missing or ambiguous. (H4-a) 
   \item \textbf{FR.Sa.10:} The system shall report a task as verified, failed, or partial only after verifying its outcome with evidence that matches the intended action and its details, such as a connector result, an account record, or a website confirmation. If the evidence is unclear, the system shall check again or report the outcome as unknown. (H4-b, H6-a, H6-b, H7-a)
   \item \textbf{FR.Sa.11:} A configured step or time limit shall pause the task and prompt the user. Time spent waiting for user clarification or approval shall not count toward the execution time limit. (H4-c)
-  \item \textbf{FR.Sa.12:} An external service failure shall pause work. The system shall then report completed work, unfinished work, and any uncertain outcomes. (H4-d)
+  \item \textbf{FR.Sa.12:} The system may retry a temporarily failed read-only lookup once. If that retry fails, or any other external service operation fails, the system shall pause work and report completed work, unfinished work, and any uncertain outcomes. The system shall never automatically retry consequential actions. (H4-d)
   \item \textbf{FR.Sa.13:} Unclear actions and consequential actions such as submissions, external messages, saved data changes, or granting permission require explicit approval before being executed; only actions with no such lasting effect do not require approval. One exception to this rule: rejecting non-essential cookies or only allowing necessary cookies on webpages does not require explicit approval. (H5-a)
   \item \textbf{FR.Sa.14:} The system shall bind each approval to the action's exact details, use it at most once, and require new approval if any detail changes. A pause, disconnection, cancellation, or task replacement shall withdraw unused approvals. (H5-b, H7-a)
   \item \textbf{FR.Sa.15:} When a pending approval expires or is withdrawn, the system shall tell the user that the action was not executed and shall state which earlier actions were completed. (H5-c)
