@@ -167,12 +167,11 @@ Technical terms:
     \item \href{https://docs.livekit.io/intro/overview/}{LiveKit}: an open-source platform for building real-time audio and video applications. \citep{LiveKitOverview}
     \item \href{https://hermes-agent.nousresearch.com/docs/developer-guide/programmatic-integration}{Hermes}: an AI agent framework that plans multi-step tasks and calls external tools. \citep{HermesIntegration}
     \item \href{https://github.com/browser-use/browser-use}{Browser Use}: an open-source library that lets an AI agent control a web browser to complete tasks. \citep{BrowserUseSource}
-    \item \href{https://modelcontextprotocol.io/}{MCP} (Model Context Protocol): an open standard for connecting AI applications to external tools and data sources. \citep{MCPSpec}
     \item \href{https://oauth.net/2/}{OAuth}: an open standard for delegated authorization, letting a user grant an application limited access to their account without sharing a password. \citep{OAuth2}
     \item \href{https://support.apple.com/guide/voiceover/welcome/mac}{VoiceOver}: Apple's built-in screen reader for macOS and iOS. \citep{VoiceOverGuide}
     \item \href{https://www.ibm.com/think/topics/speech-to-text}{STT} (speech-to-text): technology that converts spoken audio into written text. \citep{IBMSTT}
     \item \href{https://www.ibm.com/think/topics/text-to-speech}{TTS} (text-to-speech): technology that converts written text into spoken audio. \citep{IBMTTS}
-    \item \href{https://www.ibm.com/think/topics/large-language-models}{LLM} (large language model): a machine learning model trained on large amounts of text to understand and generate natural language. \citep{IBMLLM}
+    \item \href{https://www.ibm.com/think/topics/large-language-models}{LLM} (large language model): a machine learning model trained on large amounts of text to understand and generate natural language. Also is often refered to as simply an AI model.\citep{IBMLLM}
     \item \href{https://en.wikipedia.org/wiki/Proof_of_concept}{POC} (proof of concept): a small-scale demonstration built to test whether an idea is feasible before full development. \citep{POCWiki}
     \item \href{https://composio.dev/}{Composio}: a hosted platform that connects AI agents to third-party applications through managed authentication and tool APIs. \citep{ComposioSite}
     \item \href{https://www.cnib.ca/en/about-us}{CNIB} (Canadian National Institute for the Blind): a Canadian non-profit organization providing programs and support for people who are blind, deafblind, or have low vision. \citep{CNIBAbout}
@@ -259,14 +258,15 @@ Figure~\ref{fig:activityhighlevel} shows the common high-level flow behind Scena
 
 \nsection{G.8 User profiles}
 
+The following is an expansion of the stakeholder groups who will actually use and benefit from our system. They are designed to demonstrate specific examples of
+who may be interacting with our system, and are intended to be refined after proper recruitment of participants has been completed.
+
 \begin{itemize}
     \item Experienced screen-reader user: fluent with VoiceOver or JAWS and keyboard navigation; wants speed on multi-step tasks and keeps their screen reader for everything else. Primary evaluation group.
     \item Less experienced or recently blind user: often older, with acquired vision loss, limited screen-reader skill, and possibly an older device; benefits most from delegation and clear spoken confirmation.
     \item Sighted user wanting nonvisual interaction: can see the screen but prefers or needs voice (busy hands, away from the screen); can verify visually, so has lower risk.
     \item Setup helper: comfortable with computers; connects accounts and grants permissions once, then is not needed for daily use.
 \end{itemize}
-
-\comment{Validate these profiles with blind participants; drop or adjust any that do not hold up.}
 
 \nsection{G.9 Goals}
 
@@ -642,8 +642,6 @@ TARGET\_COMPLETION & Share of tasks completed correctly without sighted help & T
     \item \textbf{User interface:} a web client in Chrome. It provides session controls and task status. The user can pause, resume, or cancel work. Approval details and history are accessible through VoiceOver and the keyboard. Spoken questions can be repeated on request. The system shall explain the keyboard shortcut for stopping work during setup and repeat the shortcut on request. The shortcut shall not conflict with VoiceOver controls.
     \item \textbf{Program interfaces:} LiveKit carries audio and speech events. The Hermes integration carries task requests, corrections, and progress. The task manager controls execution separately from speech. Browser Use and Composio supply action tools. Each tool call passes through the gate.
 \end{itemize}
-
-\comment{The voice/client owner must confirm screen layouts and keyboard shortcuts. Private typed code input remains a proposed extension.}
 
 \Needspace{8\baselineskip}
 \nsection{S.4 Normal operation}
@@ -1193,7 +1191,7 @@ Kevin Kim: OpenAI Codex assisted with the October 17 layout and consistency revi
 Curtis Vos: Claude Code (Claude Sonnet 5) was used alongside a manual review, helping with wording choices 
 and cross-checking/verifying claims alongside other sections of the documents. All responses and suggestions were fully read through and followed up
 with concerns or clarifications before implementing any feedback. At the end of the review session, Claude Opus 5 was used for a more in-depth scan to 
-verify correctness and appropriateness of section contents.
+verify correctness and appropriateness of section contents. If any inconsistencies (typically wording or description differences) were found, they were manually verified, compared, and corrected.
 
 \chapter*{Appendix: Reflection}
 \addcontentsline{toc}{chapter}{Appendix: Reflection}
