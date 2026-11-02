@@ -239,46 +239,103 @@ the contents of the subsections.}
 \wss{Include a blurb here to explain why the subsections below
   cover the requirements.  References to the SRS would be good here.}
 
-\subsubsection{Area of Testing1}
+\subsubsection{Outcome Verification (S.2.4)}
 
 \wss{It would be nice to have a blurb here to explain why the subsections below
   cover the requirements.  References to the SRS would be good here.  If a section
   covers tests for input constraints, you should reference the data constraints
   table in the SRS.}
-		
-\paragraph{Title for Test}
 
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{\textbf{T.FR.OV.1} Evidence suffiency and secondary lookups\\}
 
-Control: Manual versus Automatic
+\textbf{Control:} Automatic
 					
-Initial State: 
+\textbf{Initial State:} A task is in the \textit{Executing} state with a recorded approval for creating a calendar event with exact details 
+(title, date, start time, location). The stub connector is configured twice: (a) it returns a success response
+whose body carries the created event's title, date, start time, location; (b) it returns an empty acceptance with no event details.
+The account and associated details are seeded and reachable.
 					
-Input: 
+\textbf{Input:} The approved action is released for execution in both runs.
 					
-Output: \wss{The expected result for the given inputs.  Output is not how you
-are going to return the results of the test.  The output is the expected
-result.}
+\textbf{Output:} (a) \texttt{verified}, evidence source points to the connector's response, and exactly one connector call is recorded.
+(b) \texttt{verified}, evidence source points to the account record, with the initial write followed by a lookup being recorded.
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+\textbf{Test Case Derivation:} Addresses FR12. FR12 allows a second lookup to verify results but states it ``is not always needed.'' Input and the account
+state are identical across both runs, so the connector's response sufficiency is the only variable deciding the two branches.
 
-Control: Manual versus Automatic
+\textbf{How test will be performed:} Confirm the seeded account has no previously matching event. Configure the stub per run. Release the approved action.
+Capture the recorded label, evidence source, and dispatch logs. Passes if both runs record \texttt{verified}, with each run citing the correct evidence sources.
 					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
 
-How test will be performed: 
+\item{\textbf{T.FR.OV.2} Verifying the outcome from a website confirmation\\}
+
+\textbf{Control:} Automatic
+					
+\textbf{Initial State:} A task has reached the \textit{Executing} state with a recorded approval to submit a form on a local test site,
+with the approved field values recorded. The site holds no prior submission matching those values. The site is configured to accept 
+the submission, store it, and render a confirmation page showing the submitted values and a reference number.
+					
+\textbf{Input:} The approved submission form is released for execution.
+					
+\textbf{Output:} \texttt{verified}, with the website's confirmation recorded as the evidence source and the reference number is recorded in history.
+The values extracted from the confirmation page match the approved field values.
+
+\textbf{Test Case Derivation:} Addresses FR12 as well as S.8's evidence source requirements. The outcome is read off the rendered page as evidence 
+rather than directly returned by an API, requiring its own matching logic as a separate testing path. The reference number is the page's only identifier for 
+the stored record, so recording it allows for later accessing/checking.
+
+\textbf{How test will be performed:} Serve the test site locally with a fixed confirmation template. Confirm it holds no matching submission. Release the approved submission.
+Capture the recorded label, evidence source, reference number, and the values read from the confirmation page. Passes if the label is \texttt{verified} and every approved input field
+appears in the captured confirmation.
+
+
+
+\item{\textbf{T.FR.OV.3} Detail mismatch is never reported as verified\\}
+
+\textbf{Control:} Automatic
+
+\textbf{Initial State:} A task has reached the \texttt{Executing} state with a recorded approval for a consequential action and its exact details.
+The seeded account holds no record matching those details. For three runs, the stub connector is configured per run to return a success while writing a record
+that diverges from what was approved: (a) an email with the approved subject but a different recipient; (b) a calendar event with the approved title and date but a different
+start time and no location; (c) two emails written as approved and a third with a truncated body.
+
+\textbf{Input:} The approved action is released for execution.
+
+\textbf{Output:} (a) \texttt{failed}, naming the recipient discrepancy. (b) \texttt{partial}, naming start time and location. (c) two items \texttt{verified}, one \texttt{partial} 
+naming the body, and an aggregate of \texttt{partial} for the batch, naming the affected item. No mismatched item records \texttt{verified}, and no action ID is dispatched twice.
+
+\textbf{Test Case Derivation:} Addresses FR12. Evidence is required to match the intended action \emph{and} its details, so a success response paired with a stored record is not
+sufficient on its own. (a) fails since the intended recipient receives nothing. Reporting any mismatch as \texttt{verified} would realise the risk of H4-b.
+
+\textbf{How test will be performed:} Configure the stub per run to write the divergent record and return success. Confirm the seeded account holds no matching record. Release the approved action. Capture the recorded label per item, 
+the fields cited in the discrepancy report, and the dispatch log. Passes if each run yields the expected label, names every mismatched field, and dispatches each action ID at most once.
+
+
+
+\item{\textbf{T.FR.OV.4} Unsubstantiated outcomes yield unknown result\\}
+
+\textbf{Control:} Automatic
+
+\textbf{Initial State:} A task has reached the \texttt{Executing} state with a recorded approval for a consequential action and its exact details.
+The seeded account holds no record matching those details. For three runs, the stub connector is configured per run to: 
+(a) accept a send, write nothing, and return \texttt{queued}; (b) write the approved record and return success, then fail all subsequent reads;
+(c) write the approved record and return a success, but make it readable only after \texttt{VERIFY\_RECHECK\_DELAY}.
+
+\textbf{Input:} The approved action is released for execution.
+
+\textbf{Output:} (a) \texttt{unknown}, with the spoken report and history stating that delivery is unconfirmed and avoiding ``sent'' or ``delivered.''
+(b) \texttt{unknown} with the reason recorded. (c) The lookup is retried up to \texttt{VERIFY\_RECHECK\_COUNT}, giving \texttt{verified} once the record appears and
+\texttt{unknown} on timeout. No run re-dispatches the write.
+
+\textbf{Test Case Derivation:} Addresses FR12. FR.Sa.10 requires the system to check again or report as unknown when evidence is unclear. S.8 lists the queued request case in (a).
+(c) gives \texttt{unknown} instead of \texttt{failed} on timeout due to insufficient evidence.
+
+\textbf{How test will be performed:} Configure the stub per run. Confirm the seeded account holds no matching record. Release the approved action. Capture the recorded label, the stated reason,
+the lookup count, and the dispatch log. Passes if (a) and (b) record \texttt{unknown}, if (c) \texttt{verified} after a re-check and \texttt{unknown} on timeout, and if no write is re-dispatched.
+
 
 \end{enumerate}
 
