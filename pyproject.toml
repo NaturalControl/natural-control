@@ -1,0 +1,69 @@
+[project]
+name = "natural-control"
+version = "0.1.0"
+description = "Voice supervision of a general-purpose agent for blind and visually impaired users (capstone MVP)."
+readme = "src/README.md"
+license = "MIT"
+# Hermes runs as a separate process (uv tool install, see src/README.md); it supports < 3.14.
+requires-python = ">=3.12,<3.14"
+dependencies = []
+
+[project.optional-dependencies]
+# Each external integration is an extra so CI can test our own logic without
+# installing (or needing keys for) the vendors. uv.lock pins all of them (SRS P.4).
+voice = ["livekit-agents==1.8.10"]
+# composio 0.30.0 itself requires the pre-release composio-client 2.0.0rc19;
+# naming it here lets uv accept that pre-release and nothing else.
+tools = ["composio==0.30.0", "composio-client==2.0.0rc19", "browser-use==0.13.14"]
+
+[dependency-groups]
+dev = ["pytest==9.2.0", "pytest-cov==7.1.0", "ruff==0.17.3", "mypy==2.4.1"]
+
+[project.scripts]
+natural-control-worker = "natural_control.voice.worker:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/natural_control"]
+
+[tool.pytest.ini_options]
+testpaths = ["test/agent"]
+addopts = "-q"
+
+[tool.coverage.run]
+source = ["natural_control"]
+omit = ["*/adapters/*", "*/voice/*"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "test"]
+extend-exclude = ["docs", "refs", ".github"]
+
+[tool.ruff.lint]
+# E/W/F: PEP 8 and pyflakes (NFR.E.3). I: imports. B: bugbear. UP: modern syntax.
+select = ["E", "W", "F", "I", "B", "UP", "SIM"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+files = ["src/natural_control", "test/agent"]
+
+[[tool.mypy.overrides]]
+module = ["livekit.*", "composio.*", "browser_use.*"]
+ignore_missing_imports = true
+
+# Vendor-facing modules: their decorators are only typed when the extras are installed,
+# so CI (dev group only) and a full local install would otherwise disagree.
+[[tool.mypy.overrides]]
+module = ["natural_control.voice.*", "natural_control.adapters.composio_tools"]
+disallow_untyped_decorators = false
+disallow_subclassing_any = false
+warn_unused_ignores = false
+
+[tool.uv]
+# browser-use 0.13.14 pins typing-extensions==4.15.0 exactly; composio 0.30.0 needs >=4.16.
+# typing-extensions only adds backports, so overriding the exact pin is low risk.
+override-dependencies = ["typing-extensions==4.16.0"]

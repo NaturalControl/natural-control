@@ -1,0 +1,56 @@
+name: CI
+
+# Lint, type-check and test the agent worker (Python) and web client (TypeScript).
+# No API keys: integrations are faked (V&V Plan, CI level). Secrets never enter CI logs.
+on:
+  push:
+    branches: main
+    paths: [src/**, test/**, pyproject.toml, uv.lock, .python-version, .github/workflows/ci.yml]
+  pull_request:
+    branches: main
+    paths: [src/**, test/**, pyproject.toml, uv.lock, .python-version, .github/workflows/ci.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  agent:
+    name: Agent worker (Python)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      # Dev tools only; vendor extras (voice, tools) are not needed to test our logic.
+      - run: uv sync --locked --group dev
+      - name: Lint (Ruff, PEP 8 for NFR.E.3)
+        run: uv run --no-sync ruff check . && uv run --no-sync ruff format --check .
+      - name: Type check (mypy --strict)
+        run: uv run --no-sync mypy
+      - name: Tests
+        run: uv run --no-sync pytest --cov --cov-report=term-missing
+
+  web:
+    name: Web client (TypeScript)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/web
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: src/web/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build

@@ -1,3 +1,12 @@
+# MVP build start: November 2, 2026
+
+Aaron started the MVP build on branch `aaron/mvp-skeleton` with AI assistance. See the [MVP build plan](mvp-build-plan.md). Decisions and proposals:
+
+- **Model provider (Aaron's decision, team not yet consulted):** use OpenRouter instead of Anthropic for the model behind Hermes, for cost and open-weight models. Default DeepSeek V4.1 Flash; GLM 5.3 Flash as the comparison. A small tool-calling test on our own tasks decides between them. OpenRouter listings checked October 30 showed similar TAU-Bench (agent tool-use) scores for the two, with DeepSeek faster. SRS P.5 still names Claude Sonnet as a candidate and needs revising once the test is done.
+- **Google Cloud:** not needed while Composio managed auth covers Gmail and Calendar. An empty Google Cloud project created during provisioning can be deleted.
+- **Hermes packaging:** Hermes 0.19.0 pins `openai==2.24.0`, which conflicts with Browser Use, so Hermes runs as its own process (`uv tool install`) and the adapter talks to its gateway. This is an implementation finding, not yet a tested integration.
+- **Provisional keyboard stop:** bare Escape in the web client. Whether this satisfies FR.Sa.1 (including focus in other apps) is an open team decision.
+
 # Voice supervision revision: October 17, 2026
 
 Aaron clarified that explicit stop-working requests pause the task for later resumption; non-interruptible external operations may settle, and feedback must distinguish completed, unperformed, paused, and uncertain work. Ordinary speech interruption affects speech. Initial approvals cover writes and consequential decisions, with ordinary navigation autonomous. A reduced-prompt permission mode is a later idea. Spoken one-time authentication codes are permitted; private typed input is a proposed alternative, with privacy claims to verify. Routine speech timing should be natural rather than a fixed announcement schedule. Verification may use a meaningful connector response, matching account state, or website confirmation appropriate to the task. These decisions supersede conflicting older notes and require coordinated SRS/HA revisions; they are not whole-team ratification or implemented behavior. See [decisions and proposed wording](voice-supervision-2026-10-17.md).

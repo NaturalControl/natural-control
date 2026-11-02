@@ -287,3 +287,17 @@ __pycache__/
 
 # Personal course source copies; keep shared summaries in refs/knowledge.
 /refs/course/local/
+
+## Local secrets (provisioned keys); commit only .env.example
+.env
+.env.*
+!.env.example
+
+## Python tooling for the agent worker
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/

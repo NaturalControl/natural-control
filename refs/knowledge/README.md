@@ -1,6 +1,6 @@
 # Capstone knowledge base
 
-Last updated: October 18, 2026.
+Last updated: November 2, 2026.
 
 ## Start here
 
@@ -9,6 +9,7 @@ Last updated: October 18, 2026.
 3. [Course sources and local outline](../course/README.md)
 4. [Research index](../research/README.md)
 5. [AI assistance log](ai-assistance.md)
+6. [MVP build plan](mvp-build-plan.md)
 
 ## Working locations
 

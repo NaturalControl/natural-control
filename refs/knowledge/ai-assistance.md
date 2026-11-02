@@ -62,3 +62,9 @@ Aaron authorized addressing Kevin's comment on PR #25. Codex revised H3-a and FR
 ## October 18, 2026: PR 27 merge resolution
 
 Aaron authorized resolving PR #27 against main. Codex retained the SRS glossary definitions and combined the knowledge index and AI-assistance entries. The merged Hazard Analysis files were preserved from main. The SRS PDF was regenerated from its current source. The Development Plan PDF was also rebuilt because its source combines main's role-handoff updates with Kevin's SRS-branch revisions. No new product behavior was introduced by the conflict resolution.
+
+## November 2, 2026: MVP plan and component skeleton
+
+Tool: Claude Code (Anthropic Claude Opus 5.5). At Aaron's request it drafted the [MVP build plan](mvp-build-plan.md) and the component skeleton for SRS P.4 on branch `aaron/mvp-skeleton`: the Python agent worker package (task state machine, action gate, outcome verification, task history, session commands, adapter placeholders, LiveKit worker), its pytest suite, the Next.js client and token route with Vitest tests, the CI workflow, pinned dependency locks, and README/trace updates. It also compared models on OpenRouter for the provider decision and, at Aaron's request, reviewed model choices in a separate private codebase.
+
+Verification performed by the assistant: Ruff, mypy --strict, and pytest (119 tests) pass locally with and without the vendor extras installed; ESLint, tsc, Vitest (8 tests) and `next build` pass for the web client; the LiveKit worker imports and its CLI starts. Not verified: any live connection to LiveKit, Hermes, Composio or Browser Use (no keys were used), VoiceOver behaviour, or the CI workflow on GitHub before the first push. The code needs review by the workstream owners and cross-reviewers before merging.
