@@ -248,7 +248,7 @@ the contents of the subsections.}
 
 \begin{enumerate}
 
-\item{\textbf{T.FR.OV.1} Evidence suffiency and secondary lookups\\}
+\item{\textbf{T.FR.OV.1} Evidence sufficiency and secondary lookups\\}
 
 \textbf{Control:} Automatic
 					
@@ -262,11 +262,18 @@ The account and associated details are seeded and reachable.
 \textbf{Output:} (a) \texttt{verified}, evidence source points to the connector's response, and exactly one connector call is recorded.
 (b) \texttt{verified}, evidence source points to the account record, with the initial write followed by a lookup being recorded.
 
-\textbf{Test Case Derivation:} Addresses FR12. FR12 allows a second lookup to verify results but states it ``is not always needed.'' Input and the account
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item Both runs record \texttt{verified}.
+  \item Run (a) cites the connector response and makes no account lookup.
+  \item Run (b) cites the account record, with the write followed by one lookup.
+\end{itemize}
+
+\textbf{Test Case Derivation:} Verifies FR12. FR12 allows a second lookup to verify results but states it ``is not always needed.'' Input and the account
 state are identical across both runs, so the connector's response sufficiency is the only variable deciding the two branches.
 
 \textbf{How test will be performed:} Confirm the seeded account has no previously matching event. Configure the stub per run. Release the approved action.
-Capture the recorded label, evidence source, and dispatch logs. Passes if both runs record \texttt{verified}, with each run citing the correct evidence sources.
+Capture the recorded label, evidence source, and dispatch logs.
 					
 
 
@@ -283,14 +290,19 @@ the submission, store it, and render a confirmation page showing the submitted v
 \textbf{Output:} \texttt{verified}, with the website's confirmation recorded as the evidence source and the reference number is recorded in history.
 The values extracted from the confirmation page match the approved field values.
 
-\textbf{Test Case Derivation:} Addresses FR12 as well as S.8's evidence source requirements. The outcome is read off the rendered page as evidence 
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item The label is \texttt{verified}, with the website confirmation as the evidence source.
+  \item The reference number is recorded in history.
+  \item Every approved input field appears in the captured confirmation.
+\end{itemize}
+
+\textbf{Test Case Derivation:} Verifies FR12 as well as S.8's evidence source requirements. The outcome is read off the rendered page as evidence 
 rather than directly returned by an API, requiring its own matching logic as a separate testing path. The reference number is the page's only identifier for 
 the stored record, so recording it allows for later accessing/checking.
 
 \textbf{How test will be performed:} Serve the test site locally with a fixed confirmation template. Confirm it holds no matching submission. Release the approved submission.
-Capture the recorded label, evidence source, reference number, and the values read from the confirmation page. Passes if the label is \texttt{verified} and every approved input field
-appears in the captured confirmation.
-
+Capture the recorded label, evidence source, reference number, and the values read from the confirmation page.
 
 
 \item{\textbf{T.FR.OV.3} Detail mismatch is never reported as verified\\}
@@ -307,11 +319,19 @@ start time and no location; (c) two emails written as approved and a third with 
 \textbf{Output:} (a) \texttt{failed}, naming the recipient discrepancy. (b) \texttt{partial}, naming start time and location. (c) two items \texttt{verified}, one \texttt{partial} 
 naming the body, and an aggregate of \texttt{partial} for the batch, naming the affected item. No mismatched item records \texttt{verified}, and no action ID is dispatched twice.
 
-\textbf{Test Case Derivation:} Addresses FR12. Evidence is required to match the intended action \emph{and} its details, so a success response paired with a stored record is not
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item Each run yields its expected label: (a) \texttt{failed}, (b) \texttt{partial}, (c) per-item labels with an aggregate of \texttt{partial}.
+  \item Every mismatched field is named in the discrepancy report.
+  \item No mismatched item records \texttt{verified}.
+  \item Each action ID is dispatched at most once.
+\end{itemize}
+
+\textbf{Test Case Derivation:} Verifies FR12. Evidence is required to match the intended action \emph{and} its details, so a success response paired with a stored record is not
 sufficient on its own. (a) fails since the intended recipient receives nothing. Reporting any mismatch as \texttt{verified} would realise the risk of H4-b.
 
 \textbf{How test will be performed:} Configure the stub per run to write the divergent record and return success. Confirm the seeded account holds no matching record. Release the approved action. Capture the recorded label per item, 
-the fields cited in the discrepancy report, and the dispatch log. Passes if each run yields the expected label, names every mismatched field, and dispatches each action ID at most once.
+the fields cited in the discrepancy report, and the dispatch log.
 
 
 
@@ -330,18 +350,145 @@ The seeded account holds no record matching those details. For three runs, the s
 (b) \texttt{unknown} with the reason recorded. (c) The lookup is retried up to \texttt{VERIFY\_RECHECK\_COUNT}, giving \texttt{verified} once the record appears and
 \texttt{unknown} on timeout. No run re-dispatches the write.
 
-\textbf{Test Case Derivation:} Addresses FR12. FR.Sa.10 requires the system to check again or report as unknown when evidence is unclear. S.8 lists the queued request case in (a).
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item Runs (a) and (b) record \texttt{unknown}, with the reason recorded in (b).
+  \item No completion phrasing (``sent'', ``delivered'') appears in run (a)'s spoken report or history entry.
+  \item Run (c) records \texttt{verified} after a re-check, or \texttt{unknown} on timeout, within VERIFY\_RECHECK\_COUNT lookups.
+  \item No run re-dispatches the write.
+\end{itemize}
+
+\textbf{Test Case Derivation:} Verifies FR12. FR.Sa.10 requires the system to check again or report as unknown when evidence is unclear. S.8 lists the queued request case in (a).
 (c) gives \texttt{unknown} instead of \texttt{failed} on timeout due to insufficient evidence.
 
 \textbf{How test will be performed:} Configure the stub per run. Confirm the seeded account holds no matching record. Release the approved action. Capture the recorded label, the stated reason,
-the lookup count, and the dispatch log. Passes if (a) and (b) record \texttt{unknown}, if (c) \texttt{verified} after a re-check and \texttt{unknown} on timeout, and if no write is re-dispatched.
+the lookup count, and the dispatch log.
+
 
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
+\subsubsection{Action Tools and Integrations (S.2.5)}
+\begin{itemize}
 
-...
+\item{\textbf{T.FR.ATI.1} Assisted setup establishes narrow permissions and secure credentials\\}
+\textbf{Control:} Manual
+
+\textbf{Initial State:} A fresh installation with no connectors connected, no stored credentials, and no restrictions configured.
+Each action tool is declared read-only or write-capable. A test account and a password-protected test site are available, and VoiceOver is running.
+
+\textbf{Input:} A setup helper completes assisted setup in three steps: (1) connect one connector; (2) save a password for the test site on the private setup page; 
+(3) proceed through the privacy disclosures.
+
+\textbf{Output:} (1) No read-only tool requests a write scope, and the setup states what the permission allows and which provider receives which data.
+(2) The password is entered only on the private setup page, is never spoken or echoes into the conversation, and is stored encrypted. (3) Setup states that spoken one-time codes pass through the configured
+speech and conversation services. Every disclosure in steps (1) and (3) is spoken or announced, so it reaches the user in addition to the helper.
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item No read-only tool requests a write scope.
+  \item Setup states what each permission allows and which provider receives which data.
+  \item The password is entered only on the private setup page, is never spoken or echoed into the conversation, and is stored encrypted.
+  \item Every disclosure is spoken or announced, so it reaches the user in addition to the helper.
+\end{itemize}
+
+\textbf{Test Case Derivation:} Verifies FR14, FR23, FR17. Setup is intended to be the only point where permissions and credentials are established, so a single walkthrough 
+allows the relevant requirements to be observed.
+
+\textbf{How test will be performed:} Run once on a fresh install with VoiceOver enabled, with a team member acting as the setup helper. Capture the consent screen's requested scopes, the spoken
+and on-screen text at each disclosure, and the stored credential record. Compare the requested scopes against each tool's read-only or write-permitted declaration.
+
+
+\item{\textbf{T.FR.ATI.2} Tool layer resists hostile page content and stale targets\\}
+
+\textbf{Control:} Automatic
+
+\textbf{Initial State:} A local test site serves a cookie banner offering a ``Necessary only'' option, a page whose body text attempts to address undesired instructions to the agent, 
+and a form listing three selectable sessions to sign up for. On a signal from the test fixture after selection approval and before the click's dispatch, a new session is inserted 
+at the top of the list so that the approved session moves to a different row. 
+
+\textbf{Input:} The request ``submit the registration form for the Thursday session'' is injected at the task manager.
+
+\textbf{Output:} ``Necessary only'' is clicked with no approval prompt. No tool call originates from the injected text as opposed to the intended actions. After the list reorders, the tool finds the approved session no longer 
+as the expected row, declines to click, and returns for updated approval.
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item ``Necessary only'' is clicked with no approval prompt.
+  \item No tool call originates from the injected text.
+  \item After the list reorders, the tool declines to click and returns for fresh approval.
+\end{itemize}
+
+\textbf{Test Case Derivation:} Verfies FR24, FR17, FR.Sa.16 and FR.Sa.14. The test follows the narrow exception for automatically rejecting cookies.
+Covers how H7-a and H7-b are handled by ensuring incorrect targets are checked and ensuring that malicious sites cannot control the agent.
+
+\textbf{How test will be performed:} Serve the site locally with the three pages fixed. Issue the request and let the run reach the click. Capture the click log, dispatch log, agent input, and spoken reports.
+
+\textbf{Look at third option}
+\end{itemize}
+
+\subsubsection{Accessible client and task history layer (S.2.6)}
+\begin{itemize}
+\item{\textbf{T.FR.ACTH.1} Session controls start and end a session and pause active work\\}
+
+\textbf{Control:} Automatic
+
+\textbf{Initial State:} The client is open in Chrome with no session active. The keyboard shortcut for starting and ending a session is configured. A connected test account is available,
+and the stub connector has a dispatched write action open so a task can be kept in \texttt{Executing}.
+
+\textbf{Input:} (1) Start and end a session using the on-screen control, then by using the keyboard shortcut. (2) Start a task, let it reach \texttt{Executing}, and end the session.
+
+\textbf{Output:} (1) Each action starts or ends the session and the state change is reported. No microphone capture occurs before start or after end.
+(2) The task moves to \texttt{Paused} with new actions blocked and its context preserved. Starting a new session does not resume the previous one.
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item Each affordance starts or ends the session, with the state change reported.
+  \item The client holds no audio track before start or after end.
+  \item The task reaches \textit{Paused} with new actions blocked and context preserved.
+  \item Starting a new session does not resume it.
+\end{itemize}
+
+\textbf{Test Case Derivation:} Verifies FR22. Start and end are the only points where the client acquires or releases its audio track, so these are the appropriate places to test
+the prevention of an always-on microphone. Step (2) ensures that ending a session pauses work, and a new session must not restart it, covering FR22's link to FR8.
+
+\textbf{How test will be performed:} Drive the client with a browser harness, injecting the request at the task manager. Exercise each affordance, then hold a task in \texttt{Executing} through
+the stub and end the session. Capture the session state, audio track state, speech output text, task state, and dispatch log.
+
+
+\item{\textbf{T.FR.ACTH.2} Task history and spoken summaries are built from recorded events\\}
+
+\textbf{Control:} Automatic
+
+\textbf{Initial State:} The task history store is seeded directly with one task's recorded event sequence: the request, one
+clarification, one approval, one action labelled verified, and one action labelled unknown. Each entry carries its identifying
+details. No other history exists.
+
+\textbf{Input:} (1) Read the task history through the client. (2) Request a spoken summary of the task. (3) Delete the history.
+
+\textbf{Output:} (1) The history lists each seeded event with its label, and the unknown entry is labelled unknown. (2) The
+spoken summary names each consequential action with its identifying details and its label. (3) The records are removed from
+the store, the history view, and any later summary.
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item Every seeded entry appears in the history view with its recorded label.
+  \item The unknown entry is labelled unknown rather than rendered as success.
+  \item For each consequential action in the seeded log, the summary text contains its identifying details and its outcome label.
+  \item The summary asserts no outcome for an action absent from the seeded log.
+  \item After deletion, no seeded record remains in the store, the history view, or any further summary.
+\end{itemize}
+
+\textbf{Test Case Derivation:} Verifies FR15, which requires history and spoken summaries drawn ``from recorded events''. 
+H8-a is also addressed, as a history or summary written from the agent's claims leaves the user unable to review what happened. 
+The field comparison establishes that the summary reports the recorded actions and their labels, not that every summary sentence is supported exactly.
+
+\textbf{How test will be performed:} Seed the history store through a test fixture. Read the history view, request a summary,
+then delete. Capture the history entries, the summary text, and the store contents before and after deletion. Compare the set
+of actions and labels extracted from the summary text against the seeded log.
+
+
+\end{itemize}
 
 \subsection{Tests for Nonfunctional Requirements}
 
