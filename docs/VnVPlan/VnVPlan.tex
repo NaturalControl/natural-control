@@ -135,95 +135,164 @@ how they relate to your VnV efforts.}
 
 \section{Plan}
 
-\wss{Introduce this section.  You can provide a roadmap of the sections to
-  come.}
+This section describes the planned reviews, tests, tools, and user evaluation
+for Natural Control. It follows the workstreams in the
+\href{https://github.com/NaturalControl/natural-control/blob/main/docs/DevelopmentPlan/DevelopmentPlan.tex}{Development Plan}.
+Verification will check the requirements, design, and implementation;
+validation will assess whether the voice interface helps users complete and
+supervise browser and connected-account tasks.
 
 \subsection{Verification and Validation Team}
 
-\wss{Your teammates.  Maybe your supervisor.
-  You should do more than list names.  You should say what each person's role is
-  for the project's verification.  A table is a good way to summarize this information.}
+All four team members will write and run tests, review each other's work, and
+record findings. Table~\ref{tab:vnv-team} summarizes responsibilities aligned
+with the Development Plan. Curtis's overall V\&V coordination and Lucas's
+end-to-end testing coordination are proposed assignments, subject to team
+confirmation.
+
+\begin{table}[htbp]
+\centering
+\caption{Planned V\&V responsibilities.}
+\label{tab:vnv-team}
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+Member & Responsibility\\
+\midrule
+Curtis Vos & Coordinate V\&V reviews, evaluation tasks, and evidence collection.\\
+Lucas DeBoer & Coordinate end-to-end tests of voice interaction, accessible controls, and task supervision.\\
+Kevin Kim & Set up CI checks and verify configuration, reliability, and recovery behaviour.\\
+Aaron Loh & Verify agent and tool integration, including approval checks and action outcomes.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Coordinators will track coverage and follow-up work, while testing remains a
+shared responsibility. Supervisor and classmate feedback will inform reviews;
+it will not replace team verification.
 
 \subsection{SRS Verification}
 
-\wss{List any approaches you intend to use for SRS verification.  This may
-  include ad hoc feedback from reviewers, like your classmates (like your
-  primary reviewer), or you may plan for something more rigorous/systematic.}
+The team will review the
+\href{https://github.com/NaturalControl/natural-control/blob/main/docs/SRS-Meyer/SRS.tex}{SRS}
+before using it to derive tests. Members will inspect assigned sections in
+advance, then discuss findings at a team meeting. A checklist will cover clear
+and testable wording, consistent terminology, supported scope, missing failure
+cases, and traceability to project goals. The review will cross-check safety
+requirements against the
+\href{https://github.com/NaturalControl/natural-control/blob/main/docs/HazardAnalysis/HazardAnalysis.tex}{Hazard Analysis},
+including approval, pause, cancellation, reconnection, and uncertain outcomes.
 
-\wss{If you have a supervisor for the project, you shouldn't just say they will
-read over the SRS.  You should explain your structured approach to the review.
-Will you have a meeting?  What will you present?  What questions will you ask?
-Will you give them instructions for a task-based inspection?  Will you use your
-issue tracker?}
-
-\wss{Maybe create an SRS checklist?}
+The team will walk through representative email/calendar and unfamiliar-website
+tasks to check that required inputs, user decisions, and expected outcomes are
+specified. Questions and conflicting requirements will become GitHub issues
+with an owner and a resolution. Completed checklists and meeting notes will
+record the reviewed version and decisions. Classmate and supervisor comments
+will be considered through the same process.
 
 \subsection{Design Verification}
 
-\wss{Plans for design verification}
+As the design develops, the team will inspect architecture diagrams and module
+interfaces against the SRS. A checklist will check component responsibilities,
+data flow, error handling, task state, and whether every tool action passes
+through the approval gate. Classmate review findings will be tracked alongside
+the team's findings.
 
-\wss{The review will include reviews by your classmates}
-
-\wss{Create a checklists?}
+Scenario walkthroughs will trace a task from voice input through the agent and
+tool adapter to the reported outcome. Reviewers will consider an approved
+action, a refused action, changed details after approval, a stop during a tool
+operation, and a disconnection followed by reconnection. They will check that
+stale approvals cannot be reused, new task actions are blocked while paused,
+and uncertain outcomes are reconciled before retrying. Notes will identify
+design gaps and link to issues for correction.
 
 \subsection{Verification and Validation Plan Verification}
 
-\wss{The verification and validation plan is an artifact that should also be
-verified.  Techniques for this include review and mutation testing.}
+Team members other than the author of a section will peer-review this plan
+using the repository's V\&V checklist. Reviewers will check that each activity
+has a clear purpose, an owner, expected evidence, and a feasible procedure.
+Test descriptions will be checked for explicit inputs, initial conditions, and
+observable expected results.
 
-\wss{The review will include reviews by your classmates}
-
-\wss{Create a checklists?}
+The requirements-to-tests traceability table will link each SRS requirement to
+system tests or a documented review or inspection. Unit tests will also be
+mapped to the modules they exercise once the detailed design is available.
+Reviewers will check for uncovered requirements, missing safety cases, and
+tests that no longer match the SRS. Team and classmate findings will be recorded
+in GitHub issues, and the plan will be updated as requirements and design change.
 
 \subsection{Implementation Verification}
 
-\wss{You should at least point to the tests listed in this document and the unit
-  testing plan.}
+Implementation verification will use the system tests and unit testing plan
+described later in this document. Unit tests will cover normal behaviour,
+boundary cases, invalid inputs, and failure handling in team-written modules.
+Integration tests will check the voice, task manager, agent, approval gate,
+and tool adapters together, using controlled tools before trials with real
+services and synthetic data.
 
-\wss{In this section you would also give any details of any plans for static
-  verification of the implementation.  Potential techniques include code
-  walkthroughs, code inspection, static analyzers, etc.}
+Tests will exercise approval binding, pause and cancellation, reconnection,
+and duplicate prevention. A spoken acknowledgment alone will not count as
+evidence that execution has stopped; action traces and tool outcomes will be
+checked separately. Defects will be recorded in GitHub issues, corrected, and
+retested, with regression tests added where practical.
 
-\wss{The final class presentation in CAS 741 could be used as a code
-walkthrough.  There is also a possibility of using the final presentation (in
-CAS741) for a partial usability survey.}
+Each pull request will receive review by a team member other than its author,
+as described in the Development Plan. Review will cover logic, interfaces,
+error handling, accessibility, and sensitive data in logs. Relevant automated
+checks must pass before merging.
 
 \subsection{Automated Testing and Verification Tools}
 
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-  Python.}
+GitHub Actions already builds the repository's LaTeX documents. Kevin will
+coordinate the planned application CI checks for pull requests: formatting,
+linting, type checks, unit tests, and suitable integration tests. Tests needing
+Mac hardware, VoiceOver, or external services will also be run in a documented
+local environment.
 
-\wss{If you have already done this in the development plan, you can point to
-that document.}
+The Development Plan proposes Ruff, pytest, and pytest-cov for Python, and
+TypeScript strict checks, ESLint, Prettier, Vitest, and Testing Library for the
+client. The repository currently has no application test configuration.
+The team will confirm the frameworks against the implemented stack, pin
+versions, and document how to run the checks during setup.
 
-\wss{The details of this section will likely evolve as you get closer to the
-  implementation.}
+Coverage reports will summarize exercised code and highlight untested modules,
+especially task control and approval handling. Coverage will guide test review
+alongside requirements traceability; a high percentage alone will not establish
+correctness. CI results and sanitized test reports will provide repeatable
+evidence for the V\&V report.
 
 \subsection{Software Validation}
 
-\wss{If there is any external data that can be used for validation, you should
-  point to it here.  If there are no plans for validation, you should state that
-  here.}
+Internal validation will use predefined voice commands and realistic tasks with
+test accounts and synthetic data. Team members will check task completion,
+clarification, correction, progress feedback, approval, and explicit stopping.
+These scripted trials will prepare the system for external evaluation; product
+workflows will still use general agent and browser tools.
 
-\wss{You might want to use review sessions with the stakeholder to check that
-the requirements document captures the right requirements.  Maybe task based
-inspection?}
+External participants will attempt representative browser and connected-account
+tasks using their own wording. Recruitment will aim to include blind users with
+screen-reader experience, as proposed in the Development Plan; participation
+is not yet confirmed. Sessions will follow an agreed task protocol and consent
+process. VoiceOver and keyboard checks, participant feedback, and supervisor
+feedback from a demonstration shortly after Rev 0 will inform improvements.
 
-\wss{For those capstone teams with an external supervisor, the Rev 0 demo should 
-be used as an opportunity to validate the requirements.  You should plan on 
-demonstrating your project to your supervisor shortly after the scheduled Rev 0 demo.  
-The feedback from your supervisor will be very useful for improving your project.}
+For each attempted task, the team will record the verified outcome, assistance,
+retries, corrections, clarification turns, and user feedback. Task completion
+and interaction difficulties will be reported separately, including failures.
+Usability will be evaluated from these observations without introducing an
+arbitrary pass percentage. The SRS leaves its completion target unset and
+references the Development Plan's provisional target; team review must reconcile
+those entries with this approach before finalizing acceptance criteria.
 
-\wss{For teams without an external supervisor, user testing can serve the same purpose 
-as a Rev 0 demo for the supervisor.}
+All critical safety tests for the evaluated configuration must pass before
+participant use. Failures such as an unapproved consequential action will block
+the affected evaluation until corrected and retested; usability results cannot
+offset a safety failure.
 
-\wss{This section might reference back to the SRS verification section.}
+Completed checklists, test results, review notes, and anonymized participant
+feedback will be stored in the repository and linked to GitHub issues for
+follow-up. Participant identities, credentials, personal task data, and raw
+recordings will be excluded from public evidence. Findings will be used to
+revise the requirements, design, implementation, and test plan.
 
 \section{System Tests}
 
