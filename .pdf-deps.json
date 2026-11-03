@@ -113,6 +113,10 @@
     "docs/Comments.text",
     "docs/Common.text",
     "docs/Reflection.text",
+    "docs/VnVPlan/AaronVnVReflection.text",
+    "docs/VnVPlan/CurtisVnVReflection.text",
+    "docs/VnVPlan/KevinVnVReflection.text",
+    "docs/VnVPlan/LucasVnVReflection.text",
     "docs/VnVPlan/VnVPlan.tex",
     "refs/References.bib"
   ],
