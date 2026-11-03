@@ -1,35 +1,21 @@
 \subsection*{Kevin Kim}
 
 \begin{enumerate}
-  \item \textbf{What went well while writing this deliverable?}
-
-    Identifying the specific tests and criteria we needed went well. This
+  \item Identifying the specific tests and criteria we needed went well. This
     made it easier to describe what we should check and how we would
     evaluate the results.
 
-  \item \textbf{What pain points did you experience during this deliverable,
-    and how did you resolve them?}
-
-    I found this section fairly straightforward overall and did not run
+  \item I found this section fairly straightforward overall and did not run
     into major difficulties. The main point that needed clarification was
     how the testing responsibilities would be divided. The plan keeps V\&V
     shared, assigns coordinators, and explains how responsibilities can be
     changed.
 
-  \item \textbf{What knowledge and skills will the team collectively need to
-    acquire to successfully complete the verification and validation of
-    your project?}
-
-    For my CI and reliability role, I want to strengthen my understanding
+  \item For my CI and reliability role, I want to strengthen my understanding
     of how to set up automated checks and run tests consistently. This will
     help me put the planned testing activities into practice.
 
-  \item \textbf{For each of the knowledge areas and skills identified in the
-    previous question, what are at least two approaches to acquiring the
-    knowledge or mastering the skill? Of the identified approaches, which
-    will each team member pursue, and why did they make this choice?}
-
-    I would use both documentation or tutorials and a small working
+  \item  I would use both documentation or tutorials and a small working
     example. I would start with the documentation to understand the tools
     and how they fit together, then build an example to apply what I
     learned.
