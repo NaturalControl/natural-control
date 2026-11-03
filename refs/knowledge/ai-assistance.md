@@ -65,4 +65,4 @@ Aaron authorized resolving PR #27 against main. Codex retained the SRS glossary 
 
 ## November 2, 2026: V&V Plan Section 2
 
-At Aaron's request, Claude Code (Anthropic Claude Opus 5.5) drafted Section 2 (summary, objectives, custom documents, relevant documentation) of the V&V Plan from the SRS, Development Plan, scope decisions in this knowledge base, and Aaron's earlier local draft. It compiled the document with Tectonic to check the LaTeX. The custom-document seasons and the out-of-scope list need team confirmation.
+Aaron determined the content of Section 2 (scope, objectives, custom documents, and relevant documents), drawing on the team's earlier decisions and his draft. Claude Code (Claude Opus 5.5) helped flesh out the wording and format it in LaTeX. Aaron reviewed the final text.
