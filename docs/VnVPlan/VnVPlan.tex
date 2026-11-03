@@ -78,146 +78,252 @@ This is the initial version of the plan, and it will be updated as the project p
 
 \subsection{Summary}
 
-\wss{Say what software is being tested.  Give its name and a brief overview of
-  its general functions.}
+The software under test is Natural Control, a voice interface that lets blind
+and visually impaired users hand off computer tasks to an AI agent. The user
+speaks a request. The agent works in a web browser and in connected accounts
+such as Gmail and Google Calendar. The user hears progress, answers questions,
+approves consequential actions, and can pause or cancel work at any time,
+without watching the screen.
+
+The system has an accessible web client (TypeScript/React), a LiveKit voice
+connection, and a Python agent worker. The worker contains the task manager,
+action gate, outcome verification, and task history. It uses Hermes as the
+agent harness, Composio for account tools, and Browser Use for websites.
 
 \subsection{Objectives}
 
-\wss{State what is intended to be accomplished.  The objective will be around
-  the qualities that are most important for your project.  You might have
-  something like: ``build confidence in the software correctness,''
-  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
-  just those that are most important.}
+The main objectives are to build confidence that:
+\begin{itemize}
+  \item \textbf{Consequential actions are safe.} No send, create, submit, or
+  purchase runs without the user's approval of its exact details. Changed
+  details or a pause make the old approval invalid.
+  \item \textbf{The user stays in control.} Stopping, correcting, and cancelling
+  work as specified, and a stop is acknowledged quickly.
+  \item \textbf{Reports are honest.} Results are reported as done only when the
+  account or website shows they happened. Uncertain outcomes are reported as
+  uncertain and are not blindly retried.
+  \item \textbf{The system is usable without sight.} Blind users can follow
+  progress and complete representative tasks after assisted setup.
+\end{itemize}
 
-\wss{You should also list the objectives that are out of scope.  You don't have 
-the resources to do everything, so what will you be leaving out.  For instance, 
-if you are not going to verify the quality of usability, state this.  It is also 
-worthwhile to justify why the objectives are left out.}
-
-\wss{The objectives are important because they highlight that you are aware of 
-limitations in your resources for verification and validation.  You can't do everything, 
-so what are you going to prioritize?  As an example, if your system depends on an 
-external library, you can explicitly state that you will assume that external library 
-has already been verified by its implementation team.}
+Out of scope:
+\begin{itemize}
+  \item Native Mac applications, local files, platforms other than macOS with
+  Chrome, and languages other than English. These are outside the initial
+  release.
+  \item Telephone access and saved workflows, which are stretch goals.
+  \item Verifying third-party components (LiveKit, Hermes, Composio, Browser
+  Use, the AI models). We assume their own teams verify them. We test only our
+  integration with them and record the limitations we observe.
+  \item Correct behaviour on every website, and protection against every
+  malicious input. We test representative sites and the safety requirements in
+  the Hazard Analysis.
+\end{itemize}
 
 \subsection{Custom Documents}
 
-\wss{Summarize the CDs (Custom Documents) that were tackled by this project.  CDs 
-can include usability testing, code walkthroughs, user documentation, formal
-proof, GenderMag personas, Design Thinking, etc.  CDs should have already
-been approved by the course instructor as included in your problem statement.
-You can use a pull request to update your CDs (in TeamComposition.csv or
-Repos.csv) if your plan changes as a result of the VnV planning exercise.}
+The project has two approved custom documents:
+\begin{itemize}
+  \item \textbf{Interview Report (fall).} Interviews with stakeholders about
+  their needs and current barriers. It checks that the requirements and test
+  tasks match real user needs.
+  \item \textbf{Usability Report (winter).} Sessions where participants use the
+  working system on defined tasks. It measures independent completion,
+  understanding of progress, and recovery, and serves as the main validation
+  evidence.
+\end{itemize}
 
 \subsection{Relevant Documentation}
 
-\wss{Reference relevant documentation.  This will definitely include your SRS
-  and your other project documents (design documents, like MG, MIS, etc).  You
-  can include these even before they are written, since by the time the project
-  is done, they will be written.  You can create BibTeX entries for your
-  documents and within those entries include a hyperlink to the documents.}
-
-\citet{SRS}
-
-\wss{Don't just list the other documents.  You should explain why they are relevant and 
-how they relate to your VnV efforts.}
+\begin{itemize}
+  \item \href{https://github.com/NaturalControl/natural-control/blob/main/docs/SRS-Meyer/SRS.tex}{SRS}:
+  the requirements under test. Its requirement IDs drive the traceability table,
+  and its task state machine (S.9) drives the stop, pause, and recovery tests.
+  \item \href{https://github.com/NaturalControl/natural-control/blob/main/docs/HazardAnalysis/HazardAnalysis.tex}{Hazard Analysis}:
+  failure modes and safety requirements. It is the source of the negative and
+  fault-injection tests.
+  \item \href{https://github.com/NaturalControl/natural-control/blob/main/docs/ProblemStatementAndGoals/ProblemStatement.tex}{Problem Statement and Goals}:
+  the intended benefits, which validation checks against.
+  \item \href{https://github.com/NaturalControl/natural-control/blob/main/docs/DevelopmentPlan/DevelopmentPlan.tex}{Development Plan}:
+  the stack, tools, team roles, and proof-of-concept plan that bound what we can
+  test.
+  \item \href{https://github.com/NaturalControl/natural-control/blob/main/docs/Design/SoftArchitecture/MG.tex}{Module Guide} and
+  \href{https://github.com/NaturalControl/natural-control/blob/main/docs/Design/SoftDetailedDes/MIS.tex}{Module Interface Specification}:
+  not written yet. Once complete, they will define the modules for design review
+  and unit testing (Section 5).
+\end{itemize}
 
 \section{Plan}
 
-\wss{Introduce this section.  You can provide a roadmap of the sections to
-  come.}
+This section describes the planned reviews, tests, tools, and user evaluation
+for Natural Control. It follows the workstreams in the
+\href{https://github.com/NaturalControl/natural-control/blob/main/docs/DevelopmentPlan/DevelopmentPlan.tex}{Development Plan}.
+Verification will check the requirements, design, and implementation;
+validation will assess whether the voice interface helps users complete and
+supervise browser and connected-account tasks.
 
 \subsection{Verification and Validation Team}
 
-\wss{Your teammates.  Maybe your supervisor.
-  You should do more than list names.  You should say what each person's role is
-  for the project's verification.  A table is a good way to summarize this information.}
+All four team members will write and run tests, review each other's work, and
+record findings. Table~\ref{tab:vnv-team} summarizes responsibilities aligned
+with the Development Plan and the SRS (P.1). Curtis coordinates overall
+V\&V, and Lucas coordinates end-to-end testing.
+
+\begin{table}[htbp]
+\centering
+\caption{Planned V\&V responsibilities.}
+\label{tab:vnv-team}
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+Member & Responsibility\\
+\midrule
+Curtis Vos & Coordinate V\&V reviews, evaluation tasks, and evidence collection.\\
+Lucas DeBoer & Coordinate end-to-end tests of voice interaction, accessible controls, and task supervision.\\
+Kevin Kim & Set up CI checks and verify configuration, reliability, and recovery behaviour.\\
+Aaron Loh & Verify agent and tool integration, including approval checks and action outcomes.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Coordinators will track coverage and follow-up work, while testing remains a
+shared responsibility. Supervisor and classmate feedback will inform reviews;
+it will not replace team verification.
+
+Role changes will follow the process in the Development Plan. A member who
+needs a change will notify the team on Discord and identify the affected tasks.
+The team will split the work or assign a new owner based on availability;
+the cross-reviewer will not automatically inherit the role. The outgoing
+owner will hand over progress and blockers, and GitHub assignments and
+deadlines will be updated. The team will check the arrangement at the next
+weekly meeting.
 
 \subsection{SRS Verification}
 
-\wss{List any approaches you intend to use for SRS verification.  This may
-  include ad hoc feedback from reviewers, like your classmates (like your
-  primary reviewer), or you may plan for something more rigorous/systematic.}
+The team will review the
+\href{https://github.com/NaturalControl/natural-control/blob/main/docs/SRS-Meyer/SRS.tex}{SRS}
+before using it to derive tests. Members will inspect assigned sections in
+advance, then discuss findings at a team meeting. A checklist will cover clear
+and testable wording, consistent terminology, supported scope, missing failure
+cases, and traceability to project goals. The review will cross-check safety
+requirements against the
+\href{https://github.com/NaturalControl/natural-control/blob/main/docs/HazardAnalysis/HazardAnalysis.tex}{Hazard Analysis},
+including approval, pause, cancellation, reconnection, and uncertain outcomes.
 
-\wss{If you have a supervisor for the project, you shouldn't just say they will
-read over the SRS.  You should explain your structured approach to the review.
-Will you have a meeting?  What will you present?  What questions will you ask?
-Will you give them instructions for a task-based inspection?  Will you use your
-issue tracker?}
-
-\wss{Maybe create an SRS checklist?}
+The team will walk through representative email/calendar and unfamiliar-website
+tasks to check that required inputs, user decisions, and expected outcomes are
+specified. Questions and conflicting requirements will become GitHub issues
+with an owner and a resolution. Completed checklists and meeting notes will
+record the reviewed version and decisions. Classmate and supervisor comments
+will be considered through the same process.
 
 \subsection{Design Verification}
 
-\wss{Plans for design verification}
+As the design develops, the team will inspect architecture diagrams and module
+interfaces against the SRS. A checklist will check component responsibilities,
+data flow, error handling, task state, and whether every tool action passes
+through the approval gate. Classmate review findings will be tracked alongside
+the team's findings.
 
-\wss{The review will include reviews by your classmates}
-
-\wss{Create a checklists?}
+Scenario walkthroughs will trace a task from voice input through the agent and
+tool adapter to the reported outcome. Reviewers will consider an approved
+action, a refused action, changed details after approval, a stop during a tool
+operation, and a disconnection followed by reconnection. They will check that
+stale approvals cannot be reused, new task actions are blocked while paused,
+and uncertain outcomes are reconciled before retrying. Notes will identify
+design gaps and link to issues for correction.
 
 \subsection{Verification and Validation Plan Verification}
 
-\wss{The verification and validation plan is an artifact that should also be
-verified.  Techniques for this include review and mutation testing.}
+Team members other than the author of a section will peer-review this plan
+using the repository's V\&V checklist. Reviewers will check that each activity
+has a clear purpose, an owner, expected evidence, and a feasible procedure.
+Test descriptions will be checked for explicit inputs, initial conditions, and
+observable expected results.
 
-\wss{The review will include reviews by your classmates}
-
-\wss{Create a checklists?}
+The requirements-to-tests traceability table will link each SRS requirement to
+system tests or a documented review or inspection. Unit tests will also be
+mapped to the modules they exercise once the detailed design is available.
+Reviewers will check for uncovered requirements, missing safety cases, and
+tests that no longer match the SRS. Team and classmate findings will be recorded
+in GitHub issues, and the plan will be updated as requirements and design change.
 
 \subsection{Implementation Verification}
 
-\wss{You should at least point to the tests listed in this document and the unit
-  testing plan.}
+Implementation verification will use the system tests and unit testing plan
+described later in this document. Unit tests will cover normal behaviour,
+boundary cases, invalid inputs, and failure handling in team-written modules.
+Integration tests will check the voice, task manager, agent, approval gate,
+and tool adapters together, using controlled tools before trials with real
+services and synthetic data.
 
-\wss{In this section you would also give any details of any plans for static
-  verification of the implementation.  Potential techniques include code
-  walkthroughs, code inspection, static analyzers, etc.}
+Tests will exercise approval binding, pause and cancellation, reconnection,
+and duplicate prevention. A spoken acknowledgment alone will not count as
+evidence that execution has stopped; action traces and tool outcomes will be
+checked separately. Defects will be recorded in GitHub issues, corrected, and
+retested, with regression tests added where practical.
 
-\wss{The final class presentation in CAS 741 could be used as a code
-walkthrough.  There is also a possibility of using the final presentation (in
-CAS741) for a partial usability survey.}
+Each pull request will receive review by a team member other than its author,
+as described in the Development Plan. Review will cover logic, interfaces,
+error handling, accessibility, and sensitive data in logs. Relevant automated
+checks must pass before merging.
 
 \subsection{Automated Testing and Verification Tools}
 
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-  Python.}
+GitHub Actions already builds the repository's LaTeX documents. Kevin will
+coordinate the planned application CI checks for pull requests: formatting,
+linting, type checks, unit tests, and suitable integration tests. Tests needing
+Mac hardware, VoiceOver, or external services will also be run in a documented
+local environment.
 
-\wss{If you have already done this in the development plan, you can point to
-that document.}
+For Python, the team will use Ruff (linting and PEP~8 formatting), mypy in
+strict mode, pytest, and pytest-cov. For the client, it will use TypeScript
+strict checks, ESLint, and Vitest; Testing Library will be added with component
+tests. A GitHub Actions workflow will run these checks on every pull request.
+Versions will be pinned in \texttt{uv.lock} and \texttt{package-lock.json}.
 
-\wss{The details of this section will likely evolve as you get closer to the
-  implementation.}
+Coverage reports will summarize exercised code and highlight untested modules,
+especially task control and approval handling. Coverage will guide test review
+alongside requirements traceability; a high percentage alone will not establish
+correctness. CI results and sanitized test reports will provide repeatable
+evidence for the V\&V report.
 
 \subsection{Software Validation}
 
-\wss{If there is any external data that can be used for validation, you should
-  point to it here.  If there are no plans for validation, you should state that
-  here.}
+Internal validation will use predefined voice commands and realistic tasks with
+test accounts and synthetic data. Team members will check task completion,
+clarification, correction, progress feedback, approval, and explicit stopping.
+These scripted trials will prepare the system for external evaluation; product
+workflows will still use general agent and browser tools.
 
-\wss{You might want to use review sessions with the stakeholder to check that
-the requirements document captures the right requirements.  Maybe task based
-inspection?}
+External participants will attempt representative browser and connected-account
+tasks using their own wording. Recruitment will aim to include blind users with
+screen-reader experience, as proposed in the Development Plan; participation
+is not yet confirmed. Sessions will follow an agreed task protocol and consent
+process. VoiceOver and keyboard checks, participant feedback, and supervisor
+feedback from a demonstration shortly after Rev 0 will inform improvements.
 
-\wss{For those capstone teams with an external supervisor, the Rev 0 demo should 
-be used as an opportunity to validate the requirements.  You should plan on 
-demonstrating your project to your supervisor shortly after the scheduled Rev 0 demo.  
-The feedback from your supervisor will be very useful for improving your project.}
+For each attempted task, the team will record the verified outcome, assistance,
+retries, corrections, clarification turns, and user feedback. Task completion
+and interaction difficulties will be reported separately, including failures.
+Independent completion will be compared with TARGET\_COMPLETION (NFR2),
+provisionally 80\% from the Development Plan and set after the POC. Other
+usability observations will be reported descriptively, including failures.
 
-\wss{For teams without an external supervisor, user testing can serve the same purpose 
-as a Rev 0 demo for the supervisor.}
+All critical safety tests for the evaluated configuration must pass before
+participant use. Failures such as an unapproved consequential action will block
+the affected evaluation until corrected and retested; usability results cannot
+offset a safety failure.
 
-\wss{This section might reference back to the SRS verification section.}
+Completed checklists, test results, review notes, and anonymized participant
+feedback will be stored in the repository and linked to GitHub issues for
+follow-up. Participant identities, credentials, personal task data, and raw
+recordings will be excluded from public evidence. Findings will be used to
+revise the requirements, design, implementation, and test plan.
 
 \section{System Tests}
 
 This section outlines the tests used to verify the functional and non-functional requirements as laid
-out in section S.2 of the SRS \citep{SRS}. These tests ensure that the system level components of the
+out in section S.2 of the SRS \citep{SRS}. These tests ensure that the system-level components of the
 software are functioning properly. Symbolic constants named in the tests below are defined in
 Section~\ref{sec:symbolic-params}.
 
@@ -243,7 +349,7 @@ microphone input. The system has been freshly launched (all logs clear, no tasks
 ``Open gmail and read me my latest email'', played through the virtual audio device. A reference transcript is also stored.
 
 \textbf{Output:} The system produces a transcript and passes it to the task
-manager as a user turn. The generated transcript is compared against a reference transcipt and must have 
+manager as a user turn. The generated transcript is compared against a reference transcript and must have 
 a word error rate at most \textsc{WER\_MAX}.
 
 \textbf{Test Case Derivation:} FR1 requires the system to accept spoken input
@@ -332,9 +438,9 @@ an invitation from ``John Smith'' with subject ``Invitation''.
 
 \textbf{Test Case Derivation:} FR2 requires that the user can interrupt spoken
 output without restarting the task, and FR6 and FR16 require that the user can correct part of a
-read-back by voice without restarting the request. Interupting the system while it is speaking with a
+read-back by voice without restarting the request. Interrupting the system while it is speaking with a
 single-detail correction tests both of these requirements. An unchanged task ID with no 
-pause state shows that the task was neither restarted nor paused. Verifies FR2, FR6, and FR16.
+pause state shows that the task was neither restarted nor paused. Verifies FR2, FR6, FR16, and FR.Sa.14.
 
 \textbf{Pass/Fail Criteria:}
 \begin{itemize}
@@ -380,7 +486,7 @@ from ``Dana Lee'' with subject ``Team Lunch Thursday''. The body of the email is
 
 \textbf{Test Case Derivation:} FR3 requires a bare ``stop'' to stop speech and pause work, and requires the system to clarify what the user wants next. FR3 also requires an explicit request to cancel or abandon the task to end it.
 FR8 requires that a stop request block new actions, and that the system report completed work, unfinished work, and unknown outcomes.
-Interupting the long spoken response with a ``Stop'' and the systems response to cancelling the task satisfies this. Verifies FR3 and FR8.
+Interrupting the long spoken response with a ``Stop'' and the system's response to cancelling the task satisfies this. Verifies FR3, FR8, and FR.Sa.5.i--iii.
 
 \textbf{Pass/Fail Criteria:}
 \begin{itemize}
@@ -466,7 +572,7 @@ The send tool is stubbed to log the call and return a success only after more th
 \textbf{Test Case Derivation:} FR4 requires the system to ask when details are ambiguous and to recheck relevant information before continuing. 
 The two Alex emails make the request ambiguous, and the inbox read after the answer shows the recheck. 
 FR5 requires routine updates to stay within the silence interval. The send is slowed past \textsc{IDLE\_PROMPT\_TIME}, so a spoken update is
- required while it runs. Verifies FR4 and FR5.
+ required while it runs. Verifies FR4, FR5, and FR.Sa.9.
 
 \textbf{Pass/Fail Criteria:}
 \begin{itemize}
@@ -480,7 +586,7 @@ FR5 requires routine updates to stay within the silence interval. The send is sl
 
 \textbf{Control:} Automatic
 
-\textbf{Initial State:} Wi-Fi is the only active network connection. The virtual audio device is selected as the system microphone input. 
+\textbf{Initial State:} The virtual audio device is selected as the system microphone input. 
 The system has been freshly launched (all logs clear, no tasks running, awaiting response).
 Google Calendar is connected through a test account. The calendar create tool is stubbed to return a success after \textsc{STUB\_DELAY} seconds.
 
@@ -488,7 +594,7 @@ Google Calendar is connected through a test account. The calendar create tool is
 \begin{enumerate}
   \item Play the request mp3 file which contains a recorded voice saying ``Create a calendar event called Test Meeting tomorrow at 3 PM.''
   \item When the system reads back the details, play the acceptance mp3 file which contains a recorded voice saying ``Yes.''
-  \item While the create call is pending, the script turns Wi-Fi off and then turns Wi-Fi back on.
+  \item While the create call is pending, the script disconnects the client from the session and then reconnects it. The agent worker stays connected.
   \item Play the resume mp3 file which contains a recorded voice saying ``Continue.''
 \end{enumerate}
 
@@ -496,19 +602,20 @@ Google Calendar is connected through a test account. The calendar create tool is
 \begin{itemize}
   \item After the disconnect, the state log shows Paused. 
   \item After reconnection, the system announces the paused task, reports the task state, and offers to resume or cancel.
-  \item Before continuing, the tool log shows a calendar read call occurs before the state log is changed to Working and the calendar event is successfully created. 
+  \item Before continuing, the tool log shows a calendar read call that finds the created event before the state log changes to Working. The create tool is not called again.
 \end{itemize}
 
 \textbf{Test Case Derivation:} FR7 requires a disconnection to pause the task and for it to not resume until explicitly instructed. 
 On reconnection, the system state must be reconciled and reported. FR21 requires the same state to be announced at session start, with resumption only after a state check.
-Losing Wi-Fi while a write is pending satisfies both of these checks. Verifies FR7 and FR21.
+Disconnecting the client while a write is pending satisfies both of these checks. Verifies FR7 and FR21.
 
 \textbf{Pass/Fail Criteria:}
 \begin{itemize}
   \item All Output conditions hold.
+  \item The create stub is called exactly once.
 \end{itemize}
 
-\textbf{How test will be performed:} A script plays the audio files into the virtual device and turns Wi-Fi off and on at the stated steps. It reads the task manager state log, the tool call log, and the text of system speech, and asserts each output condition.
+\textbf{How test will be performed:} A script plays the audio files into the virtual device and disconnects and reconnects the client at the stated steps. It reads the task manager state log, the tool call log, and the text of system speech, and asserts each output condition.
 
 \item T.FR.TM.2.3:\label{test:T.FR.TM.2.3}
 
@@ -533,7 +640,7 @@ The Gmail send tool is stubbed so that any send call is logged and not executed.
 
 \textbf{Test Case Derivation:} FR19 requires the system to ask whether to queue or replace when a new request is given,
 and to end the earlier task when replacing a task. FR20 requires previous approvals to be withdrawn and the system to say that the action was not executed.
-An unrelated request made during an open approval tests both. Verifies FR19 and FR20.
+An unrelated request made during an open approval tests both. Verifies FR19, FR20, FR.Sa.14, and FR.Sa.15.
 
 \textbf{Pass/Fail Criteria:}
 \begin{itemize}
@@ -568,14 +675,14 @@ with subject ``Invitation''. The send tool is stubbed to log the call and return
 
 \textbf{Output:}
 \begin{itemize}
-  \item After step 1, the state log shows AwaitingApproval. The read-back names the recipient, the subject, and the body, and the systems checks whether it should send the email.
+  \item After step 1, the state log shows AwaitingApproval. The read-back names the recipient, the subject, and the body, and the system checks whether it should send the email.
   \item After steps 2, the state log still shows AwaitingApproval, and the send stub has not been called.
   \item After step 3, the send stub is called once. Its recipient, subject, and body match the read-back.
 \end{itemize}
 
 \textbf{Test Case Derivation:} FR9 requires approval of the exact details of a send, and requires the approval to be an explicit affirmative answer. 
-Silence and an unclear remark are the two non-approvals the system is most likely to mistake for consent, and the final send matching the read-back shows 
-that the approved details were the ones executed. Verifies FR9.
+An unclear remark is a non-approval the system could mistake for consent, and the final send matching the read-back shows 
+that the approved details were the ones executed. Verifies FR9 and FR.Sa.13.
 
 \textbf{Pass/Fail Criteria:}
 \begin{itemize}
@@ -609,7 +716,7 @@ return a success for the first call, and return a failure for the second call.
 
 \textbf{Test Case Derivation:} FR9 allows similar actions to share one approval, provided the read-back states the number of actions and identifies each 
 action. FR11 requires each approved action to have a unique ID, so two items in one approval need two IDs. This sequence of events shows that the system
-can handle multiple actions in one approval, that each action has a unique ID, and that the system reports the outcome of each action. Verifies FR9 and FR11.
+can handle multiple actions in one approval, that each action has a unique ID, and that the system reports the outcome of each action. Verifies FR9, FR11, and FR.Sa.6.
 
 \textbf{Pass/Fail Criteria:}
 \begin{itemize}
@@ -1275,7 +1382,7 @@ transcript.
 \texttt{IDLE\_PROMPT\_TIME} & Maximum interval without spoken progress during active task execution
   & See SRS, Table~9\\
 \addlinespace
-\texttt{STUB\_DELAY} & Time before the stubbed calendar create tool returns. Longer than the time needed to turn Wi-Fi off and back on and for the client to reconnect
+\texttt{STUB\_DELAY} & Time before the stubbed calendar create tool returns. Longer than the time needed to disconnect and reconnect the client
   & TBD after POC (placeholder: 30\,s)\\
 \addlinespace
 \texttt{STOP\_ACK\_TIME} & Time to audibly acknowledge a work-stop request
@@ -1327,6 +1434,12 @@ Curtis Vos used Claude for help with LaTeX formatting and consistency across the
     model itself to write the content. Claude Code was also used to assist with various LaTeX formatting and errors that came up along the way.
 \end{itemize}
 
+\paragraph{Kevin Kim's use.}
+Kevin Kim used OpenAI Codex to help plan and draft the Plan section and to
+edit his reflection from his own responses. The draft was checked against
+the Development Plan, SRS, Hazard Analysis, and repository configuration,
+and compiled locally. Review by another team member remains pending.
+
 \newpage{}
 
 \section{Appendix: Reflection}
@@ -1351,6 +1464,27 @@ graduate attribute of Lifelong Learning.
   question, what are at least two approaches to acquiring the knowledge or
   mastering the skill?  Of the identified approaches, which will each team
   member pursue, and why did they make this choice?
+\end{enumerate}
+
+\subsection{Kevin Kim}
+
+\begin{enumerate}
+  \item Identifying the specific tests and criteria we needed went well.
+  This made it easier to describe what we should check and how we would
+  evaluate the results.
+
+  \item I found this section fairly straightforward overall and did not run
+  into major difficulties. The main point that needed clarification was how
+  the testing responsibilities would be divided. The plan keeps V\&V shared,
+  assigns coordinators, and explains how responsibilities can be changed.
+
+  \item For my CI and reliability role, I want to strengthen my understanding
+  of how to set up automated checks and run tests consistently. This will help
+  me put the planned testing activities into practice.
+
+  \item I would use both documentation or tutorials and a small working
+  example. I would start with the documentation to understand the tools and
+  how they fit together, then build an example to apply what I learned.
 \end{enumerate}
 
 \end{document}
