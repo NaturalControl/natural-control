@@ -1,0 +1,36 @@
+\subsection*{Lucas DeBoer}
+
+\begin{enumerate}
+  \item \textbf{What went well while writing this deliverable?}
+  
+I found that we divided the work up really well for this deliverable. Before our meeting with the TA, we had already determined who was going to do each section.
+  This allowed us to get specific, actionable feedback on our sections instead of just getting general feedback. Additionally, since I wrote some of the system tests, I found that 
+  they were very easy to come up with as I just went through the SRS and ensured that all functional and non-functional requirements had at least 
+  one test.
+  \item \textbf{What pain points did you experience during this deliverable, and how
+    did you resolve them?}
+    
+The biggest pain point that I experienced during this deliverable was the inacurracies in our previous documentation. Due to a couple of different reasons, the SRS
+    was not quite up to the standard that I would have liked, and I wasn't able to review all of the work that was submitted. Since the VnV plan was based on the SRS, I read 
+    through the SRS and I started noticing these inconsistencies. However, I don't think that we really resolved these problems. As we were a little short on time and 
+    hadn't received feedback on the SRS yet, we did not want to make unnecessary changes to the SRS that might need to be undone later on, so we instead just built on the 
+    existing version of the SRS. This doesn't really solve the problem, rather we are just kicking it farther down the road when we will need to revamp multiple documents.
+  \item \textbf{What knowledge and skills will the team collectively need to acquire to
+  successfully complete the verification and validation of your project?
+  Examples of possible knowledge and skills include dynamic testing knowledge,
+  static testing knowledge, specific tool usage, Valgrind etc.  You should look to
+  identify at least one item for each team member.}
+  We will all need to expand our knowledge about various automatic testing frameworks and tools and how they work as this is a major focus of the VnV plan. 
+  One area is how to simulate voice input as a recording to be used in automatic tests. As our project heavily relies on voice input, if this can't be done automatically, 
+  many of our tests will become manual tests instead of automatic tests which is much more of a hassle.
+
+  \item \textbf{For each of the knowledge areas and skills identified in the previous
+  question, what are at least two approaches to acquiring the knowledge or
+  mastering the skill?  Of the identified approaches, which will each team
+  member pursue, and why did they make this choice?}
+  I chose to study how to simulate voice input as a recording to be used in automatic tests, as I find this interesting. One approach that I will use it to read documentation
+  and worked examples. I will read about how macOS uses virtual audio devices and how it routes audio between different applications. Then, I will try and find other
+  projects that use audio files to simulate microphone input in their tests. A second approach that I will use is to build a small prototype. Before tackling our entire test suite,
+  I will attempt to create a very simple test that uses an mp3 file for microphone input and see if I can get a transcription of the file to be generated. Working on a smaller
+  problem like this before creating the more complex tests is a good way to get a feel for how the testing system should operate.
+\end{enumerate}
