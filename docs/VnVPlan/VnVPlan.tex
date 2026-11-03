@@ -3,6 +3,8 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage{array}
+\usepackage{float}
 \hypersetup{
     colorlinks,
     citecolor=blue,
@@ -39,7 +41,6 @@
 \tableofcontents
 
 \listoftables
-\wss{Remove this section if it isn't needed}
 
 \listoffigures
 \wss{Remove this section if it isn't needed}
@@ -48,17 +49,22 @@
 
 \section{Symbols, Abbreviations, and Acronyms}
 
+\begin{table}[H]
+\centering
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
-  \toprule		
+\caption{Symbols, abbreviations and acronyms}
+\label{tab:symbols}
+\begin{tabular}{l l}
+  \toprule
   \textbf{symbol} & \textbf{description}\\
-  \midrule 
+  \midrule
   FR & Functional Requirement\\
   NFR & Non-Functional Requirement\\
-  WER & Word Error Rate. Defined in Section 6.1\\
+  WER & Word Error Rate. Full definition in Section~\ref{sec:symbolic-params}\\
   SRS & Software Requirements Specification\\
   \bottomrule
-\end{tabular}\\
+\end{tabular}
+\end{table}
 
 \newpage
 
@@ -683,9 +689,53 @@ This section will be updated later in the project after the detailed design docu
 This is where you can place additional information.
 
 \subsection{Symbolic Parameters}
+\label{sec:symbolic-params}
 
-The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.
+The definition of the test cases calls for the use of SYMBOLIC\_CONSTANTS.
+Their values are defined in this section for easy maintenance and consistent usage across the test cases.
+
+~\\
+\textbf{Word Error Rate (WER).} WER measures how far a generated transcript is
+from a reference transcript. It is computed as
+\[
+\mathrm{WER} = \frac{S + D + I}{N},
+\]
+where $S$ is the number of substituted words, $D$ the number of deleted words,
+$I$ the number of inserted words, and $N$ the number of words in the reference
+transcript.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Symbolic constants used in the system tests}
+\label{tab:symbolic-constants}
+\begin{tabularx}{\textwidth}{@{}
+  l
+  >{\raggedright\arraybackslash}X
+  >{\raggedright\arraybackslash}p{3.2cm}
+  >{\raggedright\arraybackslash}p{2.0cm}
+@{}}
+\toprule
+\textbf{Constant} & \textbf{Meaning} & \textbf{Value}\\
+\midrule
+\texttt{WER\_MAX} & Maximum WER accepted for a transcript
+  & TBD after POC (placeholder: 0.10)\\
+\addlinespace
+\texttt{PAUSE\_LEN} & Length of the silence inside the utterance. Longer than a normal gap between words and shorter than the voice framework's end-of-turn threshold
+  & TBD after POC (placeholder: 1.5\,s)\\
+\addlinespace
+\texttt{EMAIL\_WORD\_COUNT} & Length of the test email body. Long enough that reading it aloud takes longer than the time needed to play the stop request
+  & TBD after POC (placeholder: 200 words)\\
+\addlinespace
+\texttt{IDLE\_PROMPT\_TIME} & Maximum interval without spoken progress during active task execution. Defined in the SRS (Table~9)
+  & TBD after POC\\
+\addlinespace
+\texttt{STUB\_DELAY} & Time before the stubbed calendar create tool returns. Longer than the time needed to turn Wi-Fi off and back on and for the client to reconnect
+  & TBD after POC (placeholder: 30\,s)\\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \subsection{Usability Survey Questions}
 
