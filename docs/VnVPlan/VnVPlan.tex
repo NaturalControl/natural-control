@@ -27,28 +27,12 @@
 
 \section*{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-\toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+\begin{tabularx}{\textwidth}{p{3cm}p{3cm}X}
+\toprule {\bf Date} & {\bf Contributor(s)} & {\bf Change}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+Nov 2, 2026 & All & Completed for Revision 0 submission.\\
 \bottomrule
 \end{tabularx}
-
-~\\
-\wss{The intention of the VnV plan is to increase confidence in the software.
-However, this does not mean listing every verification and validation technique
-that has ever been devised.  The VnV plan should also be a \textbf{feasible}
-plan. Execution of the plan should be possible with the time and team available.
-If the full plan cannot be completed during the time available, it can either be
-modified to ``fake it'', or a better solution is to add a section describing
-what work has been completed and what work is still planned for the future.}
-
-\wss{The VnV plan is typically started after the requirements stage, but before
-the design stage.  This means that the sections related to unit testing cannot
-initially be completed.  The sections will be filled in after the design stage
-is complete.  the final version of the VnV plan should have all sections filled
-in.}
 
 \newpage
 
@@ -872,8 +856,30 @@ This is where you can place additional information.
 
 \subsection{Symbolic Parameters}
 
-The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.
+The tests in this document use two groups of symbolic constants. The first are defined in the constants table of
+section S.2.8 of the SRS \citep{SRS} and are referenced here rather than redefined, so that a single change to
+the SRS propagates: STOP\_ACK\_TIME (T.NFR.2), RESPONSE\_TIME (T.NFR.3), and TARGET\_COMPLETION (T.NFR.5). All
+three remain provisional pending POC measurements.
+
+The second group are test parameters introduced by this plan, and their values are defined below for easy
+maintenance.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.7cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X}
+\toprule
+\textbf{Constant} & \textbf{Meaning} & \textbf{Value}\\
+\midrule
+RECHECK\_DELAY & Time the outcome verification waits before re-reading a record that the first lookup did
+not find & TBD after POC (provisional 2 s)\\\addlinespace[4pt]
+RECHECK\_COUNT & Number of further lookups verification makes before reporting an outcome as
+\texttt{unknown} & 1, per FR12's ``another check''\\\addlinespace[4pt]
+TIMING\_RUNS & Repetitions of each timing run, from which median and worst case are reported & 20\\
+\bottomrule
+\end{tabularx}
+\caption{Symbolic constants introduced by this plan}\label{tab:vnv-constants}
+\end{table}
 
 \subsection{Usability Survey Questions?}
 
