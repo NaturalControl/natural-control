@@ -1,0 +1,22 @@
+\subsection*{Kevin Kim}
+
+\begin{enumerate}
+  \item Identifying the specific tests and criteria we needed went well. This
+    made it easier to describe what we should check and how we would
+    evaluate the results.
+
+  \item I found this section fairly straightforward overall and did not run
+    into major difficulties. The main point that needed clarification was
+    how the testing responsibilities would be divided. The plan keeps V\&V
+    shared, assigns coordinators, and explains how responsibilities can be
+    changed.
+
+  \item For my CI and reliability role, I want to strengthen my understanding
+    of how to set up automated checks and run tests consistently. This will
+    help me put the planned testing activities into practice.
+
+  \item  I would use both documentation or tutorials and a small working
+    example. I would start with the documentation to understand the tools
+    and how they fit together, then build an example to apply what I
+    learned.
+\end{enumerate}
