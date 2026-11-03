@@ -165,10 +165,8 @@ supervise browser and connected-account tasks.
 
 All four team members will write and run tests, review each other's work, and
 record findings. Table~\ref{tab:vnv-team} summarizes responsibilities aligned
-with the Development Plan. Each member also cross-reviews another workstream,
-as in the Development Plan. If a member needs to change responsibilities, they
-tell the team on Discord as soon as they know and state which tasks are
-affected. The cross-reviewer does not automatically take over the work.
+with the Development Plan and the SRS (P.1). Curtis coordinates overall
+V\&V, and Lucas coordinates end-to-end testing.
 
 \begin{table}[htbp]
 \centering
@@ -189,6 +187,14 @@ Aaron Loh & Verify agent and tool integration, including approval checks and act
 Coordinators will track coverage and follow-up work, while testing remains a
 shared responsibility. Supervisor and classmate feedback will inform reviews;
 it will not replace team verification.
+
+Role changes will follow the process in the Development Plan. A member who
+needs a change will notify the team on Discord and identify the affected tasks.
+The team will split the work or assign a new owner based on availability;
+the cross-reviewer will not automatically inherit the role. The outgoing
+owner will hand over progress and blockers, and GitHub assignments and
+deadlines will be updated. The team will check the arrangement at the next
+weekly meeting.
 
 \subsection{SRS Verification}
 
@@ -861,6 +867,12 @@ Lucas DeBoer used Claude to help format LaTeX tables and to help generate the in
     Lucas then manually read over all of the AI-generated content and edited it to ensure that it was accurate and correct.
 \end{itemize}
 
+\paragraph{Kevin Kim's use.}
+Kevin Kim used OpenAI Codex to help plan and draft the Plan section and to
+edit his reflection from his own responses. The draft was checked against
+the Development Plan, SRS, Hazard Analysis, and repository configuration,
+and compiled locally. Review by another team member remains pending.
+
 \newpage{}
 
 \section{Appendix: Reflection}
@@ -885,6 +897,27 @@ graduate attribute of Lifelong Learning.
   question, what are at least two approaches to acquiring the knowledge or
   mastering the skill?  Of the identified approaches, which will each team
   member pursue, and why did they make this choice?
+\end{enumerate}
+
+\subsection{Kevin Kim}
+
+\begin{enumerate}
+  \item Identifying the specific tests and criteria we needed went well.
+  This made it easier to describe what we should check and how we would
+  evaluate the results.
+
+  \item I found this section fairly straightforward overall and did not run
+  into major difficulties. The main point that needed clarification was how
+  the testing responsibilities would be divided. The plan keeps V\&V shared,
+  assigns coordinators, and explains how responsibilities can be changed.
+
+  \item For my CI and reliability role, I want to strengthen my understanding
+  of how to set up automated checks and run tests consistently. This will help
+  me put the planned testing activities into practice.
+
+  \item I would use both documentation or tutorials and a small working
+  example. I would start with the documentation to understand the tools and
+  how they fit together, then build an example to apply what I learned.
 \end{enumerate}
 
 \end{document}
