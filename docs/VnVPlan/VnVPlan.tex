@@ -89,49 +89,80 @@ This document ... \wss{provide an introductory blurb and roadmap of the
 
 \subsection{Summary}
 
-\wss{Say what software is being tested.  Give its name and a brief overview of
-  its general functions.}
+The software under test is Natural Control, a voice interface that lets blind
+and visually impaired users hand off computer tasks to an AI agent. The user
+speaks a request. The agent works in a web browser and in connected accounts
+such as Gmail and Google Calendar. The user hears progress, answers questions,
+approves consequential actions, and can pause or cancel work at any time,
+without watching the screen.
+
+The system has an accessible web client (TypeScript/React), a LiveKit voice
+connection, and a Python agent worker. The worker contains the task manager,
+action gate, outcome verification, and task history. It uses Hermes as the
+agent harness, Composio for account tools, and Browser Use for websites.
 
 \subsection{Objectives}
 
-\wss{State what is intended to be accomplished.  The objective will be around
-  the qualities that are most important for your project.  You might have
-  something like: ``build confidence in the software correctness,''
-  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
-  just those that are most important.}
+The main objectives are to build confidence that:
+\begin{itemize}
+  \item \textbf{Consequential actions are safe.} No send, create, submit, or
+  purchase runs without the user's approval of its exact details. Changed
+  details or a pause make the old approval invalid.
+  \item \textbf{The user stays in control.} Stopping, correcting, and cancelling
+  work as specified, and a stop is acknowledged quickly.
+  \item \textbf{Reports are honest.} Results are reported as done only when the
+  account or website shows they happened. Uncertain outcomes are reported as
+  uncertain and are not blindly retried.
+  \item \textbf{The system is usable without sight.} Blind users can follow
+  progress and complete representative tasks after assisted setup.
+\end{itemize}
 
-\wss{You should also list the objectives that are out of scope.  You don't have 
-the resources to do everything, so what will you be leaving out.  For instance, 
-if you are not going to verify the quality of usability, state this.  It is also 
-worthwhile to justify why the objectives are left out.}
-
-\wss{The objectives are important because they highlight that you are aware of 
-limitations in your resources for verification and validation.  You can't do everything, 
-so what are you going to prioritize?  As an example, if your system depends on an 
-external library, you can explicitly state that you will assume that external library 
-has already been verified by its implementation team.}
+Out of scope:
+\begin{itemize}
+  \item Native Mac applications, local files, platforms other than macOS with
+  Chrome, and languages other than English. These are outside the initial
+  release.
+  \item Telephone access and saved workflows, which are stretch goals.
+  \item Verifying third-party components (LiveKit, Hermes, Composio, Browser
+  Use, the AI models). We assume their own teams verify them. We test only our
+  integration with them and record the limitations we observe.
+  \item Correct behaviour on every website, and protection against every
+  malicious input. We test representative sites and the safety requirements in
+  the Hazard Analysis.
+\end{itemize}
 
 \subsection{Custom Documents}
 
-\wss{Summarize the CDs (Custom Documents) that were tackled by this project.  CDs 
-can include usability testing, code walkthroughs, user documentation, formal
-proof, GenderMag personas, Design Thinking, etc.  CDs should have already
-been approved by the course instructor as included in your problem statement.
-You can use a pull request to update your CDs (in TeamComposition.csv or
-Repos.csv) if your plan changes as a result of the VnV planning exercise.}
+The project has two approved custom documents:
+\begin{itemize}
+  \item \textbf{Interview Report (fall).} Interviews with stakeholders about
+  their needs and current barriers. It checks that the requirements and test
+  tasks match real user needs.
+  \item \textbf{Usability Report (winter).} Sessions where participants use the
+  working system on defined tasks. It measures independent completion,
+  understanding of progress, and recovery, and serves as the main validation
+  evidence.
+\end{itemize}
 
 \subsection{Relevant Documentation}
 
-\wss{Reference relevant documentation.  This will definitely include your SRS
-  and your other project documents (design documents, like MG, MIS, etc).  You
-  can include these even before they are written, since by the time the project
-  is done, they will be written.  You can create BibTeX entries for your
-  documents and within those entries include a hyperlink to the documents.}
-
-\citet{SRS}
-
-\wss{Don't just list the other documents.  You should explain why they are relevant and 
-how they relate to your VnV efforts.}
+\begin{itemize}
+  \item \href{https://github.com/NaturalControl/natural-control/blob/main/docs/SRS-Meyer/SRS.tex}{SRS}:
+  the requirements under test. Its requirement IDs drive the traceability table,
+  and its task state machine (S.9) drives the stop, pause, and recovery tests.
+  \item \href{https://github.com/NaturalControl/natural-control/blob/main/docs/HazardAnalysis/HazardAnalysis.tex}{Hazard Analysis}:
+  failure modes and safety requirements. It is the source of the negative and
+  fault-injection tests.
+  \item \href{https://github.com/NaturalControl/natural-control/blob/main/docs/ProblemStatementAndGoals/ProblemStatement.tex}{Problem Statement and Goals}:
+  the intended benefits, which validation checks against.
+  \item \href{https://github.com/NaturalControl/natural-control/blob/main/docs/DevelopmentPlan/DevelopmentPlan.tex}{Development Plan}:
+  the stack, tools, team roles, and proof-of-concept plan that bound what we can
+  test.
+  \item \href{https://github.com/NaturalControl/natural-control/blob/main/docs/Design/SoftArchitecture/MG.tex}{Module Guide} and
+  \href{https://github.com/NaturalControl/natural-control/blob/main/docs/Design/SoftDetailedDes/MIS.tex}{Module Interface Specification}:
+  not written yet. Once complete, they will define the modules for design review
+  and unit testing (Section 5).
+\end{itemize}
 
 \section{Plan}
 
