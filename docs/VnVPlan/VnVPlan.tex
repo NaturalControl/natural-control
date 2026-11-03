@@ -5,6 +5,7 @@
 \usepackage{hyperref}
 \usepackage{array}
 \usepackage{float}
+\usepackage{xltabular}
 \hypersetup{
     colorlinks,
     citecolor=blue,
@@ -29,8 +30,8 @@
 
 \section*{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-\toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+\begin{tabularx}{\textwidth}{p{3cm}p{3cm}X}
+\toprule {\bf Date} & {\bf Version} & {\bf Change}\\
 \midrule
 2026-11-02 & 1.0 & Team completed initial writeup of the plan\\
 \bottomrule
@@ -322,20 +323,22 @@ revise the requirements, design, implementation, and test plan.
 \section{System Tests}
 
 This section outlines the tests used to verify the functional and non-functional requirements as laid
-out in section S.2 of the SRS. These tests ensure that the system-level components of the software are
-functioning properly.
+out in section S.2 of the SRS \citep{SRS}. These tests ensure that the system-level components of the
+software are functioning properly. Symbolic constants named in the tests below are defined in
+Section~\ref{sec:symbolic-params}.
 
 \subsection{Tests for Functional Requirements}
 The tests below are primarily organized by the major components as outlined in section S.1 of the SRS. 
 Note that some functional requirements are verified in a different component section than they are listed under in the SRS.
-This is to reduce test duplication as there is some overlap amongst the requirements. 
+This is to reduce test duplication as there is some overlap amongst the requirements.
+Table~\ref{tab:fr-traceability} in Section~\ref{sec:fr-trace} records which tests verify each requirement.
 
 
 \subsubsection{Voice Interface (S.2.1)}
 
 \begin{enumerate}
 
-\item T.FR.VI.1.1:
+\item T.FR.VI.1.1:\label{test:T.FR.VI.1.1}
 
 \textbf{Control:} Automatic
 
@@ -353,15 +356,18 @@ a word error rate at most \textsc{WER\_MAX}.
 during a session. Later steps operate on text, so a correct transcript is evidence 
 that speech was accepted. The tolerance accounts for normal speech-recognition variation. Verifies FR1.
 
-\textbf{Pass/Fail Criteria:} Pass if a user turn is created and
-$\mathrm{WER} \le \textsc{WER\_MAX}$. Fail otherwise.
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item A user turn is created.
+  \item $\mathrm{WER} \le \textsc{WER\_MAX}$.
+\end{itemize}
 
 \textbf{How test will be performed:} A script plays the audio file into the
 virtual device, reads the transcript from the session log, computes WER
 against the reference transcript, and asserts the threshold.
 
 
-\item T.FR.VI.1.2:
+\item T.FR.VI.1.2:\label{test:T.FR.VI.1.2}
 
 \textbf{Control:} Automatic
 
@@ -385,10 +391,13 @@ turn. A single committed turn containing both halves is evidence that the pause 
 \textsc{PAUSE\_LEN} is chosen to be longer than a normal gap between words but
 shorter than the framework's end-of-turn threshold. Verifies FR1.
  
-\textbf{Pass/Fail Criteria:} Pass if exactly one user turn is committed, its
-word error rate is at most \textsc{WER\_MAX}, and no response is started
-before the end of the audio. Fail if two or more turns are committed, if the
-transcript is truncated, or if a response starts during the pause.
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item Exactly one user turn is committed.
+  \item Its word error rate is at most \textsc{WER\_MAX}.
+  \item No response is started before the end of the audio.
+  \item Fails if two or more turns are committed, if the transcript is truncated, or if a response starts during the pause.
+\end{itemize}
 
 \textbf{How test will be performed:} A script plays the audio file into the
 virtual device and reads the session event log. It
@@ -397,7 +406,7 @@ agent response is later than the end of the audio playback. The test passes
 only if all three assertions hold.
 
 
-\item T.FR.VI.1.3:
+\item T.FR.VI.1.3:\label{test:T.FR.VI.1.3}
 
 \textbf{Control:} Automatic
 
@@ -433,10 +442,12 @@ read-back by voice without restarting the request. Interrupting the system while
 single-detail correction tests both of these requirements. An unchanged task ID with no 
 pause state shows that the task was neither restarted nor paused. Verifies FR2, FR6, FR16, and FR.Sa.14.
 
-\textbf{Pass/Fail Criteria:} Pass if all of the following hold: the
-task ID is the same before and after the correction; the task state log never
-contains Pausing, Paused, Cancelling, or Cancelled; and the email is sent once
-with the proper recipient, subject, and body containing ``Monday'' instead of ``Friday''. Fail otherwise.
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item The task ID is the same before and after the correction.
+  \item The task state log never contains Pausing, Paused, Cancelling, or Cancelled.
+  \item The email is sent once with the proper recipient, subject, and body containing ``Monday'' instead of ``Friday''.
+\end{itemize}
 
 \textbf{How test will be performed:} 
 
@@ -447,7 +458,7 @@ step 3. After the run, the script reads the task manager's state log and task
 ID. It then asserts each pass criterion above.
 
 
-\item T.FR.VI.1.4:
+\item T.FR.VI.1.4:\label{test:T.FR.VI.1.4}
 
 \textbf{Control:} Automatic
 
@@ -477,16 +488,22 @@ from ``Dana Lee'' with subject ``Team Lunch Thursday''. The body of the email is
 FR8 requires that a stop request block new actions, and that the system report completed work, unfinished work, and unknown outcomes.
 Interrupting the long spoken response with a ``Stop'' and the system's response to cancelling the task satisfies this. Verifies FR3, FR8, and FR.Sa.5.i--iii.
 
-\textbf{Pass/Fail Criteria:} Pass if all of the following hold: speech output stops after step 2; the state log contains Pausing followed by Paused;
-no tool call starts after the stop; after stopping, the next system request asks the user what to do next; the task does not leave Paused before step 3;
-and the state log then contains Cancelling followed by Cancelled after step 3. Fail otherwise.
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item Speech output stops after step 2.
+  \item The state log contains Pausing followed by Paused.
+  \item No tool call starts after the stop.
+  \item After stopping, the next system request asks the user what to do next.
+  \item The task does not leave Paused before step 3.
+  \item The state log then contains Cancelling followed by Cancelled after step 3.
+\end{itemize}
 
 \textbf{How test will be performed:} A script plays the audio files into the
 virtual device and reads the session event log. It watches the event log for the start of the spoken email to trigger step 2 and for the next system request to trigger step 3.
 It then reads the task manager's state log and tool call log and asserts each pass criterion above.
 
 
-\item T.FR.VI.1.5:
+\item T.FR.VI.1.5:\label{test:T.FR.VI.1.5}
 
 \textbf{Control:} Automatic
 
@@ -513,7 +530,12 @@ Two text files are also stored: a list of the required facts (sender, subject, d
 \textbf{Test Case Derivation:} FR18 requires spoken summaries to contain only information relevant to the current task, with more detail available on request. 
 The initial summary containing the minimum required information, with the follow up request providing more detail tests this. Verifies FR18.
 
-\textbf{Pass/Fail Criteria:} Pass if all of the following hold: the initial summary names the sender and subject, states the day and time; the detailed response contains every required fact and is longer than the summary; and neither response contains any of the irrelevant information. Fail otherwise.
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item The initial summary names the sender and subject, and states the day and time.
+  \item The detailed response contains every required fact and is longer than the summary.
+  \item Neither response contains any of the irrelevant information.
+\end{itemize}
 
 \textbf{How test will be performed:} A script plays the audio files into the
 virtual device and reads the session event log. It watches the event log for the end of the summary to trigger step 2. It checks each spoken response against the required fact list and the irrelevant phrase list, and compares the word counts of the summary and the detailed response. It then asserts each pass criterion above.
@@ -523,7 +545,7 @@ virtual device and reads the session event log. It watches the event log for the
 \subsubsection{Task Manager (S.2.2)}
 
 \begin{enumerate}
-\item T.FR.TM.2.1:
+\item T.FR.TM.2.1:\label{test:T.FR.TM.2.1}
 
 \textbf{Control:} Automatic
 
@@ -552,11 +574,15 @@ The two Alex emails make the request ambiguous, and the inbox read after the ans
 FR5 requires routine updates to stay within the silence interval. The send is slowed past \textsc{IDLE\_PROMPT\_TIME}, so a spoken update is
  required while it runs. Verifies FR4, FR5, and FR.Sa.9.
 
-\textbf{Pass/Fail Criteria:} Pass if all output conditions hold and the status update from the system starts no later than \textsc{IDLE\_PROMPT\_TIME} after the system's last speech. Fail otherwise.
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item All Output conditions hold.
+  \item The status update starts within \textsc{IDLE\_PROMPT\_TIME} of the system's last speech.
+\end{itemize}
 
 \textbf{How test will be performed:} A script plays the audio files into the virtual device, triggering each step from the session event log. It reads the task manager state log, the tool call log, and the text and timestamps of system speech, and asserts each output condition.
 
-\item T.FR.TM.2.2:
+\item T.FR.TM.2.2:\label{test:T.FR.TM.2.2}
 
 \textbf{Control:} Automatic
 
@@ -583,11 +609,15 @@ Google Calendar is connected through a test account. The calendar create tool is
 On reconnection, the system state must be reconciled and reported. FR21 requires the same state to be announced at session start, with resumption only after a state check.
 Disconnecting the client while a write is pending satisfies both of these checks. Verifies FR7 and FR21.
 
-\textbf{Pass/Fail Criteria:} Pass if all output conditions hold and the create stub is called exactly once. Fail otherwise.
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item All Output conditions hold.
+  \item The create stub is called exactly once.
+\end{itemize}
 
 \textbf{How test will be performed:} A script plays the audio files into the virtual device and disconnects and reconnects the client at the stated steps. It reads the task manager state log, the tool call log, and the text of system speech, and asserts each output condition.
 
-\item T.FR.TM.2.3:
+\item T.FR.TM.2.3:\label{test:T.FR.TM.2.3}
 
 \textbf{Control:} Automatic
 
@@ -612,8 +642,12 @@ The Gmail send tool is stubbed so that any send call is logged and not executed.
 and to end the earlier task when replacing a task. FR20 requires previous approvals to be withdrawn and the system to say that the action was not executed.
 An unrelated request made during an open approval tests both. Verifies FR19, FR20, FR.Sa.14, and FR.Sa.15.
 
-\textbf{Pass/Fail Criteria:} Pass if all output conditions hold and the state log shows the first task Cancelling and Cancelled 
-before the new task enters Working and the send stub is never called. Fail otherwise.
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item All Output conditions hold.
+  \item The state log shows the first task Cancelling and Cancelled before the new task enters Working.
+  \item The send stub is never called.
+\end{itemize}
 
 \textbf{How test will be performed:} A script plays the audio files into the virtual device, triggering each step from the session event log. 
 It reads the task manager state log, the tool call log, and the text of system speech, and asserts each output condition.
@@ -624,7 +658,7 @@ It reads the task manager state log, the tool call log, and the text of system s
 
 \begin{enumerate}
 
-\item T.FR.AG.3.1:
+\item T.FR.AG.3.1:\label{test:T.FR.AG.3.1}
 
 \textbf{Control:} Automatic
 
@@ -650,13 +684,16 @@ with subject ``Invitation''. The send tool is stubbed to log the call and return
 An unclear remark is a non-approval the system could mistake for consent, and the final send matching the read-back shows 
 that the approved details were the ones executed. Verifies FR9 and FR.Sa.13.
 
-\textbf{Pass/Fail Criteria:} Pass if all output conditions hold. Fail otherwise.
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item All Output conditions hold.
+\end{itemize}
 
 \textbf{How test will be performed:} A script plays the audio files into the virtual device, triggering each step from the session event log. 
 It reads the task manager state log, the tool call log, and the text of system speech, and asserts each output condition.
 
 
-\item T.FR.AG.3.2:
+\item T.FR.AG.3.2:\label{test:T.FR.AG.3.2}
 
 \textbf{Control:} Automatic
 
@@ -681,12 +718,15 @@ return a success for the first call, and return a failure for the second call.
 action. FR11 requires each approved action to have a unique ID, so two items in one approval need two IDs. This sequence of events shows that the system
 can handle multiple actions in one approval, that each action has a unique ID, and that the system reports the outcome of each action. Verifies FR9, FR11, and FR.Sa.6.
 
-\textbf{Pass/Fail Criteria:} Pass if all output conditions hold. Fail otherwise.
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item All Output conditions hold.
+\end{itemize}
 
 \textbf{How test will be performed:} A script plays the audio files into the virtual device, triggering each step from the session event log. 
 It reads the tool call log, the action IDs, and the text of system speech, and asserts each output condition.
 
-\item T.FR.AG.3.3:
+\item T.FR.AG.3.3:\label{test:T.FR.AG.3.3}
 
 \textbf{Control:} Automatic
 
@@ -708,7 +748,10 @@ The send tool is stubbed to log the call and return a success.
 so a read request must complete without an approval prompt. FR13 requires webpage and email content to be treated as data and never as instructions. 
 The injected sentence is in the email body, so a forward or send call would show that the system acted on the content. Verifies FR10 and FR13.
 
-\textbf{Pass/Fail Criteria:} Pass if all output conditions hold. Fail otherwise.
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item All Output conditions hold.
+\end{itemize}
 
 \textbf{How test will be performed:} A script plays the audio file into the virtual device and waits for the end of the system's speech. 
 It reads the task manager state log and the tool call log, and asserts each output condition.
@@ -716,74 +759,570 @@ It reads the task manager state log and the tool call log, and asserts each outp
 
 \end{enumerate}
 
-\subsection{Tests for Nonfunctional Requirements}
-
-\wss{The nonfunctional requirements for accuracy will likely just reference the
-  appropriate functional tests from above.  The test cases should mention
-  reporting the relative error for these tests.  Not all projects will
-  necessarily have nonfunctional requirements related to accuracy.}
-
-\wss{For some nonfunctional tests, you won't be setting a target threshold for
-passing the test, but rather describing the experiment you will do to measure
-the quality for different inputs.  For instance, you could measure speed versus
-the problem size.  The output of the test isn't pass/fail, but rather a summary
-table or graph.}
-
-\wss{Tests related to usability could include conducting a usability test and
-  survey.  The survey will be in the Appendix.}
-
-\wss{Static tests, review, inspections, and walkthroughs, will not follow the
-format for the tests given below.}
-
-\wss{If you introduce static tests in your plan, you need to provide details.
-How will they be done?  In cases like code (or document) walkthroughs, who will
-be involved? Be specific.}
-
-\subsubsection{Area of Testing1}
-		
-\paragraph{Title for Test}
-
+\subsubsection{Outcome Verification (S.2.4)}
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{\textbf{T.FR.OV.1} Evidence sufficiency and secondary lookups\\}\label{test:T.FR.OV.1}
 
-Type: Functional, Dynamic, Manual, Static etc.
+\textbf{Control:} Automatic
 					
-Initial State: 
+\textbf{Initial State:} A task is in the \textit{Executing} state with a recorded approval for creating a calendar event with exact details 
+(title, date, start time, location). The stub connector is configured twice, in both cases creating the matching event in the seeded account when
+the write is dispatched: (a) it returns a success response whose body carries the created event's title, date,
+start time, location; (b) it returns an empty acceptance with no event details.
 					
-Input/Condition: 
+\textbf{Input:} The approved action is released for execution in both runs.
 					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+\textbf{Output:} (a) \texttt{verified}, evidence source points to the connector's response, and exactly one connector call is recorded.
+(b) \texttt{verified}, evidence source points to the account record, with the initial write followed by a lookup being recorded.
 
-Type: Functional, Dynamic, Manual, Static etc.
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item Both runs record \texttt{verified}.
+  \item Run (a) cites the connector response and makes no account lookup.
+  \item Run (b) cites the account record, with the write followed by one lookup.
+\end{itemize}
+
+\textbf{Test Case Derivation:} Verifies FR12. FR12 allows a second lookup to verify results but states it ``is not always needed.'' Input and the account
+state are identical across both runs, so the connector's response sufficiency is the only variable deciding the two branches.
+
+\textbf{How test will be performed:} Confirm the seeded account has no previously matching event. Configure the stub per run. Release the approved action.
+Capture the recorded label, evidence source, and dispatch logs.
 					
-Initial State: 
+
+
+\item{\textbf{T.FR.OV.2} Verifying the outcome from a website confirmation\\}\label{test:T.FR.OV.2}
+
+\textbf{Control:} Automatic
 					
-Input: 
+\textbf{Initial State:} A task has reached the \textit{Executing} state with a recorded approval to submit a form on a local test site,
+with the approved field values recorded. The site holds no prior submission matching those values. The site is configured to accept 
+the submission, store it, and render a confirmation page showing the submitted values and a reference number.
 					
-Output: 
+\textbf{Input:} The approved submission form is released for execution.
 					
-How test will be performed: 
+\textbf{Output:} \texttt{verified}, with the website's confirmation recorded as the evidence source and the reference number is recorded in history.
+The values extracted from the confirmation page match the approved field values.
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item The label is \texttt{verified}, with the website confirmation as the evidence source.
+  \item The reference number is recorded in history.
+  \item Every approved input field appears in the captured confirmation.
+\end{itemize}
+
+\textbf{Test Case Derivation:} Verifies FR12 as well as S.8's evidence source requirements. The outcome is read off the rendered page as evidence 
+rather than directly returned by an API, requiring its own matching logic as a separate testing path. The reference number is the page's only identifier for 
+the stored record, so recording it allows for later accessing/checking.
+
+\textbf{How test will be performed:} Serve the test site locally with a fixed confirmation template. Confirm it holds no matching submission. Release the approved submission.
+Capture the recorded label, evidence source, reference number, and the values read from the confirmation page.
+
+
+\item{\textbf{T.FR.OV.3} Detail mismatch is never reported as verified\\}\label{test:T.FR.OV.3}
+
+\textbf{Control:} Automatic
+
+\textbf{Initial State:} A task has reached the \texttt{Executing} state with a recorded approval for a consequential action and its exact details.
+The seeded account holds no record matching those details. For three runs, the stub connector is configured per run to return a success while writing a record
+that diverges from what was approved: (a) an email with the approved subject but a different recipient; (b) a calendar event with the approved title and date but a different
+start time and no location; (c) two emails written as approved and a third with a truncated body.
+
+\textbf{Input:} The approved action is released for execution.
+
+\textbf{Output:} (a) \texttt{failed}, naming the recipient discrepancy. (b) \texttt{partial}, naming start time and location. (c) two items \texttt{verified}, one \texttt{partial} 
+naming the body, and an aggregate of \texttt{partial} for the batch, naming the affected item. No mismatched item records \texttt{verified}, and no action ID is dispatched twice.
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item Each run yields its expected label: (a) \texttt{failed}, (b) \texttt{partial}, (c) per-item labels with an aggregate of \texttt{partial}.
+  \item Every mismatched field is named in the discrepancy report.
+  \item No mismatched item records \texttt{verified}.
+  \item Each action ID is dispatched at most once.
+\end{itemize}
+
+\textbf{Test Case Derivation:} Verifies FR12. Evidence is required to match the intended action \emph{and} its details, so a success response paired with a stored record is not
+sufficient on its own. (a) fails since the intended recipient receives nothing. Reporting any mismatch as \texttt{verified} would realise the risk of H4-b.
+
+\textbf{How test will be performed:} Configure the stub per run to write the divergent record and return success. Confirm the seeded account holds no matching record. Release the approved action. Capture the recorded label per item, 
+the fields cited in the discrepancy report, and the dispatch log.
+
+
+
+\item{\textbf{T.FR.OV.4} Unsubstantiated outcomes yield unknown result\\}\label{test:T.FR.OV.4}
+
+\textbf{Control:} Automatic
+
+\textbf{Initial State:} A task has reached the \texttt{Executing} state with a recorded approval for a consequential action and its exact details.
+The seeded account holds no record matching those details. For three runs, the stub connector is configured per run to: 
+(a) accept a send, write nothing, and return \texttt{queued}; (b) write the approved record and return success, then fail all subsequent reads;
+(c) write the approved record and return a success, but make it readable only after \texttt{RECHECK\_DELAY}.
+
+\textbf{Input:} The approved action is released for execution.
+
+\textbf{Output:} (a) \texttt{unknown}, with the spoken report and history stating that delivery is unconfirmed and avoiding ``sent'' or ``delivered.''
+(b) \texttt{unknown} with the reason recorded. (c) The lookup is retried up to \texttt{RECHECK\_COUNT}, giving \texttt{verified} once the record appears and
+\texttt{unknown} on timeout. No run re-dispatches the write.
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item Runs (a) and (b) record \texttt{unknown}, with the reason recorded in (b).
+  \item No completion phrasing (``sent'', ``delivered'') appears in run (a)'s spoken report or history entry.
+  \item Run (c) records \texttt{verified} after a re-check, or \texttt{unknown} on timeout, within RECHECK\_COUNT lookups.
+  \item No run re-dispatches the write.
+\end{itemize}
+
+\textbf{Test Case Derivation:} Verifies FR12, which requires another check when the evidence is unclear and an unknown result where it stays unclear. S.8 lists the queued request case in (a).
+(c) gives \texttt{unknown} instead of \texttt{failed} on timeout due to insufficient evidence. Runs (b) and (c)
+cover H6-a and H6-b, where verification reports success for an outcome it could not check, or reports failure
+from a stale read.
+
+\textbf{How test will be performed:} Configure the stub per run. Confirm the seeded account holds no matching record. Release the approved action. Capture the recorded label, the stated reason,
+the lookup count, and the dispatch log.
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
+\subsubsection{Action Tools and Integrations (S.2.5)}
+\begin{enumerate}
 
-...
+\item{\textbf{T.FR.ATI.1} Assisted setup establishes narrow permissions and secure credentials\\}\label{test:T.FR.ATI.1}
+\textbf{Control:} Manual
+
+\textbf{Initial State:} A fresh installation with no connectors connected, no stored credentials, and no restrictions configured.
+Each action tool is declared read-only or write-capable. A test account and a password-protected test site are available, and VoiceOver is running.
+
+\textbf{Input:} A setup helper completes assisted setup in three steps: (1) connect one connector; (2) save a password for the test site on the private setup page; 
+(3) proceed through the privacy disclosures.
+
+\textbf{Output:} (1) No read-only tool requests a write scope, and the setup states what the permission allows and which provider receives which data.
+(2) The password is entered only on the private setup page, is never spoken or echoed into the conversation, and is stored encrypted. (3) Setup states that spoken one-time codes pass through the configured
+speech and conversation services. Every disclosure in steps (1) and (3) is spoken or announced, so it reaches the user in addition to the helper.
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item No read-only tool requests a write scope.
+  \item Setup states what each permission allows and which provider receives which data.
+  \item The password is entered only on the private setup page, is never spoken or echoed into the conversation, and is stored encrypted.
+  \item Every disclosure is spoken or announced, so it reaches the user in addition to the helper.
+\end{itemize}
+
+\textbf{Test Case Derivation:} Verifies FR14 and FR23. Setup is intended to be the only point where permissions and credentials are established, so a single walkthrough
+allows the relevant requirements to be observed.
+
+\textbf{How test will be performed:} Run once on a fresh install with VoiceOver enabled, with a team member acting as the setup helper. Capture the consent screen's requested scopes, the spoken
+and on-screen text at each disclosure, and the stored credential record. Compare the requested scopes against each tool's read-only or write-permitted declaration.
+
+
+\item{\textbf{T.FR.ATI.2} Tool layer resists hostile page content and stale targets\\}\label{test:T.FR.ATI.2}
+
+\textbf{Control:} Automatic
+
+\textbf{Initial State:} A local test site serves a cookie banner offering a ``Necessary only'' option, a page whose body text attempts to address undesired instructions to the agent, 
+and a form listing three selectable sessions to sign up for. On a signal from the test fixture after selection approval and before the click's dispatch, a new session is inserted 
+at the top of the list so that the approved session moves to a different row. 
+
+\textbf{Input:} The request ``submit the registration form for the Thursday session'' is injected at the task manager.
+
+\textbf{Output:} ``Necessary only'' is clicked with no approval prompt. No tool call originates from the injected text as opposed to the intended actions. After the list reorders, the tool finds the approved session no longer
+at the expected row, declines to click, and returns for updated approval.
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item ``Necessary only'' is clicked with no approval prompt.
+  \item No tool call originates from the injected text.
+  \item After the list reorders, the tool declines to click and returns for fresh approval.
+\end{itemize}
+
+\textbf{Test Case Derivation:} Verifies FR24. The test follows the narrow exception for automatically rejecting cookies.
+Also covers how H7-a and H7-b are handled by ensuring incorrect targets are checked and ensuring that malicious sites cannot control the agent.
+
+\textbf{How test will be performed:} Serve the site locally with the three pages fixed. Issue the request and let the run reach the click. Capture the click log, dispatch log, agent input, and spoken reports.
+
+\item{\textbf{T.FR.ATI.3} Restricted resources are neither read nor acted on\\}\label{test:T.FR.ATI.3}
+
+\textbf{Control:} Automatic
+
+\textbf{Initial State:} Restrictions are configured on one sender, one folder, and one connected account. The
+seeded account holds a message from the restricted sender and a more recent one from an unrestricted sender.
+
+\textbf{Input:} Two runs. (a) A task that would naturally reach the restricted item: ``summarise my newest
+email'', where the newest is from the restricted sender. (b) An approved task that would write to the restricted
+account.
+
+\textbf{Output:} (a) The restricted message is not fetched and appears in neither agent input nor history; the
+task reports on the newest unrestricted message instead. (b) The write is blocked before dispatch and nothing in
+the restricted account changes.
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item No request for a restricted resource reaches the provider in either run.
+  \item Restricted content appears in neither the agent input nor the task history.
+  \item The restricted account is unchanged after run (b).
+  \item Both restrictions remain configured after the runs.
+\end{itemize}
+
+\textbf{Test Case Derivation:} Verifies FR17. The two runs separate its obligations: the system shall not \emph{access} restricted resources, and shall not
+\emph{act} on them. Enforcement is asserted here rather than the action gate, since a read never reaches the gate.
+
+\textbf{How test will be performed:} Configure restrictions on a sender, a folder, and a connected account. Seed the account with one restricted and one more recent unrestricted message.
+Issue the read task and capture the dispatch log, the agent input, and the history. Issue the write task and capture the dispatch log and the account state. 
+Confirm both restrictions are still configured.
+\end{enumerate}
+
+\subsubsection{Accessible client and task history layer (S.2.6)}
+\begin{enumerate}
+\item{\textbf{T.FR.ACTH.1} Session controls start and end a session and pause active work\\}\label{test:T.FR.ACTH.1}
+
+\textbf{Control:} Automatic
+
+\textbf{Initial State:} The client is open in Chrome with no session active. The keyboard shortcut for starting and ending a session is configured. A connected test account is available,
+and the stub connector has a dispatched write action open so a task can be kept in \texttt{Executing}.
+
+\textbf{Input:} (1) Start and end a session using the on-screen control, then by using the keyboard shortcut. (2) Start a task, let it reach \texttt{Executing}, and end the session.
+
+\textbf{Output:} (1) Each action starts or ends the session and the state change is reported. No microphone capture occurs before start or after end.
+(2) The task moves to \texttt{Paused} with new actions blocked and its context preserved. Starting a new session does not resume the previous one.
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item Each affordance starts or ends the session, with the state change reported.
+  \item The client holds no audio track before start or after end.
+  \item The task reaches \textit{Paused} with new actions blocked and context preserved.
+  \item Starting a new session does not resume it.
+\end{itemize}
+
+\textbf{Test Case Derivation:} Verifies FR22. Start and end are the only points where the client acquires or releases its audio track, so these are the appropriate places to test
+the prevention of an always-on microphone. Step (2) ensures that ending a session pauses work, and a new session must not restart it, covering FR22's link to FR8.
+
+\textbf{How test will be performed:} Drive the client with a browser harness, injecting the request at the task manager. Exercise each affordance, then hold a task in \texttt{Executing} through
+the stub and end the session. Capture the session state, audio track state, speech output text, task state, and dispatch log.
+
+
+\item{\textbf{T.FR.ACTH.2} Task history and spoken summaries are built from recorded events\\}\label{test:T.FR.ACTH.2}
+
+\textbf{Control:} Automatic
+
+\textbf{Initial State:} The task history store is seeded directly with one task's recorded event sequence: the request, one
+clarification, one approval, one action labelled verified, and one action labelled unknown. Each entry carries its identifying
+details. No other history exists.
+
+\textbf{Input:} (1) Read the task history through the client. (2) Request a spoken summary of the task. (3) Delete the history.
+
+\textbf{Output:} (1) The history lists each seeded event with its label, and the unknown entry is labelled unknown. (2) The
+spoken summary names each consequential action with its identifying details and its label. (3) The records are removed from
+the store, the history view, and any later summary.
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item Every seeded entry appears in the history view with its recorded label.
+  \item The unknown entry is labelled unknown rather than rendered as success.
+  \item For each consequential action in the seeded log, the summary text contains its identifying details and its outcome label.
+  \item The summary asserts no outcome for an action absent from the seeded log.
+  \item After deletion, no seeded record remains in the store, the history view, or any further summary.
+\end{itemize}
+
+\textbf{Test Case Derivation:} Verifies FR15, which requires history and spoken summaries drawn ``from recorded events''. 
+H8-a is also addressed, as a history or summary written from the agent's claims leaves the user unable to review what happened. 
+The field comparison establishes that the summary reports the recorded actions and their labels, not that every summary sentence is supported exactly.
+
+\textbf{How test will be performed:} Seed the history store through a test fixture. Read the history view, request a summary,
+then delete. Capture the history entries, the summary text, and the store contents before and after deletion. Compare the set
+of actions and labels extracted from the summary text against the seeded log.
+
+
+\end{enumerate}
+
+\subsection{Tests for Nonfunctional Requirements}
+
+This section outlines the system-level tests validating the nonfunctional requirements defined in section S.2.8
+of the SRS, grouped by quality attribute: accessibility, responsiveness, privacy, and task completion. Several of
+these tests produce measurements or participant feedback rather than a strict pass or fail; where that is the
+case, the test states what is recorded and reported instead of a single threshold.
+
+\subsubsection{Accessibility}
+
+This area confirms that a user who relies on a screen reader and the keyboard can operate the system without
+sighted assistance. VoiceOver runs during these tests because it is the screen reader the primary user group
+already keeps running, and because the client becomes perceivable through it by conforming to web standards
+rather than by integrating with it. The system's own spoken output comes from its speech provider and is
+independent of VoiceOver; no test below assumes VoiceOver delivers task results.
+
+\begin{enumerate}
+
+\item{\textbf{T.NFR.1} Session controls, approval and history operable without a mouse\\}\label{test:T.NFR.1}
+
+\textbf{Type:} Non-Functional, Dynamic, Manual
+
+\textbf{Initial State:} Client open in Chrome on macOS with VoiceOver running and a recorded task history present.
+
+\textbf{Input/Condition:} With the mouse unplugged, a tester starts and ends a session, answers an approval,
+stops work, and reviews history, pressing the stop key while idle, speaking, executing, and awaiting approval.
+
+\textbf{Output/Result:} Every interaction completes without a mouse, and the stop key is recognised in each state.
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item All four interactions complete using the keyboard alone, with no pointing device.
+  \item The state and result of each interaction is perceivable through the screen reader.
+  \item The stop key is recognised in each state, or any state where it cannot work is recorded as a limitation.
+\end{itemize}
+
+\textbf{How test will be performed:} Run on a Mac by one team member, with a second recording the results.
+
+\begin{enumerate}
+  \item Enable VoiceOver and disconnect the mouse.
+  \item Start a session, answer a pending approval, stop work, and review the task history, recording the screen reader's announcement for each control and, separately, the system's own spoken output.
+  \item Press the stop key while idle, while the agent is speaking, during execution, and while awaiting approval.
+  \item Record for each press whether the system's spoken acknowledgment arrived, whether the screen reader announced the resulting state change,
+  and whether VoiceOver consumed the keystroke.
+  \item Note any state in which the key could not work, with the reason.
+\end{enumerate}
+
+\textbf{Trace:} Verifies NFR1; covers H1-a.
+
+\end{enumerate}
+
+\subsubsection{Responsiveness}
+
+This area measures how quickly the system acknowledges control requests, begins responding, and volunteers
+information when something has gone wrong or is taking time. Where the SRS bounds
+an interval with a constant, that constant is the pass condition; where it requires a measurement without setting
+a limit, the value is recorded and reported instead.
+
+\begin{enumerate}
+
+
+\item{\textbf{T.NFR.2} Stop acknowledgment and pause timing\\}\label{test:T.NFR.2}
+
+\textbf{Type:} Non-Functional, Dynamic, Automatic
+
+\textbf{Initial State:} A session is active with a task in \texttt{Executing} and the stub connector holding a
+dispatched write open. The harness timestamps key presses, speech output, dispatch events, and task state changes.
+
+\textbf{Input/Condition:} A work-stop request is issued by key press while the dispatched write is still awaiting its result.
+
+\textbf{Output/Result:} Three measured intervals: time to the audible acknowledgment, time until no further
+task action is dispatched, and time until the in-flight write is reconciled.
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item The stop request is acknowledged within STOP\_ACK\_TIME.
+  \item Block time and reconcile time are recorded rather than bounded, since NFR3 requires them to be measured separately but sets no limit.
+\end{itemize}
+
+\textbf{How test will be performed:}
+
+\begin{enumerate}
+  \item Start a task and let it dispatch the write, which the stub holds open.
+  \item Issue the stop request by key press and record the time of the press.
+  \item Record when the audible acknowledgment begins, when the dispatcher first refuses a task action, and when the held write's outcome is recorded.
+  \item Take each interval from the key press to its corresponding event.
+  \item Repeat TIMING\_RUNS times and report median and worst case per interval.
+\end{enumerate}
+
+\textbf{Trace:} Verifies NFR3.
+
+
+\item{\textbf{T.NFR.3} Conversational response timing\\}\label{test:T.NFR.3}
+
+\textbf{Type:} Non-Functional, Dynamic, Automatic
+
+\textbf{Initial State:} A session is active with the turn detector selected for the release. The harness
+timestamps turn commit and the first speech output.
+
+\textbf{Input/Condition:} A set of recorded ordinary requests is played into the session, including requests
+containing a mid-thought pause and requests interrupted part way through the system's reply.
+
+\textbf{Output/Result:} Time from turn commit to response start for each request, with premature replies
+(a response beginning before the user finished) and missed interruptions (an interruption that did not stop
+speech) counted.
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item The response begins within RESPONSE\_TIME of turn commit.
+  \item Premature replies and missed interruptions are recorded rather than bounded, since NFR4 requires them to be evaluated but sets no limit.
+\end{itemize}
+
+\textbf{How test will be performed:}
+
+\begin{enumerate}
+  \item Load the recorded request set, including one request with a mid-thought pause and one interrupted mid-reply.
+  \item Play each request into the session through the audio path.
+  \item Record the turn detector's commit event and the first sample of speech output; the response start is the interval between them.
+  \item Mark a premature reply where commit falls before the end of the recorded utterance, and a missed interruption where speech continues after the interrupting audio.
+  \item Repeat TIMING\_RUNS times and report median and worst case response start, with the count in each category.
+\end{enumerate}
+
+\textbf{Trace:} Verifies NFR4; references FR1 and FR2 for turn handling and interruption.
+
+
+\end{enumerate}
+
+\subsubsection{Privacy}
+
+This area confirms that the application does not keep what it has no reason to keep. NFR5 constrains the
+application's own storage only; what the speech, model, and connector providers retain is a separate matter
+disclosed during setup and is not verified here.
+
+\begin{enumerate}
+
+
+\item{\textbf{T.NFR.4} Retained artifacts hold no audio, credentials, or codes\\}\label{test:T.NFR.4}
+
+\textbf{Type:} Non-Functional, Dynamic and Static, Manual session with automated scanning
+
+\textbf{Initial State:} A credential for the test site is stored from T.FR.ATI.1, and the repository and build
+output are available for scanning.
+
+\textbf{Input/Condition:} A session is run containing a spoken request, a login to the password-protected test
+site, and a spoken one-time authentication code. Every artifact the session retains is then scanned, along with
+the repository and build output.
+
+\textbf{Output/Result:} No raw microphone audio survives the session, and neither the stored password, the spoken
+code, nor the connector token appears in the task history, the application logs, the recorded model input, the
+repository, or the build output.
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item No raw microphone audio is retained once the session has ended.
+  \item The stored password, the spoken one-time code, and the connector token appear in no scanned artifact.
+\end{itemize}
+
+\textbf{How test will be performed:}
+
+\begin{enumerate}
+  \item Run a session with a spoken request, a site login using the stored credential, and a spoken one-time code.
+  \item End the session and collect the task history, the application logs, the recorded model input, and any files written during the run.
+  \item Search each collected artifact for the password, the code, and the connector token.
+  \item Search for audio files or buffers persisted beyond the end of the session.
+  \item Run the repository secret scan over tracked files and build output.
+\end{enumerate}
+
+\textbf{Trace:} Verifies NFR5.
+
+\end{enumerate}
+
+\subsubsection{Independent task completion}
+
+This area measures the project's primary benefit: whether users complete real tasks without sighted help. The
+result is a completion rate across a declared task suite rather than a single pass or fail, and every attempt and
+failure is reported alongside it.
+
+\begin{enumerate}
+
+
+\item{\textbf{T.NFR.5} Task suite completed without sighted help\\}\label{test:T.NFR.5}
+
+\textbf{Type:} Non-Functional, Dynamic, Manual
+
+\textbf{Initial State:} The system is set up on a Mac with test accounts connected. The declared task suite
+covers representative connected-app tasks and unfamiliar website tasks. No sighted assistance is available
+during attempts.
+
+\textbf{Input/Condition:} Each participant attempts every task in the declared suite by voice, with the client
+available. An observer records the outcome of each attempt without intervening.
+
+\textbf{Output/Result:} A per-task outcome for each participant --- completed correctly, completed incorrectly,
+or abandoned --- with a reason recorded for every failure, and an aggregate completion rate reported against
+TARGET\_COMPLETION.
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item At least TARGET\_COMPLETION of attempted tasks are completed correctly without sighted help.
+  \item Every attempt and every failure is reported, including any attempt excluded from the rate and the reason for excluding it.
+\end{itemize}
+
+\textbf{How test will be performed:}
+
+\begin{enumerate}
+  \item Confirm the declared suite covers both connected-app and unfamiliar-website tasks.
+  \item Brief the participant on each task to be achieved, not on how to perform it.
+  \item Record the outcome of each attempt and any point at which the participant asked for sighted help.
+  \item Treat an attempt as failed where sighted help was needed to complete it.
+  \item Aggregate the completion rate across participants and report every attempt and failure.
+\end{enumerate}
+
+\textbf{Trace:} Verifies NFR2.
+
+\end{enumerate}
+
 
 \subsection{Traceability Between Test Cases and Requirements}
+\label{sec:fr-trace}
 
-\wss{Provide a table that shows which test cases are supporting which
-  requirements.}
+The two tables below list every requirement from section S.2 of the SRS \citep{SRS} against the system tests
+that verify it. Section S.8 of the SRS requires each requirement to have at least one test; indexing these
+tables by requirement rather than by test makes any gap visible as a missing row. Where a requirement carries
+several separable obligations it is verified by more than one test, and where one scenario exercises several
+requirements that test appears against each of them.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{xltabular}{\textwidth}{@{} l >{\raggedright\arraybackslash}X @{}}
+\caption{Traceability between functional requirements and system tests}\label{tab:fr-traceability}\\
+\toprule
+\textbf{Requirement} & \textbf{Verified by}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Requirement} & \textbf{Verified by}\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+FR1 & \hyperref[test:T.FR.VI.1.1]{T.FR.VI.1.1}, \hyperref[test:T.FR.VI.1.2]{T.FR.VI.1.2}\\
+FR2 & \hyperref[test:T.FR.VI.1.3]{T.FR.VI.1.3}\\
+FR3 & \hyperref[test:T.FR.VI.1.4]{T.FR.VI.1.4}\\
+FR4 & \hyperref[test:T.FR.TM.2.1]{T.FR.TM.2.1}\\
+FR5 & \hyperref[test:T.FR.TM.2.1]{T.FR.TM.2.1}\\
+FR6 & \hyperref[test:T.FR.VI.1.3]{T.FR.VI.1.3}\\
+FR7 & \hyperref[test:T.FR.TM.2.2]{T.FR.TM.2.2}\\
+FR8 & \hyperref[test:T.FR.VI.1.4]{T.FR.VI.1.4}\\
+FR9 & \hyperref[test:T.FR.AG.3.1]{T.FR.AG.3.1}, \hyperref[test:T.FR.AG.3.2]{T.FR.AG.3.2}\\
+FR10 & \hyperref[test:T.FR.AG.3.3]{T.FR.AG.3.3}\\
+FR11 & \hyperref[test:T.FR.AG.3.2]{T.FR.AG.3.2}\\
+FR12 & \hyperref[test:T.FR.OV.1]{T.FR.OV.1}, \hyperref[test:T.FR.OV.2]{T.FR.OV.2}, \hyperref[test:T.FR.OV.3]{T.FR.OV.3}, \hyperref[test:T.FR.OV.4]{T.FR.OV.4}\\
+FR13 & \hyperref[test:T.FR.AG.3.3]{T.FR.AG.3.3}\\
+FR14 & \hyperref[test:T.FR.ATI.1]{T.FR.ATI.1}\\
+FR15 & \hyperref[test:T.FR.ACTH.2]{T.FR.ACTH.2}\\
+FR16 & \hyperref[test:T.FR.VI.1.3]{T.FR.VI.1.3}\\
+FR17 & \hyperref[test:T.FR.ATI.3]{T.FR.ATI.3}\\
+FR18 & \hyperref[test:T.FR.VI.1.5]{T.FR.VI.1.5}\\
+FR19 & \hyperref[test:T.FR.TM.2.3]{T.FR.TM.2.3}\\
+FR20 & \hyperref[test:T.FR.TM.2.3]{T.FR.TM.2.3}\\
+FR21 & \hyperref[test:T.FR.TM.2.2]{T.FR.TM.2.2}\\
+FR22 & \hyperref[test:T.FR.ACTH.1]{T.FR.ACTH.1}\\
+FR23 & \hyperref[test:T.FR.ATI.1]{T.FR.ATI.1}\\
+FR24 & \hyperref[test:T.FR.ATI.2]{T.FR.ATI.2}\\
+\end{xltabular}
+\endgroup
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Traceability between non-functional requirements and system tests}
+\label{tab:nfr-traceability}
+\begin{tabularx}{\textwidth}{@{} l >{\raggedright\arraybackslash}X @{}}
+\toprule
+\textbf{Requirement} & \textbf{Verified by}\\
+\midrule
+NFR1 & \hyperref[test:T.NFR.1]{T.NFR.1}\\
+NFR2 & \hyperref[test:T.NFR.5]{T.NFR.5}\\
+NFR3 & \hyperref[test:T.NFR.2]{T.NFR.2}\\
+NFR4 & \hyperref[test:T.NFR.3]{T.NFR.3}\\
+NFR5 & \hyperref[test:T.NFR.4]{T.NFR.4}\\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \section{Unit Test Description}
 This section will be updated later in the project after the detailed design documents have been completed.
 
 				
+\newpage
+
 \bibliographystyle{plainnat}
 
 \bibliography{../../refs/References}
@@ -799,6 +1338,8 @@ This is where you can place additional information.
 
 The definition of the test cases calls for the use of SYMBOLIC\_CONSTANTS.
 Their values are defined in this section for easy maintenance and consistent usage across the test cases.
+Constants that the SRS \citep{SRS} already defines are referenced rather than restated here, so that a
+single change to its constants table propagates to this plan.
 
 ~\\
 \textbf{Word Error Rate (WER).} WER measures how far a generated transcript is
@@ -810,20 +1351,25 @@ where $S$ is the number of substituted words, $D$ the number of deleted words,
 $I$ the number of inserted words, and $N$ the number of words in the reference
 transcript.
 
-\begin{table}[H]
-\centering
+\begingroup
 \small
 \renewcommand{\arraystretch}{1.2}
-\caption{Symbolic constants used in the system tests}
-\label{tab:symbolic-constants}
-\begin{tabularx}{\textwidth}{@{}
+\begin{xltabular}{\textwidth}{@{}
   l
   >{\raggedright\arraybackslash}X
-  >{\raggedright\arraybackslash}p{3.2cm}
+  >{\raggedright\arraybackslash}p{3.4cm}
 @{}}
+\caption{Symbolic constants used in the system tests}\label{tab:symbolic-constants}\\
 \toprule
 \textbf{Constant} & \textbf{Meaning} & \textbf{Value}\\
 \midrule
+\endfirsthead
+\toprule
+\textbf{Constant} & \textbf{Meaning} & \textbf{Value}\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
 \texttt{WER\_MAX} & Maximum WER accepted for a transcript
   & TBD after POC (placeholder: 0.10)\\
 \addlinespace
@@ -833,14 +1379,31 @@ transcript.
 \texttt{EMAIL\_WORD\_COUNT} & Length of the test email body. Long enough that reading it aloud takes longer than the time needed to play the stop request
   & TBD after POC (placeholder: 200 words)\\
 \addlinespace
-\texttt{IDLE\_PROMPT\_TIME} & Maximum interval without spoken progress during active task execution. Defined in the SRS (Table~9)
-  & TBD after POC\\
+\texttt{IDLE\_PROMPT\_TIME} & Maximum interval without spoken progress during active task execution
+  & See SRS, Table~9\\
 \addlinespace
 \texttt{STUB\_DELAY} & Time before the stubbed calendar create tool returns. Longer than the time needed to disconnect and reconnect the client
   & TBD after POC (placeholder: 30\,s)\\
-\bottomrule
-\end{tabularx}
-\end{table}
+\addlinespace
+\texttt{STOP\_ACK\_TIME} & Time to audibly acknowledge a work-stop request
+  & See SRS, Table~9\\
+\addlinespace
+\texttt{RESPONSE\_TIME} & Time from a committed user turn to the start of the response
+  & See SRS, Table~9\\
+\addlinespace
+\texttt{TARGET\_COMPLETION} & Share of declared-suite tasks completed correctly without sighted help
+  & See SRS, Table~9\\
+\addlinespace
+\texttt{RECHECK\_DELAY} & Time outcome verification waits before re-reading a record the first lookup did not find
+  & TBD after POC (placeholder: 2\,s)\\
+\addlinespace
+\texttt{RECHECK\_COUNT} & Further lookups verification makes before reporting an outcome as unknown
+  & 1, per FR12's ``another check''\\
+\addlinespace
+\texttt{TIMING\_RUNS} & Repetitions of each timing run, from which median and worst case are reported
+  & 20\\
+\end{xltabular}
+\endgroup
 
 \subsection{Usability Survey Questions}
 
@@ -854,10 +1417,11 @@ once they are determined later on in the project.
 \subsection{AI Tools Used}
 
 Lucas DeBoer used Claude Sonnet 5.5 through the claude.ai web interface.
+Curtis Vos used Claude Opus 5 through the Claude Code command line interface.
 
 \subsection{How and Where Used}
 Lucas DeBoer used Claude to help format LaTeX tables and to help generate the initial draft of the test cases for Sections 4.1.1-4.1.3.
-
+Curtis Vos used Claude for help with LaTeX formatting and consistency across the document. It was also used to formalize various system tests through Sections 4.1.4 through 4.2.4.
 
 \subsection{Verification of AI-Generated Content}
 
@@ -865,6 +1429,9 @@ Lucas DeBoer used Claude to help format LaTeX tables and to help generate the in
     \item Lucas did not use AI to generate any information for which an AI system could produce incorrect or fabricated results. 
     Lucas provided Claude with some jot form notes about what each test case should do, and Claude generated the initial draft of the test cases from these notes.
     Lucas then manually read over all of the AI-generated content and edited it to ensure that it was accurate and correct.
+    \item Curtis used Claude Code (model Opus 5) to help with formalizing the writing of a number of System Tests. Ideas of what a test's intended purpose, inputs,
+    outputs, setup, and performance steps were inputted. Every formalized outcome was manually reviewed, verified, and used as a reference as seen fit rather than allowing the
+    model itself to write the content. Claude Code was also used to assist with various LaTeX formatting and errors that came up along the way.
 \end{itemize}
 
 \paragraph{Kevin Kim's use.}
