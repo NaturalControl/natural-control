@@ -165,9 +165,10 @@ supervise browser and connected-account tasks.
 
 All four team members will write and run tests, review each other's work, and
 record findings. Table~\ref{tab:vnv-team} summarizes responsibilities aligned
-with the Development Plan. Curtis's overall V\&V coordination and Lucas's
-end-to-end testing coordination are proposed assignments, subject to team
-confirmation.
+with the Development Plan. Each member also cross-reviews another workstream,
+as in the Development Plan. If a member needs to change responsibilities, they
+tell the team on Discord as soon as they know and state which tasks are
+affected. The cross-reviewer does not automatically take over the work.
 
 \begin{table}[htbp]
 \centering
@@ -267,11 +268,11 @@ linting, type checks, unit tests, and suitable integration tests. Tests needing
 Mac hardware, VoiceOver, or external services will also be run in a documented
 local environment.
 
-The Development Plan proposes Ruff, pytest, and pytest-cov for Python, and
-TypeScript strict checks, ESLint, Prettier, Vitest, and Testing Library for the
-client. The repository currently has no application test configuration.
-The team will confirm the frameworks against the implemented stack, pin
-versions, and document how to run the checks during setup.
+For Python, the team will use Ruff (linting and PEP~8 formatting), mypy in
+strict mode, pytest, and pytest-cov. For the client, it will use TypeScript
+strict checks, ESLint, and Vitest; Testing Library will be added with component
+tests. A GitHub Actions workflow will run these checks on every pull request.
+Versions will be pinned in \texttt{uv.lock} and \texttt{package-lock.json}.
 
 Coverage reports will summarize exercised code and highlight untested modules,
 especially task control and approval handling. Coverage will guide test review
@@ -297,10 +298,9 @@ feedback from a demonstration shortly after Rev 0 will inform improvements.
 For each attempted task, the team will record the verified outcome, assistance,
 retries, corrections, clarification turns, and user feedback. Task completion
 and interaction difficulties will be reported separately, including failures.
-Usability will be evaluated from these observations without introducing an
-arbitrary pass percentage. The SRS leaves its completion target unset and
-references the Development Plan's provisional target; team review must reconcile
-those entries with this approach before finalizing acceptance criteria.
+Independent completion will be compared with TARGET\_COMPLETION (NFR2),
+provisionally 80\% from the Development Plan and set after the POC. Other
+usability observations will be reported descriptively, including failures.
 
 All critical safety tests for the evaluated configuration must pass before
 participant use. Failures such as an unapproved consequential action will block
@@ -315,8 +315,8 @@ revise the requirements, design, implementation, and test plan.
 
 \section{System Tests}
 
-This section outlines the tests used to verify the functional and non-functional requirements as layed
-out in section S.2 of the SRS. These tests ensure that they system level components of the software are
+This section outlines the tests used to verify the functional and non-functional requirements as laid
+out in section S.2 of the SRS. These tests ensure that the system-level components of the software are
 functioning properly.
 
 \subsection{Tests for Functional Requirements}
@@ -340,7 +340,7 @@ microphone input. The system has been freshly launched (all logs clear, no tasks
 ``Open gmail and read me my latest email'', played through the virtual audio device. A reference transcript is also stored.
 
 \textbf{Output:} The system produces a transcript and passes it to the task
-manager as a user turn. The generated transcript is compared against a reference transcipt and must have 
+manager as a user turn. The generated transcript is compared against a reference transcript and must have 
 a word error rate at most \textsc{WER\_MAX}.
 
 \textbf{Test Case Derivation:} FR1 requires the system to accept spoken input
@@ -423,9 +423,9 @@ an invitation from ``John Smith'' with subject ``Invitation''.
 
 \textbf{Test Case Derivation:} FR2 requires that the user can interrupt spoken
 output without restarting the task, and FR6 and FR16 require that the user can correct part of a
-read-back by voice without restarting the request. Interupting the system while it is speaking with a
+read-back by voice without restarting the request. Interrupting the system while it is speaking with a
 single-detail correction tests both of these requirements. An unchanged task ID with no 
-pause state shows that the task was neither restarted nor paused. Verifies FR2, FR6, and FR16.
+pause state shows that the task was neither restarted nor paused. Verifies FR2, FR6, FR16, and FR.Sa.14.
 
 \textbf{Pass/Fail Criteria:} Pass if all of the following hold: the
 task ID is the same before and after the correction; the task state log never
@@ -469,7 +469,7 @@ from ``Dana Lee'' with subject ``Team Lunch Thursday''. The body of the email is
 
 \textbf{Test Case Derivation:} FR3 requires a bare ``stop'' to stop speech and pause work, and requires the system to clarify what the user wants next. FR3 also requires an explicit request to cancel or abandon the task to end it.
 FR8 requires that a stop request block new actions, and that the system report completed work, unfinished work, and unknown outcomes.
-Interupting the long spoken response with a ``Stop'' and the systems response to cancelling the task satisfies this. Verifies FR3 and FR8.
+Interrupting the long spoken response with a ``Stop'' and the system's response to cancelling the task satisfies this. Verifies FR3, FR8, and FR.Sa.5.i--iii.
 
 \textbf{Pass/Fail Criteria:} Pass if all of the following hold: speech output stops after step 2; the state log contains Pausing followed by Paused;
 no tool call starts after the stop; after stopping, the next system request asks the user what to do next; the task does not leave Paused before step 3;
@@ -544,7 +544,7 @@ The send tool is stubbed to log the call and return a success only after more th
 \textbf{Test Case Derivation:} FR4 requires the system to ask when details are ambiguous and to recheck relevant information before continuing. 
 The two Alex emails make the request ambiguous, and the inbox read after the answer shows the recheck. 
 FR5 requires routine updates to stay within the silence interval. The send is slowed past \textsc{IDLE\_PROMPT\_TIME}, so a spoken update is
- required while it runs. Verifies FR4 and FR5.
+ required while it runs. Verifies FR4, FR5, and FR.Sa.9.
 
 \textbf{Pass/Fail Criteria:} Pass if all output conditions hold and the status update from the system starts no later than \textsc{IDLE\_PROMPT\_TIME} after the system's last speech. Fail otherwise.
 
@@ -554,7 +554,7 @@ FR5 requires routine updates to stay within the silence interval. The send is sl
 
 \textbf{Control:} Automatic
 
-\textbf{Initial State:} Wi-Fi is the only active network connection. The virtual audio device is selected as the system microphone input. 
+\textbf{Initial State:} The virtual audio device is selected as the system microphone input. 
 The system has been freshly launched (all logs clear, no tasks running, awaiting response).
 Google Calendar is connected through a test account. The calendar create tool is stubbed to return a success after \textsc{STUB\_DELAY} seconds.
 
@@ -562,7 +562,7 @@ Google Calendar is connected through a test account. The calendar create tool is
 \begin{enumerate}
   \item Play the request mp3 file which contains a recorded voice saying ``Create a calendar event called Test Meeting tomorrow at 3 PM.''
   \item When the system reads back the details, play the acceptance mp3 file which contains a recorded voice saying ``Yes.''
-  \item While the create call is pending, the script turns Wi-Fi off and then turns Wi-Fi back on.
+  \item While the create call is pending, the script disconnects the client from the session and then reconnects it. The agent worker stays connected.
   \item Play the resume mp3 file which contains a recorded voice saying ``Continue.''
 \end{enumerate}
 
@@ -570,16 +570,16 @@ Google Calendar is connected through a test account. The calendar create tool is
 \begin{itemize}
   \item After the disconnect, the state log shows Paused. 
   \item After reconnection, the system announces the paused task, reports the task state, and offers to resume or cancel.
-  \item Before continuing, the tool log shows a calendar read call occurs before the state log is changed to Working and the calendar event is successfully created. 
+  \item Before continuing, the tool log shows a calendar read call that finds the created event before the state log changes to Working. The create tool is not called again.
 \end{itemize}
 
 \textbf{Test Case Derivation:} FR7 requires a disconnection to pause the task and for it to not resume until explicitly instructed. 
 On reconnection, the system state must be reconciled and reported. FR21 requires the same state to be announced at session start, with resumption only after a state check.
-Losing Wi-Fi while a write is pending satisfies both of these checks. Verifies FR7 and FR21.
+Disconnecting the client while a write is pending satisfies both of these checks. Verifies FR7 and FR21.
 
-\textbf{Pass/Fail Criteria:} Pass if all output conditions hold. Fail otherwise.
+\textbf{Pass/Fail Criteria:} Pass if all output conditions hold and the create stub is called exactly once. Fail otherwise.
 
-\textbf{How test will be performed:} A script plays the audio files into the virtual device and turns Wi-Fi off and on at the stated steps. It reads the task manager state log, the tool call log, and the text of system speech, and asserts each output condition.
+\textbf{How test will be performed:} A script plays the audio files into the virtual device and disconnects and reconnects the client at the stated steps. It reads the task manager state log, the tool call log, and the text of system speech, and asserts each output condition.
 
 \item T.FR.TM.2.3:
 
@@ -604,7 +604,7 @@ The Gmail send tool is stubbed so that any send call is logged and not executed.
 
 \textbf{Test Case Derivation:} FR19 requires the system to ask whether to queue or replace when a new request is given,
 and to end the earlier task when replacing a task. FR20 requires previous approvals to be withdrawn and the system to say that the action was not executed.
-An unrelated request made during an open approval tests both. Verifies FR19 and FR20.
+An unrelated request made during an open approval tests both. Verifies FR19, FR20, FR.Sa.14, and FR.Sa.15.
 
 \textbf{Pass/Fail Criteria:} Pass if all output conditions hold and the state log shows the first task Cancelling and Cancelled 
 before the new task enters Working and the send stub is never called. Fail otherwise.
@@ -635,14 +635,14 @@ with subject ``Invitation''. The send tool is stubbed to log the call and return
 
 \textbf{Output:}
 \begin{itemize}
-  \item After step 1, the state log shows AwaitingApproval. The read-back names the recipient, the subject, and the body, and the systems checks whether it should send the email.
+  \item After step 1, the state log shows AwaitingApproval. The read-back names the recipient, the subject, and the body, and the system checks whether it should send the email.
   \item After steps 2, the state log still shows AwaitingApproval, and the send stub has not been called.
   \item After step 3, the send stub is called once. Its recipient, subject, and body match the read-back.
 \end{itemize}
 
 \textbf{Test Case Derivation:} FR9 requires approval of the exact details of a send, and requires the approval to be an explicit affirmative answer. 
-Silence and an unclear remark are the two non-approvals the system is most likely to mistake for consent, and the final send matching the read-back shows 
-that the approved details were the ones executed. Verifies FR9.
+An unclear remark is a non-approval the system could mistake for consent, and the final send matching the read-back shows 
+that the approved details were the ones executed. Verifies FR9 and FR.Sa.13.
 
 \textbf{Pass/Fail Criteria:} Pass if all output conditions hold. Fail otherwise.
 
@@ -673,7 +673,7 @@ return a success for the first call, and return a failure for the second call.
 
 \textbf{Test Case Derivation:} FR9 allows similar actions to share one approval, provided the read-back states the number of actions and identifies each 
 action. FR11 requires each approved action to have a unique ID, so two items in one approval need two IDs. This sequence of events shows that the system
-can handle multiple actions in one approval, that each action has a unique ID, and that the system reports the outcome of each action. Verifies FR9 and FR11.
+can handle multiple actions in one approval, that each action has a unique ID, and that the system reports the outcome of each action. Verifies FR9, FR11, and FR.Sa.6.
 
 \textbf{Pass/Fail Criteria:} Pass if all output conditions hold. Fail otherwise.
 
@@ -814,7 +814,6 @@ transcript.
   l
   >{\raggedright\arraybackslash}X
   >{\raggedright\arraybackslash}p{3.2cm}
-  >{\raggedright\arraybackslash}p{2.0cm}
 @{}}
 \toprule
 \textbf{Constant} & \textbf{Meaning} & \textbf{Value}\\
@@ -831,7 +830,7 @@ transcript.
 \texttt{IDLE\_PROMPT\_TIME} & Maximum interval without spoken progress during active task execution. Defined in the SRS (Table~9)
   & TBD after POC\\
 \addlinespace
-\texttt{STUB\_DELAY} & Time before the stubbed calendar create tool returns. Longer than the time needed to turn Wi-Fi off and back on and for the client to reconnect
+\texttt{STUB\_DELAY} & Time before the stubbed calendar create tool returns. Longer than the time needed to disconnect and reconnect the client
   & TBD after POC (placeholder: 30\,s)\\
 \bottomrule
 \end{tabularx}
@@ -859,7 +858,7 @@ Lucas DeBoer used Claude to help format LaTeX tables and to help generate the in
 \begin{itemize}
     \item Lucas did not use AI to generate any information for which an AI system could produce incorrect or fabricated results. 
     Lucas provided Claude with some jot form notes about what each test case should do, and Claude generated the initial draft of the test cases from these notes.
-    Lucas then manually read over all of the AI-generated content and editted it to ensure that it was accurate and correct.
+    Lucas then manually read over all of the AI-generated content and edited it to ensure that it was accurate and correct.
 \end{itemize}
 
 \newpage{}
