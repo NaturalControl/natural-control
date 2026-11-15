@@ -14,7 +14,8 @@ Table~\ref{tab:dev-revisions} summarizes the revision history.
 \toprule Date & Contributor & Change\\\midrule
 2026-09-23 & Aaron Loh / AI assistance & Initial review draft based on Aaron's planning interview; team ratification pending.\\
 2026-09-27 & Lucas DeBoer & Reviewed the contents.\\
-2026-10-02 & Aaron Loh / AI assistance & Draft revisions for issues 11 and 12; browser/account scope.\\\bottomrule
+2026-10-02 & Aaron Loh / AI assistance & Draft revisions for issues 11 and 12; browser/account scope.\\
+2026-11-14 & Kevin Kim / AI assistance & Defined POC success criteria (peer review issue 13).\\\bottomrule
 \end{tabularx}
 \end{minipage}
 \end{center}
@@ -201,6 +202,15 @@ and explicit execution stop at least once. A full repetition of
 every condition in every class belongs to later evaluation. The demonstration uses
 controlled accounts and data; no participant's real email is required.
 Disconnection and reconnection behavior will be evaluated before participant evaluation.
+
+The POC succeeds if both of the following hold for every task in the demonstration,
+checked against the task, action, and approval logs:
+\begin{enumerate}
+\item \textbf{Stop:} after an explicit stop request, no new task action starts until the user resumes.
+\item \textbf{Approval:} no consequential action (such as sending the email or creating the event) runs without the user's explicit approval of its details.
+\end{enumerate}
+The other conditions (progress, speech interruption, cancellation, and correction) are
+exercised and their results reported, but are not pass/fail for the POC.
 
 \subsection{Control semantics}
 Ordinary speech interruption stops spoken output while the underlying task
