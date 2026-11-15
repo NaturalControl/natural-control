@@ -338,7 +338,7 @@ The following is a list of obligations and limits imposed by the environment.
 \nsection{E.4 Assumptions}
 
 \begin{itemize}
-    \item A setup helper completed setup correctly (accounts connected, permissions granted).
+    \item A setup helper completed setup correctly (accounts connected, permissions granted), as described in \hyperref[uc:setup]{UC6}.
     \item Only the user gives commands; other voices are noise.
     \item Connected accounts belong to the user; development and evaluation use test accounts.
     \item The user can hear spoken output (see G.6).
@@ -634,6 +634,7 @@ The following safety requirements are based on the Hazard Analysis. Hazard IDs r
 \reqtarget{NFR3} & A work-stop request shall be acknowledged within STOP\_ACK\_TIME. Time to block new actions and time to reconcile in-flight work shall be measured separately. & A quick acknowledgment does not prove earlier actions ended. & \reqlink{G2}; \reqlink{NFR.Sa.1}\\\addlinespace[4pt]
 \reqtarget{NFR4} & The system shall begin its response within RESPONSE\_TIME after the selected turn detector commits an ordinary request. Premature replies and missed interruptions shall also be evaluated. & Fast replies must not cut off unfinished thoughts. & \reqlink{G2}\\\addlinespace[4pt]
 \reqtarget{NFR5} & The application shall not retain raw microphone audio. It shall exclude credentials and authentication codes from task history, logs, and source control. Setup shall explain provider processing and retention separately. & Application storage rules do not establish provider privacy guarantees. & \reqlink{G5}; \reqlink{FR.Sa.17}\\\addlinespace[4pt]
+\reqtarget{NFR6} & With the setup helper, initial setup (\hyperref[uc:setup]{UC6}) shall be completed within SETUP\_TIME. After setup, routine use shall not require the setup helper. & Measures \reqlink{G5}: a short setup and independent use afterward. & \reqlink{G5}\\\addlinespace[4pt]
 \end{xltabular}
 \endgroup
 
@@ -656,7 +657,8 @@ IDLE\_PROMPT\_TIME & Maximum interval without spoken progress during active task
 SHORT\_MESSAGE\_LENGTH & Longest email body read in full before approval & TBD after POC\\\addlinespace[4pt]
 TARGET\_COMPLETION & Share of tasks completed correctly without sighted help & TBD (Development Plan provisional: 80\%)\\\addlinespace[4pt]
 MIN\_MACOS & Oldest supported macOS version (\reqlink{NFR.E.1}) & TBD after checking dependency requirements and the POC\\\addlinespace[4pt]
-MIN\_CHROME & Oldest supported Google Chrome version (\reqlink{NFR.E.1}) & TBD after checking dependency requirements and the POC\\
+MIN\_CHROME & Oldest supported Google Chrome version (\reqlink{NFR.E.1}) & TBD after checking dependency requirements and the POC\\\addlinespace[4pt]
+SETUP\_TIME & Time for the setup helper to complete initial setup (\reqlink{NFR6}) & TBD after POC\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -879,13 +881,41 @@ The five use cases below expand the high-level scenarios in G.5. Each lists the 
 
 \textbf{Failure guarantee:} Uncertain state is reported. Work does not resume silently.
 
+\Needspace{12\baselineskip}
+\subsection*{UC6: Assisted initial setup}\label{uc:setup}
+\addcontentsline{toc}{subsection}{UC6: Assisted initial setup}
+
+\textbf{Primary actor:} Setup helper, with the user present
+
+\textbf{Preconditions:} The system is installed on the user's Mac with Google Chrome (\reqlink{NFR.E.1}).
+
+\textbf{Trigger:} The setup helper opens the client for the first time.
+
+\textbf{Main success scenario:}
+\begin{enumerate}
+    \item The system explains which accounts it can connect, the permissions each needs, and which providers receive which data (\reqlink{FR14}, \reqlink{NFR5}).
+    \item The helper connects the user's accounts with the narrowest permissions (\reqlink{FR14}).
+    \item Website logins the user wants saved are entered through the private setup page (\reqlink{FR23}).
+    \item The system explains the stop shortcut and the session controls to the user (\reqlink{FR22}).
+    \item The user completes a short test task by voice. Setup is complete.
+\end{enumerate}
+
+\textbf{Extensions:}
+\begin{itemize}
+    \item \textbf{2a.} An account connection fails. The system says which one and why, and setup continues without it.
+\end{itemize}
+
+\textbf{Success guarantee:} The user can start and stop tasks without the setup helper (\reqlink{NFR6}).
+
+\textbf{Failure guarantee:} No credential is spoken or placed in the conversation.
+
 \Needspace{8\baselineskip}
 \nsection{S.7 Prioritization}
 
 \begin{itemize}
     \item Must (POC, by November 23, 2026): \reqlink{FR1} to \reqlink{FR3}, \reqlink{FR8}, \reqlink{FR9}, \reqlink{NFR3}.
     \item Must (before participant evaluation sessions, which must complete before the March 8, 2027 V\&V Report and Usability Report): \reqlink{FR4} to \reqlink{FR7}, \reqlink{FR10} to \reqlink{FR16}, \reqlink{FR18} to \reqlink{FR24}, \reqlink{NFR1}, \reqlink{NFR5}, \reqlink{NFR.E.1} to \reqlink{NFR.E.3}.
-    \item Should (tune with usability evidence from those sessions, reflected in the March 8, 2027 report): conversational timing, \reqlink{FR17}, \reqlink{NFR2}, \reqlink{NFR4}.
+    \item Should (tune with usability evidence from those sessions, reflected in the March 8, 2027 report): conversational timing, \reqlink{FR17}, \reqlink{NFR2}, \reqlink{NFR4}, \reqlink{NFR6}.
 \end{itemize}
 
 The POC shall demonstrate approval and work-stop controls for its selected email/calendar and browser workflows. This demonstrates feasibility for the tested action paths; it does not establish coverage of every integration or website action.
@@ -1161,7 +1191,7 @@ support the five project goals defined in the Problem Statement.
 
 \reqlink{G5} &
 \reqlink{FR14}, \reqlink{FR22}, \reqlink{FR23} &
-\reqlink{NFR1}, \reqlink{NFR5} &
+\reqlink{NFR1}, \reqlink{NFR5}, \reqlink{NFR6} &
 \reqlink{FR.Sa.17} \\
 
 \bottomrule
