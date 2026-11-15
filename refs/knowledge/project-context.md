@@ -1,3 +1,15 @@
+# Peer review decisions: November 14, 2026
+
+Kevin decided the following while addressing T06 peer-review issues on branch `peer-feedback-review`. These are Kevin's decisions, not whole-team ratification; team review of the branch is pending.
+
+- Issue 46: a bare ``stop'' still stops speech and pauses the task, then asks whether to continue; cancel phrases use a fixed list, other cancel wording is confirmed. Barge-in is non-command speech and stops speech only.
+- Issue 48: supported versions are symbolic constants MIN_MACOS and MIN_CHROME, to be set after checking dependency requirements and the POC.
+- Issue 47: added UC6 (assisted setup) and NFR6 (SETUP_TIME, no helper afterward).
+- Issue 49: added learnability (NFR7) and efficiency (NFR8) NFRs with V&V test T.NFR.6.
+- Issue 44: added hazard H4-e and FR.Sa.21 (restate and confirm broad requests that would change or remove data).
+- Issues 57--61: V&V test fixes; T.NFR.1 now requires the stop key in all four states.
+- Issue 13: POC success is a verified stop and no consequential action without approval, following the November 11 TA guidance.
+
 # Voice supervision revision: October 17, 2026
 
 Aaron clarified that explicit stop-working requests pause the task for later resumption; non-interruptible external operations may settle, and feedback must distinguish completed, unperformed, paused, and uncertain work. Ordinary speech interruption affects speech. Initial approvals cover writes and consequential decisions, with ordinary navigation autonomous. A reduced-prompt permission mode is a later idea. Spoken one-time authentication codes are permitted; private typed input is a proposed alternative, with privacy claims to verify. Routine speech timing should be natural rather than a fixed announcement schedule. Verification may use a meaningful connector response, matching account state, or website confirmation appropriate to the task. These decisions supersede conflicting older notes and require coordinated SRS/HA revisions; they are not whole-team ratification or implemented behavior. See [decisions and proposed wording](voice-supervision-2026-10-17.md).
