@@ -1,313 +1,376 @@
 \documentclass[12pt, titlepage]{article}
 
-\usepackage{amsmath, mathtools}
-
-\usepackage[round]{natbib}
-\usepackage{amsfonts}
-\usepackage{amssymb}
-\usepackage{graphicx}
-\usepackage{colortbl}
-\usepackage{xr}
-\usepackage{hyperref}
-\usepackage{longtable}
-\usepackage{xfrac}
-\usepackage{tabularx}
-\usepackage{float}
-\usepackage{siunitx}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb}
 \usepackage{booktabs}
-\usepackage{multirow}
-\usepackage[section]{placeins}
-\usepackage{caption}
-\usepackage{fullpage}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{xurl}
+\usepackage{hyperref}
+\hypersetup{colorlinks, linkcolor=red, urlcolor=blue}
 
-\hypersetup{
-bookmarks=true,     % show bookmarks bar?
-colorlinks=true,       % false: boxed links; true: colored links
-linkcolor=red,          % color of internal links (change box color with linkbordercolor)
-citecolor=blue,      % color of links to bibliography
-filecolor=magenta,  % color of file links
-urlcolor=cyan          % color of external links
-}
+\newcommand{\progname}{Natural Control}
+\newcommand{\todo}[1]{\par\medskip\noindent\fbox{\parbox{0.95\linewidth}{\textbf{TODO (team):} #1}}\par\medskip}
+\newcommand{\str}{\textit{string}}
+\newcommand{\B}{\mathbb{B}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
 
-\usepackage{array}
-
-\externaldocument{../../SRS/SRS}
-
-\input{../../Comments.text}
-\input{../../Common.text}
+% One access-program table: Name | In | Out | Exceptions
+\newenvironment{programs}{\par\noindent\tabularx{\textwidth}{p{3.4cm}Xp{3.2cm}p{2.6cm}}\toprule\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\\midrule}{\bottomrule\endtabularx\par}
 
 \begin{document}
 
-\title{Module Interface Specification for \progname{}}
-
-\author{\authname}
-
-\date{\today}
-
+\title{Module Interface Specification for \progname{}\\[4pt]\large Design Document Revision -1 (draft)}
+\author{Team 7: Aaron Loh, Curtis Vos, Kevin Kim, Lucas DeBoer}
+\date{November 11, 2026}
 \maketitle
 
-\pagenumbering{roman}
-
 \section{Revision History}
-
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-\toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+\toprule
+\textbf{Date} & \textbf{Version} & \textbf{Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+2026-11-11 & 0.1 & First draft, from the simple POC. Syntax complete for every module; semantics brief, as Revision -1 asks.\\
 \bottomrule
 \end{tabularx}
 
-~\newpage
-
 \section{Symbols, Abbreviations and Acronyms}
-
-See SRS Documentation at \wss{give url}
-
-\wss{Also add any additional symbols, abbreviations or acronyms}
-
-\newpage
-
-\tableofcontents
-
-\newpage
-
-\pagenumbering{arabic}
+See the SRS and the Module Guide (MG). Module numbers M1 to M12 are the MG's.
 
 \section{Introduction}
-
-The following document details the Module Interface Specifications for
-\wss{Fill in your project name and description}
-
-Complementary documents include the System Requirement Specifications
-and Module Guide.  The full documentation and implementation can be
-found at \url{...}.  \wss{provide the url for your repo}
+This document gives the interface of every module in the MG: what each one exports, what state it keeps and what it assumes. Revision -1 concentrates on syntax; the semantics are short and will be completed in Revision 0.
 
 \section{Notation}
-
-\wss{You should describe your notation.  You can use what is below as
-  a starting point.}
-
-The structure of the MIS for modules comes from \citet{HoffmanAndStrooper1995},
-with the addition that template modules have been adapted from
-\cite{GhezziEtAl2003}.  The mathematical notation comes from Chapter 3 of
-\citet{HoffmanAndStrooper1995}.  For instance, the symbol := is used for a
-multiple assignment statement and conditional rules follow the form $(c_1
-\Rightarrow r_1 | c_2 \Rightarrow r_2 | ... | c_n \Rightarrow r_n )$.
-
-The following table summarizes the primitive data types used by \progname. 
+The specification follows the notation of Hoffman and Strooper. Types used:
 
 \begin{center}
-\renewcommand{\arraystretch}{1.2}
-\noindent 
-\begin{tabular}{l l p{7.5cm}} 
-\toprule 
-\textbf{Data Type} & \textbf{Notation} & \textbf{Description}\\ 
+\begin{tabular}{lll}
+\toprule
+\textbf{Type} & \textbf{Notation} & \textbf{Meaning}\\
 \midrule
-character & char & a single symbol or digit\\
-integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, $\infty$) \\
-natural number & $\mathbb{N}$ & a number without a fractional component in [1, $\infty$) \\
-real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
+boolean & $\B$ & true or false\\
+natural number & $\N$ & $0, 1, 2, \ldots$\\
+real & $\R$ & a number of seconds or milliseconds\\
+string & \str & a sequence of characters, such as a sentence\\
+sequence & seq of $T$ & an ordered list of values of type $T$\\
+optional & $T \cup \{\bot\}$ & a value of type $T$, or none ($\bot$)\\
 \bottomrule
-\end{tabular} 
+\end{tabular}
 \end{center}
 
-\noindent
-The specification of \progname \ uses some derived data types: sequences, strings, and
-tuples. Sequences are lists filled with elements of the same data type. Strings
-are sequences of characters. Tuples contain a list of values, potentially of
-different types. In addition, \progname \ uses functions, which
-are defined by the data types of their inputs and outputs. Local functions are
-described by giving their type signature followed by their specification.
+Types defined by modules: \textit{Command} (M4), \textit{State} and \textit{Task} (M5), \textit{Action}, \textit{Answer} and \textit{Decision} (M6), \textit{Email} and \textit{Event} (M9), \textit{StopTiming} (M11), \textit{Settings} (M12). \textit{DateTime} is a date and time of day. Out ``--'' means no output.
 
 \section{Module Decomposition}
-
-The following table is taken directly from the Module Guide document for this project.
-
-\begin{table}[h!]
-\centering
 \begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
 \toprule
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
-
-{Hardware-Hiding} & ~ \\
-\midrule
-
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding} & Input Parameters\\
-& Output Format\\
-& Output Verification\\
-& Temperature ODEs\\
-& Energy Equations\\ 
-& Control Module\\
-& Specification Parameters Module\\
-\midrule
-
-\multirow{3}{0.3\textwidth}{Software Decision} & {Sequence Data Structure}\\
-& ODE Solver\\
-& Plotting\\
+Hardware-Hiding & M1 Voice\\
+Behaviour-Hiding & M2 Accessible Client, M3 Supervisor, M4 Control Phrases, M5 Task State, M6 Action Gate, M7 Agent Tools\\
+Software Decision & M8 AI Model, M9 Mail and Calendar, M10 Web Reader, M11 Event Log, M12 Settings\\
 \bottomrule
-
 \end{tabular}
-\caption{Module Hierarchy}
-\label{TblMH}
-\end{table}
 
+% ------------------------------------------------------------------
 \newpage
-~\newpage
-
-\section{MIS of \wss{Module Name}} \label{Module} \wss{Use labels for
-  cross-referencing}
-
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
-
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
-
-\subsection{Module}
-
-\wss{Short name for the module}
-
-\subsection{Uses}
-
-
+\section{MIS of Control Phrases (M4)}
+\subsection{Module} Control Phrases
+\subsection{Uses} None.
 \subsection{Syntax}
-
 \subsubsection{Exported Constants}
-
+\textit{Command} $=$ \{STOP, CANCEL, CONTINUE, YES, NO, OTHER\}\\
+PHRASES: \textit{Command} $\to$ set of \str{} (the fixed phrases for STOP, CANCEL, CONTINUE and NO)
 \subsubsection{Exported Access Programs}
-
-\begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
-\end{tabular}
-\end{center}
-
+\begin{programs}
+classify & text: \str & \textit{Command} & --\\
+\end{programs}
 \subsection{Semantics}
-
-\subsubsection{State Variables}
-
-\wss{Not all modules will have state variables.  State variables give the module
-  a memory.}
-
-\subsubsection{Environment Variables}
-
-\wss{This section is not necessary for all modules.  Its purpose is to capture
-  when the module has external interaction with the environment, such as for a
-  device driver, screen interface, keyboard, file, etc.}
-
-\subsubsection{Assumptions}
-
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
-
+\subsubsection{State Variables} None (library module).
+\subsubsection{Environment Variables} None.
+\subsubsection{Assumptions} Text is English, as transcribed by the speech-to-text service or typed.
 \subsubsection{Access Routine Semantics}
-
-\noindent \wss{accessProg}():
+\noindent classify(text):
 \begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
+\item output: $out :=$ STOP if the normalized text contains ``stop working'' or equals a STOP phrase; otherwise the command whose phrase set contains the normalized text; otherwise YES if the text is a short run of yes words that begins with one; otherwise OTHER.
+\item exception: none.
 \end{itemize}
-
-\wss{A module without environment variables or state variables is unlikely to
-  have a state transition.  In this case a state transition can only occur if
-  the module is changing the state of another module.}
-
-\wss{Modules rarely have both a transition and an output.  In most cases you
-  will have one or the other.}
-
 \subsubsection{Local Functions}
+normalize: \str{} $\to$ seq of \str{}: lower-case words with punctuation and leading or trailing filler words removed.
 
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
+% ------------------------------------------------------------------
+\newpage
+\section{MIS of Task State (M5)}
+\subsection{Module} Task State
+\subsection{Uses} None.
+\subsection{Syntax}
+\subsubsection{Exported Constants}
+\textit{State} $=$ \{Working, AwaitingApproval, Executing, Pausing, Paused, Cancelled, Done\}\\
+RUNNING $=$ \{Working, AwaitingApproval, Executing\}\\
+ALLOWED: \textit{State} $\to$ set of \textit{State} (the moves of the state machine, SRS S.9 simplified for the POC)
+\subsubsection{Exported Types}
+\textit{Task} (abstract data type)
+\subsubsection{Exported Access Programs}
+\begin{programs}
+new Task & request: \str & \textit{Task} & --\\
+move & next: \textit{State} & -- & IllegalMove\\
+running & -- & $\B$ & --\\
+state & -- & \textit{State} & --\\
+doneWork & -- & seq of \str & --\\
+\end{programs}
+\subsection{Semantics}
+\subsubsection{State Variables}
+request: \str; \quad state: \textit{State}; \quad done: seq of \str{}
+\subsubsection{Environment Variables} None.
+\subsubsection{Assumptions} One task is active per session (MG UC4).
+\subsubsection{Access Routine Semantics}
+\noindent new Task(r): transition: request, state, done $:=$ r, Working, $\langle\rangle$; output: $out :=$ self.\\[4pt]
+\noindent move(next): transition: state $:=$ next; exception: $exc :=$ (next $\notin$ ALLOWED(state) $\Rightarrow$ IllegalMove).\\[4pt]
+\noindent running(): output: $out :=$ state $\in$ RUNNING.
+
+% ------------------------------------------------------------------
+\newpage
+\section{MIS of Action Gate (M6)}
+\subsection{Module} Action Gate
+\subsection{Uses} Control Phrases (M4), Task State (M5).
+\subsection{Syntax}
+\subsubsection{Exported Constants}
+\textit{Answer} $=$ \{YES, NO, CHANGE, WITHDRAWN\}
+\subsubsection{Exported Types}
+\textit{Action} $=$ tuple of (kind: \str, details: \str{} $\to$ \str, readback: \str)\\
+\textit{Decision} $=$ tuple of (answer: \textit{Answer}, note: \str)
+\subsubsection{Exported Access Programs}
+\begin{programs}
+new Gate & speak: \str{} $\to$ -- & Gate & --\\
+ask & task: \textit{Task}, action: \textit{Action} & \textit{Decision} & --\\
+answer & text: \str & $\B$ & --\\
+withdraw & -- & -- & --\\
+pending & -- & \textit{Action} $\cup \{\bot\}$ & --\\
+\end{programs}
+\subsection{Semantics}
+\subsubsection{State Variables}
+waiting: \textit{Action} $\cup \{\bot\}$
+\subsubsection{Environment Variables} Speech output, through speak.
+\subsubsection{Assumptions} At most one action waits at a time.
+\subsubsection{Access Routine Semantics}
+\noindent ask(task, action): if task is not running, $out := \langle$WITHDRAWN, ``''$\rangle$. Otherwise: task moves to AwaitingApproval; waiting $:=$ action; the readback is spoken; the program waits until answer or withdraw is called. Then waiting $:= \bot$; on YES the task moves to Executing; on NO or CHANGE it moves to Working; $out :=$ the decision.\\[4pt]
+\noindent answer(text): if waiting $= \bot$, $out :=$ false. Otherwise the decision is YES, NO or CHANGE (with note $=$ text) as classify(text) (M4) is YES, NO or anything else; $out :=$ true.\\[4pt]
+\noindent withdraw(): if an action is waiting, its decision is WITHDRAWN.
+
+% ------------------------------------------------------------------
+\newpage
+\section{MIS of Agent Tools (M7)}
+\subsection{Module} Agent Tools
+\subsection{Uses} Task State (M5), Action Gate (M6), Mail and Calendar (M9), Web Reader (M10).
+\subsection{Syntax}
+\subsubsection{Exported Constants}
+UNTRUSTED: \str{} (the note placed before text from emails and websites)\\
+PAUSED: \str{} (the result returned when the task may not act)
+\subsubsection{Exported Access Programs}
+\begin{programs}
+searchEmail & query: \str & \str & --\\
+readWebsite & url: \str, question: \str & \str & --\\
+sendEmail & to: \str, subject: \str, body: \str & \str & --\\
+addEvent & title: \str, start: \textit{DateTime}, end: \textit{DateTime}, place: \str & \str & --\\
+writing & -- & $\B$ & --\\
+calls & -- & $\N$ & --\\
+\end{programs}
+\subsection{Semantics}
+\subsubsection{State Variables}
+inProgress: $\N$ (tool calls running); \quad sending: $\B$ (an approved send or add is running)
+\subsubsection{Environment Variables} Speech output, for short progress lines.
+\subsubsection{Assumptions} The current task is supplied by the Supervisor (M3).
+\subsubsection{Access Routine Semantics}
+\noindent searchEmail, readWebsite: if the task is not running, $out :=$ PAUSED; otherwise $out :=$ UNTRUSTED followed by the text found. No approval is needed (FR10).\\[4pt]
+\noindent sendEmail, addEvent: if the task is not running, $out :=$ PAUSED. Otherwise the action and its readback go to ask (M6). On YES, the action runs to completion even if a stop arrives meanwhile, the result is looked up again (M9), and the work is recorded on the task; $out :=$ ``confirmed'' or ``outcome unknown''. On NO, CHANGE or WITHDRAWN, nothing is sent and $out$ says why.
+\subsubsection{Local Functions}
+spokenTime: \textit{DateTime} $\to$ \str{}: a time as it should sound, for example ``Saturday, November 21 at 9:00 AM''.
+
+% ------------------------------------------------------------------
+\newpage
+\section{MIS of Supervisor (M3)}
+\subsection{Module} Supervisor
+\subsection{Uses} Control Phrases (M4), Task State (M5), Action Gate (M6), Agent Tools (M7), Event Log (M11).
+\subsection{Syntax}
+\subsubsection{Exported Constants}
+SETTLE\_TIME: $\R = 5$ (seconds a pause waits for a send already in progress)\\
+\textit{Key} $=$ \{stop, resume, cancel, approve, decline\}
+\subsubsection{Exported Access Programs}
+\begin{programs}
+onPartial & text: \str & -- & --\\
+onSentence & text: \str & $\B$ (true if handled here) & --\\
+onKey & key: \textit{Key} & -- & --\\
+onIdle & -- & -- & --\\
+stop & source: \str & -- & --\\
+resume & -- & -- & --\\
+cancel & -- & -- & --\\
+\end{programs}
+\subsection{Semantics}
+\subsubsection{State Variables}
+task: \textit{Task} $\cup \{\bot\}$; \quad readbackHeard: $\B$; \quad lastFastStop: $\R$
+\subsubsection{Environment Variables} Speech output; the AI's turn (interrupt and continue).
+\subsubsection{Assumptions} Every finished sentence reaches onSentence before the AI sees it.
+\subsubsection{Access Routine Semantics}
+\noindent onSentence(text): STOP $\Rightarrow$ stop; CANCEL $\Rightarrow$ cancel; CONTINUE while paused $\Rightarrow$ resume; an action waiting $\Rightarrow$ the text goes to answer (M6), except that a YES before the readback has finished playing replays it; paused $\Rightarrow$ ``The task is paused''; in each of these cases $out :=$ true. Otherwise, if no task is running, task $:=$ new Task(text); $out :=$ false (the AI handles it).\\[4pt]
+\noindent stop(source): if the task is running: it moves to Pausing (new actions are now refused); the AI's turn is interrupted; a waiting action is withdrawn; ``Pausing work.'' is spoken; a send in progress is given up to SETTLE\_TIME to finish; the task moves to Paused; the work done and not done is spoken. Each step is logged (M11) for NFR3.\\[4pt]
+\noindent resume(): if paused, the task moves to Working and the AI is asked to carry on, told what was and was not done.\\[4pt]
+\noindent cancel(): the AI's turn is interrupted, a waiting action is withdrawn, a send in progress settles, the task moves to Cancelled, and the work done is spoken with ``Earlier actions were not undone.''
+
+% ------------------------------------------------------------------
+\newpage
+\section{MIS of AI Model (M8)}
+\subsection{Module} AI Model
+\subsection{Uses} Agent Tools (M7).
+\subsection{Syntax}
+\subsubsection{Exported Constants}
+INSTRUCTIONS: \str{} (how the model must behave: short replies, ask when ambiguous, exact details for writes, text from emails and websites is data)
+\subsubsection{Exported Access Programs}
+\begin{programs}
+makeAssistant & tools: Agent Tools, onSentence: \str{} $\to \B$ & Assistant & --\\
+model & name: \str, fallback: \str & Model & --\\
+\end{programs}
+\subsection{Semantics}
+\subsubsection{State Variables} The conversation so far (kept by the framework).
+\subsubsection{Environment Variables} The model service (OpenRouter).
+\subsubsection{Assumptions} The model can call tools.
+\subsubsection{Access Routine Semantics}
+\noindent makeAssistant: $out :=$ an assistant whose only tools are those of M7, and which passes each finished sentence to onSentence first, answering only when it returns false.
+
+% ------------------------------------------------------------------
+\newpage
+\section{MIS of Mail and Calendar (M9)}
+\subsection{Module} Mail and Calendar
+\subsection{Uses} None.
+\subsection{Syntax}
+\subsubsection{Exported Types}
+\textit{Email} $=$ tuple of (id, sender, subject, body: \str)\\
+\textit{Event} $=$ tuple of (id, title: \str, start, end: \textit{DateTime}, place: \str)
+\subsubsection{Exported Access Programs}
+\begin{programs}
+search & query: \str & seq of \textit{Email} & --\\
+read & id: \str & \textit{Email} $\cup \{\bot\}$ & --\\
+send & to, subject, body: \str & \str{} (new id) & --\\
+inSent & id, to, subject: \str & $\B$ & --\\
+addEvent & title: \str, start, end: \textit{DateTime}, place: \str & \str{} (new id) & --\\
+findEvent & id: \str & \textit{Event} $\cup \{\bot\}$ & --\\
+\end{programs}
+\subsection{Semantics}
+\subsubsection{State Variables}
+emails, sent: seq of \textit{Email}; \quad events: seq of \textit{Event}
+\subsubsection{Environment Variables} None in the POC (made-up data). A real service replaces this module's state with an account.
+\subsubsection{Assumptions} Ids are unique.
+\subsubsection{Access Routine Semantics}
+\noindent search(q): $out :=$ the emails whose sender, subject or body contain every word of q.\\[4pt]
+\noindent send(to, s, b): transition: sent $:=$ sent $\|$ $\langle$new email$\rangle$; $out :=$ its id.\\[4pt]
+\noindent inSent(id, to, s): $out := \exists e \in$ sent $\cdot$ e.id $=$ id $\wedge$ e.sender $=$ to $\wedge$ e.subject $=$ s.
+
+% ------------------------------------------------------------------
+\newpage
+\section{MIS of Web Reader (M10)}
+\subsection{Module} Web Reader
+\subsection{Uses} None.
+\subsection{Syntax}
+\subsubsection{Exported Constants}
+ALLOWED\_ACTIONS $=$ \{open a page, follow a link, scroll, read\}
+\subsubsection{Exported Access Programs}
+\begin{programs}
+readWebsite & url: \str, question: \str & \str & --\\
+\end{programs}
+\subsection{Semantics}
+\subsubsection{State Variables} None.
+\subsubsection{Environment Variables} A browser window; the network.
+\subsubsection{Assumptions} The site is public; no sign-in is needed.
+\subsubsection{Access Routine Semantics}
+\noindent readWebsite(url, q): $out :=$ the answer to q found on the site, or a statement that it could not be read. Only ALLOWED\_ACTIONS are used, so nothing on the site is changed.
+
+% ------------------------------------------------------------------
+\newpage
+\section{MIS of Event Log (M11)}
+\subsection{Module} Event Log
+\subsection{Uses} None.
+\subsection{Syntax}
+\subsubsection{Exported Types}
+\textit{StopTiming} $=$ tuple of (blocked, acknowledged, paused: $\R$), each in milliseconds after the stop was heard, or $-1$ if that event never followed
+\subsubsection{Exported Access Programs}
+\begin{programs}
+new EventLog & file: the log file & EventLog & --\\
+write & event: \str, fields: set of (name: \str, value) & -- & --\\
+stopTimings & log: the log file & seq of \textit{StopTiming} & --\\
+\end{programs}
+\subsection{Semantics}
+\subsubsection{State Variables} logFile: the file this log appends to.
+\subsubsection{Environment Variables} The log file; a monotonic clock.
+\subsubsection{Assumptions} Callers never pass message text, speech or keys as fields (NFR5).
+\subsubsection{Access Routine Semantics}
+\noindent new EventLog(file): transition: logFile $:=$ file, creating its folder if it does not exist; output: $out :=$ self.\\[4pt]
+\noindent write(e, f): transition: appends to logFile one record of e, f and the current monotonic time.\\[4pt]
+\noindent stopTimings(log): $out :=$ one \textit{StopTiming} for each ``stop\_heard'' record s in log, in order. Each of its three values is the time from s to the first later record named ``blocked'', ``acknowledged'' or ``paused'' respectively, or $-1$ if there is no such record.
+
+% ------------------------------------------------------------------
+\newpage
+\section{MIS of Settings (M12)}
+\subsection{Module} Settings
+\subsection{Uses} None.
+\subsection{Syntax}
+\subsubsection{Exported Types}
+\textit{Settings} $=$ tuple of (model, fallbackModel, speechToText, textToSpeech: \str, realWebsites: $\B$, sendDelay, readDelay: $\R$)
+\subsubsection{Exported Constants}
+DEFAULT\_MODEL, DEFAULT\_FALLBACK\_MODEL: \str{} (the AI models used when none is set)\\
+DEFAULT\_STT, DEFAULT\_TTS: \str{} (the speech services used when none is set)\\
+By default realWebsites $=$ false and sendDelay $=$ readDelay $=$ 0.
+\subsubsection{Exported Access Programs}
+\begin{programs}
+load & -- & \textit{Settings} & InvalidSetting\\
+\end{programs}
+\subsection{Semantics}
+\subsubsection{State Variables} None.
+\subsubsection{Environment Variables} The process environment (settings only; keys are read by the outside services, not by this module).
+\subsubsection{Assumptions} None.
+\subsubsection{Access Routine Semantics}
+\noindent load(): output: $out :=$ the settings from the environment, each one that is not set taking its default; exception: $exc :=$ (sendDelay or readDelay is set but is not a number $\Rightarrow$ InvalidSetting).
+
+% ------------------------------------------------------------------
+\newpage
+\section{MIS of Voice (M1)}
+\subsection{Module} Voice
+\subsection{Uses} Supervisor (M3), AI Model (M8), Event Log (M11), Settings (M12); it also creates Agent Tools (M7), Mail and Calendar (M9) and Web Reader (M10) for a session.
+\subsection{Syntax}
+\subsubsection{Exported Access Programs}
+\begin{programs}
+startSession & room: a LiveKit room & -- & --\\
+say & text: \str, interruptible: $\B$ & speech handle & --\\
+\end{programs}
+\subsection{Semantics}
+\subsubsection{State Variables} The voice session; the last task state shown to the client.
+\subsubsection{Environment Variables} Microphone and speakers (through the client); the network; the speech-to-text and text-to-speech services.
+\subsubsection{Assumptions} One user per room.
+\subsubsection{Access Routine Semantics}
+\noindent startSession(room): connects speech in and out; passes partial sentences to onPartial (M3), finished sentences through the assistant (M8) to onSentence, and key presses to onKey; publishes the task state to the client; calls onIdle once the AI, the tools and the speech have been quiet for two seconds.
+
+% ------------------------------------------------------------------
+\newpage
+\section{MIS of Accessible Client (M2)}
+\subsection{Module} Accessible Client
+\subsection{Uses} Voice (M1), over the network.
+\subsection{Syntax}
+\subsubsection{Exported Access Programs}
+The client's interface is the user's: each control below is a button with a keyboard shortcut.
+\begin{programs}
+startSession & -- & -- & ConnectionFailed\\
+endSession & -- & -- & --\\
+sendCommand & key: \textit{Key} (M3) & -- & --\\
+sendText & text: \str & -- & --\\
+\end{programs}
+\subsection{Semantics}
+\subsubsection{State Variables} connected: $\B$; \quad taskState: \textit{State} $\cup \{\bot\}$; \quad conversation: seq of \str
+\subsubsection{Environment Variables} Screen, keyboard, microphone, speakers; VoiceOver.
+\subsubsection{Assumptions} A current web browser.
+\subsubsection{Access Routine Semantics}
+\noindent sendCommand(key): sends key on the room's \texttt{control} topic. taskState follows the voice module's \texttt{task\_state} attribute and is announced when it changes.
+\todo{Lucas: confirm the controls and shortcuts against src/web, and how state changes are announced.}
 
 \newpage
-
-\bibliographystyle {plainnat}
-\bibliography {../../../refs/References}
-
-\newpage
-
-\newpage{}
-
 \section{Appendix: Generative AI Use Disclosure}
-
-\wss{ChatGPT (version 5) was used to brainstorm ideas for the template for this disclose section.}
-
-\subsection{AI Tools Used}
-
-\wss{Give the name of the AI tool(s) used and the version.}
-
-\subsection{How and Where Used}
-
-\wss{Explain what the tool(s) were used for.  Examples include: brainstorming,
-explaining a technical concept, reviewing the document, generating or modifying
-text, generating or modifying diagrams, identifying errors or omissions or
-inconsistencies.}
-
-\wss{For each of the uses, identify which parts of the document were affected.}
-
-\wss{You do not need to report every interaction, but you should disclose the 
-uses that materially contributed to your work}
-
-\subsection{Verification of AI-Generated Content}
-
-\wss{\begin{itemize}
-    \item Describe how the team checked AI-generated or AI-assisted material
-    before including it in the document.
-    \item In particular, verify factual claims, technical assertions,
-    requirements, calculations, references, and other information for which an
-    AI system may produce incorrect or fabricated results.
-    \item \textbf{The team is responsible for the accuracy, completeness,
-consistency, and appropriateness of the submitted document, regardless of
-whether material was generated by a human or an AI system.}
-\end{itemize}}
-
-\newpage{}
-
-\section{Appendix: Reflection}
-
-\wss{Not required for CAS 741 projects}
-
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Problem Analysis and Design.
-
-\input{../../Reflection.text}
-
-\begin{enumerate}
-  \item What went well while writing this deliverable? 
-  \item What pain points did you experience during this deliverable, and how
-    did you resolve them?
-  \item Which of your design decisions stemmed from speaking to your client(s)
-  or a proxy (e.g. your peers, stakeholders, potential users)? For those that
-  were not, why, and where did they come from?
-  \item While creating the design doc, what parts of your other documents (e.g.
-  requirements, hazard analysis, etc), it any, needed to be changed, and why?
-  \item What are the limitations of your solution?  Put another way, given
-  unlimited resources, what could you do to make the project better? (LO\_ProbSolutions)
-  \item Give a brief overview of other design solutions you considered.  What
-  are the benefits and tradeoffs of those other designs compared with the chosen
-  design?  From all the potential options, why did you select the documented design?
-  (LO\_Explores)
-  \item (After you have implemented another team's module, which means this
-  isn't filled in until after the original deadline). What did you learn by
-  implementing another team's module? Were all the details you needed in the
-  documentation, or did you need to make assumptions, or ask the other team
-  questions?  If your team also had another team implement one of your modules,
-  what was this experience like?  Are there things in your documentation you
-  could have changed to make the process go more smoothly for when an
-  ``outsider'' completes some of the implementation?
-
-  Your reflection should be about concepts learned in your SE education, such as modular decomposition, cohesion, coupling, information hiding, etc.  You should critique the quality and utility of the specification you received.
-
-  You should create a PR for your implemented module.  A link to the PR should be part of your reflection.
-
-\end{enumerate}
+\todo{Fill in as the rubric asks: the tools used and their versions, how and where each was used in this document, and how the content was checked. Each author adds their own part.}
 
 \end{document}
