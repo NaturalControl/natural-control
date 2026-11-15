@@ -15,6 +15,9 @@
 }
 \usepackage[round]{natbib}
 
+% Number test steps 1., 2., ... so outputs can cite them as ``step N''.
+\renewcommand{\labelenumii}{\arabic{enumii}.}
+
 \input{../Comments.text}
 \input{../Common.text}
 
@@ -478,6 +481,7 @@ from ``Dana Lee'' with subject ``Team Lunch Thursday''. The body of the email is
 
 \textbf{Output:}
 \begin{itemize}
+  \item After step 1, the system begins reading the email aloud.
   \item After step 2, the system stops speaking. The state log shows the task entering Pausing and then Paused.
   \item After step 2, the system inquires what the user wants to do next.
   \item After step 3, the action gate rejects the archive call. The tool call log shows no dispatch, and the email remains in the inbox.
@@ -600,9 +604,11 @@ Google Calendar is connected through a test account. The calendar create tool is
 
 \textbf{Output:}
 \begin{itemize}
-  \item After the disconnect, the state log shows Paused. 
-  \item After reconnection, the system announces the paused task, reports the task state, and offers to resume or cancel.
-  \item Before continuing, the tool log shows a calendar read call that finds the created event before the state log changes to Working. The create tool is not called again.
+  \item After step 1, the system reads back the event title, date, and time, and the state log shows AwaitingApproval.
+  \item After step 2, the create tool is called once.
+  \item After the disconnect in step 3, the state log shows Paused.
+  \item After the reconnect in step 3, the system announces the paused task, reports the task state, and offers to resume or cancel.
+  \item After step 4, before continuing, the tool log shows a calendar read call that finds the created event before the state log changes to Working. The create tool is not called again.
 \end{itemize}
 
 \textbf{Test Case Derivation:} FR7 requires a disconnection to pause the task and for it to not resume until explicitly instructed. 
