@@ -40,6 +40,7 @@
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
 2026-10-19 & All & Initial version from team discussion\\
+2026-11-14 & Kevin Kim & Added H4-e and FR.Sa.21 (peer review issue 44)\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -138,6 +139,7 @@ H4-a & AI agent & Does the wrong task or picks the wrong target & Wrong action p
 H4-b & AI agent & Claims outcome that didn't happen & Missed task; duplicated task; user misinformed & Model hallucination; partial failure reported as success; partial success reported as failure & Report completion only from verified outcomes; distinguish verified, partial, failed, and unknown results & FR.Sa.10\\
 H4-c & AI agent & Stalls or loops & Silence or repeated steps; user unsure what's happening; cost grows & Model loop; slow or broken website & Provide meaningful spoken progress or blocker updates before a configurable maximum silence interval is exceeded during active task execution; pause and ask the user after a step or execution-time limit. & FR.Sa.11, NFR.Sa.3\\
 H4-d & AI agent & AI provider outage or timeout & Task halts partway & Provider down; network loss & Pause and tell the user what was and wasn't done; never claim success & FR.Sa.12\\
+H4-e & AI agent & Transcribes the request correctly but misreads what the user meant & Actions that follow the agent's interpretation but not the user's intent (e.g. ``organize my emails'' taken as deleting unimportant ones) & Broad or open-ended request; model assumptions & Restate the interpreted plan and confirm it before acting when it would change or remove data; destructive steps still need approval (H5-a, H5-d) & FR.Sa.21\\
 H5-a & Action gate & A consequential action slips through without approval & Unwanted action with lasting effects runs (delete, purchase, submit) & Action not recognized as consequential (e.g. a browser click that submits a form); new tool not classified & Require explicit approval for consequential actions and actions with unclear effects. One exception: automatic rejection of non-essential cookies on webpages. & FR.Sa.13\\
 H5-b & Action gate & A stale approval is reused & Action runs with details the user never approved & Details changed after approval (time, recipient) & Bind each approval to its exact details; approvals are single-use; any change requires new approval & FR.Sa.14\\
 H5-c & Action gate & A pending approval expires or is withdrawn without a clear result & User unsure whether the action happened & Pause, disconnection, cancellation, or task replacement & When a pending approval expires or is withdrawn, the system shall tell the user that the action was not executed and shall state which earlier actions were completed. & FR.Sa.15\\
@@ -182,6 +184,7 @@ These requirements come from the recommended actions in Table~\ref{TblFMEA} and 
   \item \textbf{FR.Sa.18:} The system shall check the service or item state directly and confirm the user's approval before retrying an action whose outcome is unknown. (H7-d)
   \item \textbf{FR.Sa.19:} Before deletions, the system shall read back the item's identifying details, state whether the operation is reversible, and use recoverable deletion where supported. (H5-d)
   \item \textbf{FR.Sa.20:} If voice input, voice output, or speech services become unavailable, the system shall stop as outlined in FR.Sa.5.i, accept no new tasks requests until voice functionality is restored, and shall not resume unless user explicitly requests it. (H2-c)
+  \item \textbf{FR.Sa.21:} The system shall restate its interpretation of a broad or open-ended request (for example, ``organize my inbox'') and obtain the user's confirmation before acting on it, when that interpretation would change or remove data. Read-only tasks need no such confirmation. (H4-e)
 \end{itemize}
 \subsection{Non-Functional Safety Requirements}
 

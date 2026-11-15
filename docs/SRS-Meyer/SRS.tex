@@ -602,6 +602,7 @@ The following safety requirements are based on the Hazard Analysis. Hazard IDs r
   \item \textbf{\reqtarget{FR.Sa.18}:} The system shall check the service or item state directly and confirm the user's approval before retrying an action whose outcome is unknown. (H7-d)
   \item \textbf{\reqtarget{FR.Sa.19}:} Before deletions, the system shall read back the item's identifying details, state whether the operation is reversible, and use recoverable deletion where supported. (H5-d)
   \item \textbf{\reqtarget{FR.Sa.20}:} If voice input, voice output, or speech services become unavailable, the system shall stop as outlined in \reqlink{FR.Sa.5.i}, accept no new tasks requests until voice functionality is restored, and shall not resume unless user explicitly requests it. (H2-c)
+  \item \textbf{\reqtarget{FR.Sa.21}:} The system shall restate its interpretation of a broad or open-ended request (for example, ``organize my inbox'') and obtain the user's confirmation before acting on it, when that interpretation would change or remove data. Read-only tasks need no such confirmation. (H4-e)
 \end{itemize}
 
 \paragraph{Non-functional safety requirements}
@@ -1182,7 +1183,7 @@ support the five project goals defined in the Problem Statement.
 \reqlink{FR4}, \reqlink{FR9}, \reqlink{FR11}, \reqlink{FR12}, \reqlink{FR13}, \reqlink{FR20}, \reqlink{FR24} &
 --- &
 \reqlink{FR.Sa.3}, \reqlink{FR.Sa.6}, \reqlink{FR.Sa.9}, \reqlink{FR.Sa.10},
-\reqlink{FR.Sa.13}, \reqlink{FR.Sa.14}, \reqlink{FR.Sa.15}, \reqlink{FR.Sa.16}, \reqlink{FR.Sa.18} \\
+\reqlink{FR.Sa.13}, \reqlink{FR.Sa.14}, \reqlink{FR.Sa.15}, \reqlink{FR.Sa.16}, \reqlink{FR.Sa.18}, \reqlink{FR.Sa.21} \\
 
 \addlinespace[6pt]
 
