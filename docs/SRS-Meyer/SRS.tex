@@ -262,7 +262,7 @@ who may be interacting with our system, and are intended to be refined after pro
 
 \begin{itemize}
     \item Experienced screen-reader user: fluent with VoiceOver or JAWS and keyboard navigation; wants speed on multi-step tasks and keeps their screen reader for everything else. Primary evaluation group.
-    \item Less experienced or recently blind user: often older, with acquired vision loss, limited screen-reader skill, and possibly an older device; benefits most from delegation and clear spoken confirmation.
+    \item Less experienced or recently blind user: often older, with acquired vision loss, limited screen-reader skill, and possibly an older device that may not meet the minimum versions in \reqlink{NFR.E.1}; benefits most from delegation and clear spoken confirmation.
     \item Sighted user wanting nonvisual interaction: can see the screen but prefers or needs voice (busy hands, away from the screen); can verify visually, so has lower risk.
     \item Setup helper: comfortable with computers; connects accounts and grants permissions once, then is not needed for daily use.
 \end{itemize}
@@ -378,7 +378,7 @@ Speech recognition, the AI model, websites, and external services are not assume
 \addcontentsline{toc}{subsection}{Environment requirements}
 
 \begin{itemize}
-    \item \reqtarget{NFR.E.1}: The system shall run in English on macOS with Google Chrome.
+    \item \reqtarget{NFR.E.1}: The system shall run in English on macOS MIN\_MACOS or later with Google Chrome MIN\_CHROME or later.
     \item \reqtarget{NFR.E.2}: The web client shall meet WCAG 2.2 Level AA.
     \item \reqtarget{NFR.E.3}: Python code shall pass the team's PEP 8 linter checks; TypeScript code shall pass strict type checks and the shared linter.
 \end{itemize}
@@ -654,7 +654,9 @@ RESPONSE\_TIME & Time from committed user turn to response start & TBD after POC
 CONNECTION\_NOTICE\_TIME & Time to signal connection loss (\reqlink{NFR.Sa.2}) & TBD after POC\\\addlinespace[4pt]
 IDLE\_PROMPT\_TIME & Maximum interval without spoken progress during active task execution & TBD after POC\\\addlinespace[4pt]
 SHORT\_MESSAGE\_LENGTH & Longest email body read in full before approval & TBD after POC\\\addlinespace[4pt]
-TARGET\_COMPLETION & Share of tasks completed correctly without sighted help & TBD (Development Plan provisional: 80\%)\\
+TARGET\_COMPLETION & Share of tasks completed correctly without sighted help & TBD (Development Plan provisional: 80\%)\\\addlinespace[4pt]
+MIN\_MACOS & Oldest supported macOS version (\reqlink{NFR.E.1}) & TBD after checking dependency requirements and the POC\\\addlinespace[4pt]
+MIN\_CHROME & Oldest supported Google Chrome version (\reqlink{NFR.E.1}) & TBD after checking dependency requirements and the POC\\
 \bottomrule
 \end{tabularx}
 \end{table}
