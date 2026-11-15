@@ -37,6 +37,7 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Change}\\
 \midrule
 2026-11-02 & 1.0 & Team completed initial writeup of the plan\\
+2026-11-14 & 1.1 & Peer review fixes (issues 57--61) and new tests for NFR6--NFR8 and FR.Sa.21\\
 \bottomrule
 \end{tabularx}
 
@@ -657,6 +658,39 @@ An unrelated request made during an open approval tests both. Verifies FR19, FR2
 
 \textbf{How test will be performed:} A script plays the audio files into the virtual device, triggering each step from the session event log. 
 It reads the task manager state log, the tool call log, and the text of system speech, and asserts each output condition.
+
+\item{\textbf{T.FR.TM.2.4} Broad request is restated and confirmed before changing data\\}\label{test:T.FR.TM.2.4}
+
+\textbf{Control:} Automatic
+
+\textbf{Initial State:} The virtual audio device is selected as the system microphone input. The system has been freshly launched (all logs clear, no tasks running, awaiting response).
+Gmail is connected through a test account whose inbox holds five emails. The archive and delete tools are stubbed to log each call.
+
+\textbf{Input:}
+\begin{enumerate}
+  \item Play the request mp3 file which contains a recorded voice saying ``Organize my inbox.''
+  \item After the system restates its plan, play the mp3 file which contains a recorded voice saying ``No.''
+  \item Play the request mp3 file which contains a recorded voice saying ``Summarise my newest email.''
+\end{enumerate}
+
+\textbf{Output:}
+\begin{itemize}
+  \item After step 1, the system restates what it plans to change (for example, which emails it would archive or delete) and asks for confirmation. No archive or delete call is made.
+  \item After step 2, no archive or delete call is made, and the system asks what the user wants instead.
+  \item After step 3, the system summarises the newest email without asking for confirmation.
+\end{itemize}
+
+\textbf{Test Case Derivation:} FR.Sa.21 requires the system to restate its interpretation of a broad request and confirm it before acting, when that interpretation would change or remove data, while read-only tasks need no such confirmation.
+``Organize my inbox'' is broad and would change data, and the summary request is read-only. Verifies FR.Sa.21 and covers H4-e.
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item All Output conditions hold.
+  \item The archive and delete stubs are never called.
+\end{itemize}
+
+\textbf{How test will be performed:} A script plays the audio files into the virtual device. It reads the tool call log and the text of system speech, and asserts each output condition.
+
 \end{enumerate}
 
 
@@ -910,9 +944,10 @@ speech and conversation services. Every disclosure in steps (1) and (3) is spoke
   \item Setup states what each permission allows and which provider receives which data.
   \item The password is entered only on the private setup page, is never spoken or echoed into the conversation, and is stored encrypted.
   \item Every disclosure is spoken or announced, so it reaches the user in addition to the helper.
+  \item Setup is completed within SETUP\_TIME, timed from the first setup screen to the end of the privacy disclosures.
 \end{itemize}
 
-\textbf{Test Case Derivation:} Verifies FR14 and FR23. Setup is intended to be the only point where permissions and credentials are established, so a single walkthrough
+\textbf{Test Case Derivation:} Verifies FR14, FR23, and the setup-time part of NFR6. Setup is intended to be the only point where permissions and credentials are established, so a single walkthrough
 allows the relevant requirements to be observed.
 
 \textbf{How test will be performed:} Run once on a fresh install with VoiceOver enabled, with a team member acting as the setup helper. Capture the consent screen's requested scopes, the spoken
@@ -1252,6 +1287,36 @@ TARGET\_COMPLETION.
 
 \textbf{Test Case Derivation:} NFR2 requires TARGET\_COMPLETION of the declared task suite to be completed correctly without sighted help, so every attempt by every participant counts toward the rate. Verifies NFR2.
 
+\item{\textbf{T.NFR.6} First task, task time, and independence after setup\\}\label{test:T.NFR.6}
+
+\textbf{Control:} Manual
+
+\textbf{Initial State:} Run in the same participant sessions as T.NFR.5. Setup has just been completed with the participant as in UC6 of the SRS, and the participant has not used the system before. The setup helper is not present.
+
+\textbf{Input:}
+\begin{enumerate}
+  \item The participant attempts a first task from the declared suite, without help.
+  \item For each task in the suite, the participant also completes the same task with their usual screen-reader method. The order of the two methods alternates between tasks.
+\end{enumerate}
+
+\textbf{Output:}
+\begin{itemize}
+  \item After step 1, the time to complete the first task and whether any help was needed.
+  \item After step 2, the time for each task with each method, and the ratio of the system's median task time to the usual method's.
+  \item Across the sessions, the number of times the setup helper was needed.
+\end{itemize}
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item The first task is completed without help within LEARN\_TIME.
+  \item The median task time ratio does not exceed EFFICIENCY\_RATIO.
+  \item The setup helper is not needed after setup.
+\end{itemize}
+
+\textbf{How test will be performed:} An observer times each attempt with each method and records any request for help, without intervening.
+
+\textbf{Test Case Derivation:} NFR7 requires a first task without help within LEARN\_TIME, NFR8 bounds task time against the user's usual method, and NFR6 requires routine use without the setup helper. Timing both methods on the same tasks gives a direct comparison. Verifies NFR6, NFR7, and NFR8.
+
 \end{enumerate}
 
 
@@ -1321,6 +1386,9 @@ NFR2 & \hyperref[test:T.NFR.5]{T.NFR.5}\\
 NFR3 & \hyperref[test:T.NFR.2]{T.NFR.2}\\
 NFR4 & \hyperref[test:T.NFR.3]{T.NFR.3}\\
 NFR5 & \hyperref[test:T.NFR.4]{T.NFR.4}\\
+NFR6 & \hyperref[test:T.FR.ATI.1]{T.FR.ATI.1}, \hyperref[test:T.NFR.6]{T.NFR.6}\\
+NFR7 & \hyperref[test:T.NFR.6]{T.NFR.6}\\
+NFR8 & \hyperref[test:T.NFR.6]{T.NFR.6}\\
 \bottomrule
 \end{tabularx}
 \end{table}
