@@ -154,8 +154,8 @@ Project terms:
     \item Task: one job the user asks for. It may pause before it is completed, cancelled, or failed.
     \item Consequential action: a write to user or account data, a submission, an external message, or a commitment such as accepting terms or granting access. Navigation and temporary preparation do not need approval unless they cause one of these effects. \reqlink{FR24} defines one exception for rejecting non-essential cookies.
     \item Approval: the user's explicit consent to one consequential action, or to a listed batch of similar actions, with their specific details; used once and void if any detail changes.
-    \item Barge-in: the user speaking while the system is speaking; it stops the speech only.
-    \item Stop request: an explicit ``stop working'' command or stop key. It pauses work and preserves the task. Cancellation ends the task.
+    \item Barge-in: the user speaking while the system is speaking, other than a stop phrase, cancel phrase, or correction. It stops the speech only; the task keeps running.
+    \item Stop request: a ``stop'' or ``stop working'' command, or the stop key. It stops speech, pauses the task, and preserves the task for resumption. Cancellation ends the task.
     \item Pause acknowledged: the system received the stop request. Pause confirmed: no new task actions can start. Any earlier operation that is still pending is reported separately.
     \item Verified outcome: a result supported by a matching tool response, account record, or website confirmation. Unknown outcome: an action whose result cannot be determined.
 \end{itemize}
@@ -438,8 +438,8 @@ Requirements are grouped by their responsible component (S.1). Each has a ration
 \bottomrule
 \endfoot
 \reqtarget{FR1} & The system shall accept spoken input during a session. It shall support pauses within a thought through the selected voice framework's turn handling. & Voice is the main input for everyday use. Turn timing needs POC and user evaluation. & \reqlink{G1}\\\addlinespace[4pt]
-\reqtarget{FR2} & The user shall be able to interrupt spoken output. This shall not restart the task or pause its execution by itself. A correction or explicit work-stop request shall follow its own handling. & Users need to cut off long speech without losing work. & \reqlink{G2}\\\addlinespace[4pt]
-\reqtarget{FR3} & An explicit ``stop working'' command or the stop key shall pause the task (\reqlink{FR8}). A bare ``stop'' shall stop speech and pause work. The system shall clarify what the user wants next. An explicit request to cancel or abandon the task shall end it. & Speech interruption, work pause, and cancellation have different effects. The key provides a backup when voice fails. & \reqlink{G2}; \reqlink{FR.Sa.1}, \reqlink{FR.Sa.4}\\\addlinespace[4pt]
+\reqtarget{FR2} & The user shall be able to interrupt spoken output by speaking over it (barge-in). A barge-in shall stop speech only. It shall not restart the task or pause its execution. Speech that is a stop phrase, cancel phrase, or correction shall instead follow \reqlink{FR3} or \reqlink{FR6}. & Users need to cut off long speech without losing work. & \reqlink{G2}\\\addlinespace[4pt]
+\reqtarget{FR3} & A ``stop'' or ``stop working'' command, or the stop key, shall stop speech and pause the task (\reqlink{FR8}). After a bare ``stop'', the system shall ask whether to continue or keep the task paused. Cancel phrases (for example, ``cancel the task'') shall be recognized from a fixed list, like stop phrases, and shall end the task. Other wording that may mean cancellation shall be confirmed with the user before the task ends. & Pausing on any stop phrase is the safe default; a user who only wanted silence can continue with one word. Fixed phrases keep stop and cancel independent of the AI agent. The key provides a backup when voice fails. & \reqlink{G2}; \reqlink{FR.Sa.1}, \reqlink{FR.Sa.4}\\\addlinespace[4pt]
 \reqtarget{FR16} & The system shall let the user correct part of a read-back (for example, one sentence or one detail) by voice without restarting the request. & \hyperref[app:interview]{Interview}: fixing a read-back usually means starting over. Correcting speech input is slow for blind users \citep{AzenkotLee2013}. & \reqlink{G4}\\\addlinespace[4pt]
 \reqtarget{FR18} & Spoken updates and summaries shall include only information relevant to the current task, with more detail available on request. & \hyperref[app:interview]{Interview} and WebAIM survey \citep{WebAIM2024}: screen readers read too much irrelevant content. & \reqlink{G2}\\\addlinespace[4pt]
 \end{xltabular}
@@ -838,7 +838,7 @@ The five use cases below expand the high-level scenarios in G.5. Each lists the 
 \textbf{Extensions:}
 \begin{itemize}
     \item \textbf{1a.} The user corrects the task instead. The agent receives the correction (\reqlink{FR6}). Changed action details require fresh approval (\reqlink{FR9}).
-    \item \textbf{1b.} The user says only ``stop.'' Speech stops and work pauses. The system asks what the user wants next (\reqlink{FR3}).
+    \item \textbf{1b.} The user says only ``stop.'' Speech stops and work pauses. The system asks whether to continue or keep the task paused (\reqlink{FR3}).
     \item \textbf{4a.} A form was prepared but not submitted. Its context is saved where possible. The system says it was not submitted. Resumption requires a check that the page still matches the request.
     \item \textbf{4b.} The earlier submission times out. The task remains paused. The system reports its outcome as unknown. Reconciliation may continue without advancing the task. It does not retry blindly (\reqlink{FR11}).
     \item \textbf{6a.} The user cancels. The task enters Cancelling and then Cancelled. Earlier actions are reported and are not undone automatically.
