@@ -1072,7 +1072,7 @@ stops work, and reviews history, pressing the stop key while idle, speaking, exe
 \begin{itemize}
   \item All four interactions complete using the keyboard alone, with no pointing device.
   \item The state and result of each interaction is perceivable through the screen reader.
-  \item The stop key is recognised in each state, or any state where it cannot work is recorded as a limitation.
+  \item The stop key is recognised in all four states (idle, speaking, executing, and awaiting approval), and pauses any active task. A failure in any state fails the test.
 \end{itemize}
 
 \textbf{How test will be performed:} Run on a Mac by one team member, with a second recording the results.
@@ -1083,7 +1083,7 @@ stops work, and reviews history, pressing the stop key while idle, speaking, exe
   \item Press the stop key while idle, while the agent is speaking, during execution, and while awaiting approval.
   \item Record for each press whether the system's spoken acknowledgment arrived, whether the screen reader announced the resulting state change,
   and whether VoiceOver consumed the keystroke.
-  \item Note any state in which the key could not work, with the reason.
+  \item Record any state in which the key did not work, with the reason, as a test failure.
 \end{enumerate}
 
 \textbf{Trace:} Verifies NFR1; covers H1-a.
