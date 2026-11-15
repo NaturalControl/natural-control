@@ -421,33 +421,54 @@ in the relevant pull request.
 
 \clearpage
 \section*{Appendix A: Generative AI Use Disclosure}
-\textbf{Tool and use.} Aaron Loh used OpenAI Codex with GPT-6 Astra,
-primarily at Medium reasoning and occasionally High (settings reported by
-Aaron). Codex helped extract questions from course requirements, challenge
-assumptions, research options, and develop ideas through discussion. It also
-assisted with drafting and revising text throughout this document, organizing
-references, and LaTeX/PDF formatting. Aaron made the judgment calls and reviewed
-the work. During integration, Codex also helped reconcile both reviews, clarify
-evaluation wording, and check formatting. No participant research results are
-claimed. Codex also assisted with the October 2 revisions addressing peer-review
-issues 11 and 12 and Aaron's browser/account scope decision. Review of these
-revisions by another team member is pending.
+\subsection*{AI Tools Used}
+\begin{itemize}
+\item Aaron Loh: OpenAI Codex with GPT-6 Astra, primarily at Medium reasoning
+and occasionally High (settings reported by Aaron).
+\item Kevin Kim: OpenAI Codex (model and reasoning settings not specified in
+his contribution); Claude Code (Claude Opus 5.5) for the November 14 revisions.
+\end{itemize}
 
-Kevin Kim used Codex for grammar, punctuation, and wording revisions. His
-exact model and reasoning settings were not specified in his contribution.
+\subsection*{How and Where Used}
+\begin{itemize}
+\item Aaron Loh: Codex helped extract questions from course requirements,
+challenge assumptions, research options, and develop ideas through discussion.
+It also assisted with drafting and revising text throughout this document,
+organizing references, and LaTeX/PDF formatting. During integration, it helped
+reconcile both reviews, clarify evaluation wording, and check formatting. It
+also assisted with the October 2 revisions addressing peer-review issues 11
+and 12 and Aaron's browser/account scope decision.
+\item Kevin Kim: Codex was used for grammar, punctuation, and wording
+revisions. Claude Code drafted the November 14 POC success criteria in
+Section 9.1 (peer review issue 13) and the revision-history update (teaching
+assistant feedback issue 41).
+\end{itemize}
 
-\textbf{Verification and responsibility.} The assistant checked cited sources,
-course requirements, document consistency, and PDF rendering. These checks do
-not establish that the proposed system works. Lucas and Kevin reviewed the Development Plan; their changes and reflections
-are incorporated here. Charter ratification remains to be confirmed. Before
-submission, the team will verify
-the final content and update this disclosure to reflect subsequent revisions
-and any additional AI use. The team remains responsible for the submitted work.
+\subsection*{Verification of AI-Generated Content}
+\begin{itemize}
+\item The assistant checked cited sources, course requirements, document
+consistency, and PDF rendering. These checks do not establish that the
+proposed system works.
+\item Aaron Loh made the judgment calls and reviewed the work. No participant
+research results are claimed. Review of the October 2 revisions by another
+team member is pending.
+\item Lucas DeBoer and Kevin Kim reviewed the Development Plan; their changes
+and reflections are incorporated here. Charter ratification remains to be
+confirmed.
+\item For the November 14 revisions, Kevin chose and approved each change before
+it was committed. Revision-history dates and authors were checked against the
+repository history, and the document was rebuilt to confirm that citations and
+references resolve.
+\end{itemize}
+
+Before submission, the team will verify the final content and update this
+disclosure to reflect subsequent revisions and any additional AI use. The team
+remains responsible for the submitted work.
 
 \section*{Appendix B: Reflection}
 The following reflections were contributed by Lucas during the team review.
 \begin{enumerate}
-\item Why is it important to create a development plan before starting?
+\item Why is it important to create a development plan prior to starting the project?
 \\A strong development plan is important for many reasons. First, it is used to get all team members on the same
 page about the project's descriptions, goals, and scope, and it helps the team clarify administrative details
 such as team roles, responsibilities and communication expectations. Explicitly laying out these expectations at the start
@@ -456,7 +477,7 @@ team members to see what fields or technologies they should brush up on before t
 may seem overwhelming at first, but a development plan can help avoid analysis paralysis by encouraging the team to make
 decisions and begin concrete work.
 
-\item What are the advantages and disadvantages of continuous integration and deployment (CI/CD) in your opinion?
+\item In your opinion, what are the advantages and disadvantages of using CI/CD?
 \\CI/CD offer many disadvantages and advantages. Some advantages include faster releases, an easier time merging work,
 and automation of repetitive tasks such as testing, builds, and deployment. Additionally, CI/CD encourages smaller changes
 that are easier to understand and review. However, there are also disadvantages; the initial setup can take some time,
@@ -464,7 +485,7 @@ and there is a learning curve to setting up an effective CI/CD pipeline. These p
 as developers may assume that if the pipeline passes, the code is correct. However, if test coverage is incomplete, automated
 checks can miss bugs making it easier for faulty code to slip through.
 
-\item What disagreements occurred in this deliverable and how were they resolved?
+\item What disagreements did your group have in this deliverable, if any, and how did you resolve them?
 \\Overall, there were no major disagreements in this deliverable. Some differences while brainstorming ideas were
 resolved through discussion and compromise. There was a minor concern over the uneven distribution of work for this deliverable.
 For future deliverables, the team will divide work more clearly beforehand and follow the expectations laid out in this document.
