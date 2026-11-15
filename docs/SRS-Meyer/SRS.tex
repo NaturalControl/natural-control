@@ -116,6 +116,7 @@ Table~\ref{tab:srs-revisions} summarizes the revision history.
 \toprule Date & Contributor & Change\\
 \midrule
 2026-10-19 & All & Completed for Revision 0 submission.\\
+2026-11-14 & Kevin Kim / AI assistance & Peer review fixes: stop and cancel wording (issue 46), platform versions (48), setup use case and NFR6 (47), usability NFR7--NFR8 (49), FR.Sa.21 (44).\\
 \bottomrule
 \end{tabularx}
 \end{minipage}
@@ -154,8 +155,8 @@ Project terms:
     \item Task: one job the user asks for. It may pause before it is completed, cancelled, or failed.
     \item Consequential action: a write to user or account data, a submission, an external message, or a commitment such as accepting terms or granting access. Navigation and temporary preparation do not need approval unless they cause one of these effects. \reqlink{FR24} defines one exception for rejecting non-essential cookies.
     \item Approval: the user's explicit consent to one consequential action, or to a listed batch of similar actions, with their specific details; used once and void if any detail changes.
-    \item Barge-in: the user speaking while the system is speaking; it stops the speech only.
-    \item Stop request: an explicit ``stop working'' command or stop key. It pauses work and preserves the task. Cancellation ends the task.
+    \item Barge-in: the user speaking while the system is speaking, other than a stop phrase, cancel phrase, or correction. It stops the speech only; the task keeps running.
+    \item Stop request: a ``stop'' or ``stop working'' command, or the stop key. It stops speech, pauses the task, and preserves the task for resumption. Cancellation ends the task.
     \item Pause acknowledged: the system received the stop request. Pause confirmed: no new task actions can start. Any earlier operation that is still pending is reported separately.
     \item Verified outcome: a result supported by a matching tool response, account record, or website confirmation. Unknown outcome: an action whose result cannot be determined.
 \end{itemize}
@@ -262,7 +263,7 @@ who may be interacting with our system, and are intended to be refined after pro
 
 \begin{itemize}
     \item Experienced screen-reader user: fluent with VoiceOver or JAWS and keyboard navigation; wants speed on multi-step tasks and keeps their screen reader for everything else. Primary evaluation group.
-    \item Less experienced or recently blind user: often older, with acquired vision loss, limited screen-reader skill, and possibly an older device; benefits most from delegation and clear spoken confirmation.
+    \item Less experienced or recently blind user: often older, with acquired vision loss, limited screen-reader skill, and possibly an older device that may not meet the minimum versions in \reqlink{NFR.E.1}; benefits most from delegation and clear spoken confirmation.
     \item Sighted user wanting nonvisual interaction: can see the screen but prefers or needs voice (busy hands, away from the screen); can verify visually, so has lower risk.
     \item Setup helper: comfortable with computers; connects accounts and grants permissions once, then is not needed for daily use.
 \end{itemize}
@@ -338,7 +339,7 @@ The following is a list of obligations and limits imposed by the environment.
 \nsection{E.4 Assumptions}
 
 \begin{itemize}
-    \item A setup helper completed setup correctly (accounts connected, permissions granted).
+    \item A setup helper completed setup correctly (accounts connected, permissions granted), as described in \hyperref[uc:setup]{UC6}.
     \item Only the user gives commands; other voices are noise.
     \item Connected accounts belong to the user; development and evaluation use test accounts.
     \item The user can hear spoken output (see G.6).
@@ -378,7 +379,7 @@ Speech recognition, the AI model, websites, and external services are not assume
 \addcontentsline{toc}{subsection}{Environment requirements}
 
 \begin{itemize}
-    \item \reqtarget{NFR.E.1}: The system shall run in English on macOS with Google Chrome.
+    \item \reqtarget{NFR.E.1}: The system shall run in English on macOS MIN\_MACOS or later with Google Chrome MIN\_CHROME or later.
     \item \reqtarget{NFR.E.2}: The web client shall meet WCAG 2.2 Level AA.
     \item \reqtarget{NFR.E.3}: Python code shall pass the team's PEP 8 linter checks; TypeScript code shall pass strict type checks and the shared linter.
 \end{itemize}
@@ -438,8 +439,8 @@ Requirements are grouped by their responsible component (S.1). Each has a ration
 \bottomrule
 \endfoot
 \reqtarget{FR1} & The system shall accept spoken input during a session. It shall support pauses within a thought through the selected voice framework's turn handling. & Voice is the main input for everyday use. Turn timing needs POC and user evaluation. & \reqlink{G1}\\\addlinespace[4pt]
-\reqtarget{FR2} & The user shall be able to interrupt spoken output. This shall not restart the task or pause its execution by itself. A correction or explicit work-stop request shall follow its own handling. & Users need to cut off long speech without losing work. & \reqlink{G2}\\\addlinespace[4pt]
-\reqtarget{FR3} & An explicit ``stop working'' command or the stop key shall pause the task (\reqlink{FR8}). A bare ``stop'' shall stop speech and pause work. The system shall clarify what the user wants next. An explicit request to cancel or abandon the task shall end it. & Speech interruption, work pause, and cancellation have different effects. The key provides a backup when voice fails. & \reqlink{G2}; \reqlink{FR.Sa.1}, \reqlink{FR.Sa.4}\\\addlinespace[4pt]
+\reqtarget{FR2} & The user shall be able to interrupt spoken output by speaking over it (barge-in). A barge-in shall stop speech only. It shall not restart the task or pause its execution. Speech that is a stop phrase, cancel phrase, or correction shall instead follow \reqlink{FR3} or \reqlink{FR6}. & Users need to cut off long speech without losing work. & \reqlink{G2}\\\addlinespace[4pt]
+\reqtarget{FR3} & A ``stop'' or ``stop working'' command, or the stop key, shall stop speech and pause the task (\reqlink{FR8}). After a bare ``stop'', the system shall ask whether to continue or keep the task paused. Cancel phrases (for example, ``cancel the task'') shall be recognized from a fixed list, like stop phrases, and shall end the task. Other wording that may mean cancellation shall be confirmed with the user before the task ends. & Pausing on any stop phrase is the safe default; a user who only wanted silence can continue with one word. Fixed phrases keep stop and cancel independent of the AI agent. The key provides a backup when voice fails. & \reqlink{G2}; \reqlink{FR.Sa.1}, \reqlink{FR.Sa.4}\\\addlinespace[4pt]
 \reqtarget{FR16} & The system shall let the user correct part of a read-back (for example, one sentence or one detail) by voice without restarting the request. & \hyperref[app:interview]{Interview}: fixing a read-back usually means starting over. Correcting speech input is slow for blind users \citep{AzenkotLee2013}. & \reqlink{G4}\\\addlinespace[4pt]
 \reqtarget{FR18} & Spoken updates and summaries shall include only information relevant to the current task, with more detail available on request. & \hyperref[app:interview]{Interview} and WebAIM survey \citep{WebAIM2024}: screen readers read too much irrelevant content. & \reqlink{G2}\\\addlinespace[4pt]
 \end{xltabular}
@@ -602,6 +603,7 @@ The following safety requirements are based on the Hazard Analysis. Hazard IDs r
   \item \textbf{\reqtarget{FR.Sa.18}:} The system shall check the service or item state directly and confirm the user's approval before retrying an action whose outcome is unknown. (H7-d)
   \item \textbf{\reqtarget{FR.Sa.19}:} Before deletions, the system shall read back the item's identifying details, state whether the operation is reversible, and use recoverable deletion where supported. (H5-d)
   \item \textbf{\reqtarget{FR.Sa.20}:} If voice input, voice output, or speech services become unavailable, the system shall stop as outlined in \reqlink{FR.Sa.5.i}, accept no new tasks requests until voice functionality is restored, and shall not resume unless user explicitly requests it. (H2-c)
+  \item \textbf{\reqtarget{FR.Sa.21}:} The system shall restate its interpretation of a broad or open-ended request (for example, ``organize my inbox'') and obtain the user's confirmation before acting on it, when that interpretation would change or remove data. Read-only tasks need no such confirmation. (H4-e)
 \end{itemize}
 
 \paragraph{Non-functional safety requirements}
@@ -634,6 +636,9 @@ The following safety requirements are based on the Hazard Analysis. Hazard IDs r
 \reqtarget{NFR3} & A work-stop request shall be acknowledged within STOP\_ACK\_TIME. Time to block new actions and time to reconcile in-flight work shall be measured separately. & A quick acknowledgment does not prove earlier actions ended. & \reqlink{G2}; \reqlink{NFR.Sa.1}\\\addlinespace[4pt]
 \reqtarget{NFR4} & The system shall begin its response within RESPONSE\_TIME after the selected turn detector commits an ordinary request. Premature replies and missed interruptions shall also be evaluated. & Fast replies must not cut off unfinished thoughts. & \reqlink{G2}\\\addlinespace[4pt]
 \reqtarget{NFR5} & The application shall not retain raw microphone audio. It shall exclude credentials and authentication codes from task history, logs, and source control. Setup shall explain provider processing and retention separately. & Application storage rules do not establish provider privacy guarantees. & \reqlink{G5}; \reqlink{FR.Sa.17}\\\addlinespace[4pt]
+\reqtarget{NFR6} & With the setup helper, initial setup (\hyperref[uc:setup]{UC6}) shall be completed within SETUP\_TIME. After setup, routine use shall not require the setup helper. & Measures \reqlink{G5}: a short setup and independent use afterward. & \reqlink{G5}\\\addlinespace[4pt]
+\reqtarget{NFR7} & After setup (\hyperref[uc:setup]{UC6}), a new user shall complete a first task from the declared task suite without help within LEARN\_TIME. & Recently blind users find screen readers hard to learn (\hyperref[app:interview]{Interview}); the system should not add the same burden. & \reqlink{G1}\\\addlinespace[4pt]
+\reqtarget{NFR8} & For tasks in the declared task suite, the median task time shall not exceed EFFICIENCY\_RATIO times the user's time for the same task with their usual screen-reader method. & Delegation only helps if it is not slower than the user's current method. & \reqlink{G1}\\\addlinespace[4pt]
 \end{xltabular}
 \endgroup
 
@@ -654,7 +659,12 @@ RESPONSE\_TIME & Time from committed user turn to response start & TBD after POC
 CONNECTION\_NOTICE\_TIME & Time to signal connection loss (\reqlink{NFR.Sa.2}) & TBD after POC\\\addlinespace[4pt]
 IDLE\_PROMPT\_TIME & Maximum interval without spoken progress during active task execution & TBD after POC\\\addlinespace[4pt]
 SHORT\_MESSAGE\_LENGTH & Longest email body read in full before approval & TBD after POC\\\addlinespace[4pt]
-TARGET\_COMPLETION & Share of tasks completed correctly without sighted help & TBD (Development Plan provisional: 80\%)\\
+TARGET\_COMPLETION & Share of tasks completed correctly without sighted help & TBD (Development Plan provisional: 80\%)\\\addlinespace[4pt]
+MIN\_MACOS & Oldest supported macOS version (\reqlink{NFR.E.1}) & TBD after checking dependency requirements and the POC\\\addlinespace[4pt]
+MIN\_CHROME & Oldest supported Google Chrome version (\reqlink{NFR.E.1}) & TBD after checking dependency requirements and the POC\\\addlinespace[4pt]
+SETUP\_TIME & Time for the setup helper to complete initial setup (\reqlink{NFR6}) & TBD after POC\\\addlinespace[4pt]
+LEARN\_TIME & Time for a new user to complete a first task without help (\reqlink{NFR7}) & TBD after POC\\\addlinespace[4pt]
+EFFICIENCY\_RATIO & Largest allowed ratio of task time to the user's usual method (\reqlink{NFR8}) & TBD after POC\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -838,7 +848,7 @@ The five use cases below expand the high-level scenarios in G.5. Each lists the 
 \textbf{Extensions:}
 \begin{itemize}
     \item \textbf{1a.} The user corrects the task instead. The agent receives the correction (\reqlink{FR6}). Changed action details require fresh approval (\reqlink{FR9}).
-    \item \textbf{1b.} The user says only ``stop.'' Speech stops and work pauses. The system asks what the user wants next (\reqlink{FR3}).
+    \item \textbf{1b.} The user says only ``stop.'' Speech stops and work pauses. The system asks whether to continue or keep the task paused (\reqlink{FR3}).
     \item \textbf{4a.} A form was prepared but not submitted. Its context is saved where possible. The system says it was not submitted. Resumption requires a check that the page still matches the request.
     \item \textbf{4b.} The earlier submission times out. The task remains paused. The system reports its outcome as unknown. Reconciliation may continue without advancing the task. It does not retry blindly (\reqlink{FR11}).
     \item \textbf{6a.} The user cancels. The task enters Cancelling and then Cancelled. Earlier actions are reported and are not undone automatically.
@@ -877,13 +887,41 @@ The five use cases below expand the high-level scenarios in G.5. Each lists the 
 
 \textbf{Failure guarantee:} Uncertain state is reported. Work does not resume silently.
 
+\Needspace{12\baselineskip}
+\subsection*{UC6: Assisted initial setup}\label{uc:setup}
+\addcontentsline{toc}{subsection}{UC6: Assisted initial setup}
+
+\textbf{Primary actor:} Setup helper, with the user present
+
+\textbf{Preconditions:} The system is installed on the user's Mac with Google Chrome (\reqlink{NFR.E.1}).
+
+\textbf{Trigger:} The setup helper opens the client for the first time.
+
+\textbf{Main success scenario:}
+\begin{enumerate}
+    \item The system explains which accounts it can connect, the permissions each needs, and which providers receive which data (\reqlink{FR14}, \reqlink{NFR5}).
+    \item The helper connects the user's accounts with the narrowest permissions (\reqlink{FR14}).
+    \item Website logins the user wants saved are entered through the private setup page (\reqlink{FR23}).
+    \item The system explains the stop shortcut and the session controls to the user (\reqlink{FR22}).
+    \item The user completes a short test task by voice. Setup is complete.
+\end{enumerate}
+
+\textbf{Extensions:}
+\begin{itemize}
+    \item \textbf{2a.} An account connection fails. The system says which one and why, and setup continues without it.
+\end{itemize}
+
+\textbf{Success guarantee:} The user can start and stop tasks without the setup helper (\reqlink{NFR6}).
+
+\textbf{Failure guarantee:} No credential is spoken or placed in the conversation.
+
 \Needspace{8\baselineskip}
 \nsection{S.7 Prioritization}
 
 \begin{itemize}
     \item Must (POC, by November 23, 2026): \reqlink{FR1} to \reqlink{FR3}, \reqlink{FR8}, \reqlink{FR9}, \reqlink{NFR3}.
     \item Must (before participant evaluation sessions, which must complete before the March 8, 2027 V\&V Report and Usability Report): \reqlink{FR4} to \reqlink{FR7}, \reqlink{FR10} to \reqlink{FR16}, \reqlink{FR18} to \reqlink{FR24}, \reqlink{NFR1}, \reqlink{NFR5}, \reqlink{NFR.E.1} to \reqlink{NFR.E.3}.
-    \item Should (tune with usability evidence from those sessions, reflected in the March 8, 2027 report): conversational timing, \reqlink{FR17}, \reqlink{NFR2}, \reqlink{NFR4}.
+    \item Should (tune with usability evidence from those sessions, reflected in the March 8, 2027 report): conversational timing, \reqlink{FR17}, \reqlink{NFR2}, \reqlink{NFR4}, \reqlink{NFR6} to \reqlink{NFR8}.
 \end{itemize}
 
 The POC shall demonstrate approval and work-stop controls for its selected email/calendar and browser workflows. This demonstrates feasibility for the tested action paths; it does not establish coverage of every integration or website action.
@@ -1127,7 +1165,7 @@ support the five project goals defined in the Problem Statement.
 
 \reqlink{G1} &
 \reqlink{FR1}, \reqlink{FR10} &
-\reqlink{NFR2} &
+\reqlink{NFR2}, \reqlink{NFR7}, \reqlink{NFR8} &
 \reqlink{FR.Sa.13} \\
 
 \addlinespace[6pt]
@@ -1146,7 +1184,7 @@ support the five project goals defined in the Problem Statement.
 \reqlink{FR4}, \reqlink{FR9}, \reqlink{FR11}, \reqlink{FR12}, \reqlink{FR13}, \reqlink{FR20}, \reqlink{FR24} &
 --- &
 \reqlink{FR.Sa.3}, \reqlink{FR.Sa.6}, \reqlink{FR.Sa.9}, \reqlink{FR.Sa.10},
-\reqlink{FR.Sa.13}, \reqlink{FR.Sa.14}, \reqlink{FR.Sa.15}, \reqlink{FR.Sa.16}, \reqlink{FR.Sa.18} \\
+\reqlink{FR.Sa.13}, \reqlink{FR.Sa.14}, \reqlink{FR.Sa.15}, \reqlink{FR.Sa.16}, \reqlink{FR.Sa.18}, \reqlink{FR.Sa.21} \\
 
 \addlinespace[6pt]
 
@@ -1159,7 +1197,7 @@ support the five project goals defined in the Problem Statement.
 
 \reqlink{G5} &
 \reqlink{FR14}, \reqlink{FR22}, \reqlink{FR23} &
-\reqlink{NFR1}, \reqlink{NFR5} &
+\reqlink{NFR1}, \reqlink{NFR5}, \reqlink{NFR6} &
 \reqlink{FR.Sa.17} \\
 
 \bottomrule
