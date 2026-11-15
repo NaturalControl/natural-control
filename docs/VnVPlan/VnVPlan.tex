@@ -471,6 +471,7 @@ from ``Dana Lee'' with subject ``Team Lunch Thursday''. The body of the email is
   \item Play the request mp3 file which contains a recorded voice saying ``Read me my latest email.''
   \item Wait until the system begins speaking the email, then
   play the stop mp3 file which contains a recorded voice saying ``Stop.''
+  \item While the task is Paused, the script makes the agent stub request one new tool call: archiving the email.
   \item After the system asks for user input, play the cancel mp3 file
   which contains a recorded voice saying ``Cancel that task.''
 \end{enumerate}
@@ -479,25 +480,26 @@ from ``Dana Lee'' with subject ``Team Lunch Thursday''. The body of the email is
 \begin{itemize}
   \item After step 2, the system stops speaking. The state log shows the task entering Pausing and then Paused.
   \item After step 2, the system inquires what the user wants to do next.
-  \item After step 3, the state log shows the task entering Cancelling and then Cancelled. The system reports that the task was cancelled. 
+  \item After step 3, the action gate rejects the archive call. The tool call log shows no dispatch, and the email remains in the inbox.
+  \item After step 4, the state log shows the task entering Cancelling and then Cancelled. The system reports that the task was cancelled. 
 \end{itemize}
 
 \textbf{Test Case Derivation:} FR3 requires a bare ``stop'' to stop speech and pause work, and requires the system to clarify what the user wants next. FR3 also requires an explicit request to cancel or abandon the task to end it.
 FR8 requires that a stop request block new actions, and that the system report completed work, unfinished work, and unknown outcomes.
-Interrupting the long spoken response with a ``Stop'' and the system's response to cancelling the task satisfies this. Verifies FR3, FR8, and FR.Sa.5.i--iii.
+Interrupting the long spoken response with a ``Stop'', attempting a new action while paused, and the system's response to cancelling the task satisfies this. Verifies FR3, FR8, and FR.Sa.5.i--iii.
 
 \textbf{Pass/Fail Criteria:}
 \begin{itemize}
   \item Speech output stops after step 2.
   \item The state log contains Pausing followed by Paused.
-  \item No tool call starts after the stop.
+  \item No tool call starts after the stop; the injected archive call is rejected and not dispatched.
   \item After stopping, the next system request asks the user what to do next.
-  \item The task does not leave Paused before step 3.
-  \item The state log then contains Cancelling followed by Cancelled after step 3.
+  \item The task does not leave Paused before step 4.
+  \item The state log then contains Cancelling followed by Cancelled after step 4.
 \end{itemize}
 
 \textbf{How test will be performed:} A script plays the audio files into the
-virtual device and reads the session event log. It watches the event log for the start of the spoken email to trigger step 2 and for the next system request to trigger step 3.
+virtual device and reads the session event log. It watches the event log for the start of the spoken email to trigger step 2, for the Paused state to trigger step 3, and for the next system request to trigger step 4.
 It then reads the task manager's state log and tool call log and asserts each pass criterion above.
 
 
