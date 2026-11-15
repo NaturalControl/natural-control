@@ -635,6 +635,8 @@ The following safety requirements are based on the Hazard Analysis. Hazard IDs r
 \reqtarget{NFR4} & The system shall begin its response within RESPONSE\_TIME after the selected turn detector commits an ordinary request. Premature replies and missed interruptions shall also be evaluated. & Fast replies must not cut off unfinished thoughts. & \reqlink{G2}\\\addlinespace[4pt]
 \reqtarget{NFR5} & The application shall not retain raw microphone audio. It shall exclude credentials and authentication codes from task history, logs, and source control. Setup shall explain provider processing and retention separately. & Application storage rules do not establish provider privacy guarantees. & \reqlink{G5}; \reqlink{FR.Sa.17}\\\addlinespace[4pt]
 \reqtarget{NFR6} & With the setup helper, initial setup (\hyperref[uc:setup]{UC6}) shall be completed within SETUP\_TIME. After setup, routine use shall not require the setup helper. & Measures \reqlink{G5}: a short setup and independent use afterward. & \reqlink{G5}\\\addlinespace[4pt]
+\reqtarget{NFR7} & After setup (\hyperref[uc:setup]{UC6}), a new user shall complete a first task from the declared task suite without help within LEARN\_TIME. & Recently blind users find screen readers hard to learn (\hyperref[app:interview]{Interview}); the system should not add the same burden. & \reqlink{G1}\\\addlinespace[4pt]
+\reqtarget{NFR8} & For tasks in the declared task suite, the median task time shall not exceed EFFICIENCY\_RATIO times the user's time for the same task with their usual screen-reader method. & Delegation only helps if it is not slower than the user's current method. & \reqlink{G1}\\\addlinespace[4pt]
 \end{xltabular}
 \endgroup
 
@@ -658,7 +660,9 @@ SHORT\_MESSAGE\_LENGTH & Longest email body read in full before approval & TBD a
 TARGET\_COMPLETION & Share of tasks completed correctly without sighted help & TBD (Development Plan provisional: 80\%)\\\addlinespace[4pt]
 MIN\_MACOS & Oldest supported macOS version (\reqlink{NFR.E.1}) & TBD after checking dependency requirements and the POC\\\addlinespace[4pt]
 MIN\_CHROME & Oldest supported Google Chrome version (\reqlink{NFR.E.1}) & TBD after checking dependency requirements and the POC\\\addlinespace[4pt]
-SETUP\_TIME & Time for the setup helper to complete initial setup (\reqlink{NFR6}) & TBD after POC\\
+SETUP\_TIME & Time for the setup helper to complete initial setup (\reqlink{NFR6}) & TBD after POC\\\addlinespace[4pt]
+LEARN\_TIME & Time for a new user to complete a first task without help (\reqlink{NFR7}) & TBD after POC\\\addlinespace[4pt]
+EFFICIENCY\_RATIO & Largest allowed ratio of task time to the user's usual method (\reqlink{NFR8}) & TBD after POC\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -915,7 +919,7 @@ The five use cases below expand the high-level scenarios in G.5. Each lists the 
 \begin{itemize}
     \item Must (POC, by November 23, 2026): \reqlink{FR1} to \reqlink{FR3}, \reqlink{FR8}, \reqlink{FR9}, \reqlink{NFR3}.
     \item Must (before participant evaluation sessions, which must complete before the March 8, 2027 V\&V Report and Usability Report): \reqlink{FR4} to \reqlink{FR7}, \reqlink{FR10} to \reqlink{FR16}, \reqlink{FR18} to \reqlink{FR24}, \reqlink{NFR1}, \reqlink{NFR5}, \reqlink{NFR.E.1} to \reqlink{NFR.E.3}.
-    \item Should (tune with usability evidence from those sessions, reflected in the March 8, 2027 report): conversational timing, \reqlink{FR17}, \reqlink{NFR2}, \reqlink{NFR4}, \reqlink{NFR6}.
+    \item Should (tune with usability evidence from those sessions, reflected in the March 8, 2027 report): conversational timing, \reqlink{FR17}, \reqlink{NFR2}, \reqlink{NFR4}, \reqlink{NFR6} to \reqlink{NFR8}.
 \end{itemize}
 
 The POC shall demonstrate approval and work-stop controls for its selected email/calendar and browser workflows. This demonstrates feasibility for the tested action paths; it does not establish coverage of every integration or website action.
@@ -1159,7 +1163,7 @@ support the five project goals defined in the Problem Statement.
 
 \reqlink{G1} &
 \reqlink{FR1}, \reqlink{FR10} &
-\reqlink{NFR2} &
+\reqlink{NFR2}, \reqlink{NFR7}, \reqlink{NFR8} &
 \reqlink{FR.Sa.13} \\
 
 \addlinespace[6pt]
