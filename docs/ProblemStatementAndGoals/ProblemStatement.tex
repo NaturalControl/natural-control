@@ -14,10 +14,12 @@
 \toprule
 Date & Developer(s) & Change \\
 \midrule
-2026-09-23 & Aaron & AI-assisted draft. \\
-\midrule
-2026-09-28 & Curtis & Reviewed draft for alignment with rubric and expectations. \\
-2026-10-02 & Aaron / AI assistance & Draft revisions for peer-review issues 11 and 12; narrow initial scope. \\
+2026-09-23 & Aaron Loh / AI (artificial intelligence) assistance & Initial draft. \\
+2026-09-28 & Curtis Vos & Added the accuracy goal (G3), the setup goal (G5), and the saved-workflow stretch goal after rubric review. \\
+2026-10-02 & Aaron Loh / AI assistance & Narrowed scope to browser and connected-account tasks (peer review issues 11 and 12). \\
+2026-10-14 & Kevin Kim & Clarified the problem and added the appointment example (peer review issue 14). \\
+2026-10-19 & Curtis Vos & Added website and application developers as tertiary stakeholders (group feedback). \\
+2026-11-14 & Kevin Kim / AI assistance & Clarified wording (teaching assistant feedback issue 37) and gave each goal a separate measure (issue 38). \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -25,13 +27,14 @@ Date & Developer(s) & Change \\
 \section{Problem Statement}
 Visually impaired individuals can face many difficulties when navigating screen-based websites and
 applications that rely on visual feedback. These barriers become especially
-challenging when completing complex, multi-step digital tasks that require the interpretation of changing
-system states. Natural Control is a voice-based interface to a computer-use agent aiming to help visually impaired users complete
+challenging for multi-step digital tasks (tasks done on websites and online accounts, such as email or
+booking), where the user must keep track of what has changed, for example whether a form was submitted
+or an email was sent. Natural Control is a voice-based interface to a computer-use agent aiming to help visually impaired users complete
 digital tasks while receiving accessible feedback and retaining control.
 
 \subsection{Problem}
-Complex and unfamiliar tasks can require users to navigate multiple applications, interpret changing
-interface and application states, recover from errors and unexpected outcomes, and determine if actions
+Complex and unfamiliar tasks can require users to navigate multiple applications, notice what has changed
+in each one, recover from errors and unexpected outcomes, and determine if actions
 were completed successfully. Managing these tasks can be particularly difficult without relying on
 visual feedback.
 
@@ -90,33 +93,25 @@ evaluation method for these goals. The goals below describe intended outcomes,
 not achieved results.
 
 \begin{enumerate}[label=G\arabic*.,leftmargin=*]
-\item \textbf{Complete complex digital tasks independently.}
-Within the initial browser and connected-account scope, users should be able to
-complete common, multi-step tasks without
-relying on visual feedback or sighted assistance. Success can be measured by task completion rate
-and the amount of sighted assistance that is required.
+\item \textbf{Complete tasks independently.}
+\textit{Goal:} Users complete common multi-step tasks on websites and connected accounts without sighted help.\\
+\textit{Measure:} Task completion rate and the amount of sighted help needed.
 
-\item \textbf{Maintain awareness and control during digital tasks.}
-Users should be able to understand relevant task progress and state changes, provide input when required,
-and stop or redirect tasks when necessary. Measure successful corrections, explicit stop acknowledgment and execution-stop
-confirmation, and approval before consequential actions. Clarification counts
-provide context; fewer questions alone do not establish better control.
+\item \textbf{Stay aware and in control.}
+\textit{Goal:} Users know what the system is doing and can stop or redirect it at any time.\\
+\textit{Measure:} Successful corrections, stop requests acknowledged and confirmed, and approval before consequential actions.
 
-\item \textbf{Accurately receive results and execute commands.}
-Users should be able to have confidence that the program is correctly tracking the system's state,
-retrieving results, and executing their desired actions and commands. Compare reported outcomes and executed actions against independently verified
-application state and the user's request. Report incorrect or unsupported
-completion claims separately from successful actions.
+\item \textbf{Trust the results.}
+\textit{Goal:} Users can rely on what the system says it did.\\
+\textit{Measure:} Reported outcomes compared with the verified account or website state, with wrong claims counted separately.
 
-\item \textbf{Recover from errors and unexpected outcomes.}
-Users should be able to identify unexpected, misunderstood, or failed actions and recover without restarting
-the entire task or relying on sighted assistance. Measure whether recovery succeeds without sighted help or a full restart,
-along with recovery time and clarification turns.
+\item \textbf{Recover from mistakes.}
+\textit{Goal:} When something goes wrong, users can fix it without starting over or asking for sighted help.\\
+\textit{Measure:} Recoveries without a restart or sighted help, recovery time, and clarification turns.
 
-\item \textbf{Provide a straightforward and reliable setup process.}
-Individuals responsible for setting up the interface should have a smooth setup process.
-Routine use after initial setup should not require assistance from the setup helper. Success can be measured by the number of clicks or commands needed,
-the setup time before the program can be used, as well as how many times the setup helper is required to assist after installation.
+\item \textbf{Easy setup.}
+\textit{Goal:} A helper can set the system up quickly, and the user does not need them again afterward.\\
+\textit{Measure:} Setup time, number of setup steps, and helper visits after setup.
 \end{enumerate}
 
 \section{Stretch Goals}
@@ -144,8 +139,8 @@ Two custom documents are proposed to be completed over the course of the project
 \item \textbf{Fall: User/Stakeholder Interview Report.} Record recruitment,
 participant needs, methods, findings, and resulting design decisions.
 Separate direct evidence from team hypotheses.
-\item \textbf{Winter: Usability Report.} Evaluate independent completion,
-awareness, correction, and user control against participants' usual
+\item \textbf{Winter: Usability Report.} Evaluate whether users complete tasks without sighted help,
+and their awareness, correction, and control against participants' usual
 workflows. Report limitations and unsuccessful cases as well as benefits.
 \end{itemize}
 
@@ -160,7 +155,7 @@ and easy to manage.
 \item \textbf{What pain points arose and how were they resolved?}
 The group had initially determined that transparently using AI assistance for writing the draft of the document before manually
 reviewing would be effective and efficient, but Curtis found this to be rather time-consuming when it came down to the review
-process. Some sections didn't fully align with expectations, were slightly difficult to understand, and were rather vague due to the nature of LLM's and
+process. Some sections didn't fully align with expectations, were slightly difficult to understand, and were rather vague due to the nature of large language models (LLMs) and
 their writing style, so the next process to try moving forward will be primarily manual writing first, then use AI assistance to proofread and
 expand on anything needing elaboration. This should be beneficial as a whole for the group's effectiveness when it comes to writing
 proposals and further documents.
