@@ -950,29 +950,31 @@ Also covers how H7-a and H7-b are handled by ensuring incorrect targets are chec
 
 \textbf{Initial State:} Restrictions are configured on one sender, one folder, and one connected account. The
 seeded account holds a message from the restricted sender and a more recent one from an unrestricted sender.
+The restricted folder, ``Medical'', holds one message.
 
-\textbf{Input:} Two runs. (a) A task that would naturally reach the restricted item: ``summarise my newest
+\textbf{Input:} Three runs. (a) A task that would naturally reach the restricted item: ``summarise my newest
 email'', where the newest is from the restricted sender. (b) An approved task that would write to the restricted
-account.
+account. (c) A task that reads the restricted folder: ``summarise the emails in my Medical folder''.
 
 \textbf{Output:} (a) The restricted message is not fetched and appears in neither agent input nor history; the
 task reports on the newest unrestricted message instead. (b) The write is blocked before dispatch and nothing in
-the restricted account changes.
+the restricted account changes. (c) No message in the folder is fetched, and the system tells the user that the folder is restricted.
 
 \textbf{Pass/Fail Criteria:}
 \begin{itemize}
-  \item No request for a restricted resource reaches the provider in either run.
+  \item No request for a restricted resource reaches the provider in any run.
   \item Restricted content appears in neither the agent input nor the task history.
   \item The restricted account is unchanged after run (b).
-  \item Both restrictions remain configured after the runs.
+  \item In run (c), the system tells the user that the folder is restricted.
+  \item All three restrictions remain configured after the runs.
 \end{itemize}
 
-\textbf{Test Case Derivation:} Verifies FR17. The two runs separate its obligations: the system shall not \emph{access} restricted resources, and shall not
-\emph{act} on them. Enforcement is asserted here rather than the action gate, since a read never reaches the gate.
+\textbf{Test Case Derivation:} Verifies FR17. The runs separate its obligations: the system shall not \emph{access} restricted resources, and shall not
+\emph{act} on them. Runs (a) and (c) cover a restricted sender and a restricted folder, and run (b) a restricted account. Enforcement is asserted here rather than the action gate, since a read never reaches the gate.
 
 \textbf{How test will be performed:} Configure restrictions on a sender, a folder, and a connected account. Seed the account with one restricted and one more recent unrestricted message.
-Issue the read task and capture the dispatch log, the agent input, and the history. Issue the write task and capture the dispatch log and the account state. 
-Confirm both restrictions are still configured.
+Issue the read task and capture the dispatch log, the agent input, and the history. Issue the write task and capture the dispatch log and the account state. Issue the folder task and capture the dispatch log and the system's spoken response.
+Confirm all three restrictions are still configured.
 \end{enumerate}
 
 \subsubsection{Accessible client and task history layer (S.2.6)}
