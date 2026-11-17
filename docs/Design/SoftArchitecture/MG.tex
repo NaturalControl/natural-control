@@ -10,6 +10,9 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, positioning}
 \usepackage{xurl}
+\usepackage[numbers]{natbib}
+\usepackage{microtype}
+\setlength{\emergencystretch}{3em}
 \usepackage{hyperref}
 \hypersetup{colorlinks, linkcolor=red, urlcolor=blue, citecolor=blue}
 
@@ -28,9 +31,9 @@
 
 \begin{document}
 
-\title{Module Guide for \progname{}\\[4pt]\large Design Document Revision -1 (draft)}
-\author{Team 7: Aaron Loh, Curtis Vos, Kevin Kim, Lucas DeBoer}
-\date{November 11, 2026}
+\title{Module Guide for \progname{}\\[4pt]\large Design Document Revision $-1$}
+\author{Group 7: Lucas DeBoer, Kevin Kim, Aaron Loh, Curtis Vos}
+\date{November 16, 2026}
 \maketitle
 
 \pagenumbering{roman}
@@ -41,7 +44,7 @@
 \toprule
 \textbf{Date} & \textbf{Version} & \textbf{Notes}\\
 \midrule
-2026-11-11 & 0.1 & First draft, written from the simple POC in the team's prototype repository.\\
+2026-11-18 & -1 & Intial revision.\\
 \bottomrule
 \end{tabularx}
 
@@ -54,33 +57,43 @@
 \textbf{Symbol} & \textbf{Description}\\
 \midrule
 AC & Anticipated change\\
-AI & Artificial intelligence; here, the language model that chooses which tool to use\\
+ADT & Abstract data type\\
 FR, NFR & Functional and non-functional requirement, as numbered in the SRS\\
+FR.Sa, NFR.Sa & Safety requirement, as numbered in the SRS and Hazard Analysis\\
+LC, ULC & Likely and unlikely change, as numbered in the SRS\\
 M & Module\\
 MG & Module Guide\\
 MIS & Module Interface Specification\\
+OAuth & Delegated-authorization protocol used to connect accounts\\
 POC & Proof of concept\\
 SRS & Software Requirements Specification\\
 STT, TTS & Speech to text, text to speech\\
 UC & Unlikely change\\
+WCAG & Web Content Accessibility Guidelines\\
 \bottomrule
 \end{tabularx}
 
 \subsection{Services and Tools}
 
-\begin{tabularx}{\textwidth}{lX}
+The technologies below are the ones committed to in SRS P.2 and P.5 and in the
+Development Plan. Each is reached through exactly one module, so that the
+corresponding likely change costs one work assignment.
+
+\begin{tabular}{@{}p{2.4cm}p{13.2cm}@{}}
 \toprule
 \textbf{Name} & \textbf{Description}\\
 \midrule
-Browser Use & Open-source library that lets the AI open and read websites in Chrome; used read-only (\mref{mWeb})\\
-Composio & Service that connects to Gmail and Google Calendar; a later option for \mref{mAccounts}\\
-LiveKit & Open-source real-time voice framework; carries speech between the user and the agent, and runs the agent (\mref{mVoice})\\
-OpenRouter & Service that gives access to many AI models through one interface (\mref{mAI})\\
+Browser Use & Browser automation library used to open and read websites (\mref{mWeb})\\
+Composio & Connector service holding OAuth tokens for Gmail and Google Calendar (\mref{mAccount})\\
+ElevenLabs & Candidate text-to-speech provider, reached through LiveKit's plugin (\mref{mSpeech})\\
+Hermes & Candidate agent harness that plans tasks and proposes tool calls (\mref{mHarness})\\
+LiveKit & Real-time voice framework carrying audio and turn events (\mref{mVoice})\\
 VoiceOver & The screen reader built into macOS, used by the target users\\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 
-Terms from the problem domain (task, approval, stop, pause) are defined in the SRS and the project glossary.
+Terms from the problem domain (task, approval, consequential action, stop, pause)
+are defined in the SRS glossary and are used here with the same meaning.
 
 \newpage
 \tableofcontents
@@ -89,229 +102,643 @@ Terms from the problem domain (task, approval, stop, pause) are defined in the S
 
 \section{Introduction}
 
-\progname{} lets a blind user delegate email, calendar and website tasks to an AI agent by voice, while staying in control: the user can pause the work at any time, and nothing is sent or created until they approve its exact details.
+\progname{} lets a blind user delegate email, calendar and website tasks to an AI
+agent by voice while staying in control: the user can stop the work at any point,
+and nothing is sent, created or submitted until they have approved its exact
+details.
 
-This guide splits the system into modules by the principle of information hiding \cite{Parnas1972}: each module hides one design decision that is likely to change, its \emph{secret}. A module is a work assignment for one programmer \cite{ParnasEtAl1984}; Section~\ref{SecTimeline} lists who owns each one.
+This guide splits the system into modules by the principle of information hiding
+\citep{Parnas1972a}: each module hides one design decision that is likely to
+change, its \emph{secret}. A module is a work assignment for one programmer
+\citep{ParnasEtAl1984}; Section~\ref{SecTimeline} names the owner of each one.
 
-The modules match the source files of the proof of concept one to one, so the guide describes code that runs. Section~\ref{SecChange} lists anticipated and unlikely changes. Section~\ref{SecMH} gives the module hierarchy. Section~\ref{SecConnection} connects the requirements to the design. Section~\ref{SecMD} describes each module. Section~\ref{SecTM} gives the traceability matrices, and Section~\ref{SecUse} the uses hierarchy.
+The decomposition is derived from the requirements rather than from any existing
+code. Its starting point is the set of eight system components in SRS S.1, which
+the Hazard Analysis also uses; Section~\ref{SecConnection} maps those components
+onto the modules below. The software-decision modules are then introduced so that
+each likely change in the SRS is confined to a single module.
+
+Section~\ref{SecChange} lists the anticipated and unlikely changes.
+Section~\ref{SecMH} gives the module hierarchy. Section~\ref{SecConnection}
+connects the requirements to the design. Section~\ref{SecMD} describes each
+module. Section~\ref{SecTM} gives the traceability matrices, and
+Section~\ref{SecUse} the uses hierarchy.
+
+\subsection{Design principles} \label{SecPrinciples}
+
+Information hiding is the organising principle, and the decomposition was checked
+against the SOLID principles as a cross-check on it:
+
+\begin{description}[leftmargin=0.8cm]
+\item[Single responsibility.] Each module below states one secret. Where a
+responsibility could have been bundled with another, it was separated instead:
+holding an action for approval (\mref{mGate}) is separate from deciding whether a
+result actually happened (\mref{mVerify}), and both are separate from the set of
+tools the planner may call (\mref{mTools}).
+\item[Open--closed and dependency inversion.] Every external service is reached
+through a software-decision module that defines the interface its callers depend
+on. Changing the model provider, speech provider, agent harness, connected-app
+connector or browser library therefore changes one module and no caller. This is
+what makes SRS LC1 to LC6 cheap.
+\item[Liskov substitution.] Those same interfaces are what allow a substitute
+implementation during development and verification: the account connector
+(\mref{mAccount}) and web reader (\mref{mWeb}) admit synthetic stand-ins behind
+the identical interface, which is how the V\&V Plan's contract tests run without
+touching a real account.
+\item[Interface segregation.] The planner (\mref{mHarness}) sees only the tool
+surface of \mref{mTools}, never the gate, the task state or the connectors. The
+gate sees a proposed action and its details, never the planner that produced it.
+\end{description}
+
+A consequence worth stating explicitly, because it is the system's safety case:
+no module can reach a connected account or a website except through
+\mref{mTools}, and \mref{mTools} cannot execute a consequential action without a
+decision from \mref{mGate}. The hazards in the Hazard Analysis that this
+structure exists to prevent are H5-a and H5-b.
 
 \section{Anticipated and Unlikely Changes} \label{SecChange}
 
 \subsection{Anticipated Changes} \label{SecAchange}
 
-Each anticipated change is hidden by exactly one module (Table~\ref{TblACT}).
+Anticipated changes are the design decisions hidden inside the modules. Each one
+below is hidden by exactly one module, so changing it is one work assignment;
+Table~\ref{TblACT} gives that mapping. \acref{acHarness}, \acref{acModel},
+\acref{acSpeech}, \acref{acAccount}, \acref{acWeb} and \acref{acConfig}
+correspond to likely changes LC3, LC1, LC2, LC4, LC6 and LC5 of the SRS, so this
+list is a superset of the SRS likely changes.
 
 \begin{description}[leftmargin=1.2cm]
-\item[\refstepcounter{acnum} \actheacnum \label{acAudio}:] How audio reaches and leaves the user's computer, and which speech-to-text and text-to-speech services are used.
-\item[\refstepcounter{acnum} \actheacnum \label{acClient}:] The layout and controls of the user's client, including the stop key and how state changes are announced to VoiceOver.
-\item[\refstepcounter{acnum} \actheacnum \label{acResponse}:] What the system does with each kind of user input, and the wording it uses to acknowledge a stop, confirm a pause or report finished work.
-\item[\refstepcounter{acnum} \actheacnum \label{acPhrases}:] The phrases recognized as stop, cancel, continue, yes and no, and the languages supported.
-\item[\refstepcounter{acnum} \actheacnum \label{acStates}:] The task states and the moves allowed between them, as the SRS state machine (S.9) is refined.
-\item[\refstepcounter{acnum} \actheacnum \label{acApproval}:] Which actions count as consequential, and how a read-back and the user's answer are matched to the action they approve.
-\item[\refstepcounter{acnum} \actheacnum \label{acTools}:] The set of tools the agent may use, their read-backs, and how each result is checked.
-\item[\refstepcounter{acnum} \actheacnum \label{acModel}:] The AI model, its provider, its instructions, or the agent framework that runs it (for example, Hermes in place of the current framework).
-\item[\refstepcounter{acnum} \actheacnum \label{acAccounts}:] Where email and calendar data come from: made-up data, Gmail and Google Calendar through Composio, or another provider.
-\item[\refstepcounter{acnum} \actheacnum \label{acWeb}:] How websites are read (a browser automation library, a plain page download, a hosted browser), and whether any website actions are allowed.
-\item[\refstepcounter{acnum} \actheacnum \label{acLog}:] The format and storage of the event log, and which timings are measured from it.
-\item[\refstepcounter{acnum} \actheacnum \label{acSettings}:] Which settings exist, where they come from, and their default values.
+\item[\refstepcounter{acnum} \actheacnum \label{acAudio}:] How audio is captured
+from the microphone and played to the speakers on the user's machine.
+\item[\refstepcounter{acnum} \actheacnum \label{acClient}:] The layout, controls
+and key bindings of the client, and how a change of task state is announced to a
+screen reader.
+\item[\refstepcounter{acnum} \actheacnum \label{acVoice}:] How a spoken turn is
+detected and committed, how the user's speech is delivered as partial and
+finished sentences, and how the user barges in on spoken output.
+\item[\refstepcounter{acnum} \actheacnum \label{acPhrase}:] The phrases
+recognised as stop, cancel, continue, yes and no, and the languages supported.
+\item[\refstepcounter{acnum} \actheacnum \label{acCtrl}:] How each kind of input
+is routed to the handler that acts on it.
+\item[\refstepcounter{acnum} \actheacnum \label{acResponse}:] The wording of the
+system's spoken responses and how much detail each one carries.
+\item[\refstepcounter{acnum} \actheacnum \label{acTask}:] The task states and the
+transitions allowed between them, as the state machine in SRS S.9 is refined.
+\item[\refstepcounter{acnum} \actheacnum \label{acGate}:] Which actions count as
+consequential, and how an approval is bound to the exact details of the action it
+authorises.
+\item[\refstepcounter{acnum} \actheacnum \label{acVerify}:] What counts as
+sufficient evidence that an action happened, and how an outcome is classified as
+verified, partial, failed or unknown.
+\item[\refstepcounter{acnum} \actheacnum \label{acTools}:] The set of tools the
+planner may call, and the read-back each one produces for approval.
+\item[\refstepcounter{acnum} \actheacnum \label{acHist}:] What the task history
+records, and how it is reviewed, retained and deleted.
+\item[\refstepcounter{acnum} \actheacnum \label{acPolicy}:] How a restriction on
+an account, sender, folder or resource is expressed, and the permission scope
+each tool requests.
+\item[\refstepcounter{acnum} \actheacnum \label{acHarness}:] Which agent harness
+runs the planner, and how its streamed status, interrupts and clarification
+requests are adapted (SRS LC3).
+\item[\refstepcounter{acnum} \actheacnum \label{acModel}:] Which AI model and
+provider plan the task, and the instructions they are given (SRS LC1).
+\item[\refstepcounter{acnum} \actheacnum \label{acSpeech}:] Which speech-to-text
+and text-to-speech services are used (SRS LC2).
+\item[\refstepcounter{acnum} \actheacnum \label{acAccount}:] Which connected apps
+are supported and which connector reaches them (SRS LC4).
+\item[\refstepcounter{acnum} \actheacnum \label{acWeb}:] How a website is opened
+and read, and whether any consequential website actions are permitted (SRS LC6).
+\item[\refstepcounter{acnum} \actheacnum \label{acCreds}:] How passwords, tokens
+and authentication codes are stored and supplied to the services that need them.
+\item[\refstepcounter{acnum} \actheacnum \label{acLog}:] The format and storage
+of the event log, and which timings are computed from it.
+\item[\refstepcounter{acnum} \actheacnum \label{acConfig}:] The backend topology,
+secret storage and network requirements of a deployment (SRS LC5).
 \end{description}
 
 \subsection{Unlikely Changes} \label{SecUchange}
 
+These carry the system's safety case and its reason for existing. \ucref{ucApproval},
+\ucref{ucEvidence} and \ucref{ucVoice} correspond to unlikely changes ULC1, ULC3
+and ULC2 of the SRS. A change to any of them would not be a revision of this
+project. Table~\ref{TblUCT} gives the modules each one constrains.
+
 \begin{description}[leftmargin=1.2cm]
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucApproval}:] Any action that sends, saves, deletes, submits or creates something needs the user's approval of its exact details first (FR9).
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucStop}:] A stop is recognized and acted on without the AI model.
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input is speech and key presses; output is speech and a web page.
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucOneTask}:] A session has at most one active task (SRS S.9).
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucDevice}:] The user works on a computer with a microphone, speakers or headphones, and a current web browser.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucApproval}:] A consequential
+action requires the user's explicit approval of its exact details before it runs,
+and silence is never approval (SRS ULC1, FR9, FR.Sa.13). Without this the system
+is an unsupervised agent acting for a user who cannot see what it did.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucEvidence}:] An outcome is
+reported as verified, partial or failed only against evidence matching the
+intended action; otherwise it is reported as unknown (SRS ULC3, FR12,
+FR.Sa.10). A blind user cannot visually confirm a result, so an unverified
+success claim is the harm hazards H4-b and H6-a exist to prevent.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucStop}:] Recognising a
+stop request and blocking further actions does not depend on the planner choosing
+to cooperate (FR.Sa.4, hazard H2-b).
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucVoice}:] Voice is the primary
+interaction mode, with the keyboard as the guaranteed alternative (SRS ULC2).
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucOneTask}:] A session has at
+most one active task (SRS S.9, property P6).
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucLocal}:] Controlling the user's
+own browser requires a component running on the user's machine, because a hosted
+backend cannot reach their signed-in sessions (SRS E.3).
 \end{description}
 
 \section{Module Hierarchy} \label{SecMH}
 
-Table~\ref{TblMH} groups the modules by the kind of secret they hide. The modules are:
+Table~\ref{TblMH} groups the modules by the kind of secret they hide. The modules
+are:
 
 \begin{description}[leftmargin=1.2cm]
-\item[\refstepcounter{mnum} \mthemnum \label{mVoice}:] Voice Module
+\item[\refstepcounter{mnum} \mthemnum \label{mAudio}:] Audio Device Module
 \item[\refstepcounter{mnum} \mthemnum \label{mClient}:] Accessible Client Module
-\item[\refstepcounter{mnum} \mthemnum \label{mSupervisor}:] Supervisor Module
-\item[\refstepcounter{mnum} \mthemnum \label{mPhrases}:] Control Phrase Module
+\item[\refstepcounter{mnum} \mthemnum \label{mVoice}:] Voice Session Module
+\item[\refstepcounter{mnum} \mthemnum \label{mPhrase}:] Control Phrase Module
+\item[\refstepcounter{mnum} \mthemnum \label{mCtrl}:] Session Control Module
+\item[\refstepcounter{mnum} \mthemnum \label{mResponse}:] Spoken Response Module
 \item[\refstepcounter{mnum} \mthemnum \label{mTask}:] Task State Module
 \item[\refstepcounter{mnum} \mthemnum \label{mGate}:] Action Gate Module
+\item[\refstepcounter{mnum} \mthemnum \label{mVerify}:] Outcome Verification Module
 \item[\refstepcounter{mnum} \mthemnum \label{mTools}:] Agent Tools Module
-\item[\refstepcounter{mnum} \mthemnum \label{mAI}:] AI Model Module
-\item[\refstepcounter{mnum} \mthemnum \label{mAccounts}:] Mail and Calendar Module
+\item[\refstepcounter{mnum} \mthemnum \label{mHist}:] Task History Module
+\item[\refstepcounter{mnum} \mthemnum \label{mPolicy}:] Access Policy Module
+\item[\refstepcounter{mnum} \mthemnum \label{mHarness}:] Agent Harness Module
+\item[\refstepcounter{mnum} \mthemnum \label{mModel}:] Model Provider Module
+\item[\refstepcounter{mnum} \mthemnum \label{mSpeech}:] Speech Services Module
+\item[\refstepcounter{mnum} \mthemnum \label{mAccount}:] Account Connector Module
 \item[\refstepcounter{mnum} \mthemnum \label{mWeb}:] Web Reader Module
+\item[\refstepcounter{mnum} \mthemnum \label{mCreds}:] Credential Store Module
 \item[\refstepcounter{mnum} \mthemnum \label{mLog}:] Event Log Module
-\item[\refstepcounter{mnum} \mthemnum \label{mSettings}:] Settings Module
+\item[\refstepcounter{mnum} \mthemnum \label{mConfig}:] Deployment Configuration Module
 \end{description}
 
-\begin{table}[h!]
+\begin{table}[H]
 \centering
 \begin{tabular}{p{0.32\textwidth} p{0.55\textwidth}}
 \toprule
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
-Hardware-Hiding Module & Voice Module (\mref{mVoice})\\
+Hardware-Hiding Module & Audio Device Module (\mref{mAudio})\\
 \midrule
-\multirow{6}{*}{Behaviour-Hiding Module} & Accessible Client Module (\mref{mClient})\\
-& Supervisor Module (\mref{mSupervisor})\\
-& Control Phrase Module (\mref{mPhrases})\\
+\multirow{11}{*}{Behaviour-Hiding Module}
+& Accessible Client Module (\mref{mClient})\\
+& Voice Session Module (\mref{mVoice})\\
+& Control Phrase Module (\mref{mPhrase})\\
+& Session Control Module (\mref{mCtrl})\\
+& Spoken Response Module (\mref{mResponse})\\
 & Task State Module (\mref{mTask})\\
 & Action Gate Module (\mref{mGate})\\
+& Outcome Verification Module (\mref{mVerify})\\
 & Agent Tools Module (\mref{mTools})\\
+& Task History Module (\mref{mHist})\\
+& Access Policy Module (\mref{mPolicy})\\
 \midrule
-\multirow{5}{*}{Software Decision Module} & AI Model Module (\mref{mAI})\\
-& Mail and Calendar Module (\mref{mAccounts})\\
+\multirow{8}{*}{Software Decision Module}
+& Agent Harness Module (\mref{mHarness})\\
+& Model Provider Module (\mref{mModel})\\
+& Speech Services Module (\mref{mSpeech})\\
+& Account Connector Module (\mref{mAccount})\\
 & Web Reader Module (\mref{mWeb})\\
+& Credential Store Module (\mref{mCreds})\\
 & Event Log Module (\mref{mLog})\\
-& Settings Module (\mref{mSettings})\\
+& Deployment Configuration Module (\mref{mConfig})\\
 \bottomrule
 \end{tabular}
 \caption{Module hierarchy}
 \label{TblMH}
 \end{table}
 
-\section{Connection Between Requirements and Design} \label{SecConnection}
-
-The proof of concept must meet FR1 to FR3, FR8, FR9 and NFR3 (SRS S.7). The design meets them as follows.
+Every software-decision module is used by a behaviour-hiding module except two,
+and both exceptions are deliberate:
 
 \begin{itemize}
-\item \textbf{Spoken input and interrupting speech (FR1, FR2):} the Voice Module (\mref{mVoice}) carries speech both ways, and talking over the system stops its speech without stopping the task.
-\item \textbf{Stop and cancel (FR3):} the Supervisor Module (\mref{mSupervisor}) sees every sentence and key press before the AI does. The Control Phrase Module (\mref{mPhrases}) recognizes stop and cancel by plain matching, so no model sits on the stop path (\ucref{ucStop}).
-\item \textbf{Pause semantics (FR8):} on a stop, the Supervisor moves the task to Pausing in the Task State Module (\mref{mTask}). From then on the Agent Tools Module (\mref{mTools}) refuses new actions, the Action Gate Module (\mref{mGate}) withdraws any waiting approval, and a send already in progress is allowed to finish and is reported.
-\item \textbf{Approval of exact details (FR9, FR16):} every send or create in the Agent Tools Module waits in the Action Gate Module, which reads the details back and accepts only an explicit yes. A requested change ends the wait, and the changed action needs a new yes.
-\item \textbf{Stop timing (NFR3):} the Event Log Module (\mref{mLog}) records when a stop was heard, when new actions were blocked, when the acknowledgment started and when the pause was confirmed, and computes the times between them.
-\item \textbf{Clarification, progress and corrections (FR4, FR5, FR6):} the AI Model Module (\mref{mAI}) asks when a request is ambiguous; the Agent Tools Module speaks a short progress line for each kind of work; any sentence that is not a control word reaches the AI as a correction.
-\item \textbf{Verified outcomes (FR11, FR12):} after each send or create, the Agent Tools Module checks the Mail and Calendar Module (\mref{mAccounts}) for the result and reports it as confirmed or unknown. An unknown outcome is not retried.
-\item \textbf{Reading without approval (FR10):} searching email and reading websites (Web Reader Module, \mref{mWeb}) run without approval; the web reader cannot click, type or submit.
-\item \textbf{No sensitive content in logs (NFR5):} the Event Log Module records event names and times only, never message text or speech.
-\item \textbf{Keyboard and VoiceOver (NFR1):} the Accessible Client Module (\mref{mClient}) offers every control by keyboard. \emph{Not yet verified with VoiceOver.}
+\item \mref{mModel} is used only by \mref{mHarness}. The harness is the sole
+consumer of model inference, and keeping the provider one level below the harness
+is what lets LC1 and LC3 change independently of each other.
+\item \mref{mCreds} is used only by \mref{mAccount} and \mref{mWeb}. This is the
+point: no behaviour-hiding module ever holds a credential value, which is how
+FR.Sa.17 and NFR5 are satisfied structurally rather than by convention.
 \end{itemize}
+
+\section{Connection Between Requirements and Design} \label{SecConnection}
+
+\subsection{System components to modules}
+
+SRS S.1 describes the system as eight components, and the Hazard Analysis assigns
+its failure modes to the same eight. Table~\ref{TblComp} maps them onto the
+modules of this guide, so that a reader of either document can find the
+corresponding work assignments.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{p{0.34\textwidth} p{0.56\textwidth}}
+\toprule
+\textbf{SRS S.1 component} & \textbf{Modules}\\
+\midrule
+Accessible client & \mref{mClient}\\
+Voice interface & \mref{mVoice}, \mref{mAudio}, \mref{mSpeech}\\
+Task manager & \mref{mCtrl}, \mref{mTask}\\
+AI agent & \mref{mHarness}, \mref{mModel}\\
+Action gate & \mref{mGate}\\
+Outcome verification & \mref{mVerify}\\
+Action tools and integrations & \mref{mTools}, \mref{mAccount}, \mref{mWeb},
+\mref{mPolicy}, \mref{mCreds}\\
+Task history layer & \mref{mHist}, \mref{mLog}\\
+\midrule
+(no S.1 component) & \mref{mPhrase}, \mref{mResponse}, \mref{mConfig}\\
+\bottomrule
+\end{tabular}
+\caption{Trace between the SRS system components and the modules}
+\label{TblComp}
+\end{table}
+
+Three modules have no counterpart in S.1. \mref{mPhrase} is separated out
+because FR.Sa.4 requires the stop path to be independent of the planner, which is
+a property of a module rather than of a component. \mref{mResponse} is separated
+out because the requirements governing what the system says, FR18 and
+FR.Sa.5.ii, cut across two components: FR18 belongs to the voice interface in
+S.2.1 and FR5 to the task manager in S.2.2, while both are decided by the same
+wording choices. \mref{mConfig} hides the deployment decisions that SRS E.3 and
+P.5 defer until a working configuration is demonstrated, which S.1 does not
+describe as a component.
+
+\subsection{Requirements the POC demonstration must satisfy}
+
+SRS S.7 scopes the proof-of-concept demonstration, scheduled for November 23 to
+December 3, 2026, to FR1 to FR3, FR8, FR9 and NFR3. The demonstration is the
+first test of the design decisions below; none of them is claimed to be
+established yet.
+
+\begin{itemize}
+\item \textbf{Spoken input and interrupting speech (FR1, FR2).} \mref{mVoice}
+carries speech in both directions and commits a turn, so that a pause within a
+sentence does not end it. Barge-in stops spoken output only; it does not by
+itself pause the task.
+\item \textbf{Stop and cancel (FR3).} \mref{mCtrl} receives every finished
+sentence and every key press before the planner does, and classifies it with
+\mref{mPhrase} by plain matching. This is the design decision the demonstration
+is meant to test: that no model sits on the stop path (\ucref{ucStop}).
+\item \textbf{Pause semantics (FR8).} A recognised stop moves the task to Pausing
+in \mref{mTask}, after which \mref{mTools} refuses to start new actions and
+\mref{mGate} withdraws any unused approval. An operation already submitted may
+still settle; its outcome is tracked separately by \mref{mVerify} and reported
+rather than assumed.
+\item \textbf{Approval of exact details (FR9).} Every consequential action
+proposed by \mref{mHarness} reaches \mref{mTools}, which holds it in
+\mref{mGate} until the user has approved those exact details. Changed details
+invalidate the approval.
+\item \textbf{Stop timing (NFR3).} \mref{mLog} records when a stop was
+recognised, when new actions were blocked, when the acknowledgment began and when
+the pause was confirmed, so that acknowledgment time and blocking time are
+measured separately rather than conflated.
+\end{itemize}
+
+The remaining requirements are traced to modules in Section~\ref{SecTM} and are
+scheduled against Revision 0 in Section~\ref{SecTimeline}.
 
 \section{Module Decomposition} \label{SecMD}
 
-Each module is described by its \emph{secret} (the design decision it hides), its \emph{services} (what it does for the rest of the system) and what \emph{implements} it. ``\progname{}'' means the module is our code; the file named is in the proof of concept.
+Each module is described by its \emph{secret} (the design decision it hides), the
+\emph{services} it provides to the rest of the system, what \emph{implements} it,
+and its \emph{type} in the sense used by the MIS. ``\progname{}'' means the module
+is the team's own code.
 
-\subsection{Hardware Hiding Modules}
+\subsection{Hardware-Hiding Modules}
 
-\subsubsection{Voice Module (\mref{mVoice})}
+\subsubsection{Audio Device Module (\mref{mAudio})}
 \begin{description}
-\item[Secrets:] How audio is captured and played, how it travels over the network, and which speech-to-text and text-to-speech services convert it.
-\item[Services:] Turns the user's speech into sentences (and partial sentences while they are still speaking) for the Supervisor; speaks text; tells the client the current task state; starts a session and builds the other modules for it.
-\item[Implemented By:] \progname{} (\texttt{voice.py}), using LiveKit Agents and LiveKit Inference.
+\item[Secrets:] How audio is captured from the microphone and played to the
+speakers on the user's machine.
+\item[Services:] Supplies captured audio to the voice session and plays audio
+produced by it; reports the loss of an input or output device.
+\item[Implemented By:] Operating system and browser media interfaces.
+\item[Type of Module:] Library
 \end{description}
 
 \subsection{Behaviour-Hiding Modules}
 
 \subsubsection{Accessible Client Module (\mref{mClient})}
 \begin{description}
-\item[Secrets:] The layout of the page, its controls and key bindings, and how state changes are announced.
-\item[Services:] Starts and ends a session; sends the stop, continue, cancel, approve and decline commands and typed text; shows the conversation and the task state.
-\item[Implemented By:] \progname{} (\texttt{src/web}, Next.js and React).
+\item[Secrets:] The user-facing presentation of the client: its layout,
+controls, key bindings, and how a change of task state is announced to a screen
+reader.
+\item[Services:] Starts and ends a voice session; offers every control by
+keyboard, including the stop key, continue, cancel, approve, decline and typed
+text; presents the conversation, the current task state and the task history.
+\item[Implemented By:] \progname{}, as a web client meeting WCAG 2.2 Level AA.
+\item[Type of Module:] Abstract Object
 \end{description}
 
-\subsubsection{Supervisor Module (\mref{mSupervisor})}
+\subsubsection{Voice Session Module (\mref{mVoice})}
 \begin{description}
-\item[Secrets:] What the system does with each sentence and key press, and what it says back when it stops, pauses, continues or cancels.
-\item[Services:] Routes each input: a stop, cancel or continue is handled directly; an answer to a waiting approval goes to the Action Gate; anything else starts a task or corrects the current one and goes to the AI. Carries out stop, continue and cancel, and reports what was finished. This is the control module.
-\item[Implemented By:] \progname{} (\texttt{supervisor.py}).
+\item[Secrets:] The turn-taking discipline of a spoken conversation: how a
+turn is detected and committed, how speech is delivered as partial and finished
+sentences, and how the user barges in on spoken output.
+\item[Services:] Delivers partial and finished sentences to session control;
+speaks text and reports whether an utterance was interrupted or played to the
+end; publishes the current task state to the client.
+\item[Implemented By:] \progname{}, using LiveKit.
+\item[Type of Module:] Abstract Object
 \end{description}
 
-\subsubsection{Control Phrase Module (\mref{mPhrases})}
+\subsubsection{Control Phrase Module (\mref{mPhrase})}
 \begin{description}
 \item[Secrets:] The phrases that mean stop, cancel, continue, yes and no.
-\item[Services:] Classifies a sentence as one of these commands, or as other speech.
-\item[Implemented By:] \progname{} (\texttt{commands.py}).
+\item[Services:] Classifies a sentence as one of these commands or as other
+speech, by fixed matching and without consulting any model.
+\item[Implemented By:] \progname{}.
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Session Control Module (\mref{mCtrl})}
+\begin{description}
+\item[Secrets:] How each kind of input is routed to the handler that acts on
+it.
+\item[Services:] Routes each sentence and key press: a stop, cancel or continue
+is carried out directly; an answer to a waiting approval is passed to the action
+gate; anything else starts a task or corrects the current one and is passed to
+the planner. Carries out stop, resume and cancel, drives the transitions of
+\mref{mTask}, and decides which situations the user must be told about, taking
+the words for them from \mref{mResponse}. This is the control module and sits at
+the top of the uses hierarchy.
+\item[Implemented By:] \progname{}.
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Spoken Response Module (\mref{mResponse})}
+\begin{description}
+\item[Secrets:] The wording of the system's spoken responses and how much
+detail each one carries.
+\item[Services:] Produces the text spoken for each situation the control module
+reports: acknowledging a stop, confirming a pause, summarising completed,
+unfinished and uncertain work, reporting progress and blockers, and asking a
+clarifying question. Keeps each response to what is relevant to the current task
+and offers more detail on request (FR18), and keeps a stop acknowledgment
+separate from the later confirmation that work has paused (FR.Sa.5.ii).
+\item[Implemented By:] \progname{}.
+\item[Type of Module:] Library
 \end{description}
 
 \subsubsection{Task State Module (\mref{mTask})}
 \begin{description}
-\item[Secrets:] The task states and the moves allowed between them.
-\item[Services:] Holds the current task, its state and the work finished so far; refuses any move the state machine does not allow; says whether the task may take new actions.
-\item[Implemented By:] \progname{} (\texttt{task.py}).
+\item[Secrets:] The task states and the transitions allowed between them.
+\item[Services:] Holds the current task, its state and the work recorded against
+it; refuses any transition the state machine of SRS S.9 does not allow; reports
+whether the task may start new actions, and whether an already approved action is
+still in flight so that a pause can distinguish unfinished work from an unknown
+outcome.
+\item[Implemented By:] \progname{}.
+\item[Type of Module:] Abstract Data Type
 \end{description}
 
 \subsubsection{Action Gate Module (\mref{mGate})}
 \begin{description}
-\item[Secrets:] How a consequential action is held, read back and matched to the user's answer.
-\item[Services:] Holds an action until the user approves, declines or changes it, or until a stop or cancel withdraws it; reports the decision.
-\item[Implemented By:] \progname{} (\texttt{gate.py}).
+\item[Secrets:] The conditions under which an action may execute: which
+effects count as consequential, and how an approval is bound to the exact details
+it authorises.
+\item[Services:] Classifies a proposed action by its effect rather than by its
+tool name; holds a consequential action with its read-back until the user
+approves, declines or alters it, or until it is withdrawn; binds each approval to
+one set of details and one use, and withdraws unused approvals on pause,
+disconnection, cancellation or task replacement; assigns each approved action a
+unique identifier so that it cannot execute twice.
+\item[Implemented By:] \progname{}.
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Outcome Verification Module (\mref{mVerify})}
+\begin{description}
+\item[Secrets:] The evidence standard for reporting an outcome, including how
+an outcome is classified when the evidence is incomplete.
+\item[Services:] Checks the evidence for a consequential action against its
+intended details and classifies the outcome as verified, partial, failed or
+unknown; re-checks when the evidence is unclear; never reports a queued request
+as delivered; reports the state of an action whose outcome is still unresolved so
+that it is not retried blindly.
+\item[Implemented By:] \progname{}.
+\item[Type of Module:] Abstract Object
 \end{description}
 
 \subsubsection{Agent Tools Module (\mref{mTools})}
 \begin{description}
-\item[Secrets:] Which tools the AI may use, what each tool reads back for approval, and how each result is checked.
-\item[Services:] Searches email and reads websites; sends email and adds events after approval, lets an approved send finish even if the user stops, and checks the result; marks text from emails and websites as data, not instructions.
-\item[Implemented By:] \progname{} (\texttt{tools.py}).
+\item[Secrets:] The tool surface available to the planner, including the
+read-back each tool produces for approval.
+\item[Services:] Presents the only interface through which the planner can reach
+an account or a website; marks content returned from an email or a website as
+data rather than instructions; refuses to start a new action while the task may
+not act; routes every consequential call through \mref{mGate} before execution
+and through \mref{mVerify} afterwards.
+\item[Implemented By:] \progname{}.
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Task History Module (\mref{mHist})}
+\begin{description}
+\item[Secrets:] The content and lifecycle of the task history.
+\item[Services:] Records task state, approvals, action identifiers and verified
+outcomes from recorded events rather than from the planner's claims, labelling
+anything unknown; supplies an accessible history and spoken summaries; allows the
+user to delete the history; preserves enough state across a restart to announce
+an interrupted task and its last known state.
+\item[Implemented By:] \progname{}.
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Access Policy Module (\mref{mPolicy})}
+\begin{description}
+\item[Secrets:] How a restriction on a resource is expressed and enforced.
+\item[Services:] Holds the user's restrictions on accounts, senders, folders and
+resources, and answers whether a proposed target is permitted, so that a
+restricted resource is never read from or acted on.
+\item[Implemented By:] \progname{}.
+\item[Type of Module:] Abstract Object
 \end{description}
 
 \subsection{Software Decision Modules}
 
-\subsubsection{AI Model Module (\mref{mAI})}
+\subsubsection{Agent Harness Module (\mref{mHarness})}
 \begin{description}
-\item[Secrets:] Which model and provider choose the next tool, the instructions they follow, and the framework that runs them.
-\item[Services:] Decides which tool to call and writes the replies, given the conversation and the Agent Tools.
-\item[Implemented By:] \progname{} (\texttt{ai.py}), using LiveKit Agents with a model through OpenRouter.
+\item[Secrets:] The agent harness behind the planner interface, including the
+adaptation of its streamed status, interrupts and clarification requests.
+\item[Services:] Plans a task and proposes tool calls from \mref{mTools};
+surfaces progress, clarification requests and completion as events session
+control can act on; accepts a correction and an interrupt without losing the
+conversation.
+\item[Implemented By:] \progname{}, adapting Hermes.
+\item[Type of Module:] Abstract Object
 \end{description}
 
-\subsubsection{Mail and Calendar Module (\mref{mAccounts})}
+\subsubsection{Model Provider Module (\mref{mModel})}
 \begin{description}
-\item[Secrets:] Where email and calendar data are stored and how they are reached.
-\item[Services:] Searches and reads email; sends email; checks that a sent email is in Sent; adds events; looks an event up again.
-\item[Implemented By:] \progname{} (\texttt{accounts.py}), made-up data for the POC.
+\item[Secrets:] The model that plans the task, including the instructions it
+is given.
+\item[Services:] Supplies model inference to the harness under a fixed interface,
+with the system instructions that require concise replies, a clarifying question
+when a request is ambiguous, exact details for a write, and treatment of
+retrieved content as data.
+\item[Implemented By:] An external model provider, reached through \progname{}.
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Speech Services Module (\mref{mSpeech})}
+\begin{description}
+\item[Secrets:] Which speech-to-text and text-to-speech services are used.
+\item[Services:] Transcribes captured audio and synthesises spoken output under a
+fixed interface; reports the unavailability of either service.
+\item[Implemented By:] External speech providers, reached through \progname{}.
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Account Connector Module (\mref{mAccount})}
+\begin{description}
+\item[Secrets:] The connected-app integration: which apps are supported,
+which connector reaches them, and the permission scope each requires.
+\item[Services:] Searches and reads mail; sends mail; reads, creates and deletes
+calendar events; re-reads a specific item so that its state can be checked after
+an action. States the narrowest permission scope each supported app requires, and
+which provider receives which data, so that setup can explain it. Admits a
+synthetic stand-in behind the identical interface for development and
+verification.
+\item[Implemented By:] Connected app APIs through Composio, reached through
+\progname{}.
+\item[Type of Module:] Abstract Object
 \end{description}
 
 \subsubsection{Web Reader Module (\mref{mWeb})}
 \begin{description}
-\item[Secrets:] How a website is opened and read, and the guarantee that nothing on it is changed.
-\item[Services:] Opens a website and answers a question about it, read-only.
-\item[Implemented By:] \progname{} (\texttt{web.py}), using Browser Use with Chrome.
+\item[Secrets:] The browser integration, including the action set it
+exposes.
+\item[Services:] Opens a page and returns the structured information needed to
+answer a question about it; guarantees that the permitted action set excludes
+anything with a lasting effect for the initial release; re-reads a page so that a
+confirmation can be checked.
+\item[Implemented By:] Browser Use with Chrome, reached through \progname{}.
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Credential Store Module (\mref{mCreds})}
+\begin{description}
+\item[Secrets:] How passwords, tokens and authentication codes are stored and
+supplied to the services that need them.
+\item[Services:] Accepts a website password through a private entry path, stores
+it encrypted, and supplies it only to the site it was entered for; holds
+connector tokens; keeps every credential value out of spoken output, the
+conversation, the task history, the event log, the planner's input and source
+control.
+\item[Implemented By:] \progname{}, over platform secret storage.
+\item[Type of Module:] Abstract Object
 \end{description}
 
 \subsubsection{Event Log Module (\mref{mLog})}
 \begin{description}
-\item[Secrets:] The format and storage of the log.
-\item[Services:] Records named events with a monotonic time; computes stop timings from a log.
-\item[Implemented By:] \progname{} (\texttt{log.py}).
+\item[Secrets:] The event log's representation, including the timings
+derivable from it.
+\item[Services:] Appends a named event with a monotonic timestamp and structured
+fields; computes the stop, acknowledgment and pause timings that NFR3 and
+NFR.Sa.1 are measured against; excludes message content, speech and credentials
+by construction.
+\item[Implemented By:] \progname{}.
+\item[Type of Module:] Abstract Object
 \end{description}
 
-\subsubsection{Settings Module (\mref{mSettings})}
+\subsubsection{Deployment Configuration Module (\mref{mConfig})}
 \begin{description}
-\item[Secrets:] Which settings exist, where they come from, and their defaults.
-\item[Services:] Provides the model names, speech services and rehearsal options for a session. Keys are not settings: the outside services read them directly from the environment, so no module of ours holds a key value.
-\item[Implemented By:] \progname{} (\texttt{settings.py}).
+\item[Secrets:] The shape of a deployment: its topology, secret storage and
+network requirements.
+\item[Services:] Supplies the settings a session needs, including which providers
+and connectors are selected and where secrets are read from; separates the local
+component required to reach the user's browser from hosted services; fails
+clearly when a required setting is absent or malformed.
+\item[Implemented By:] \progname{}.
+\item[Type of Module:] Library
 \end{description}
 
 \section{Traceability Matrices} \label{SecTM}
 
-\begin{table}[H]
-\centering
-\begin{tabular}{p{0.2\textwidth} p{0.7\textwidth}}
+Table~\ref{TblRT} lists every requirement of SRS S.2, including the safety
+requirements the Hazard Analysis contributes, against the modules that satisfy
+it. Indexing by requirement rather than by module makes any gap visible as a
+missing row.
+
+Two requirements are not assigned to a module, for stated reasons. NFR2 is a
+system-level acceptance measure over a declared task suite rather than a property
+of any one module; it is measured on the system as a whole in the V\&V Plan.
+NFR.E.3 is a process requirement on coding standards, enforced by the continuous
+integration checks described in the Development Plan rather than hidden by a
+module.
+
+\begin{longtable}{p{0.16\textwidth} p{0.76\textwidth}}
 \toprule
 \textbf{Requirement} & \textbf{Modules}\\
 \midrule
-FR1 & \mref{mVoice}, \mref{mSupervisor}\\
-FR2 & \mref{mVoice}\\
-FR3 & \mref{mSupervisor}, \mref{mPhrases}, \mref{mClient}\\
-FR4 & \mref{mAI}\\
-FR5 & \mref{mTools}, \mref{mSupervisor}\\
-FR6 & \mref{mSupervisor}, \mref{mAI}\\
-FR8 & \mref{mSupervisor}, \mref{mTask}, \mref{mGate}, \mref{mTools}\\
-FR9 & \mref{mGate}, \mref{mTools}, \mref{mPhrases}\\
-FR10 & \mref{mTools}, \mref{mWeb}\\
-FR11 & \mref{mTools}\\
-FR12 & \mref{mTools}, \mref{mAccounts}\\
-FR16 & \mref{mGate}, \mref{mAI}\\
-NFR1 & \mref{mClient}\\
-NFR3 & \mref{mSupervisor}, \mref{mLog}\\
-NFR5 & \mref{mLog}, \mref{mSettings}\\
+\endfirsthead
+\toprule
+\textbf{Requirement} & \textbf{Modules}\\
+\midrule
+\endhead
 \bottomrule
-\end{tabular}
+\endfoot
+FR1 & \mref{mVoice}, \mref{mAudio}, \mref{mSpeech}\\
+FR2 & \mref{mVoice}, \mref{mSpeech}\\
+FR3 & \mref{mCtrl}, \mref{mPhrase}, \mref{mClient}\\
+FR4 & \mref{mCtrl}, \mref{mHarness}, \mref{mModel}\\
+FR5 & \mref{mCtrl}, \mref{mResponse}, \mref{mHist}\\
+FR6 & \mref{mCtrl}, \mref{mHarness}\\
+FR7 & \mref{mCtrl}, \mref{mTask}, \mref{mVerify}, \mref{mHist}\\
+FR8 & \mref{mCtrl}, \mref{mTask}, \mref{mGate}, \mref{mTools}, \mref{mResponse}\\
+FR9 & \mref{mGate}, \mref{mTools}\\
+FR10 & \mref{mGate}, \mref{mTools}, \mref{mWeb}\\
+FR11 & \mref{mGate}, \mref{mVerify}\\
+FR12 & \mref{mVerify}, \mref{mAccount}, \mref{mWeb}\\
+FR13 & \mref{mTools}, \mref{mHarness}, \mref{mModel}\\
+FR14 & \mref{mAccount}, \mref{mClient}\\
+FR15 & \mref{mHist}, \mref{mClient}\\
+FR16 & \mref{mCtrl}, \mref{mGate}\\
+FR17 & \mref{mPolicy}\\
+FR18 & \mref{mResponse}, \mref{mModel}\\
+FR19 & \mref{mCtrl}, \mref{mTask}\\
+FR20 & \mref{mCtrl}, \mref{mGate}\\
+FR21 & \mref{mCtrl}, \mref{mHist}, \mref{mTask}\\
+FR22 & \mref{mClient}, \mref{mVoice}\\
+FR23 & \mref{mCreds}, \mref{mWeb}, \mref{mClient}\\
+FR24 & \mref{mGate}, \mref{mWeb}\\
+NFR1 & \mref{mClient}\\
+NFR2 & Not module-assigned; see the note above\\
+NFR3 & \mref{mCtrl}, \mref{mLog}\\
+NFR4 & \mref{mVoice}, \mref{mSpeech}\\
+NFR5 & \mref{mCreds}, \mref{mLog}, \mref{mHist}, \mref{mVoice}, \mref{mConfig}\\
+NFR.E.1 & \mref{mClient}, \mref{mPhrase}, \mref{mConfig}\\
+NFR.E.2 & \mref{mClient}\\
+NFR.E.3 & Not module-assigned; see the note above\\
+FR.Sa.1 & \mref{mClient}\\
+FR.Sa.2 & \mref{mHist}, \mref{mVerify}\\
+FR.Sa.3 & \mref{mGate}, \mref{mTools}\\
+FR.Sa.4 & \mref{mPhrase}, \mref{mCtrl}\\
+FR.Sa.5.i & \mref{mCtrl}, \mref{mTask}, \mref{mTools}\\
+FR.Sa.5.ii & \mref{mCtrl}, \mref{mResponse}\\
+FR.Sa.5.iii & \mref{mCtrl}, \mref{mTask}\\
+FR.Sa.6 & \mref{mGate}\\
+FR.Sa.7 & \mref{mCtrl}, \mref{mTask}\\
+FR.Sa.8 & \mref{mHist}, \mref{mTask}, \mref{mGate}\\
+FR.Sa.9 & \mref{mCtrl}, \mref{mHarness}\\
+FR.Sa.10 & \mref{mVerify}\\
+FR.Sa.11 & \mref{mCtrl}, \mref{mTask}\\
+FR.Sa.12 & \mref{mCtrl}, \mref{mTools}\\
+FR.Sa.13 & \mref{mGate}\\
+FR.Sa.14 & \mref{mGate}\\
+FR.Sa.15 & \mref{mCtrl}, \mref{mGate}, \mref{mResponse}\\
+FR.Sa.16 & \mref{mTools}, \mref{mHarness}\\
+FR.Sa.17 & \mref{mCreds}, \mref{mPolicy}, \mref{mLog}\\
+FR.Sa.18 & \mref{mVerify}, \mref{mGate}\\
+FR.Sa.19 & \mref{mGate}, \mref{mAccount}\\
+FR.Sa.20 & \mref{mVoice}, \mref{mCtrl}, \mref{mSpeech}\\
+NFR.Sa.1 & \mref{mCtrl}, \mref{mVoice}\\
+NFR.Sa.2 & \mref{mClient}, \mref{mVoice}\\
+NFR.Sa.3 & \mref{mCtrl}, \mref{mLog}\\
 \caption{Trace between requirements and modules}
 \label{TblRT}
-\end{table}
-
-\todo{Extend Table~\ref{TblRT} to every requirement in the SRS, not only the ones the POC covers, and mark the ones no module covers yet.}
+\end{longtable}
 
 \begin{table}[H]
 \centering
@@ -319,108 +746,249 @@ NFR5 & \mref{mLog}, \mref{mSettings}\\
 \toprule
 \textbf{AC} & \textbf{Module}\\
 \midrule
-\acref{acAudio} & \mref{mVoice}\\
+\acref{acAudio} & \mref{mAudio}\\
 \acref{acClient} & \mref{mClient}\\
-\acref{acResponse} & \mref{mSupervisor}\\
-\acref{acPhrases} & \mref{mPhrases}\\
-\acref{acStates} & \mref{mTask}\\
-\acref{acApproval} & \mref{mGate}\\
+\acref{acVoice} & \mref{mVoice}\\
+\acref{acPhrase} & \mref{mPhrase}\\
+\acref{acCtrl} & \mref{mCtrl}\\
+\acref{acResponse} & \mref{mResponse}\\
+\acref{acTask} & \mref{mTask}\\
+\acref{acGate} & \mref{mGate}\\
+\acref{acVerify} & \mref{mVerify}\\
 \acref{acTools} & \mref{mTools}\\
-\acref{acModel} & \mref{mAI}\\
-\acref{acAccounts} & \mref{mAccounts}\\
+\acref{acHist} & \mref{mHist}\\
+\acref{acPolicy} & \mref{mPolicy}\\
+\acref{acHarness} & \mref{mHarness}\\
+\acref{acModel} & \mref{mModel}\\
+\acref{acSpeech} & \mref{mSpeech}\\
+\acref{acAccount} & \mref{mAccount}\\
 \acref{acWeb} & \mref{mWeb}\\
+\acref{acCreds} & \mref{mCreds}\\
 \acref{acLog} & \mref{mLog}\\
-\acref{acSettings} & \mref{mSettings}\\
+\acref{acConfig} & \mref{mConfig}\\
 \bottomrule
 \end{tabular}
-\caption{Trace between anticipated changes and modules (one module each)}
+\caption{Trace between anticipated changes and modules. The mapping is one to
+one: each anticipated change is hidden by exactly one module, and each module
+hides exactly one anticipated change.}
 \label{TblACT}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+\toprule
+\textbf{UC} & \textbf{Modules constrained}\\
+\midrule
+\ucref{ucApproval} & \mref{mGate}, \mref{mTools}\\
+\ucref{ucEvidence} & \mref{mVerify}, \mref{mHist}\\
+\ucref{ucStop} & \mref{mPhrase}, \mref{mCtrl}\\
+\ucref{ucVoice} & \mref{mVoice}, \mref{mClient}\\
+\ucref{ucOneTask} & \mref{mTask}, \mref{mCtrl}\\
+\ucref{ucLocal} & \mref{mConfig}, \mref{mWeb}\\
+\bottomrule
+\end{tabular}
+\caption{Trace between unlikely changes and the modules they constrain}
+\label{TblUCT}
 \end{table}
 
 \section{Use Hierarchy Between Modules} \label{SecUse}
 
-Module A \emph{uses} module B when A needs a correct B to do its job. The arrows in Figure~\ref{FigUH} point from the user to the used module. None points up, so the relation is a hierarchy with no cycles. The Accessible Client is not shown: it runs in the user's browser and reaches the Voice Module over the network (Section~\ref{SecProtocols}).
+Module A \emph{uses} module B when A needs a correct B to do its own job, in the
+sense that A's code would reference B's interface. Figure~\ref{FigUH} draws the
+relation with every arrow pointing from the using module down to the used one.
+No arrow points upward, so the relation is a hierarchy with no cycles, and
+\mref{mCtrl} sits at the top as the control module.
+
+\mref{mClient} runs as a separate process in the user's browser and reaches
+\mref{mVoice} across the network, shown by the dashed arrow; the protocol is
+described in Section~\ref{SecProtocols}. Input arrives at \mref{mCtrl} through a
+callback that \mref{mCtrl} registers with \mref{mVoice}, so \mref{mVoice} depends
+on a function type rather than on the control module, which is what keeps the
+relation acyclic.
 
 \begin{figure}[H]
 \centering
 \resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[
-  box/.style={draw, rounded corners, minimum height=0.8cm, font=\small, align=center},
-  use/.style={-{Stealth}, thick}]
-\node[box] (voice) at (0,0) {\mref{mVoice} Voice};
-\node[box] (log) at (-6.2,-1.6) {\mref{mLog} Event Log};
-\node[box] (sup) at (-2.6,-1.6) {\mref{mSupervisor} Supervisor};
-\node[box] (ai) at (2.6,-1.6) {\mref{mAI} AI Model};
-\node[box] (set) at (6.2,-1.6) {\mref{mSettings} Settings};
-\node[box] (tools) at (0,-3.2) {\mref{mTools} Agent Tools};
-\node[box] (gate) at (-3.4,-4.8) {\mref{mGate} Action Gate};
-\node[box] (acc) at (1.9,-4.8) {\mref{mAccounts} Mail and Calendar};
-\node[box] (web) at (5.9,-4.8) {\mref{mWeb} Web Reader};
-\node[box] (phr) at (-5.2,-6.4) {\mref{mPhrases} Control Phrases};
-\node[box] (task) at (-1.0,-6.4) {\mref{mTask} Task State};
-\draw[use] (voice) -- (sup);
-\draw[use] (voice) -- (ai);
-\draw[use] (voice.east) -- (set.north west);
-\draw[use] (voice.west) -- (log.north east);
-\draw[use] (sup) -- (log);
-\draw[use] (sup) -- (tools);
-\draw[use] (sup) -- (gate);
-\draw[use] (sup) -- (task);
-\draw[use] (sup.south west) .. controls (-5.8,-3.2) and (-6.2,-5.2) .. (phr.north);
-\draw[use] (ai) -- (tools);
-\draw[use] (tools) -- (gate);
-\draw[use] (tools) -- (acc);
-\draw[use] (tools) -- (web);
+  box/.style={draw, rounded corners, minimum height=0.9cm, text width=2.6cm,
+              font=\small, align=center, inner sep=2pt,
+              execute at begin node={\hyphenpenalty=10000\exhyphenpenalty=10000}},
+  use/.style={-{Stealth}, thick},
+  net/.style={-{Stealth}, thick, dashed}]
+
+\node[box] (ctrl)    at (0,0)        {\mref{mCtrl} Session Control};
+\node[box] (client)  at (-11,0)      {\mref{mClient} Accessible\\Client};
+
+\node[box] (voice)   at (-10.5,-2.8) {\mref{mVoice} Voice Session};
+\node[box] (phrase)  at (-7.5,-2.8)  {\mref{mPhrase} Control Phrases};
+\node[box] (response) at (-2.6,-2.8) {\mref{mResponse} Spoken Response};
+\node[box] (harness) at (1.5,-2.8)   {\mref{mHarness} Agent Harness};
+\node[box] (hist)    at (6,-2.8)     {\mref{mHist} Task History};
+\node[box] (config)  at (10,-2.8)    {\mref{mConfig} Deployment\\Configuration};
+
+\node[box] (speech)  at (-12,-5.6)   {\mref{mSpeech} Speech Services};
+\node[box] (audio)   at (-8,-5.6)    {\mref{mAudio} Audio Device};
+\node[box] (model)   at (-2.8,-5.6)  {\mref{mModel} Model Provider};
+\node[box] (tools)   at (1.5,-5.6)   {\mref{mTools} Agent Tools};
+\node[box] (log)     at (5.5,-5.6)   {\mref{mLog} Event Log};
+
+\node[box] (task)    at (-6.5,-8.4)  {\mref{mTask} Task State};
+\node[box] (gate)    at (-2.5,-8.4)  {\mref{mGate} Action Gate};
+\node[box] (verify)  at (1.5,-8.4)   {\mref{mVerify} Outcome Verification};
+\node[box] (policy)  at (5.5,-8.4)   {\mref{mPolicy} Access Policy};
+
+\node[box] (account) at (0,-11.2)    {\mref{mAccount} Account Connector};
+\node[box] (web)     at (4,-11.2)    {\mref{mWeb} Web Reader};
+
+\node[box] (creds)   at (2,-14)      {\mref{mCreds} Credential\\Store};
+
+\draw[net] (client.south) -- (voice.north);
+
+\draw[use] (ctrl) -- (voice);
+\draw[use] (ctrl) -- (phrase);
+\draw[use] (ctrl) -- (response);
+\draw[use] (ctrl) -- (harness);
+\draw[use] (ctrl) -- (hist);
+\draw[use] (ctrl) -- (config);
+\draw[use] (ctrl.west) .. controls (-5.6,-1.6) and (-5.6,-7.0) .. (task.north);
+\draw[use] (ctrl.west) .. controls (-4.6,-1.6) and (-4.6,-7.0) .. (gate.north);
+\draw[use] (ctrl.east) .. controls (3.4,-1.6) and (3.4,-7.0) .. (verify.north);
+
+\draw[use] (voice) -- (speech);
+\draw[use] (voice) -- (audio);
+
+\draw[use] (harness) -- (model);
+\draw[use] (harness) -- (tools);
+
+\draw[use] (hist) -- (log);
+
 \draw[use] (tools) -- (task);
-\draw[use] (gate) -- (phr);
-\draw[use] (gate) -- (task);
+\draw[use] (tools) -- (gate);
+\draw[use] (tools) -- (verify);
+\draw[use] (tools) -- (policy);
+\draw[use] (tools.south west) .. controls (-0.6,-7.0) and (-0.6,-10.0) .. (account.north);
+\draw[use] (tools.south east) .. controls (3.6,-7.0) and (3.6,-10.0) .. (web.north);
+
+\draw[use] (verify) -- (account);
+\draw[use] (verify) -- (web);
+
+\draw[use] (account) -- (creds);
+\draw[use] (web) -- (creds);
 \end{tikzpicture}}
-\caption{Use hierarchy among modules}
+\caption{Use hierarchy among modules. Solid arrows are the uses relation; the
+dashed arrow crosses a process and network boundary.}
 \label{FigUH}
 \end{figure}
 
-\todo{Check every arrow against the code once each owner has finished their module, and redraw if a module's uses change.}
-
 \section{User Interfaces}
 
-The user talks to the system and hears its replies. The web page (\mref{mClient}) offers the same controls by keyboard: start and end a session, stop, continue, cancel, approve and decline, and a text box. It shows the conversation and the task state. \todo{Lucas: add a sketch or screenshot of the page and the key bindings.}
+The user speaks to the system and hears its replies. \mref{mClient} offers every
+one of those interactions by keyboard as well: start and end a session, stop,
+continue, cancel, approve, decline, and a text field for typed input. It presents
+the conversation, the current task state and the task history, and announces a
+change of task state so that a screen-reader user hears it without moving focus.
+
+The stop control is the one interaction that must never depend on voice. It is
+available whenever the client is running, is explained during setup, can be
+repeated on request, and is chosen so that it does not conflict with VoiceOver
+commands (FR.Sa.1, hazard H1-a).
+
+\todo{Lucas: add a sketch of the client and a table of the key bindings once the
+shortcut set is fixed against VoiceOver.}
 
 \section{Design of Communication Protocols} \label{SecProtocols}
 
-The client and the Voice Module meet in a LiveKit room. Audio flows both ways. The client sends commands as data messages on the topic \texttt{control} (stop, resume, cancel, approve, decline) and typed text on \texttt{lk.chat}. The Voice Module sends transcripts on \texttt{lk.transcription} and publishes the task state as the participant attribute \texttt{task\_state}. The client gets a short-lived room token from its own server route; the LiveKit secret never reaches the browser.
+\mref{mClient} and \mref{mVoice} communicate across a process and network
+boundary, so the interface between them is a protocol rather than a procedure
+call. They join a shared real-time session that carries three kinds of traffic:
+captured and synthesised audio in both directions; control commands from the
+client, namely stop, continue, cancel, approve and decline, together with typed
+text; and state updates from the voice session, namely transcripts and the
+current task state.
+
+Two properties of this protocol follow from the requirements rather than from the
+transport. A control command must reach session control without passing through
+the planner, so that the keyboard stop remains available when speech fails
+(FR.Sa.4). The client must learn of a lost connection within
+CONNECTION\_NOTICE\_TIME and must be able to signal it locally when network
+speech is unavailable (NFR.Sa.2), which means the client cannot depend on spoken
+output to report its own disconnection.
+
+Session credentials are issued to the client with a short lifetime and a scope
+limited to one session; no provider secret is held by the client
+(\mref{mCreds}, NFR5).
+
+\section{Database Design}
+
+The system stores no relational database. Task state and approval records are
+held by \mref{mTask} and \mref{mGate} for the lifetime of a session, and
+\mref{mHist} holds the task history that FR15 makes reviewable and deletable.
+\mref{mLog} appends events to a per-session log from which the timings in NFR3
+and NFR.Sa.1 are computed.
+
+FR.Sa.8 requires task state and approval records to survive a restart, which
+means some of this state must outlive a process. Which store provides that
+persistence is a deployment decision hidden by \mref{mConfig} and \mref{mHist},
+deferred to Revision 0 along with the rest of the backend topology (SRS E.3,
+P.5).
 
 \section{Timeline} \label{SecTimeline}
 
+Table~\ref{TblTimeline} assigns each module an owner and the revision by which it
+must be implemented. Owners follow the workstream split agreed in SRS P.1 and the
+Development Plan: voice and client to Lucas, agent and tools to Aaron, deployment
+and reliability to Kevin, evaluation and quality to Curtis. Each module is also
+cross-reviewed by a second member under the same split.
+
+The target column follows the deliverable dates in SRS P.4. The modules needed to
+exercise FR1 to FR3, FR8, FR9 and NFR3 are required for the proof-of-concept
+demonstration window of November 23 to December 3, 2026. Outcome verification,
+task history, access policy, credential storage and deployment configuration are
+scheduled against the Revision 0 design document of January 18, 2027, matching
+the task table in SRS P.4.
+
 \begin{table}[H]
 \centering
-\begin{tabular}{p{0.38\textwidth} p{0.2\textwidth} p{0.3\textwidth}}
+\begin{tabular}{p{0.38\textwidth} p{0.16\textwidth} p{0.3\textwidth}}
 \toprule
-\textbf{Module} & \textbf{Owner} & \textbf{POC status (Nov 11)}\\
+\textbf{Module} & \textbf{Owner} & \textbf{Required by}\\
 \midrule
-\mref{mVoice} Voice & Lucas & Built; voice test pending\\
-\mref{mClient} Accessible Client & Lucas & Built; VoiceOver check pending\\
-\mref{mPhrases} Control Phrases & Lucas & Built and tested\\
-\mref{mSupervisor} Supervisor & Aaron & Built and tested\\
-\mref{mTask} Task State & Aaron & Built and tested\\
-\mref{mGate} Action Gate & Aaron & Built and tested\\
-\mref{mTools} Agent Tools & Aaron & Built and tested\\
-\mref{mAI} AI Model & Aaron & Built; checked with the real model\\
-\mref{mWeb} Web Reader & Aaron & Built; real browser untested in this version\\
-\mref{mAccounts} Mail and Calendar & Curtis & Built and tested (made-up data)\\
-\mref{mLog} Event Log & Kevin & Built and tested\\
-\mref{mSettings} Settings & Kevin & Built\\
+\mref{mAudio} Audio Device & Lucas & POC demonstration\\
+\mref{mClient} Accessible Client & Lucas & POC demonstration\\
+\mref{mVoice} Voice Session & Lucas & POC demonstration\\
+\mref{mPhrase} Control Phrases & Lucas & POC demonstration\\
+\mref{mCtrl} Session Control & Aaron & POC demonstration\\
+\mref{mResponse} Spoken Response & Curtis & POC demonstration\\
+\mref{mTask} Task State & Aaron & POC demonstration\\
+\mref{mGate} Action Gate & Aaron & POC demonstration\\
+\mref{mTools} Agent Tools & Aaron & POC demonstration\\
+\mref{mHarness} Agent Harness & Aaron & POC demonstration\\
+\mref{mModel} Model Provider & Aaron & POC demonstration\\
+\mref{mSpeech} Speech Services & Lucas & POC demonstration\\
+\mref{mAccount} Account Connector & Curtis & POC demonstration\\
+\mref{mWeb} Web Reader & Aaron & POC demonstration\\
+\mref{mLog} Event Log & Kevin & POC demonstration\\
+\midrule
+\mref{mVerify} Outcome Verification & Curtis & Revision 0\\
+\mref{mHist} Task History & Kevin & Revision 0\\
+\mref{mPolicy} Access Policy & Curtis & Revision 0\\
+\mref{mCreds} Credential Store & Kevin & Revision 0\\
+\mref{mConfig} Deployment Configuration & Kevin & Revision 0\\
 \bottomrule
 \end{tabular}
-\caption{Module owners and status}
+\caption{Module owners and the revision by which each is required}
+\label{TblTimeline}
 \end{table}
 
-\section*{Generative AI Use Disclosure}
+\section{Generative AI Use Disclosure}
 
-\todo{Fill in as the rubric asks: the tools used and their versions, how and where each was used in this document, and how the content was checked. Each author adds their own part.}
+\todo{To be completed before submission: the tools used and their version
+numbers, a detailed summary of how and where each was used in this document, and
+the steps taken to verify the generated content. Each author adds their own part,
+following the structure used in the Problem Statement and Development Plan.}
 
-\begin{thebibliography}{9}
-\bibitem{Parnas1972} D. L. Parnas, ``On the criteria to be used in decomposing systems into modules,'' \emph{Communications of the ACM}, vol. 15, no. 12, pp. 1053--1058, 1972.
-\bibitem{ParnasEtAl1984} D. L. Parnas, P. C. Clements and D. M. Weiss, ``The modular structure of complex systems,'' in \emph{Proc. 7th International Conference on Software Engineering}, 1984, pp. 408--417.
-\end{thebibliography}
+\bibliographystyle{plainnat}
+\bibliography{../../../refs/References}
 
 \end{document}
