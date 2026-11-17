@@ -71,9 +71,7 @@ urlcolor=cyan
 \toprule
 \textbf{Date} & \textbf{Version} & \textbf{Notes}\\
 \midrule
-2026-11-16 & 0.1 & First draft. Interfaces specified for the modules of the
-Module Guide, which derives its decomposition from the system components in
-SRS~S.1.\\
+2026-11-18 & 1.0 & Initial revision for Rev -1.\\
 \bottomrule
 \end{tabularx}
 
@@ -375,9 +373,11 @@ AccessibleClient
 
 \subsection{Uses}
 
-Voice Session (M1 \ref{mod:voice}), across a process and network boundary. The
-client runs in the user's browser and reaches the voice session over the
-real-time session described in the MG; it holds no other module.
+Audio Device (M1 \ref{mod:audio}); Voice Session (M3 \ref{mod:voice}), across a
+process and network boundary. The client runs in the user's browser, so the
+user's microphone and speakers are reachable from it and the voice session is
+not; it captures audio locally through M1 and carries it to M3 over the
+real-time session described in the MG.
 
 \subsection{Syntax}
 
@@ -446,18 +446,28 @@ is preserved because endSession clears both together.
 
 \noindent startSession():
 \begin{itemize}
-\item transition: live $:=$ true; a real-time session with M1 is opened
-\item exception: $exc :=$ (the session cannot be opened $\Rightarrow$
-ConnectionFailed). The failure is announced through reader rather than only
+\item transition: live $:=$ true; initAudio of M1 is called, a real-time
+session with M3 is opened, and each frame captured through M1 is sent on it
+while frames arriving on it are played through M1
+\item exception: $exc :=$ (M1 reports no input or no output device, or the
+session cannot be opened $\Rightarrow$ ConnectionFailed). The failure is announced through reader rather than only
 displayed, and a local sound is used if no spoken channel is available, as
 NFR.Sa.2 requires.
 \end{itemize}
 
+\noindent The audio devices are reachable from the client and not from the
+voice session, which runs on whichever host the deployment places it on (M20).
+A device lost part way through a session is therefore reported on the session
+rather than raised locally, so that FR.Sa.20 can stop the task: losing voice
+leaves a user who cannot see the screen with no way to approve or halt
+anything.
+
 \noindent endSession():
 \begin{itemize}
 \item transition: live, shown $:=$ false, $\nil$; the real-time session is
-closed. Ending a session pauses any active work, which FR22 requires; the pause
-itself is M5's, reached by the Stop that M1 delivers on the session closing.
+closed and audio capture ends. Ending a session pauses any active work, which
+FR22 requires; the pause itself is M5's, reached by the Stop that M3 delivers
+on the session closing.
 \end{itemize}
 
 \noindent press(k):
@@ -514,7 +524,7 @@ VoiceSession
 
 \subsection{Uses}
 
-Audio Device (M1 \ref{mod:audio}), Speech Services (M15 \ref{mod:speech}).
+Speech Services (M15 \ref{mod:speech}).
 
 \subsection{Syntax}
 
@@ -577,14 +587,14 @@ not on the control module.
 
 \noindent openSession(onPartial, onFinal, onKey):
 \begin{itemize}
-\item transition: live $:=$ true; audio capture begins through M1, and each
-captured frame is transcribed through M15. While the user is speaking,
+\item transition: live $:=$ true; each frame of audio arriving on the session
+from the client is transcribed through M15. While the user is speaking,
 onPartial is invoked with the transcript so far. When TURN\_END\_SILENCE of
 silence has elapsed the turn is committed and onFinal is invoked with the
 complete transcript. A control key arriving on the session is delivered to
 onKey.
-\item exception: $exc :=$ (M1 reports no input or no output device
-$\Rightarrow$ NoAudioDevice)
+\item exception: $exc :=$ (the client reports a lost audio device on the
+session $\Rightarrow$ NoAudioDevice)
 \end{itemize}
 
 \noindent onPartial exists so that a work stop can be acted on before the turn
@@ -601,7 +611,8 @@ session is released
 \noindent say(text, interruptible):
 \begin{itemize}
 \item transition: let u be a fresh UtteranceId. spoken(u) $:=$ false, and text
-is synthesised through M15 and emitted through M1. If interruptible, speech from
+is synthesised through M15 and sent on the session for the client to play. If
+interruptible, speech from
 the user stops the emission and spoken(u) remains false; otherwise emission
 continues to the end. On reaching the end, spoken(u) $:=$ true.
 \item output: $out :=$ u
@@ -768,6 +779,14 @@ Gate (M8 \ref{mod:gate}), Outcome Verification (M9 \ref{mod:verify}), Task
 History (M11 \ref{mod:hist}), Agent Harness (M13 \ref{mod:harness}), Deployment
 Configuration (M20 \ref{mod:config}).
 
+\noindent For initialisation only, it also uses Model Provider (M14
+\ref{mod:model}), Speech Services (M15 \ref{mod:speech}), Account Connector (M16
+\ref{mod:account}) and Credential Store (M18 \ref{mod:creds}). Assembling the
+session is the control module's job: it reads the deployment's settings once from
+M20 and gives each of those modules the one setting it needs. None of them learns
+where its setting came from, so a change to how a deployment is configured costs
+one module rather than five.
+
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
@@ -832,7 +851,12 @@ can only be outstanding while the task is waiting for one.
 
 \noindent initControl():
 \begin{itemize}
-\item transition: task, pendingId, readbackOf $:=$ $\nil$, $\nil$, $\emptyset$
+\item transition: task, pendingId, readbackOf $:=$ $\nil$, $\nil$, $\emptyset$.
+Then loadConfig() of M20 is called and each setting is passed to the module that
+needs it.
+\item exception: a provider that cannot be reached raises its own exception
+here, so a misconfigured deployment fails at startup rather than part way
+through a task the user has already asked for.
 \end{itemize}
 
 \noindent onPartial(text):
@@ -863,7 +887,8 @@ Declined) of M8 accordingly; if c $=$ Yes but the read-back was not delivered,
 it is spoken again and no decision is recorded; any other c is decide(pendingId,
 Changed) and the text is passed to M13 as a correction. $out :=$ true
 \item the task is paused: phrase(AlreadyPaused) is spoken; $out :=$ true
-\item task $= \nil$ or task.state() $\in$ FINAL: task $:=$ new TaskState(text);
+\item task $= \nil$ or task.state() $\in$ FINAL: task $:=$ new TaskState(text),
+and recordTask(task) of M11;
 the request is passed to M13; $out :=$ false
 \item otherwise: text is passed to M13 as a correction to the running task,
 which FR6 requires to need no restart; $out :=$ false
@@ -910,8 +935,8 @@ resume it.
 \begin{itemize}
 \item transition: the task's state and the work it has recorded are spoken
 through phrase(WorkReport); each action in task.inFlight() is reconciled through
-M9 and its outcome recorded; the user is asked whether to resume or cancel. The
-task is not moved out of Paused.
+M9 and its outcome recorded, through recordOutcome of M11 as well; the user is
+asked whether to resume or cancel. The task is not moved out of Paused.
 \item FR21 requires relevant state to be checked and earlier actions reconciled
 before resuming, and requires any pending approval to be requested again rather
 than carried over; the approvals were withdrawn when the disconnection paused
@@ -933,8 +958,8 @@ start nothing further; write(BLOCKED)
 write(ACKNOWLEDGED)
 \item each action in task.inFlight() is given up to SETTLE\_LIMIT to settle;
 one that settles has its outcome recorded through M9, and one that does not is
-recorded as Unknown
-\item task.moveTo(Paused); write(PAUSED)
+recorded as Unknown; each outcome is also passed to recordOutcome of M11
+\item task.moveTo(Paused); recordTask(task) of M11; write(PAUSED)
 \item phrase(WorkReport) is spoken, naming completed work, work not done, and
 any outcome still unknown
 \end{enumerate}
@@ -966,7 +991,8 @@ state that reconnecting a voice session does not by itself resume work.
 \item transition: M13 is interrupted; withdrawAll() of M8 is called and
 pendingId $:= \nil$; task.moveTo(Cancelling); actions in task.inFlight() are
 given up to SETTLE\_LIMIT as in stopWork; task.moveTo(Cancelled);
-phrase(Cancelled) is spoken, which states that earlier actions were not undone
+recordTask(task) of M11; phrase(Cancelled) is spoken, which states that earlier
+actions were not undone
 \item exception: $exc :=$ (task $= \nil$ $\vee$ task.state() $\in$ FINAL
 $\Rightarrow$ NothingToCancel)
 \end{itemize}
@@ -1821,6 +1847,11 @@ store: durable storage surviving a restart of the process
 
 initHistory is called before any other access program.
 
+\noindent M9 is authoritative for an outcome. What this module holds is the
+user-facing record of one, written by M5 when a task is created, paused or
+cancelled, and when an outcome is settled or reconciled. Nothing else writes
+here, which is what lets the invariant below hold.
+
 \subsubsection{State Invariant}
 
 Every component of every element of entries derives from a
@@ -2187,7 +2218,8 @@ by M9, and treating retrieved content as data by the prefix M10 applies.
 
 \subsubsection{State Invariant}
 
-chosen is the model named by config() of M20 at the time initModel was called.
+chosen is the name passed to initModel. This module does not learn where that
+name came from, so a change to how a deployment is configured does not reach it.
 
 \subsubsection{Access Routine Semantics}
 
@@ -2236,7 +2268,7 @@ None.
 
 \subsubsection{Exported Constants}
 
-None. The services in use are named by config() of M20.
+None. The services in use are the ones named in the arguments to initSpeech.
 
 \subsubsection{Exported Access Programs}
 
@@ -2359,7 +2391,7 @@ a correspondent could not express the check FR12 requires.
 \subsubsection{Exported Access Programs}
 
 \begin{programs}
-initConnector & -- & -- & NotAuthorised\\
+initConnector & connector: \str & -- & NotAuthorised\\
 searchMessages & query: \str & seq of Message & ProviderUnavailable\\
 readMessage & r: \hyperref[type:ResourceRef]{ResourceRef} & Message $\cup
 \{\nil\}$ & ProviderUnavailable\\
@@ -2385,7 +2417,7 @@ connected: $\B$
 \subsubsection{Environment Variables}
 
 accounts: the user's connected mail and calendar accounts, held by the connector
-service named in config() of M20
+service named in the argument to initConnector
 
 \subsubsection{Assumptions}
 
@@ -2403,10 +2435,10 @@ $\lnot$connected $\Rightarrow$ no program below has reached accounts.
 
 \subsubsection{Access Routine Semantics}
 
-\noindent initConnector():
+\noindent initConnector(connector):
 \begin{itemize}
-\item transition: connected $:=$ true, using the credentials M18 supplies for
-the connector service
+\item transition: connected $:=$ true, reaching the named connector service
+with the credentials M18 supplies for it
 \item exception: $exc :=$ (the credentials are absent or refused $\Rightarrow$
 NotAuthorised)
 \end{itemize}
@@ -2506,7 +2538,7 @@ WebReader
 
 \subsection{Uses}
 
-Credential Store (M18 \ref{mod:creds}).
+None.
 
 \subsection{Syntax}
 
@@ -2651,7 +2683,7 @@ returns one)
 
 \subsubsection{Environment Variables}
 
-store: the platform secret storage named by config() of M20
+store: the platform secret storage named by the argument to initStore
 
 \subsubsection{Assumptions}
 
