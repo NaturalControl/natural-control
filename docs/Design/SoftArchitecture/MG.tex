@@ -33,7 +33,7 @@
 
 \title{Module Guide for \progname{}\\[4pt]\large Design Document Revision $-1$}
 \author{\textbf{Group 7}\\Lucas DeBoer\\Kevin Kim\\Aaron Loh\\Curtis Vos}
-\date{November 16, 2026}
+\date{November 18, 2026}
 \maketitle
 
 \pagenumbering{roman}
@@ -136,6 +136,9 @@ and specified in the interface of the module that hides it; it appears here
 because it is expected to change, not because it is unresolved.
 
 \begin{description}[leftmargin=1.2cm]
+\item[\refstepcounter{acnum} \actheacnum \label{acAudio}:] The audio devices
+supported on the user's machine, and how audio is captured from and played to
+them.
 \item[\refstepcounter{acnum} \actheacnum \label{acClient}:] The layout, controls
 and key bindings of the client, and how a change of task state is announced to a
 screen reader.
@@ -144,6 +147,9 @@ detected and committed, how the user's speech is delivered as partial and
 finished sentences, and how the user barges in on spoken output.
 \item[\refstepcounter{acnum} \actheacnum \label{acPhrase}:] The phrases
 recognised as stop, cancel, continue, yes and no, and the languages supported.
+\item[\refstepcounter{acnum} \actheacnum \label{acCtrl}:] The order in which the
+system responds to events, for example whether a stop is handled before a
+pending approval.
 \item[\refstepcounter{acnum} \actheacnum \label{acResponse}:] The wording of the
 system's spoken responses and how much detail each one carries.
 \item[\refstepcounter{acnum} \actheacnum \label{acTask}:] The task states and the
@@ -159,8 +165,7 @@ planner may call, and the read-back each one produces for approval.
 \item[\refstepcounter{acnum} \actheacnum \label{acHist}:] What the task history
 records, and how it is reviewed, retained and deleted.
 \item[\refstepcounter{acnum} \actheacnum \label{acPolicy}:] How a restriction on
-an account, sender, folder or resource is expressed, and the permission scope
-each tool requests.
+an account, sender, folder or resource is expressed and enforced.
 \item[\refstepcounter{acnum} \actheacnum \label{acHarness}:] Which agent harness
 runs the planner, and how its streamed status, interrupts and clarification
 requests are adapted (SRS LC3).
@@ -169,11 +174,14 @@ provider plan the task, and the instructions they are given (SRS LC1).
 \item[\refstepcounter{acnum} \actheacnum \label{acSpeech}:] Which speech-to-text
 and text-to-speech services are used (SRS LC2).
 \item[\refstepcounter{acnum} \actheacnum \label{acAccount}:] Which connected apps
-are supported and which connector reaches them (SRS LC4).
+are supported, which connector reaches them, and the permission scope each
+requires (SRS LC4).
 \item[\refstepcounter{acnum} \actheacnum \label{acWeb}:] How a website is opened
 and read, and whether any consequential website actions are permitted (SRS LC6).
 \item[\refstepcounter{acnum} \actheacnum \label{acCreds}:] How passwords, tokens
 and authentication codes are stored and supplied to the services that need them.
+\item[\refstepcounter{acnum} \actheacnum \label{acLog}:] The format of the
+event log, and which timings are derived from it.
 \item[\refstepcounter{acnum} \actheacnum \label{acConfig}:] The backend topology,
 secret storage and network requirements of a deployment (SRS LC5).
 \end{description}
@@ -637,7 +645,7 @@ FR21 & \mref{mCtrl}, \mref{mHist}, \mref{mTask}\\
 \hline
 FR22 & \mref{mClient}, \mref{mVoice}\\
 \hline
-FR23 & \mref{mCreds}, \mref{mClient}\\
+FR23 & \mref{mCreds}, \mref{mClient}, \mref{mWeb}\\
 \hline
 FR24 & \mref{mGate}, \mref{mWeb}\\
 \hline
@@ -650,6 +658,12 @@ NFR3 & \mref{mCtrl}, \mref{mLog}\\
 NFR4 & \mref{mVoice}, \mref{mSpeech}\\
 \hline
 NFR5 & \mref{mCreds}, \mref{mLog}, \mref{mHist}, \mref{mVoice}, \mref{mConfig}\\
+\hline
+NFR.E.1 & \mref{mAudio}, \mref{mClient}, \mref{mPhrase}, \mref{mResponse}, \mref{mWeb}\\
+\hline
+NFR.E.2 & \mref{mClient}\\
+\hline
+NFR.E.3 & All modules (a coding standard for all code)\\
 \hline
 FR.Sa.1 & \mref{mClient}\\
 \hline
@@ -711,11 +725,15 @@ NFR.Sa.3 & \mref{mCtrl}, \mref{mLog}\\
 \hline
 \textbf{AC} & \textbf{Module}\\
 \hline
+\acref{acAudio} & \mref{mAudio}\\
+\hline
 \acref{acClient} & \mref{mClient}\\
 \hline
 \acref{acVoice} & \mref{mVoice}\\
 \hline
 \acref{acPhrase} & \mref{mPhrase}\\
+\hline
+\acref{acCtrl} & \mref{mCtrl}\\
 \hline
 \acref{acResponse} & \mref{mResponse}\\
 \hline
@@ -742,6 +760,8 @@ NFR.Sa.3 & \mref{mCtrl}, \mref{mLog}\\
 \acref{acWeb} & \mref{mWeb}\\
 \hline
 \acref{acCreds} & \mref{mCreds}\\
+\hline
+\acref{acLog} & \mref{mLog}\\
 \hline
 \acref{acConfig} & \mref{mConfig}\\
 \hline
@@ -918,7 +938,10 @@ protocol itself does.
 
 \section{Database Design}
 
-NA.
+No database is used. The only data kept between sessions are the task history
+(\mref{mHist}), the access restrictions (\mref{mPolicy}) and the saved
+credentials (\mref{mCreds}). Each module hides how its data is stored behind its
+interface, so the storage can change without affecting other modules.
 
 \section{Timeline} \label{SecTimeline}
 

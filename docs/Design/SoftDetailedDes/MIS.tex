@@ -59,7 +59,7 @@ urlcolor=cyan
 
 \author{\authname}
 
-\date{November 16, 2026}
+\date{November 18, 2026}
 
 \maketitle
 
@@ -618,6 +618,10 @@ continues to the end. On reaching the end, spoken(u) $:=$ true.
 \item output: $out :=$ u
 \item exception: $exc :=$ ($\lnot$live $\Rightarrow$ NotOpen)
 \end{itemize}
+
+\noindent say has both a transition and an output: it starts the speech and
+returns its UtteranceId. The id is the only way a caller can later ask delivered(u)
+about that speech, so it must come from the program that started it.
 
 \noindent Interrupting spoken output stops only the speech. FR2 requires that it
 not by itself pause the task or restart anything, so no transition of the task
@@ -1384,6 +1388,10 @@ NotConsequential). An exempt action is not held, and its caller runs it
 directly.
 \end{itemize}
 
+\noindent request has both a transition and an output, as a constructor does: it
+holds the action and returns its ActionId, which is the caller's only handle on
+the held request.
+
 \noindent readback(id):
 \begin{itemize}
 \item transition: presented(id) $:=$ true
@@ -2141,6 +2149,10 @@ the distinction FR8 draws between acknowledging a stop and having stopped.
 \item output: $out :=$ that head, or $\nil$ when no event is waiting
 \end{itemize}
 
+\noindent next has both a transition and an output: it removes and returns the
+head of pending in one step, so each event is handed out exactly once. A
+separate read would return the same event until a second call removed it.
+
 \noindent A NeedsClarification event is what FR4 and FR.Sa.9 require when a
 detail is missing or ambiguous: the planner asks rather than guessing, and
 hazard H4-a is a planner that guesses the wrong target.
@@ -2538,7 +2550,12 @@ WebReader
 
 \subsection{Uses}
 
-None.
+Credential Store (M18 \ref{mod:creds}).
+
+\noindent When a page needs the user to sign in, open supplies the password the
+user saved for that site through useFor, so the password is never spoken or seen
+by the planner (FR23). Signing in is part of opening the page, not an action in
+PERMITTED.
 
 \subsection{Syntax}
 
@@ -2605,7 +2622,9 @@ BrowserUnavailable)
 \item transition: current $:=$ url and the page is loaded. A clearly identified
 option to reject non-essential cookies is taken, which FR24 permits without
 approval; any consent choice that is not clearly that is left alone and reported
-through ask.
+through ask. If the page asks the user to sign in and has(site) holds for its
+site in M18, the saved password is entered through useFor; if it does not, the
+page is left at its sign-in step and reported through ask.
 \item exception: $exc :=$ (the page cannot be loaded $\Rightarrow$
 BrowserUnavailable)
 \end{itemize}
