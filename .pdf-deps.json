@@ -1,4 +1,13 @@
 {
+  "docs/CDs/Interviews/InterviewReport.tex": [
+    "docs/CDs/Interviews/InterviewReport.tex"
+  ],
+  "docs/CDs/Interviews/LowVisionParticipantInterview.md": [
+    "docs/CDs/Interviews/LowVisionParticipantInterview.md"
+  ],
+  "docs/CDs/Interviews/UserInterviewGuide.md": [
+    "docs/CDs/Interviews/UserInterviewGuide.md"
+  ],
   "docs/CDs/MLReport/main.tex": [
     "docs/CDs/MLReport/acl.sty",
     "docs/CDs/MLReport/custom.bib",
