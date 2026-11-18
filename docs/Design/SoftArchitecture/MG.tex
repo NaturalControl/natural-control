@@ -1001,25 +1001,36 @@ Revision 0.
 
 \section{Generative AI Use Disclosure}
 
-\todo{To be completed before submission: the tools used and their version
-numbers, a detailed summary of how and where each was used in this document, and
-the steps taken to verify the generated content. Each author adds their own part,
-following the structure used in the Problem Statement and Development Plan.}
+\todo{Aaron, Curtis and Lucas: add your own item under each of the three
+headings below (tools and versions; how and where used; how the output was
+verified), following the Problem Statement, then delete this box.}
 
-\begin{enumerate}
-\item Kevin Kim: Claude Code (Claude Opus 5.5) was used to review the whole
-document against the course MG checklist, the Design Document rubric and the
-SRS, and to make the fixes that review found. Kevin approved each fix. The fixes
-were: anticipated changes for the Audio Device, Session Control and Event Log
-modules (Section~\ref{SecChange}, Table~\ref{TblACT}); trace rows for NFR.E.1 to
-NFR.E.3, and the Web Reader for FR23 (Table~\ref{TblRT}); moving the permission
-scope from the Access Policy anticipated change to the Account Connector one; the
-Database Design text; and spelling and date corrections. Kevin chose to have the
-Web Reader sign in to websites with saved credentials. Each fix was checked by
+\subsection{AI Tools Used}
+\begin{itemize}
+\item Kevin Kim: Claude Code (Claude Opus 5.5).
+\end{itemize}
+
+\subsection{How and Where Used}
+\begin{itemize}
+\item Kevin Kim: Claude Code reviewed the whole document against the course MG checklist,
+the Design Document rubric and the SRS, and made the fixes that review found:
+anticipated changes for the Audio Device, Session Control and Event Log modules
+(Section~\ref{SecChange}, Table~\ref{TblACT}); trace rows for NFR.E.1 to NFR.E.3,
+and the Web Reader for FR23 (Table~\ref{TblRT}); moving the permission scope from
+the Access Policy anticipated change to the Account Connector one; the Database
+Design text; and spelling and date corrections.
+\end{itemize}
+
+\subsection{Verification of AI-Generated Content}
+\begin{itemize}
+\item Kevin Kim: Kevin approved each fix before it was committed, and chose to have the Web
+Reader sign in to websites with saved credentials. Each fix was checked by
 recompiling the document and by scripted checks that every SRS requirement is
 traced, that every module has exactly one anticipated change, and that the uses
 relation here matches the MIS.
-\end{enumerate}
+\end{itemize}
+
+\textbf{The team maintains responsibility for all submitted work.}
 
 \bibliographystyle{plainnat}
 \bibliography{../../../refs/References}

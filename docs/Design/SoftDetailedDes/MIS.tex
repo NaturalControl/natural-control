@@ -2984,22 +2984,34 @@ its initialisation.
 
 \section{Appendix --- Generative AI Use Disclosure}
 
-\todo{Each author adds their own item below, following the structure used in
-the Problem Statement and Development Plan: the tools and their versions, how and
-where each was used, and how its output was verified.}
+\todo{Aaron, Curtis and Lucas: add your own item under each of the three
+headings below (tools and versions; how and where used; how the output was
+verified), following the Problem Statement, then delete this box.}
 
-\begin{enumerate}
-\item Kevin Kim: Claude Code (Claude Opus 5.5) was used to review the whole
-document against the course MIS checklist, the Design Document rubric and the
-SRS, and to make the fixes that review found. Kevin approved each fix. The fixes
-were: adding the Credential Store to the Web Reader's uses and describing sign-in
-in its open program (Kevin chose this design, for FR23); making a bare ``stop''
-pause the task in Session Control, as SRS FR3 requires; adding short reasons
-why say, request and next each have both a transition and an output; and
-spelling and date corrections. Each fix was checked by recompiling the document
-and by scripted checks that the module list and uses relations here match the
-MG.
-\end{enumerate}
+\subsection{AI Tools Used}
+\begin{itemize}
+\item Kevin Kim: Claude Code (Claude Opus 5.5).
+\end{itemize}
+
+\subsection{How and Where Used}
+\begin{itemize}
+\item Kevin Kim: Claude Code reviewed the whole document against the course MIS checklist,
+the Design Document rubric and the SRS, and made the fixes that review found:
+adding the Credential Store to the Web Reader's uses and describing sign-in in its
+open program; making a bare ``stop'' pause the task in Session Control, as SRS FR3
+requires; adding short reasons why say, request and next each have both a
+transition and an output; and spelling and date corrections.
+\end{itemize}
+
+\subsection{Verification of AI-Generated Content}
+\begin{itemize}
+\item Kevin Kim: Kevin approved each fix before it was committed, and chose the Web Reader
+sign-in design (for FR23). Each fix was checked by recompiling the document and
+by scripted checks that the module list and uses relations here match the MG,
+and the stop handling was checked against SRS FR3.
+\end{itemize}
+
+\textbf{The team maintains responsibility for all submitted work.}
 
 \newpage
 
