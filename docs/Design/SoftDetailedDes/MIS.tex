@@ -879,10 +879,10 @@ by itself change what the task is doing.
 \item transition and output: let c $=$ classify(text) of M4.
 \begin{itemize}
 \item c $=$ Stop and isWorkStop(text): stopWork(); $out :=$ true
-\item c $=$ Stop otherwise: spoken output is interrupted and the user is asked
-what they want next, through phrase(StopAmbiguous); the task is unchanged;
-$out :=$ true. This is the bare ``stop'' of FR3, which stops speech and seeks
-clarification rather than silently choosing between pausing and cancelling.
+\item c $=$ Stop otherwise: stopWork(), and the user is then asked whether to
+continue or keep the task paused, through phrase(StopAmbiguous); $out :=$ true.
+This is the bare ``stop'' of FR3, which stops speech and pauses work, then asks
+what the user wants next rather than choosing for them.
 \item c $=$ Cancel: cancel(); $out :=$ true
 \item c $=$ Continue and the task is paused: resume(); $out :=$ true
 \item pendingId $\neq \nil$: if c $\in$ \{Yes, No\} and delivered(readbackOf
@@ -2993,7 +2993,8 @@ where each was used, and how its output was verified.}
 document against the course MIS checklist, the Design Document rubric and the
 SRS, and to make the fixes that review found. Kevin approved each fix. The fixes
 were: adding the Credential Store to the Web Reader's uses and describing sign-in
-in its open program (Kevin chose this design, for FR23); adding short reasons
+in its open program (Kevin chose this design, for FR23); making a bare ``stop''
+pause the task in Session Control, as SRS FR3 requires; adding short reasons
 why say, request and next each have both a transition and an output; and
 spelling and date corrections. Each fix was checked by recompiling the document
 and by scripted checks that the module list and uses relations here match the
