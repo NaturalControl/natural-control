@@ -140,7 +140,7 @@ The following table summarises the primitive data types used by \progname.
 character & char & a single symbol or digit\\
 boolean & $\B$ & true or false\\
 integer & $\Zed$ & a number without a fractional component in (-$\infty$, $\infty$)\\
-natural number & $\N$ & a number without a fractional component in [1, $\infty$)\\
+natural number & $\N$ & a number without a fractional component in [0, $\infty$)\\
 real & $\R$ & any number in (-$\infty$, $\infty$)\\
 \bottomrule
 \end{tabular}
@@ -407,7 +407,7 @@ startSession & -- & -- & ConnectionFailed\\
 endSession & -- & -- & --\\
 press & k: ControlKey & -- & NotConnected\\
 submitText & text: \str & -- & NotConnected\\
-showState & s: \hyperref[type:TaskState]{TaskStateT} & -- & --\\
+showState & s: \hyperref[type:TaskState]{TaskStateT} & -- & NotConnected\\
 showTurn & speaker: \str, text: \str & -- & --\\
 connected & -- & $\B$ & --\\
 \end{programs}
@@ -466,8 +466,8 @@ anything.
 \begin{itemize}
 \item transition: live, shown $:=$ false, $\nil$; the real-time session is
 closed and audio capture ends. Ending a session pauses any active work, which
-FR22 requires; the pause itself is M5's, reached by the Stop that M3 delivers
-on the session closing.
+FR22 requires; the pause itself is M5's, reached through the onDisconnect
+callback that M3 invokes when the session closes.
 \end{itemize}
 
 \noindent press(k):
@@ -492,6 +492,7 @@ supporting the keyboard-only operation NFR1 requires
 \item transition: shown $:=$ s, and the change is announced to reader without
 moving the keyboard focus, so that a user reading elsewhere on the page is told
 the task state changed but is not interrupted
+\item exception: $exc :=$ ($\lnot$live $\Rightarrow$ NotConnected)
 \end{itemize}
 
 \noindent showTurn(speaker, text):
@@ -545,7 +546,8 @@ UtteranceId: an opaque identifier for one piece of spoken output
 
 \begin{programs}
 openSession & onPartial: \str{} $\to$ --, onFinal: \str{} $\to \B$, onKey:
-ControlKey $\to$ -- & -- & NoAudioDevice\\
+ControlKey $\to$ --, onDisconnect: () $\to$ --, onReconnect: () $\to$ -- & -- &
+NoAudioDevice\\
 closeSession & -- & -- & --\\
 say & text: \str, interruptible: $\B$ & UtteranceId & NotOpen\\
 delivered & u: UtteranceId & $\B$ & NoSuchUtterance\\
@@ -585,16 +587,18 @@ not on the control module.
 
 \subsubsection{Access Routine Semantics}
 
-\noindent openSession(onPartial, onFinal, onKey):
+\noindent openSession(onPartial, onFinal, onKey, onDisconnect, onReconnect):
 \begin{itemize}
 \item transition: live $:=$ true; each frame of audio arriving on the session
 from the client is transcribed through M15. While the user is speaking,
 onPartial is invoked with the transcript so far. When TURN\_END\_SILENCE of
 silence has elapsed the turn is committed and onFinal is invoked with the
 complete transcript. A control key arriving on the session is delivered to
-onKey.
-\item exception: $exc :=$ (the client reports a lost audio device on the
-session $\Rightarrow$ NoAudioDevice)
+onKey. If the session drops, or the client reports on it that an audio device
+has been lost, onDisconnect is invoked; when the session is re-established,
+onReconnect is invoked.
+\item exception: $exc :=$ (the client has no audio device when the session
+opens $\Rightarrow$ NoAudioDevice)
 \end{itemize}
 
 \noindent onPartial exists so that a work stop can be acted on before the turn
@@ -742,8 +746,9 @@ words(utterance)
 
 \noindent These two programs are what let FR3 distinguish its three effects. A
 bare ``stop'' classifies as Stop but is not a work stop, so Session Control (M5)
-stops speech and asks what the user wants next; ``stop working'' is a work stop
-and pauses the task, even when it occurs inside a longer sentence; ``cancel''
+waits for the finished turn, then pauses the task and asks whether to continue;
+``stop working'' is a work stop and pauses the task at once, from the partial
+transcript, even when it occurs inside a longer sentence; ``cancel''
 classifies as Cancel and ends the task. Because no model is consulted on this
 path, FR.Sa.4 is satisfied by construction.
 
@@ -810,6 +815,7 @@ onFinal & text: \str & $\B$ & --\\
 onKey & k: ControlKey & -- & --\\
 onDisconnect & -- & -- & --\\
 onReconnect & -- & -- & --\\
+poll & -- & -- & --\\
 stopWork & -- & -- & --\\
 resume & -- & -- & NothingPaused\\
 cancel & -- & -- & NothingToCancel\\
@@ -832,7 +838,9 @@ shown through M2.
 \subsubsection{Assumptions}
 
 initControl is called before any other access program, and the callbacks given
-to M3's openSession are onPartial, onFinal and onKey.
+to M3's openSession are onPartial, onFinal, onKey, onDisconnect and
+onReconnect. While a task is active, poll is called repeatedly, for example on a
+short timer, so that each planner event is handled soon after it is emitted.
 
 \noindent Every committed utterance reaches onFinal before the planner sees it.
 This is what FR.Sa.4 requires: the stop path must not depend on the planner
@@ -876,7 +884,8 @@ by itself change what the task is doing.
 
 \noindent onFinal(text):
 \begin{itemize}
-\item transition and output: let c $=$ classify(text) of M4.
+\item transition and output: let c $=$ classify(text) of M4. The first case
+below that applies is taken, so a stop or cancel always wins over an approval.
 \begin{itemize}
 \item c $=$ Stop and isWorkStop(text): stopWork(); $out :=$ true
 \item c $=$ Stop otherwise: stopWork(), and the user is then asked whether to
@@ -895,7 +904,9 @@ Changed) and the text is passed to M13 as a correction. $out :=$ true
 and recordTask(task) of M11;
 the request is passed to M13; $out :=$ false
 \item otherwise: text is passed to M13 as a correction to the running task,
-which FR6 requires to need no restart; $out :=$ false
+which FR6 requires to need no restart, and if task.state() $=$
+AwaitingClarification then task.moveTo(Working), since the text is the user's
+answer; $out :=$ false
 \end{itemize}
 \end{itemize}
 
@@ -946,6 +957,32 @@ before resuming, and requires any pending approval to be requested again rather
 than carried over; the approvals were withdrawn when the disconnection paused
 the task, so there is nothing to carry.
 \end{itemize}
+
+\noindent poll():
+\begin{itemize}
+\item transition: let e $=$ next() of M13. Then
+\begin{itemize}
+\item e $= \nil$: nothing changes
+\item e.kind $=$ Progress: phrase(ProgressUpdate) is spoken for e.text
+\item e.kind $=$ NeedsClarification: task.moveTo(AwaitingClarification), and
+phrase(ClarificationNeeded) is spoken for e.text
+\item e.kind $=$ ProposedAction: pendingId $:=$ the ActionId in awaiting() of
+M8; the read-back from readback(pendingId) of M8 is spoken through say of M3
+with interruptible true, and readbackOf(pendingId) $:=$ the UtteranceId say
+returns
+\item e.kind $=$ Finished: task.moveTo(Done), the task is recorded through
+recordTask of M11, and phrase(OutcomeReport) is spoken for e.text
+\item e.kind $=$ Blocked: phrase(Blocker) is spoken for e.text; the task is
+unchanged and waits for the user's reply
+\item e.kind $=$ LimitReached: stopWork(), which FR.Sa.11 requires when the
+step limit is reached
+\end{itemize}
+\end{itemize}
+
+\noindent This is how the planner's progress reaches the user without the user
+waiting in silence (FR5), and how a proposed action gets its read-back. The
+read-back is interruptible, as FR2 allows; if it is cut off, delivered is false,
+so a ``yes'' is not accepted until it has been heard in full (FR.Sa.3).
 
 \noindent stopWork():
 \begin{itemize}
@@ -1745,8 +1782,9 @@ planner and every consequential action.
 \{to, subject, body\}). Then, in order:
 \begin{enumerate}
 \item id $:=$ request(a) of M8
-\item task.moveTo(AwaitingApproval); readback(id) is produced and spoken; the
-user's decision reaches M8 through M5
+\item task.moveTo(AwaitingApproval); the read-back is spoken by M5 when it
+handles the resulting ProposedAction event (poll of M5), and the user's decision
+reaches M8 through M5
 \item if verdict(id) is not Approved, $out :=$ Unknown is not produced; the
 program raises NotApproved and nothing is sent
 \item if claim(id, a) of M8 returns false, the program raises NotApproved
@@ -2117,7 +2155,8 @@ HarnessUnavailable)
 \begin{itemize}
 \item transition: active, steps $:=$ true, 0; the planner begins work on
 request, calling only the access programs of M10 and emitting a PlannerEvent for
-each step it takes
+each step it takes, including a ProposedAction when it calls a program of M10
+that needs approval
 \item exception: $exc :=$ (active $\Rightarrow$ AlreadyRunning). SRS~S.9
 property P6 allows a session one active task, so a second start is an error
 rather than a queue.
