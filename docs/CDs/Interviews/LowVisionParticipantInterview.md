@@ -7,6 +7,7 @@
 - **Format:** In person, one conversation
 - **Interviewer:** Kevin Kim
 - **Questions:** The 12 questions in [`UserInterviewGuide.md`](UserInterviewGuide.md), asked in order.
+- **Recording:** P2's answers were transcribed into text by ChatGPT's voice feature during the interview. There is no audio recording.
 - **Consent:** P2 consented to the interview.
 - **Anonymization:** P2 is not named. No identifying details are recorded.
 
@@ -14,7 +15,7 @@ This file is separate from `InterviewReport.tex`'s P1 interview. P1 was a former
 
 ## Raw responses
 
-The responses are P2's words as recorded, kept unedited, including filler words, repetitions and grammar. Each line is a separate recorded message. The interviewer's opening and closing remarks are not included.
+The responses are ChatGPT's transcription of P2's words, kept unedited, including filler words, repetitions and grammar. Each line is a separate recorded message. The interviewer's opening and closing remarks are not included.
 
 ### Q1. Tell me a bit about yourself and how technology fits into your day. As much as you're comfortable sharing, how does your disability affect how you use a computer, and has that changed over time?
 
@@ -128,6 +129,7 @@ The interviewer skipped this question.
 
 - One participant, with low vision rather than blindness. P2 uses zoom, so some answers may not apply to users who cannot see the screen at all.
 - The interviewer is a team member and a developer of the system.
+- The responses are a machine transcription with no audio recording to check against, so some wording may be a transcription error.
 - Q10 was not answered. No conclusion is drawn from it.
 - Q11: P2 did not give a reason for avoiding saving personal information and passwords.
 
