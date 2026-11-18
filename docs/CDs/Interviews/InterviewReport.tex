@@ -1,0 +1,797 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{xurl}
+\usepackage{hyperref}
+
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}
+
+% A visible box for items the team must confirm or complete before submission.
+\newcommand{\todo}[1]{\par\medskip\noindent\fbox{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}{\textbf{TODO (team):} #1}}\par\medskip}
+
+% Labels used inside each finding.
+\newcommand{\said}{\paragraph{What P1 said.}}
+\newcommand{\saidtwo}{\paragraph{What P2 said.}}
+\newcommand{\means}{\paragraph{What it means for the project.}}
+\newcommand{\affects}{\paragraph{Requirements and design affected.}}
+\newcommand{\research}{\paragraph{Published research (not from the interview).}}
+
+\setlist{itemsep=2pt, topsep=4pt}
+
+\title{Interview Report (CD-Fall)\\[1ex]\large Natural Control, Team 7}
+\author{Team 7 (T07), SFWRENG 4G06, McMaster University}
+\date{November 17, 2026}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section*{Revision history}
+\addcontentsline{toc}{section}{Revision history}
+
+\begin{tabularx}{\textwidth}{l l X}
+\toprule
+\textbf{Date} & \textbf{Version} & \textbf{Notes}\\
+\midrule
+2026-11-11 & Draft & First draft for team review.\\
+2026-11-17 & Rev 0 & Added the November 14 interview with a low-vision participant (P2) and Findings 9 to 12.\\
+\bottomrule
+\end{tabularx}
+
+\section{Purpose and how this report is used}
+
+Natural Control is a voice interface that lets a blind user delegate digital tasks to an AI agent while staying in control. The user can say ``stop working'' to pause a task, and the system needs the user's approval before it sends or creates anything.
+
+This report covers the two requirements interviews the team has held so far:
+\begin{itemize}
+    \item \textbf{P1}, October 17, 2026: a former staff member of a service for deafblind people. P1 is not blind or deaf, so this is a proxy interview.
+    \item \textbf{P2}, November 14, 2026: a recent graduate with low vision. This is the team's first interview with a person with vision loss.
+\end{itemize}
+
+The P1 interview is already part of the project. This report explains how it was done and what we learned from it. It feeds four parts of the project:
+
+\begin{itemize}
+    \item \textbf{SRS.} The SRS lists this interview as a requirements source (G.2, G.7, P.7). P.7 states that FR16 (correct part of a read-back), FR17 (restrict access to accounts and resources) and FR18 (speak only what is relevant to the task), and intervenors as a stakeholder, came from it. The transcript is also an appendix of the SRS.
+    \item \textbf{Hazard Analysis.} Two critical assumptions reflect this interview: setup help may only be available weekly (for example, from an intervenor), and the assumption that users can understand spoken output excludes many deafblind users. The second one cites the interview directly.
+    \item \textbf{Proof of concept (POC).} The POC demonstrates an approval read-back before a send, a correction that withdraws the old approval, and short spoken stop messages. Section~\ref{sec:analysis} shows which of these the interview supports and which it does not address.
+    \item \textbf{Winter usability evaluation.} The questions P1 could not answer, and the findings that need checking with blind users, become questions for the participant sessions planned before the March 8, 2027 V\&V Report and Usability Report (Section~\ref{sec:next}).
+\end{itemize}
+
+\paragraph{Where to find things.} The methodology is in Section~\ref{sec:method}. The questions are in Section~\ref{sec:questions} and the subject in Section~\ref{sec:subjects}. The analysis, including a traceability table and an empathy map, is in Section~\ref{sec:analysis}. The P1 transcript is Appendix~\ref{app:transcript}, and P2's raw responses are Appendix~\ref{app:p2raw}.
+
+\section{Methodology}\label{sec:method}
+
+Most of this section describes the P1 interview. The P2 interview is described in Section~\ref{sec:p2method}.
+
+\subsection{Who we interviewed and why a proxy}
+
+For the first interview we interviewed P1. P1 is a former special events coordinator at Deafblind Community Services (DBCS), a CNIB organization. P1 is not blind or deaf. P1 spoke from experience working with DBCS clients.
+
+This is a proxy interview: P1 reported what they saw while working with people who have vision loss, but P1 does not have vision loss. At the time of the P1 interview the team had not recruited any blind or low-vision participants. SRS P.6 lists recruitment of blind participants as a project risk, and SRS P.4 requires protocol, consent and institutional research requirements to be resolved before any participant session. A former staff member could describe patterns across many clients. They cannot speak for those clients, so we treat each finding as an observation to check with blind users, not as proof.
+
+\subsection{Recruitment}
+
+The sources available for this draft do not record how P1 was contacted or recruited.
+
+\todo{State how P1 was contacted and recruited (for example, a personal or professional contact of a team member), and whether any compensation was offered. The sources used for this draft do not say.}
+
+\subsection{Format}
+
+The interview was one conversation on October 17, 2026. The interviewer was a team member, Aaron Loh. The transcript header says the format was a ``conversation transcribed by Aaron.''
+
+The questions were open-ended. The interviewer asked follow-up questions where useful and skipped one question that was not working (mistake recovery). The transcript header says that ``long questions were shortened to the question actually asked,'' so the questions in Section~\ref{sec:questions} are the shortened versions.
+
+The sources do not mention an audio recording. Two editor notes in the transcript say that attribution is uncertain ``in the notes.'' This suggests (an inference) that the transcript was written from the interviewer's notes and cannot be checked against a recording.
+
+\todo{Confirm how the interview was held (in person, phone or video), how long it took, whether it was recorded, and whether a written question list was prepared in advance. If one was, add it as an appendix.}
+
+\subsection{Consent}
+
+\todo{Confirm what consent P1 gave: to be interviewed, to have notes taken, and to have the anonymized transcript used in course documents (the SRS appendix and this report). The sources do not establish what consent was given, so this draft makes no claim about it. The team's findings notes list confirming consent as an open item.}
+
+\subsection{Editing and anonymization}
+
+The transcript header describes the editing:
+\begin{quote}
+Lightly edited for readability. Filler words, false starts, and repeated phrases were removed, and long questions were shortened to the question actually asked. The participant's answers were not reworded beyond that, and nothing was added. Square brackets mark editor notes.
+\end{quote}
+
+It also describes the anonymization:
+\begin{quote}
+Published without the participant's name. Their name is withheld until they confirm they are comfortable being named.
+\end{quote}
+
+This report uses only the anonymized transcript. It refers to the participant only as P1 and adds no identifying detail beyond what that transcript says. Two transcription points are marked in the transcript for confirmation: ``ASL'' (transcribed as ``ALS'') and ``people will skip over'' (transcribed as ``We'll skip over'').
+
+\subsection{Analysis method}
+
+After the interview, the interviewer wrote findings notes. The notes group P1's answers by topic and keep three things separate: what P1 said, what published sources say, and what it means for the project. We used those notes, checked against the anonymized transcript, to write the findings in Section~\ref{sec:analysis}.
+
+For each finding we give:
+\begin{itemize}
+    \item \textbf{What P1 said}: short direct quotes from the transcript;
+    \item \textbf{What it means for the project}: our interpretation;
+    \item \textbf{Requirements and design affected}: SRS requirement IDs, Hazard Analysis items and POC decisions.
+\end{itemize}
+
+Where the findings notes link a finding to published research, we include it in a separate paragraph with its source link, so it is not confused with what P1 said.
+
+The course expectations suggest an empathy map. We did not use one to plan the questions. We built one after the interview (Section~\ref{sec:empathy}) to check that the analysis covers what the people P1 described say, think, do and feel, and to show where we have no evidence.
+
+\subsection{P2 interview}\label{sec:p2method}
+
+\paragraph{Who and why.} P2 is a recent graduate with low vision. P2 uses zoom and audio features, and asks Siri to do tasks. Unlike P1, P2 speaks from their own experience. P2 is not fully blind and can use the screen with zoom, so P2 is not in our first evaluation group (experienced blind Mac screen-reader users, SRS G.7). P2 is in the wider primary group of blind and visually impaired people.
+
+\paragraph{Format.} One in-person conversation on November 14, 2026. The interviewer was a team member, Kevin Kim. The interviewer asked the 12 questions of the team's interview guide (\texttt{UserInterviewGuide.md}, in this folder) in order. The guide asks about the participant's own experiences and recent examples before any product ideas, and avoids assuming that the participant uses a screen reader or a voice assistant.
+
+P2's answers were captured with the voice feature of ChatGPT, which transcribed P2's speech into text during the interview. The raw responses in Appendix~\ref{app:p2raw} are that transcription. They were not checked against an audio recording.
+
+P2 is a friend of the interviewer and was recruited directly. The interview took about 15 minutes.
+
+\paragraph{Consent.} P2 consented to the interview.
+
+\paragraph{Editing and anonymization.} P2's responses are kept as transcribed, without editing, including filler words and grammar (Appendix~\ref{app:p2raw}). P2 is not named, and this report adds no identifying detail.
+
+\paragraph{Analysis method.} For each of P2's answers, we noted what it says about the project and checked it against P1's findings. Where P2 supports a P1 finding, we add P2's words to that finding. Where P2 raises something new, it becomes a new finding (Findings 9 to 12). Each finding keeps P2's words separate from our interpretation, in the same structure as the P1 findings.
+
+\section{Questions asked}\label{sec:questions}
+
+The two interviews used different question lists. In this report, ``Q$n$'' on its own means a P1 question, and ``P2 Q$n$'' means a P2 question.
+
+\subsection{P1 questions}
+
+These are the questions as they appear in the transcript, in order. The interviewer is a team member; the transcript labels them ``Aaron.''
+
+\begin{enumerate}[label=Q\arabic*.]
+    \item What was your role at DBCS, and who were the people you supported? Were they fully blind, low vision, or deafblind, and what was the age range?
+    \item What tools do they use that you know of, such as VoiceOver, JAWS, NVDA, or Be My Eyes? From what you could tell, what were the limitations of those tools?
+    \item Are there any specific times you can recall seeing someone get stuck?
+    \item If someone could just say what they wanted done, which tasks would matter most: email, calendar, forms, booking appointments, shopping, banking? This could be for the people you worked with, or even for you.
+    \item What kind of tasks do you think people would not want AI to do for them?
+    \item Imagine you're only talking to this assistant by voice, not looking at anything. Before it submits, deletes, or buys something, what would you want to hear first? Would you want it to confirm before it does anything?
+    \item How much spoken feedback would you want? Say you asked it to send a message, put something on your calendar, or submit a grocery order. Would you want progress updates, or would you rather it just do it without saying much?
+    \item If it made a mistake, how would someone want to find out and fix it? (Skipped after a short exchange.)
+    \item Who usually sets up new technology for the people you worked with: family, or staff like you?
+    \item Follow-up: How much time would someone spend with an intervenor?
+    \item Where do people typically use their computers: at home, the library, a cafe? Is there any difference for them?
+    \item Is there anything I haven't asked that you think matters for building an AI personal assistant like this for blind users?
+    \item Follow-up: Detailed in what ways?
+    \item Could you introduce us to two or three people who would be willing to try what we build and give feedback?
+\end{enumerate}
+
+The transcript lists three topics that were not covered:
+\begin{itemize}
+    \item Amount of spoken feedback: P1 deferred to blind users (Q7).
+    \item Mistake recovery: question skipped (Q8).
+    \item Whether a voice-only tool works for deafblind users: not asked.
+\end{itemize}
+
+\subsection{P2 questions}
+
+These are the 12 questions of the interview guide, asked in order.
+
+\begin{enumerate}[label=P2 Q\arabic*.,leftmargin=*]
+    \item Tell me a bit about yourself and how technology fits into your day. As much as you're comfortable sharing, how does your disability affect how you use a computer, and has that changed over time?
+    \item Could you walk me through what tasks you might typically use a computer for?
+    \item What accessibility tools or features or voice assistants do you use most often, and what do they do?
+    \item How have these tools been working for you?
+    \item Walk me through how you tell your computer what to do, for example opening an app, clicking a button, or typing a message.
+    \item Think about the last time you had difficulty completing something on a computer. What were you trying to do, and what happened?
+    \item If you need help with a computer task, such as completing an action or setting up a tool, what do you usually do?
+    \item When you're doing a task, how does your computer let you know what's happening, like whether it understood you, what's on the screen, or whether something worked?
+    \item Think about the last time you did something online that mattered to you, such as sending an important email, submitting a form, or making a purchase. How did you make sure it was right before you finished?
+    \item Can you tell me about a time a website, app, or accessibility tool did something unexpected while you were using it? What happened, and how did you fix it? (P2 was not sure how to answer, and the question was skipped.)
+    \item Are there any things you would like to do on a computer that you currently avoid or have someone else do? Why?
+    \item Is there anything else you would like to share that would be important about understanding your experience using a computer?
+\end{enumerate}
+
+\section{Subjects}\label{sec:subjects}
+
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{ID} & \textbf{Description}\\
+\midrule
+P1 & A former special events coordinator at Deafblind Community Services (DBCS), a CNIB organization. P1 is not blind or deaf; they speak from working with DBCS clients. Interviewed October 17, 2026.\\
+P2 & A recent graduate with low vision. P2 uses zoom and audio features, and asks Siri to do tasks. P2 speaks from their own experience. Interviewed in person, November 14, 2026.\\
+\bottomrule
+\end{tabularx}
+
+\medskip
+P2 is the only subject with vision loss. No fully blind or deafblind person has been interviewed yet.
+
+The people P1 described are DBCS clients. In P1's words, they are ``people who are newly diagnosed with deafblindness,'' mostly ``older people in the community,'' who use free services and ``generally have low to no income.'' They are described here only to frame the analysis; none of them took part.
+
+\section{Analysis}\label{sec:analysis}
+
+We found twelve findings. Findings 1 to 8 come from P1, and P2 adds evidence to Findings 4 and 5. Findings 9 to 12 are new from P2. Table~\ref{tab:trace} shows how each one connects to the SRS, the Hazard Analysis and the POC. The subsections that follow give the evidence.
+
+All requirement IDs below exist in the current SRS. ``HA'' refers to the Hazard Analysis. ``POC decision $n$'' refers to the numbered list in the prototype's \texttt{docs/decisions.md}. Tasks A and B are the two POC demo tasks in \texttt{docs/poc-plan.md}.
+
+{\small
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.2cm} >{\raggedright\arraybackslash}p{3.6cm} >{\raggedright\arraybackslash}p{4.2cm}}
+\caption{Findings traced to the SRS, Hazard Analysis and POC.}\label{tab:trace}\\
+\toprule
+\textbf{Finding} & \textbf{SRS} & \textbf{Hazard Analysis} & \textbf{POC}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Finding} & \textbf{SRS} & \textbf{Hazard Analysis} & \textbf{POC}\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+1. Older adults with acquired loss, on low income & G.8 user profile; G.7; NFR.E.1; G5 & None & Not addressed\\\addlinespace[3pt]
+2. Screen readers are hard to learn and read too much & G1, G2; FR18; FR2; FR5; NFR.Sa.3 & H4-c (silence, user unsure) & Short fixed stop messages (decision 13); talking over speech stops speech only (decision 15)\\\addlinespace[3pt]
+3. Scheduling, email and appointments matter most & G1; LC4; UC1, UC2; NFR2 & None & Task A (email reply); Task B (calendar event)\\\addlinespace[3pt]
+4. Health and banking details are private & FR17; FR14; NFR5; FR.Sa.17 & Loss: privacy leak; H7-c & Made-up demo data (decision 21); no banking\\\addlinespace[3pt]
+5. Read-back helps, but a mistake means starting over & FR9; FR.Sa.3; FR.Sa.14; FR6; FR16; G4 & H2-a & Task A read-back and correction; ``yes'' counts only after the read-back (decision 14)\\\addlinespace[3pt]
+6. Family and intervenors set things up, with limited time & G.7 intervenors; G5; FR14; E.6 & Critical assumption: setup help may only be weekly; loss of independence & Not addressed\\\addlinespace[3pt]
+7. Use is mostly at home, somewhere quiet and private & E.4; FR23; NFR.E.1 & H2-a (causes: noise, other voices) & Not addressed\\\addlinespace[3pt]
+8. Voice-only output excludes deafblind users & G.6; E.4; ULC2; NFR1 & Critical assumption: users can understand spoken output & Not addressed (voice only)\\\addlinespace[3pt]
+9. (P2) Audio and voice already replace reading & G1; ULC2; G.8 user profile & None & Voice interface\\\addlinespace[3pt]
+10. (P2) Two-step verification blocked a task & FR23; E.6; G5 & Loss of independence (proposed in Finding 6) & Not addressed\\\addlinespace[3pt]
+11. (P2) Results are checked by trial and error & FR12; FR11; G3 & None & Outcomes are checked, not assumed (decision 4)\\\addlinespace[3pt]
+12. (P2) A screenshot replaces a long explanation & None yet & Loss: privacy leak & Not addressed\\
+\end{longtable}
+}
+
+\subsection{Finding 1: The people DBCS serves are mostly older adults with acquired loss}
+
+\said
+\begin{itemize}
+    \item ``people who are newly diagnosed with deafblindness.''
+    \item ``It's more often acquired, not something people are typically born with, so that population is in their later years.''
+    \item ``free services for people who generally have low to no income.''
+    \item On devices: ``it might be an older device rather than a new MacBook.''
+\end{itemize}
+
+\means
+A large group who could benefit from delegation are older, new to their vision loss, and less confident with technology. They are not only experienced screen-reader users. Our first evaluation group is blind Mac users with screen-reader experience (SRS G.7), so the people P1 described are not the group we will test with first. Our Mac and Chrome requirement may exclude people on older or cheaper devices.
+
+P1's clients have combined vision and hearing loss. Finding 8 covers what that means for a voice interface.
+
+\affects
+\begin{itemize}
+    \item \textbf{G.8 user profiles.} The ``less experienced or recently blind user'' profile now reads ``often older, with acquired vision loss, limited screen-reader skill, and possibly an older device.'' This matches the change the findings notes proposed from this interview.
+    \item \textbf{G.7 stakeholders.} The primary group stays blind and visually impaired people; the initial evaluation group stays experienced Mac screen-reader users. This finding is a reason to include at least one less experienced user in winter sessions if recruitment allows.
+    \item \textbf{NFR.E.1} (macOS with Google Chrome). Open question for the team: whether this platform limit should be stated as a limitation for users on older devices.
+    \item \textbf{G5} (straightforward setup). Less confident users depend more on setup being simple.
+\end{itemize}
+
+\research
+In the Canadian Longitudinal Study on Aging (ages 45 to 85), about 6\% of adults had at least mild dual sensory loss, and about 20 to 24\% had at least mild vision loss (\href{https://resolve.cambridge.org/core/services/aop-cambridge-core/content/view/EEAB27765E0BCA26AAD0C7AC56F048E0/S0714980820000070a.pdf/the-prevalence-of-hearing-vision-and-dual-sensory-loss-in-older-canadians-an-analysis-of-data-from-the-canadian-longitudinal-study-on-aging.pdf}{Mick et al., 2020}). Dual sensory loss rises with age and is much more common in home care and long-term care (\href{https://link.springer.com/doi/10.1186/s12877-022-03671-7}{Guthrie et al., 2022}; \href{https://pmc.ncbi.nlm.nih.gov/articles/PMC4858206}{Guthrie et al., 2016}). Ontario recognizes that deafblindness can be present from birth or acquired later in life (\href{https://www.ontario.ca/page/services-people-who-are-deaf-or-deafblind}{Ontario}).
+
+\subsection{Finding 2: Existing screen readers are hard to learn and read too much}
+
+\said
+\begin{itemize}
+    \item ``For any type of screen reader, I think in that population, who already have some struggles with high-tech devices, it can be complicated. It should be oversimplified so they're able to use it.''
+    \item ``I don't think many software programs are built with the deaf or the blind in mind.''
+    \item ``Sometimes, if the screen reader is reading the whole screen, it's reading irrelevant things rather than the things that actually need to be read.''
+    \item ``people will skip over things that are complicated to use'' (wording marked for confirmation in the transcript).
+    \item Asked what matters: ``Detailed but simple, if that makes sense.'' Asked in what ways: ``Only in the ways that matter.''
+\end{itemize}
+
+\means
+This supports the project's main benefit: the user states an outcome instead of navigating each element (SRS G.3, ``Delegate, don't navigate''). It also supports speaking only what matters to the current task, with more detail when the user asks for it.
+
+There is a tension to manage. The system must still report progress and blockers, and must not stay silent longer than IDLE\_PROMPT\_TIME during a task (FR5, NFR.Sa.3). Each update therefore has to be short and about the task, not a description of every step. ``Detailed but simple'' is P1's phrase for this balance.
+
+P1 did not say how much feedback is right (Q7). That remains open for blind participants.
+
+\affects
+\begin{itemize}
+    \item \textbf{FR18}: spoken updates and summaries include only information relevant to the current task, with more detail on request. The SRS cites this interview as its source. It is a Must before participant evaluation (SRS S.7), not a POC requirement.
+    \item \textbf{FR2}: the user can interrupt spoken output without restarting or pausing the task. This gives the user a way to cut off speech that is too long.
+    \item \textbf{FR5} and \textbf{NFR.Sa.3}: meaningful progress without constant narration (HA H4-c covers the opposite risk, a silent or looping agent).
+    \item \textbf{G1, G2}: independent completion, and awareness of relevant progress.
+    \item \textbf{POC.} The stop acknowledgment is a short pre-recorded phrase, ``Pausing work,'' followed by a short confirmation such as ``Paused. Nothing has been sent or changed.'' (decision 13, Task B). Talking over the system stops its speech and the task carries on (decision 15).
+\end{itemize}
+
+\research
+Screen-reader users mostly navigate by headings rather than reading pages in order (71.6\% use headings first), and long-standing problems include links or buttons with unclear meaning, screens changing unexpectedly, complex forms, and too many links or navigation items (\href{https://webaim.org/blog/screen-reader-user-survey-10-results/}{WebAIM Screen Reader Survey \#10}; summary by \href{https://www.rochester.edu/digital-accessibility/?p=7992}{University of Rochester}).
+
+\subsection{Finding 3: Scheduling, email and appointments matter most, and are often done with a friend's help}
+
+\said
+\begin{itemize}
+    \item ``All of the above. Scheduling, formulating emails.''
+    \item ``Those are everyday things, and they're the kinds of things that population typically looks for help with.''
+    \item ``Making appointments, they might typically need help with, like having a friend do it.''
+\end{itemize}
+
+\means
+This supports Gmail and Google Calendar as the first connected apps. Needing a friend to make an appointment is the kind of dependence G1 aims to reduce. Booking an appointment on a website is a realistic candidate task for the winter task suite.
+
+\affects
+\begin{itemize}
+    \item \textbf{G1}: complete common multi-step tasks without sighted help.
+    \item \textbf{LC4}: Gmail and Google Calendar are the first two integrations.
+    \item \textbf{UC1} (reply to an email) and \textbf{UC2} (add an event from a webpage to the calendar).
+    \item \textbf{NFR2}: the declared task suite. Consider adding an appointment-booking task.
+    \item \textbf{POC.} Task A is an email reply and Task B ends with a calendar event, so both POC tasks are in the areas P1 named. The POC browser is read-only (decision 9), so booking on a website is not in the POC.
+\end{itemize}
+
+\research
+Blind users interviewed about voice assistants valued them most at home and described them as part of daily life (\href{https://userpages.umbc.edu/~rkuber/pubs/assets2018.pdf}{Abdolrahmani, Kuber and Branham, ASSETS 2018}).
+
+\subsection{Finding 4: Health and banking details are private}
+
+\said
+\begin{itemize}
+    \item ``I'm sure there are confidentiality concerns.''
+    \item ``If there are certain healthcare problems, maybe they don't always want to disclose that to the AI. Maybe they just want to book an appointment rather than explain what is wrong.''
+    \item ``Banking could also be confidential, if they don't want to put all their banking information into an AI and ask it to move money.''
+\end{itemize}
+
+\saidtwo
+\begin{itemize}
+    \item P2 Q11, asked what they avoid doing on a computer: ``I avoid saving all my personal information on my computer / And my Passwords.''
+\end{itemize}
+
+P2 speaks from their own experience. P2 did not say why.
+
+\means
+Users should be able to keep some accounts or resources off-limits. The system should use only the details a task needs. A user who wants an appointment booked should not have to explain the health reason. This also supports keeping banking out of the initial scope. P2's answer shows the same caution from a user: they avoid storing personal information and passwords at all. Setup that asks for passwords must explain clearly where they are kept (FR23).
+
+FR17 covers restricting accounts, senders, folders and resources. It does not cover a topic, such as a health condition, that the user does not want to explain. The team should decide whether that gap matters.
+
+\affects
+\begin{itemize}
+    \item \textbf{FR17}: the user can restrict access to specific accounts, senders, folders or resources. The SRS cites this interview. It is a Should (SRS S.7).
+    \item \textbf{FR14}: request only needed permissions and explain which providers receive which data.
+    \item \textbf{NFR5} and \textbf{FR.Sa.17}: no raw audio retained; credentials kept out of logs and model input.
+    \item \textbf{FR23} (P2): website passwords are entered on a private setup page, stored encrypted, and never spoken.
+    \item \textbf{HA}: ``privacy leak'' is one of the defined losses; H7-c covers access broader than needed. The findings notes propose a new FMEA row for sending health or banking details that a task did not need. It is not in the Hazard Analysis yet.
+    \item \textbf{POC.} The demo uses made-up data in test accounts (decision 21; SRS E.4) and has no banking task.
+\end{itemize}
+
+\research
+In a survey of 155 visually impaired people, concern about sharing information through assistive services varied by the kind of information and who received it (\href{https://www.usenix.org/conference/usenixsecurity20/presentation/akter}{Akter et al., USENIX Security 2020}). Blind users also avoid using voice assistants in public for privacy and social reasons (\href{https://userpages.umbc.edu/~rkuber/pubs/assets2018.pdf}{Abdolrahmani et al., 2018}).
+
+\subsection{Finding 5: A read-back before sending helps, but fixing a mistake means starting over}
+
+\said
+\begin{itemize}
+    \item P1 first noted: ``I'm neither deaf nor blind, so it's hard to say specifically.''
+    \item ``When I'm driving and can't look at what I'm typing, having Siri read back what I want to send is nice.''
+    \item ``The only downfall is that if it messes up, you have to cancel the whole message.''
+    \item ``It would be cool to have it maybe read back sentence by sentence. Confirmation that it heard you correctly.''
+\end{itemize}
+
+This answer comes from P1's own experience, not from what P1 saw clients do.
+
+\saidtwo
+\begin{itemize}
+    \item P2 Q8: ``it would inform me whether or not it understood my questions, um, and If it didn't, it would tell me to repeat myself.''
+    \item ``I would just have basically a conversation with the AI tool.''
+\end{itemize}
+
+\means
+A read-back before a consequential action is supported. Correction has to be cheap: the user should be able to fix one part (``change the second sentence'') without redoing the whole request. Reading back sentence by sentence is P1's suggestion. It may conflict with Finding 2 (keep speech short), so it should be tested with blind participants rather than adopted now. P2 already expects a voice tool to say whether it understood, and to ask them to repeat when it did not. This supports confirming understanding before acting.
+
+\affects
+\begin{itemize}
+    \item \textbf{FR9} and \textbf{FR.Sa.3}: read back key details and require explicit approval before a consequential action. FR9 is a POC requirement (SRS S.7).
+    \item \textbf{FR.Sa.14}: an approval is bound to the exact details; any change needs new approval.
+    \item \textbf{FR6} and \textbf{FR16}: accept corrections without a restart, including correcting part of a read-back by voice. The SRS cites this interview for FR16. FR16 is a Must before participant evaluation.
+    \item \textbf{G4}: recover without restarting the whole task.
+    \item \textbf{HA H2-a} (system misunderstands the user): the recommended action is the read-back with explicit approval.
+    \item \textbf{POC.} In Task A, the system reads back the reply and asks ``Should I send it?'' The user says ``change Friday to Monday''; the old approval stops counting and the new text is read back. This is a partial correction without restarting the request. A spoken ``yes'' counts only after the read-back has finished (decision 14).
+\end{itemize}
+
+\research
+In a study of blind people using speech input on phones, participants spent about 80\% of their time finding and correcting errors, even though speech was about five times faster than the keyboard (\href{https://unpaywall.org/10.1145\%2F2513383.2513440}{Azenkot and Lee, ASSETS 2013}).
+
+\subsection{Finding 6: Family or intervenors set up technology, with limited time}
+
+\said
+\begin{itemize}
+    \item ``Typically family, but there are also intervenors. Sometimes clients will dedicate some of their time with an intervenor to setting things up.''
+    \item ``It's typically an hour to an hour and a half per day, but it varies. For some people it's a weekly occurrence at least. It's up to the client.''
+    \item Earlier, on intervenors: ``If they were going to the grocery store, an intervenor would come and assist them.''
+\end{itemize}
+
+\means
+Intervenors are a real stakeholder and a likely setup helper. Setup time comes out of limited support time. Help may only come weekly, so anything that breaks after setup (for example, an expired login or a disconnected account) should be fixable by voice. Otherwise the user loses independence until the next visit.
+
+\affects
+\begin{itemize}
+    \item \textbf{G.7}: intervenors are listed as stakeholders who may help with setup and recovery. P.7 says this came from the interview.
+    \item \textbf{G5}: routine use after setup should not need the setup helper.
+    \item \textbf{FR14}: setup explains permissions and data flows; this explanation must make sense to a family member or intervenor.
+    \item \textbf{E.6}: authentication credentials can expire or be revoked independently of the system. No current requirement covers guiding the user by voice to reconnect an account. The findings notes propose one, with an FMEA row for ``loss of independence.'' Neither is in the SRS or Hazard Analysis yet.
+    \item \textbf{HA critical assumptions}: ``Setup help may only be available weekly (for example, from an intervenor), so recovery after setup should not depend on it.''
+\end{itemize}
+
+\research
+DBCS intervenors help deafblind people get accurate information, communicate, and move around more independently, including at appointments and for errands; DBCS also runs a 24-hour emergency intervenor line (\href{https://champlainhealthline.ca/displayService.aspx?id=211322}{DBCS Ottawa listing}; \href{https://www.torontocentralhealthline.ca/(X(1))/printService.aspx?id=225003}{Toronto listing}).
+
+\subsection{Finding 7: Use is mostly at home, somewhere quiet and private}
+
+\said
+\begin{itemize}
+    \item ``If anything, it might be an older device rather than a new MacBook, but I would say more at home, for comfort. It'll usually be a quieter, private place.''
+\end{itemize}
+
+\means
+This supports our assumption that only the user gives commands. It lowers the risk that private content read aloud is overheard, but does not remove it. It is also a second mention of older devices (Finding 1).
+
+\affects
+\begin{itemize}
+    \item \textbf{E.4}: ``Only the user gives commands; other voices are noise.''
+    \item \textbf{HA H2-a}: listed causes include background noise and other people. A quiet home lowers these but does not remove them, so the read-back still applies.
+    \item \textbf{FR23}: spoken one-time codes can be heard nearby; a private place lowers this risk.
+    \item \textbf{NFR.E.1}: see Finding 1 on older devices.
+\end{itemize}
+
+\research
+Blind voice-assistant users describe home as their comfort zone and avoid using them on public transit (\href{https://userpages.umbc.edu/~rkuber/pubs/assets2018.pdf}{Abdolrahmani et al., 2018}).
+
+\subsection{Finding 8: Voice-only output excludes deafblind users}
+
+\said
+This was not asked directly (the transcript lists it as not covered). P1's whole client group has combined vision and hearing loss. P1 described intervenors providing ``any kind of visual context, ASL [transcribed as ``ALS''; confirm], or hand-touch language.''
+
+\means
+Natural Control speaks its questions, read-backs and results. A user who cannot hear that output cannot approve an action safely. The group P1 knows best is therefore largely outside what our first version supports. We state this as a limitation rather than hide it. Braille output through VoiceOver is a possible future extension.
+
+\affects
+\begin{itemize}
+    \item \textbf{G.6}: ``Users who cannot hear spoken output, including many deafblind users'' are excluded; braille output through VoiceOver is a possible extension.
+    \item \textbf{E.4}: ``The user can hear spoken output (see G.6).''
+    \item \textbf{HA critical assumptions}: ``Users can understand spoken output,'' with the note that this excludes many deafblind users, citing this interview.
+    \item \textbf{ULC2}: voice stays the primary interaction mode, so this exclusion is a deliberate scope limit.
+    \item \textbf{NFR1}: session controls, pause, approval and history work with VoiceOver and the keyboard alone. This is the path a braille extension would build on.
+\end{itemize}
+
+\research
+DBCS intervenors use ASL, braille, large print, print on palm, two-hand manual, and voice-over (\href{https://www.torontocentralhealthline.ca/(X(1))/printService.aspx?id=225003}{DBCS listing}). VoiceOver on Mac can send output to a refreshable braille display and accept braille input (\href{https://support.apple.com/guide/voiceover/vo15607/mac}{Apple}).
+
+\subsection{Finding 9 (P2): Audio and voice already replace reading for everyday tasks}
+
+\saidtwo
+\begin{itemize}
+    \item P2 Q1: ``the use of AI and audio technologies where I don't have to / um spend my time reading / Um, and I can rely on the audio features.''
+    \item P2 Q3: ``I use the zoom feature a lot, um, that helps me / With my visual impairment. And I use the audio feature a lot.''
+    \item P2 Q4: ``when I forget my um glasses / Or when I just woke up and I don't have my um Tools with me that I can just ask my phone to do tasks.''
+    \item P2 Q5: ``I would. Just ask Siri to perform tasks for me and it would do it instantaneously.''
+\end{itemize}
+
+\means
+A user with low vision already uses voice and audio to avoid reading, and already asks a voice assistant to do tasks. This supports voice as the main way to use Natural Control. P2 also uses zoom, so P2 can partly check the screen. None of the SRS user profiles (G.8) describes this kind of user. P2 used Siri for quick phone tasks, not for multi-step computer tasks, so this finding does not show that P2 would delegate longer tasks.
+
+\affects
+\begin{itemize}
+    \item \textbf{G1}: complete tasks independently, without reading each step.
+    \item \textbf{ULC2}: voice stays the primary interaction mode.
+    \item \textbf{G.8 user profiles.} Proposal for team review: add a ``low-vision user'' profile, who uses zoom and voice and can partly check the screen.
+\end{itemize}
+
+\subsection{Finding 10 (P2): Two-step verification blocked a task, and P2 needed IT help}
+
+\saidtwo
+\begin{itemize}
+    \item P2 Q6, asked about a recent difficulty: ``I had difficulty with the new emerging features of two step verification codes.''
+    \item ``it wasn't sending the code properly to my phone and I had trouble rebooting my authentication system. And so I had to / Um contact IT for help.''
+\end{itemize}
+
+\means
+Sign-in and two-step verification are a real point where a user can get stuck and need someone else. This is the same loss of independence as in Finding 6, here from the user's own experience. Natural Control will meet one-time codes when it signs in to sites. When a code does not arrive, the system should say so clearly and tell the user what they can do, instead of waiting or retrying without saying anything.
+
+\affects
+\begin{itemize}
+    \item \textbf{FR23}: the user may speak a one-time authentication code or approve a push on their device. FR23 does not say what happens when the code does not arrive.
+    \item \textbf{E.6}: account states can change outside the system at any time.
+    \item \textbf{G5}: setup and routine use should not depend on outside help.
+    \item \textbf{HA.} This supports the ``loss of independence'' FMEA row proposed in Finding 6.
+    \item \textbf{POC.} Not addressed.
+\end{itemize}
+
+\subsection{Finding 11 (P2): P2 checks whether an action worked by trial and error}
+
+\saidtwo
+\begin{itemize}
+    \item P2 Q9: ``It would just be trial and error.''
+    \item ``If I were to send an important email, um the way I make sure that it is delivered is I just / refresh the application tool / Um, and usually Um any pop ups would show if there is an error.''
+\end{itemize}
+
+\means
+P2 does not trust that an action worked until they see evidence, and they check it themselves by refreshing and looking for errors. Natural Control should do this check for the user and say the result, so the user does not have to check by trial and error. This supports reporting each result as verified, partial, failed or unknown.
+
+\affects
+\begin{itemize}
+    \item \textbf{FR12}: each consequential result is reported as verified, partial, failed or unknown, with matching evidence.
+    \item \textbf{FR11}: check the outcome before retrying an uncertain action.
+    \item \textbf{G3}: compare reported outcomes with independently verified state.
+    \item \textbf{POC.} Outcomes are checked, not assumed: after a send, the POC looks for the email in Sent (decision 4).
+\end{itemize}
+
+\subsection{Finding 12 (P2): A screenshot lets P2 get help without a long explanation}
+
+\saidtwo
+\begin{itemize}
+    \item P2 Q7: ``I usually go on Chat GPT'' and ``most of the time I would just screenshot Where I'm having issues and it would just analyze it without me having to explain in detail.''
+    \item P2 Q12: ``it requires a lot more time and effort to explain my situation / Um, and so I think the ability to send an image like a screenshot / is very Useful for me as someone that has visual impairment.''
+\end{itemize}
+
+\means
+For P2, describing a problem in words is slow and tiring, and showing the screen is easier. When the user is stuck, Natural Control could look at the current page itself instead of asking the user to describe it. A screenshot can contain private information, so this must follow the same limits on access as other data (FR17, FR14). No current requirement covers this.
+
+\affects
+\begin{itemize}
+    \item \textbf{No current requirement.} Proposal for team review: when the user asks for help, the system can describe the current page or screen, so the user does not have to explain it.
+    \item \textbf{FR17} and \textbf{FR14}: any screen capture must respect restricted resources and needed permissions only.
+    \item \textbf{HA}: ``privacy leak'' is one of the defined losses.
+    \item \textbf{POC.} Not addressed. The POC can take browser screenshots for the agent (untested), but not to help the user.
+\end{itemize}
+
+\subsection{What the interviews did not answer}\label{sec:open}
+
+These gaps are from the P1 interview. P2 adds a little to the first two, as noted.
+
+\begin{itemize}
+    \item \textbf{How much spoken feedback.} P1: ``I don't think I'd be good at answering that. I can't answer that.'' This affects FR5, FR18 and the value of IDLE\_PROMPT\_TIME (NFR.Sa.3). P2 described having ``basically a conversation'' with an AI tool (P2 Q8), but did not say how much detail they want.
+    \item \textbf{Mistake recovery.} P1 asked, ``Would it tell me that a mistake was made, or would I tell it?'' and then said, ``It should tell you, I'm assuming.'' The question was then skipped. This affects G4, FR6, FR12 and FR16. P2 said a voice tool asks them to repeat when it did not understand (P2 Q8), but P2 was not asked how to fix a wrong action, and P2 Q10 (unexpected behaviour) was not answered.
+    \item \textbf{Stopping a task.} No question asked about stopping, and P1 did not raise it. The stop control is the POC's main control (FR3, FR8, FR.Sa.4, NFR3; HA H2-b). Neither interview supports or challenges it. It must be tested with blind participants.
+    \item \textbf{Specific moments of difficulty.} Asked for a time someone got stuck (Q3), P1 said ``No.'' The findings rest on general impressions, not specific incidents.
+\end{itemize}
+
+\subsection{Empathy map}\label{sec:empathy}
+
+This map is for the people P1 described: DBCS clients, mostly older adults newly diagnosed with acquired deafblindness. None of them was interviewed. Every entry is P1's second-hand report, or our inference from it. Entries marked \textbf{(Inference)} are our interpretation, not something P1 said. The ``Basis'' column points to the transcript.
+
+{\small
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{1.6cm} >{\raggedright\arraybackslash}p{7.6cm} >{\raggedright\arraybackslash}p{6.2cm}}
+\caption{Empathy map for the people P1 described.}\label{tab:empathy}\\
+\toprule
+\textbf{Quadrant} & \textbf{Entry} & \textbf{Basis in the transcript}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Quadrant} & \textbf{Entry} & \textbf{Basis in the transcript}\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Says & Asks for help with everyday tasks such as scheduling and writing emails. & Q4: ``they're the kinds of things that population typically looks for help with.''\\\addlinespace[3pt]
+ & Asks a friend to make appointments. & Q4: ``Making appointments, they might typically need help with, like having a friend do it.''\\\addlinespace[3pt]
+ & \textbf{(Inference)} Would ask for an appointment without explaining the reason. & Q5: ``Maybe they just want to book an appointment rather than explain what is wrong.''\\\addlinespace[3pt]
+ & No direct client words are recorded. & P1 reports on clients; no client was present.\\
+\midrule
+Thinks & May not want to tell an AI about health problems. & Q5: ``maybe they don't always want to disclose that to the AI.''\\\addlinespace[3pt]
+ & May not trust an AI with banking information or moving money. & Q5: ``if they don't want to put all their banking information into an AI and ask it to move money.''\\\addlinespace[3pt]
+ & \textbf{(Inference)} Software is not made for them. & Q2: P1's own view, ``I don't think many software programs are built with the deaf or the blind in mind.''\\
+\midrule
+Does & Uses DBCS resources to navigate home technology and community services. & Q1: ``different types of resources to help them navigate their home tech and other services in the community.''\\\addlinespace[3pt]
+ & Relies on intervenors for access, such as visual context, ASL or hand-touch language. & Q1: grocery store example.\\\addlinespace[3pt]
+ & Has family set up technology, or spends some intervenor time on setup. & Q9: ``Typically family, but there are also intervenors.''\\\addlinespace[3pt]
+ & Uses a computer mostly at home, somewhere quiet and private, possibly on an older device. & Q11.\\\addlinespace[3pt]
+ & Skips over things that are complicated to use. & Q12: ``people will skip over things that are complicated to use'' (wording to confirm).\\\addlinespace[3pt]
+ & Struggles to use and navigate screen readers. & Q2: ``Some people probably still struggle with it, not only with using the software or having it work, but with navigating it.''\\
+\midrule
+Feels & Comfortable at home. & Q11: ``more at home, for comfort.''\\\addlinespace[3pt]
+ & \textbf{(Inference)} Low confidence or frustration with high-tech devices. & Q2: ``who already have some struggles with high-tech devices, it can be complicated.''\\\addlinespace[3pt]
+ & \textbf{(Inference)} Concern about privacy for health and banking. & Q5: ``I'm sure there are confidentiality concerns.''\\\addlinespace[3pt]
+ & \textbf{(Inference)} Dependent on others for some everyday tasks. & Q4 (a friend makes appointments); Q9 and Q10 (family and intervenors set up technology).\\
+\end{longtable}
+}
+
+\paragraph{What the map shows.} ``Does'' is the best-supported quadrant. ``Says'' has no direct client words, and most of ``Feels'' is inference. P2 is not one of the people this map describes, but P2's answers are the team's first direct words from a user with vision loss (Findings 9 to 12). This is still the main gap the winter sessions should fill: we need blind users' own words on how much they want to hear, how they want to correct mistakes, and how they feel about stopping and approving an agent's actions.
+
+\section{Limitations}\label{sec:limits}
+
+\begin{itemize}
+    \item \textbf{Two interviews.} All findings come from two conversations, one with each person.
+    \item \textbf{P1 is a proxy, not a user.} P1 is not blind or deaf. P1 reported what they saw while working with clients. Finding 5 comes from P1's own experience with Siri, not from clients.
+    \item \textbf{A different population.} P1's clients are deafblind. Our system is voice-only and our first evaluation group is experienced blind Mac screen-reader users. Some findings may not transfer.
+    \item \textbf{P2 has low vision, not blindness.} P2 uses zoom and can partly see the screen, so P2 is not in our first evaluation group. Findings 9 to 12 may not hold for users who cannot see the screen at all.
+    \item \textbf{P2's answers are a machine transcription.} ChatGPT's voice feature transcribed them, and there is no audio recording to check against. Some wording may be a transcription error (for example, ``audially a audibly'' in P2 Q8).
+    \item \textbf{Interviewers who are also developers.} In each interview, a team member asked the questions and wrote the findings. Some questions describe our design (for example, the confirmation question, Q6), which may have led the answers.
+    \item \textbf{No recording to check against.} The sources do not mention a recording, and two editor notes mark uncertain attribution. Two words are marked for confirmation (``ASL'' and ``people will skip over'').
+    \item \textbf{Gaps in coverage.} Spoken feedback, mistake recovery and stopping were not answered (Section~\ref{sec:open}). Q3 produced no specific incidents.
+    \item \textbf{P1 consent not yet documented.} See the TODO in Section~\ref{sec:method}. P2 consented to the interview (Section~\ref{sec:p2method}).
+\end{itemize}
+
+\section{Next steps}\label{sec:next}
+
+\begin{itemize}
+    \item \textbf{Winter usability evaluation.} SRS S.7 plans participant evaluation sessions before the March 8, 2027 V\&V Report and Usability Report. Use them to ask blind participants the open questions: how much spoken feedback (FR5, FR18, NFR.Sa.3), how to find and fix mistakes (G4, FR16), whether partial correction of a read-back works, and whether sentence-by-sentence read-back is wanted for long messages.
+    \item \textbf{Recruitment.} SRS P.4 aims to recruit two to four blind participants with screen-reader experience; this is not confirmed. P1 said ``Yeah, probably'' when asked to introduce two or three people. Follow up with P1 in writing. Protocol, consent and institutional research requirements must be resolved before any session (SRS P.4).
+    \item \textbf{POC demonstration (November 23 to December 3).} The demo shows the read-back and partial correction in Task A, and the stop and short confirmations in Task B. When presenting the demo, the team can say that the interview supports the read-back and correction but did not cover stopping.
+    \item \textbf{Proposals for team review.} Decide whether to add (a) a requirement and FMEA row for voice-guided recovery after an expired or disconnected account (Finding 6), (b) an FMEA row for sending health or banking details a task did not need (Finding 4), and (c) an extension of FR17 to topics, not only resources (Finding 4).
+    \item \textbf{Proposals from P2 for team review.} Decide whether to add (d) a low-vision user profile to SRS G.8 (Finding 9), (e) a requirement for telling the user what to do when a one-time code does not arrive (Finding 10), and (f) a requirement for describing the current screen when the user asks for help (Finding 12).
+    \item \textbf{Confirm transcript details with P1.} ``ASL'' and ``people will skip over,'' and whether P1 is comfortable being named.
+\end{itemize}
+
+\appendix
+
+\section{Interview transcript}\label{app:transcript}
+
+This is the anonymized transcript from the SRS appendix (file \url{docs/SRS-Meyer/InterviewTranscript.text} in the capstone repository), reproduced without change.
+
+\medskip
+\hrule
+\medskip
+
+\textbf{Date:} October 17, 2026\\
+\textbf{Interviewer:} Aaron Loh (Group 7, Natural Control)\\
+\textbf{Participant:} P1, a former special events coordinator at Deafblind Community Services (DBCS), a CNIB organization. P1 is not blind or deaf; they speak from working with DBCS clients.\\
+\textbf{Format:} Conversation transcribed by Aaron.\\
+\textbf{Editing:} Lightly edited for readability. Filler words, false starts, and repeated phrases were removed, and long questions were shortened to the question actually asked. The participant's answers were not reworded beyond that, and nothing was added. Square brackets mark editor notes.\\
+\textbf{Anonymity:} Published without the participant's name. Their name is withheld until they confirm they are comfortable being named.
+
+\bigskip
+\hrule
+\bigskip
+
+\textbf{Aaron:} Thank you for agreeing to do this short interview for our capstone project. To start with some context: what was your role at DBCS, and who were the people you supported? Were they fully blind, low vision, or deafblind, and what was the age range?
+
+\textbf{P1:} I was a special events coordinator at Deafblind Community Services, which provided different kinds of events and services to people who are newly diagnosed with deafblindness. It's more often acquired, not something people are typically born with, so that population is in their later years. It can be earlier, but the people I mostly interacted with were older people in the community.
+
+Our services were non-profit and government-funded, so they were free services for people who generally have low to no income. We provided different types of resources to help them navigate their home tech and other services in the community, and we provided intervenors so they could get access to the things they need. If they were going to the grocery store, an intervenor would come and assist them and provide any kind of visual context, ASL [transcribed as ``ALS''; confirm], or hand-touch language.
+
+\textbf{Aaron:} What tools do they use that you know of, such as VoiceOver, JAWS, NVDA, or Be My Eyes? From what you could tell, what were the limitations of those tools?
+
+\textbf{P1:} For any type of screen reader, I think in that population, who already have some struggles with high-tech devices, it can be complicated. It should be oversimplified so they're able to use it. Some people probably still struggle with it, not only with using the software or having it work, but with navigating it. Also, I don't think many software programs are built with the deaf or the blind in mind. When I'm making something, I'm not thinking about how easy it is for a blind person to navigate.
+
+\textbf{Aaron:} Are there any specific times you can recall seeing someone get stuck?
+
+\textbf{P1:} No.
+
+\textbf{Aaron:} If someone could just say what they wanted done, which tasks would matter most: email, calendar, forms, booking appointments, shopping, banking? This could be for the people you worked with, or even for you.
+
+\textbf{P1:} All of the above. Scheduling, formulating emails. Those are everyday things, and they're the kinds of things that population typically looks for help with. Making appointments, they might typically need help with, like having a friend do it.
+
+\textbf{Aaron:} What kind of tasks do you think people would not want AI to do for them?
+
+\textbf{P1:} I'm sure there are confidentiality concerns. If there are certain healthcare problems, maybe they don't always want to disclose that to the AI. Maybe they just want to book an appointment rather than explain what is wrong. Banking could also be confidential, if they don't want to put all their banking information into an AI and ask it to move money.
+
+\textbf{Aaron:} Imagine you're only talking to this assistant by voice, not looking at anything. Before it submits, deletes, or buys something, what would you want to hear first? Would you want it to confirm before it does anything?
+
+\textbf{P1:} I'm neither deaf nor blind, so it's hard to say specifically. When I'm driving and can't look at what I'm typing, having Siri read back what I want to send is nice. The only downfall is that if it messes up, you have to cancel the whole message. It would be cool to have it maybe read back sentence by sentence. Confirmation that it heard you correctly.
+
+\textbf{Aaron:} How much spoken feedback would you want? Say you asked it to send a message, put something on your calendar, or submit a grocery order. Would you want progress updates, or would you rather it just do it without saying much?
+
+\textbf{P1:} I don't think I'd be good at answering that. I can't answer that.
+
+\textbf{Aaron:} Fair. That might be better to ask someone who is actually blind, so I may ask you to connect me with someone.
+
+\textbf{Aaron:} If it made a mistake, how would someone want to find out and fix it?
+
+\textbf{P1:} Would it tell me that a mistake was made, or would I tell it?
+
+\textbf{Aaron:} [Attribution uncertain in the notes.] Sometimes it might do something and then realize it messed up.
+
+\textbf{P1:} It should tell you, I'm assuming.
+
+\textbf{Aaron:} Sometimes. That question isn't working well, so let's skip it. [Question skipped.]
+
+\textbf{Aaron:} Who usually sets up new technology for the people you worked with: family, or staff like you?
+
+\textbf{P1:} Typically family, but there are also intervenors. Sometimes clients will dedicate some of their time with an intervenor to setting things up.
+
+\textbf{Aaron:} How much time would someone spend with an intervenor?
+
+\textbf{P1:} It's typically an hour to an hour and a half per day, but it varies. For some people it's a weekly occurrence at least. It's up to the client.
+
+\textbf{Aaron:} Where do people typically use their computers: at home, the library, a cafe? Is there any difference for them?
+
+\textbf{P1:} If anything, it might be an older device rather than a new MacBook, but I would say more at home, for comfort. It'll usually be a quieter, private place.
+
+\textbf{Aaron:} Is there anything I haven't asked that you think matters for building an AI personal assistant like this for blind users?
+
+\textbf{P1:} Probably just keeping it as simple as possible, because most of the time these software programs are hard to navigate, and people will skip over things that are complicated to use [transcribed as ``We'll skip over''; confirm]. Sometimes, if the screen reader is reading the whole screen, it's reading irrelevant things rather than the things that actually need to be read.
+
+\textbf{Aaron:} [Attribution uncertain in the notes.] So what I'm hearing is that it should read the things that matter, and only those, the things that actually have to do with getting the task done.
+
+\textbf{P1:} Detailed but simple, if that makes sense.
+
+\textbf{Aaron:} Detailed in what ways?
+
+\textbf{P1:} Only in the ways that matter.
+
+\textbf{Aaron:} Could you introduce us to two or three people who would be willing to try what we build and give feedback?
+
+\textbf{P1:} Yeah, probably.
+
+\textbf{Aaron:} We'll be in touch about that. Thank you for your time.
+
+\bigskip
+\hrule
+\bigskip
+
+\textbf{Questions not covered:}
+\begin{itemize}
+    \item Amount of spoken feedback: participant deferred to blind users.
+    \item Mistake recovery: question skipped.
+    \item Whether a voice-only tool works for deafblind users: not asked.
+\end{itemize}
+
+\section{P2 raw responses}\label{app:p2raw}
+
+These are P2's responses as transcribed by ChatGPT's voice feature on November 14, 2026, without editing. Filler words, repetitions and grammar are kept. Each line is a separate recorded message. The interviewer's opening and closing remarks are not included. The same responses are in \texttt{LowVisionParticipantInterview.md} in this folder.
+
+\begin{description}[style=nextline,leftmargin=1.5em]
+\item[P2 Q1.] Um, I am a freshly graduate\\
+and technology has been an integral part of my life, um, especially with the emerging, um Features of a the use of AI and audio technologies where I don't have to\\
+um spend my time reading\\
+Um, and I can rely on the audio features
+\item[P2 Q2.] I use my computer to Search up directions when I am\\
+traveling\\
+And Do research - places to eat, places to go\\
+And I use it I would use it for school sometimes\\
+when I was at school too\\
+to learn
+\item[P2 Q3.] I use the zoom feature a lot, um, that helps me\\
+With my visual impairment. And I use the audio feature a lot\\
+. Um as well
+\item[P2 Q4.] Um it just makes my life more\\
+convenient. Um, in a sense that when I forget my um glasses\\
+Or when I just woke up and I don't have my um Tools with me that I can just ask my phone to do tasks without um spending much time\\
+and Reading, opening up my phone, etcetera
+\item[P2 Q5.] So I just ask Siri\\
+I would. Just ask Siri to perform tasks for me and it would do it instantaneously\\
+And I won't have to go searching for my phone as well because it is accessible Basically, anywhere near me\\
+And I don't, I won't have to carry it with me
+\item[P2 Q6.] I had difficulty with the new emerging features of two step verification codes\\
+Um I it wasn't sending the code properly to my phone and I had trouble rebooting my authentication system. And so I had to\\
+Um contact IT for help
+\item[P2 Q7.] I usually go on Chat GPT and I would ask Um Them I would Ask them a prompt and usually they would personalize and answer for me\\
+Um, and so most of the time I would just screenshot Where I'm having issues and it would just analyze it without me having to explain in detail
+\item[P2 Q8.] Usually the AI tools would respond audially a audibly, so\\
+it would inform me whether or not it understood my questions, um, and If it didn't, it would tell me to repeat myself\\
+um and I would just have basically a conversation with the AI tool
+\item[P2 Q9.] It would just be trial and error\\
+Um If I were to send an important email, um the way I make sure that it is delivered is I just\\
+refresh the application tool\\
+Um, and usually Um any pop ups would show if there is an error
+\item[P2 Q10.] Um. I'm not sure\\
+How to answer it\\
+\textit{[The interviewer skipped this question.]}
+\item[P2 Q11.] I avoid saving all my personal information on my computer\\
+And my Passwords
+\item[P2 Q12.] I think AI has been a very helpful Tool for me\\
+Um, and it has simplified a lot of the steps that I have trouble sometimes just searching it up on the internet because it requires a lot more time and effort to explain my situation\\
+Um, and so I think the ability to send an image like a screenshot\\
+is very Useful for me as someone that has visual impairment
+\end{description}
+
+\section{Generative AI use disclosure}\label{app:ai}
+
+\todo{Each team member who used generative AI on this report fills in the three headings below. Do not submit with this placeholder.}
+
+\subsection*{Tools and versions}
+\todo{List each tool and model version used, and who used it.}
+
+\begin{itemize}
+    \item Kevin Kim: ChatGPT (GPT-6), including its voice feature; Claude Code (Claude Opus 5.5).
+\end{itemize}
+
+\subsection*{Where used}
+\todo{List the sections of this report where AI was used, and for what (for example, drafting, summarizing or checking).}
+
+\begin{itemize}
+    \item Kevin Kim:
+    \begin{itemize}
+        \item \textbf{P2 interview.} The ChatGPT voice feature transcribed P2's spoken answers into text during the interview. ChatGPT then turned screenshots of that transcription into the plain text in Appendix~\ref{app:p2raw}.
+        \item \textbf{P2 sections.} Claude Code drafted the P2 parts of this report from that text: the P2 interview method (Section~\ref{sec:p2method}), the P2 questions and subject, the P2 evidence in Findings 4 and 5, Findings 9 to 12 and their rows in Table~\ref{tab:trace}, and the P2 changes to the open questions, limitations and next steps. It also formatted Appendix~\ref{app:p2raw}.
+    \end{itemize}
+\end{itemize}
+
+\subsection*{How outputs were verified}
+\todo{Describe how the team checked AI output against the transcript, the SRS and the Hazard Analysis before submission.}
+
+\begin{itemize}
+    \item Kevin Kim: Kevin conducted the P2 interview himself, so the questions, date, format and consent are first-hand. The raw responses in Appendix~\ref{app:p2raw} were compared line by line with the copy in \texttt{LowVisionParticipantInterview.md}, and every quote in Findings 9 to 12 was checked against Appendix~\ref{app:p2raw}. Every SRS requirement ID cited for P2 was checked against the SRS, and every claim about the POC was checked against the POC's \texttt{docs/decisions.md} and \texttt{docs/poc-plan.md}. Claims that could not be confirmed from these sources were removed rather than kept.
+\end{itemize}
+
+\end{document}
