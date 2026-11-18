@@ -4,7 +4,8 @@
 
 - **Participant:** P2, a recent graduate with low vision. P2 uses zoom and audio features, and asks Siri to do tasks.
 - **Date:** November 14, 2026
-- **Format:** In person, one conversation
+- **Format:** In person, one conversation of about 15 minutes
+- **Recruitment:** A friend of the interviewer, recruited directly
 - **Interviewer:** Kevin Kim
 - **Questions:** The 12 questions in [`UserInterviewGuide.md`](UserInterviewGuide.md), asked in order.
 - **Recording:** P2's answers were transcribed into text by ChatGPT's voice feature during the interview. There is no audio recording.
