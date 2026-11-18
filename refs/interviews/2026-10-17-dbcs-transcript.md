@@ -3,9 +3,12 @@
 - **Date:** October 17, 2026
 - **Interviewer:** Aaron Loh (Group 7, Natural Control)
 - **Participant:** P1, a former special events coordinator at Deafblind Community Services (DBCS), a CNIB organization. P1 is not blind or deaf; they speak from working with DBCS clients.
-- **Format:** Conversation transcribed by Aaron.
+- **Format:** In-person conversation transcribed by Aaron.
 - **Editing:** Lightly edited for readability. Filler words, false starts, and repeated phrases were removed, and long questions were shortened to the question actually asked. The participant's answers were not reworded beyond that, and nothing was added. Square brackets mark editor notes.
-- **Anonymity:** Published without the participant's name. Their name is withheld until they confirm they are comfortable being named.
+- **Recruitment:** A friend of Aaron, recruited directly
+- **Consent:** P1 verbally consented to the interview and its recording prior to the start of the interview
+- **Anonymity:** Published without the participant's name.
+
 
 ---
 

@@ -7,6 +7,7 @@
 \usepackage{enumitem}
 \usepackage{xurl}
 \usepackage{hyperref}
+\usepackage{titlesec}   % preamble
 
 \hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}
 
@@ -63,7 +64,7 @@ The P1 interview is already part of the project. This report explains how it was
     \item \textbf{Winter usability evaluation.} The questions P1 could not answer, and the findings that need checking with blind users, become questions for the participant sessions planned before the March 8, 2027 V\&V Report and Usability Report (Section~\ref{sec:next}).
 \end{itemize}
 
-\paragraph{Where to find things.} The methodology is in Section~\ref{sec:method}. The questions are in Section~\ref{sec:questions} and the subject in Section~\ref{sec:subjects}. The analysis, including a traceability table and an empathy map, is in Section~\ref{sec:analysis}. The P1 transcript is Appendix~\ref{app:transcript}, and P2's raw responses are Appendix~\ref{app:p2raw}.
+\paragraph{Where to find things.} The methodology is in Section~\ref{sec:method}. The questions are in Section~\ref{sec:questions} and the subject in Section~\ref{sec:subjects}. The analysis, including a traceability table and an empathy map, is in Section~\ref{sec:analysis}. The P1 transcript is Appendix~\ref{app:p1interview}, and P2's raw responses are Appendix~\ref{app:p2interview}.
 
 \section{Methodology}\label{sec:method}
 
@@ -130,13 +131,13 @@ The course expectations suggest an empathy map. We did not use one to plan the q
 
 \paragraph{Format.} One in-person conversation on November 14, 2026. The interviewer was a team member, Kevin Kim. The interviewer asked the 12 questions of the team's interview guide (\texttt{UserInterviewGuide.md}, in this folder) in order. The guide asks about the participant's own experiences and recent examples before any product ideas, and avoids assuming that the participant uses a screen reader or a voice assistant.
 
-P2's answers were captured with the voice feature of ChatGPT, which transcribed P2's speech into text during the interview. The raw responses in Appendix~\ref{app:p2raw} are that transcription. They were not checked against an audio recording.
+P2's answers were captured with the voice feature of ChatGPT, which transcribed P2's speech into text during the interview. The raw responses in Appendix~\ref{app:p2interview} are that transcription. They were not checked against an audio recording.
 
 P2 is a friend of the interviewer and was recruited directly. The interview took about 15 minutes.
 
 \paragraph{Consent.} P2 consented to the interview.
 
-\paragraph{Editing and anonymization.} P2's responses are kept as transcribed, without editing, including filler words and grammar (Appendix~\ref{app:p2raw}). P2 is not named, and this report adds no identifying detail.
+\paragraph{Editing and anonymization.} P2's responses are kept as transcribed, without editing, including filler words and grammar (Appendix~\ref{app:p2interview}). P2 is not named, and this report adds no identifying detail.
 
 \paragraph{Analysis method.} For each of P2's answers, we noted what it says about the project and checked it against P1's findings. Where P2 supports a P1 finding, we add P2's words to that finding. Where P2 raises something new, it becomes a new finding (Findings 9 to 12). Each finding keeps P2's words separate from our interpretation, in the same structure as the P1 findings.
 
@@ -613,157 +614,21 @@ Feels & Comfortable at home. & Q11: ``more at home, for comfort.''\\\addlinespac
 \end{itemize}
 
 \appendix
+\titleformat{\section}{\normalfont\Large\bfseries}{Appendix \thesection:}{0.5em}{}
 
-\section{Interview transcript}\label{app:transcript}
+\section{P1 Interview transcript}\label{app:p1interview}
 
-This is the anonymized transcript from the SRS appendix (file \url{docs/SRS-Meyer/InterviewTranscript.text} in the capstone repository), reproduced without change.
+This is the same interview that was used in the SRS.\\
+\\\input{../../../refs/interviews/2026-10-17-dbcs-transcript.tex}
 
-\medskip
-\hrule
-\medskip
+\section{P2 Interview Transcript}\label{app:p2interview}
+\input{../../../refs/interviews/2026-11-14-P2Interview.tex}
 
-\textbf{Date:} October 17, 2026\\
-\textbf{Interviewer:} Aaron Loh (Group 7, Natural Control)\\
-\textbf{Participant:} P1, a former special events coordinator at Deafblind Community Services (DBCS), a CNIB organization. P1 is not blind or deaf; they speak from working with DBCS clients.\\
-\textbf{Format:} Conversation transcribed by Aaron.\\
-\textbf{Editing:} Lightly edited for readability. Filler words, false starts, and repeated phrases were removed, and long questions were shortened to the question actually asked. The participant's answers were not reworded beyond that, and nothing was added. Square brackets mark editor notes.\\
-\textbf{Anonymity:} Published without the participant's name. Their name is withheld until they confirm they are comfortable being named.
+\section{P3 Interview Transcript}\label{app:p3interview}
+\input{../../../refs/interviews/2026-11-17-P3Interview.tex}
 
-\bigskip
-\hrule
-\bigskip
-
-\textbf{Aaron:} Thank you for agreeing to do this short interview for our capstone project. To start with some context: what was your role at DBCS, and who were the people you supported? Were they fully blind, low vision, or deafblind, and what was the age range?
-
-\textbf{P1:} I was a special events coordinator at Deafblind Community Services, which provided different kinds of events and services to people who are newly diagnosed with deafblindness. It's more often acquired, not something people are typically born with, so that population is in their later years. It can be earlier, but the people I mostly interacted with were older people in the community.
-
-Our services were non-profit and government-funded, so they were free services for people who generally have low to no income. We provided different types of resources to help them navigate their home tech and other services in the community, and we provided intervenors so they could get access to the things they need. If they were going to the grocery store, an intervenor would come and assist them and provide any kind of visual context, ASL [transcribed as ``ALS''; confirm], or hand-touch language.
-
-\textbf{Aaron:} What tools do they use that you know of, such as VoiceOver, JAWS, NVDA, or Be My Eyes? From what you could tell, what were the limitations of those tools?
-
-\textbf{P1:} For any type of screen reader, I think in that population, who already have some struggles with high-tech devices, it can be complicated. It should be oversimplified so they're able to use it. Some people probably still struggle with it, not only with using the software or having it work, but with navigating it. Also, I don't think many software programs are built with the deaf or the blind in mind. When I'm making something, I'm not thinking about how easy it is for a blind person to navigate.
-
-\textbf{Aaron:} Are there any specific times you can recall seeing someone get stuck?
-
-\textbf{P1:} No.
-
-\textbf{Aaron:} If someone could just say what they wanted done, which tasks would matter most: email, calendar, forms, booking appointments, shopping, banking? This could be for the people you worked with, or even for you.
-
-\textbf{P1:} All of the above. Scheduling, formulating emails. Those are everyday things, and they're the kinds of things that population typically looks for help with. Making appointments, they might typically need help with, like having a friend do it.
-
-\textbf{Aaron:} What kind of tasks do you think people would not want AI to do for them?
-
-\textbf{P1:} I'm sure there are confidentiality concerns. If there are certain healthcare problems, maybe they don't always want to disclose that to the AI. Maybe they just want to book an appointment rather than explain what is wrong. Banking could also be confidential, if they don't want to put all their banking information into an AI and ask it to move money.
-
-\textbf{Aaron:} Imagine you're only talking to this assistant by voice, not looking at anything. Before it submits, deletes, or buys something, what would you want to hear first? Would you want it to confirm before it does anything?
-
-\textbf{P1:} I'm neither deaf nor blind, so it's hard to say specifically. When I'm driving and can't look at what I'm typing, having Siri read back what I want to send is nice. The only downfall is that if it messes up, you have to cancel the whole message. It would be cool to have it maybe read back sentence by sentence. Confirmation that it heard you correctly.
-
-\textbf{Aaron:} How much spoken feedback would you want? Say you asked it to send a message, put something on your calendar, or submit a grocery order. Would you want progress updates, or would you rather it just do it without saying much?
-
-\textbf{P1:} I don't think I'd be good at answering that. I can't answer that.
-
-\textbf{Aaron:} Fair. That might be better to ask someone who is actually blind, so I may ask you to connect me with someone.
-
-\textbf{Aaron:} If it made a mistake, how would someone want to find out and fix it?
-
-\textbf{P1:} Would it tell me that a mistake was made, or would I tell it?
-
-\textbf{Aaron:} [Attribution uncertain in the notes.] Sometimes it might do something and then realize it messed up.
-
-\textbf{P1:} It should tell you, I'm assuming.
-
-\textbf{Aaron:} Sometimes. That question isn't working well, so let's skip it. [Question skipped.]
-
-\textbf{Aaron:} Who usually sets up new technology for the people you worked with: family, or staff like you?
-
-\textbf{P1:} Typically family, but there are also intervenors. Sometimes clients will dedicate some of their time with an intervenor to setting things up.
-
-\textbf{Aaron:} How much time would someone spend with an intervenor?
-
-\textbf{P1:} It's typically an hour to an hour and a half per day, but it varies. For some people it's a weekly occurrence at least. It's up to the client.
-
-\textbf{Aaron:} Where do people typically use their computers: at home, the library, a cafe? Is there any difference for them?
-
-\textbf{P1:} If anything, it might be an older device rather than a new MacBook, but I would say more at home, for comfort. It'll usually be a quieter, private place.
-
-\textbf{Aaron:} Is there anything I haven't asked that you think matters for building an AI personal assistant like this for blind users?
-
-\textbf{P1:} Probably just keeping it as simple as possible, because most of the time these software programs are hard to navigate, and people will skip over things that are complicated to use [transcribed as ``We'll skip over''; confirm]. Sometimes, if the screen reader is reading the whole screen, it's reading irrelevant things rather than the things that actually need to be read.
-
-\textbf{Aaron:} [Attribution uncertain in the notes.] So what I'm hearing is that it should read the things that matter, and only those, the things that actually have to do with getting the task done.
-
-\textbf{P1:} Detailed but simple, if that makes sense.
-
-\textbf{Aaron:} Detailed in what ways?
-
-\textbf{P1:} Only in the ways that matter.
-
-\textbf{Aaron:} Could you introduce us to two or three people who would be willing to try what we build and give feedback?
-
-\textbf{P1:} Yeah, probably.
-
-\textbf{Aaron:} We'll be in touch about that. Thank you for your time.
-
-\bigskip
-\hrule
-\bigskip
-
-\textbf{Questions not covered:}
-\begin{itemize}
-    \item Amount of spoken feedback: participant deferred to blind users.
-    \item Mistake recovery: question skipped.
-    \item Whether a voice-only tool works for deafblind users: not asked.
-\end{itemize}
-
-\section{P2 raw responses}\label{app:p2raw}
-
-These are P2's responses as transcribed by ChatGPT's voice feature on November 14, 2026, without editing. Filler words, repetitions and grammar are kept. Each line is a separate recorded message. The interviewer's opening and closing remarks are not included. The same responses are in \texttt{LowVisionParticipantInterview.md} in this folder.
-
-\begin{description}[style=nextline,leftmargin=1.5em]
-\item[P2 Q1.] Um, I am a freshly graduate\\
-and technology has been an integral part of my life, um, especially with the emerging, um Features of a the use of AI and audio technologies where I don't have to\\
-um spend my time reading\\
-Um, and I can rely on the audio features
-\item[P2 Q2.] I use my computer to Search up directions when I am\\
-traveling\\
-And Do research - places to eat, places to go\\
-And I use it I would use it for school sometimes\\
-when I was at school too\\
-to learn
-\item[P2 Q3.] I use the zoom feature a lot, um, that helps me\\
-With my visual impairment. And I use the audio feature a lot\\
-. Um as well
-\item[P2 Q4.] Um it just makes my life more\\
-convenient. Um, in a sense that when I forget my um glasses\\
-Or when I just woke up and I don't have my um Tools with me that I can just ask my phone to do tasks without um spending much time\\
-and Reading, opening up my phone, etcetera
-\item[P2 Q5.] So I just ask Siri\\
-I would. Just ask Siri to perform tasks for me and it would do it instantaneously\\
-And I won't have to go searching for my phone as well because it is accessible Basically, anywhere near me\\
-And I don't, I won't have to carry it with me
-\item[P2 Q6.] I had difficulty with the new emerging features of two step verification codes\\
-Um I it wasn't sending the code properly to my phone and I had trouble rebooting my authentication system. And so I had to\\
-Um contact IT for help
-\item[P2 Q7.] I usually go on Chat GPT and I would ask Um Them I would Ask them a prompt and usually they would personalize and answer for me\\
-Um, and so most of the time I would just screenshot Where I'm having issues and it would just analyze it without me having to explain in detail
-\item[P2 Q8.] Usually the AI tools would respond audially a audibly, so\\
-it would inform me whether or not it understood my questions, um, and If it didn't, it would tell me to repeat myself\\
-um and I would just have basically a conversation with the AI tool
-\item[P2 Q9.] It would just be trial and error\\
-Um If I were to send an important email, um the way I make sure that it is delivered is I just\\
-refresh the application tool\\
-Um, and usually Um any pop ups would show if there is an error
-\item[P2 Q10.] Um. I'm not sure\\
-How to answer it\\
-\textit{[The interviewer skipped this question.]}
-\item[P2 Q11.] I avoid saving all my personal information on my computer\\
-And my Passwords
-\item[P2 Q12.] I think AI has been a very helpful Tool for me\\
-Um, and it has simplified a lot of the steps that I have trouble sometimes just searching it up on the internet because it requires a lot more time and effort to explain my situation\\
-Um, and so I think the ability to send an image like a screenshot\\
-is very Useful for me as someone that has visual impairment
-\end{description}
+\section{P4 Interview Transcript}\label{app:p4interview}
+\input{../../../refs/interviews/2026-11-18-P4Interview.tex}
 
 \section{Generative AI use disclosure}\label{app:ai}
 
@@ -782,8 +647,8 @@ is very Useful for me as someone that has visual impairment
 \begin{itemize}
     \item Kevin Kim:
     \begin{itemize}
-        \item \textbf{P2 interview.} The ChatGPT voice feature transcribed P2's spoken answers into text during the interview. ChatGPT then turned screenshots of that transcription into the plain text in Appendix~\ref{app:p2raw}.
-        \item \textbf{P2 sections.} Claude Code drafted the P2 parts of this report from that text: the P2 interview method (Section~\ref{sec:p2method}), the P2 questions and subject, the P2 evidence in Findings 4 and 5, Findings 9 to 12 and their rows in Table~\ref{tab:trace}, and the P2 changes to the open questions, limitations and next steps. It also formatted Appendix~\ref{app:p2raw}.
+        \item \textbf{P2 interview.} The ChatGPT voice feature transcribed P2's spoken answers into text during the interview. ChatGPT then turned screenshots of that transcription into the plain text in Appendix~\ref{app:p2interview}.
+        \item \textbf{P2 sections.} Claude Code drafted the P2 parts of this report from that text: the P2 interview method (Section~\ref{sec:p2method}), the P2 questions and subject, the P2 evidence in Findings 4 and 5, Findings 9 to 12 and their rows in Table~\ref{tab:trace}, and the P2 changes to the open questions, limitations and next steps. It also formatted Appendix~\ref{app:p2interview}.
     \end{itemize}
 \end{itemize}
 
@@ -791,7 +656,7 @@ is very Useful for me as someone that has visual impairment
 \todo{Describe how the team checked AI output against the transcript, the SRS and the Hazard Analysis before submission.}
 
 \begin{itemize}
-    \item Kevin Kim: Kevin conducted the P2 interview himself, so the questions, date, format and consent are first-hand. The raw responses in Appendix~\ref{app:p2raw} were compared line by line with the copy in \texttt{LowVisionParticipantInterview.md}, and every quote in Findings 9 to 12 was checked against Appendix~\ref{app:p2raw}. Every SRS requirement ID cited for P2 was checked against the SRS, and every claim about the POC was checked against the POC's \texttt{docs/decisions.md} and \texttt{docs/poc-plan.md}. Claims that could not be confirmed from these sources were removed rather than kept.
+    \item Kevin Kim: Kevin conducted the P2 interview himself, so the questions, date, format and consent are first-hand. The raw responses in Appendix~\ref{app:p2interview} were compared line by line with the copy in \texttt{P2Interview.md}, and every quote in Findings 9 to 12 was checked against Appendix~\ref{app:p2interview}. Every SRS requirement ID cited for P2 was checked against the SRS, and every claim about the POC was checked against the POC's \texttt{docs/decisions.md} and \texttt{docs/poc-plan.md}. Claims that could not be confirmed from these sources were removed rather than kept.
 \end{itemize}
 
 \end{document}
