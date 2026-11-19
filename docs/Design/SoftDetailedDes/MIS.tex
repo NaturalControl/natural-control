@@ -2746,9 +2746,10 @@ store: the platform secret storage named by the argument to initStore
 
 \subsubsection{Assumptions}
 
-initStore is called before any other access program. A secret reaches put from a
-private entry path in the client and not from a spoken utterance, which FR23
-requires because anything spoken is heard by whoever is nearby and processed by
+initStore is called before any other access program. A secret reaches put only
+from the private setup page this module serves on the user's machine, which
+accepts a password but never displays or returns one. It never comes from a
+spoken utterance or through the client (M2), which FR23 requires because anything spoken is heard by whoever is nearby and processed by
 an external speech provider.
 
 \subsubsection{State Invariant}

@@ -647,7 +647,7 @@ FR21 & \mref{mCtrl}, \mref{mHist}, \mref{mTask}\\
 \hline
 FR22 & \mref{mClient}, \mref{mVoice}\\
 \hline
-FR23 & \mref{mCreds}, \mref{mClient}, \mref{mWeb}\\
+FR23 & \mref{mCreds}, \mref{mWeb}\\
 \hline
 FR24 & \mref{mGate}, \mref{mWeb}\\
 \hline
@@ -934,9 +934,10 @@ speech is unavailable (NFR.Sa.2), which means the client cannot depend on spoken
 output to report its own disconnection.
 
 No provider secret reaches the client. \mref{mClient} uses only \mref{mAudio}
-and \mref{mVoice}, so \mref{mCreds} is not reachable from the browser at all,
-which is how NFR5 holds across this boundary rather than by anything the
-protocol itself does.
+and \mref{mVoice}, so it never handles a credential. The only browser path to
+\mref{mCreds} is its own write-only setup page, which accepts a password but
+never returns one; this is how NFR5 holds across this boundary rather than by
+anything the protocol itself does.
 
 \section{Database Design}
 
