@@ -475,8 +475,8 @@ consequential call and an outcome after it.
 \subsubsection{Task History Module (\mref{mHist})}
 \begin{description}
 \item[Secrets:] The content and lifecycle of the task history.
-\item[Services:] Records task state, approvals, action identifiers and
-verified outcomes, labelling anything unknown; supplies an accessible history
+\item[Services:] Records task state and each approved action by its
+identifier, with its outcome, labelling anything unknown; supplies an accessible history
 and spoken summaries; deletes the history on request; preserves enough state
 across a restart to announce an interrupted task.
 \item[Implemented By:] \progname{}.

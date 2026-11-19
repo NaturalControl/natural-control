@@ -971,7 +971,8 @@ resume it.
 \begin{itemize}
 \item transition: the task's state and the work it has recorded are spoken
 through phrase(WorkReport); each action in task.inFlight() is reconciled through
-M9 and its outcome recorded, through recordOutcome of M11 as well; the user is
+M9 and its outcome recorded on the task through task.recordWork and through
+recordOutcome of M11; the user is
 asked whether to resume or cancel. The task is not moved out of Paused.
 \item FR21 requires relevant state to be checked and earlier actions reconciled
 before resuming, and requires any pending approval to be requested again rather
@@ -1020,7 +1021,9 @@ start nothing further; write(BLOCKED)
 write(ACKNOWLEDGED)
 \item each action in task.inFlight() is given up to SETTLE\_LIMIT to settle;
 one that settles has its outcome recorded through M9, and one that does not is
-recorded as Unknown; each outcome is also passed to recordOutcome of M11
+recorded as Unknown; each outcome is also written on the task through
+task.recordWork and passed to recordOutcome of M11, so that the recordTask call
+in the next step copies the settled outcome rather than overwriting it
 \item task.moveTo(Paused); recordTask(task) of M11; write(PAUSED)
 \item phrase(WorkReport) is spoken, naming completed work, work not done, and
 any outcome still unknown
@@ -1221,8 +1224,8 @@ new TaskState & request: \str & TaskState & --\\
 moveTo & next: \hyperref[type:TaskState]{TaskStateT} & -- & IllegalTransition\\
 state & -- & \hyperref[type:TaskState]{TaskStateT} & --\\
 mayAct & -- & $\B$ & --\\
-recordWork & note: \str, result: \hyperref[type:Outcome]{Outcome} & -- & --\\
-completed & -- & seq of (\str{} $\times$ \hyperref[type:Outcome]{Outcome}) & --\\
+recordWork & id: \hyperref[type:ActionId]{ActionId}, note: \str, result: \hyperref[type:Outcome]{Outcome} & -- & --\\
+completed & -- & seq of (\hyperref[type:ActionId]{ActionId} $\times$ \str{} $\times$ \hyperref[type:Outcome]{Outcome}) & --\\
 noteInFlight & id: \hyperref[type:ActionId]{ActionId} & -- & --\\
 clearInFlight & id: \hyperref[type:ActionId]{ActionId} & -- & --\\
 inFlight & -- & set of \hyperref[type:ActionId]{ActionId} & --\\
@@ -1234,7 +1237,7 @@ inFlight & -- & set of \hyperref[type:ActionId]{ActionId} & --\\
 
 \noindent request: \str\\
 st: \hyperref[type:TaskState]{TaskStateT}\\
-done: seq of (\str{} $\times$ \hyperref[type:Outcome]{Outcome})\\
+done: seq of (\hyperref[type:ActionId]{ActionId} $\times$ \str{} $\times$ \hyperref[type:Outcome]{Outcome})\\
 outstanding: set of \hyperref[type:ActionId]{ActionId}
 
 \subsubsection{Environment Variables}
@@ -1284,9 +1287,13 @@ IllegalTransition)
 \item output: $out :=$ st $\in$ RUNNING
 \end{itemize}
 
-\noindent recordWork(note, result):
+\noindent recordWork(id, note, result):
 \begin{itemize}
-\item transition: done $:=$ done $\|$ $\langle$(note, result)$\rangle$
+\item transition: if done already holds an item for id, that item becomes (id,
+note, result); otherwise done $:=$ done $\|$ $\langle$(id, note,
+result)$\rangle$. Replacing rather than appending is what lets an action be
+recorded as Unknown when it starts and given its real outcome once that is
+known, without appearing twice
 \end{itemize}
 
 \noindent completed():
@@ -1809,10 +1816,12 @@ reaches M8 through M5
 \item if verdict(id) is not Approved, $out :=$ Unknown is not produced; the
 program raises NotApproved and nothing is sent
 \item if claim(id, a) of M8 returns false, the program raises NotApproved
-\item task.moveTo(Executing); task.noteInFlight(id); M16 sends the message
+\item task.moveTo(Executing); task.noteInFlight(id); task.recordWork(id, a
+description of a, Unknown); M16 sends the message
 \item the result is assessed through M9 against the sent record; the outcome is
 recorded through record(id, $\cdot$) and on the task through
-task.recordWork; task.clearInFlight(id); $out :=$ that outcome
+task.recordWork(id, a description of a, that outcome); task.clearInFlight(id);
+$out :=$ that outcome
 \end{enumerate}
 \item exception: $exc :=$ ($\lnot$task.mayAct() $\Rightarrow$ Paused $|$
 $\lnot$permitted of M12 for the recipient $\Rightarrow$ Restricted $|$ claim
@@ -1886,8 +1895,11 @@ None.
 \subsubsection{Exported Types}
 
 HistoryEntry $=$ tuple of (request: \str, at: $\R$, state:
-\hyperref[type:TaskState]{TaskStateT}, work: seq of (\str{} $\times$
-\hyperref[type:Outcome]{Outcome}))
+\hyperref[type:TaskState]{TaskStateT}, work: seq of (\hyperref[type:ActionId]{ActionId} $\times$
+\str{} $\times$ \hyperref[type:Outcome]{Outcome}))
+
+\noindent Each work item is an action that passed claim of M8, so the work list
+is also the record of approvals that FR.Sa.8 requires to survive a restart.
 
 \subsubsection{Exported Access Programs}
 
@@ -1946,8 +1958,8 @@ exists, taking its request, state and work from t; store is updated
 
 \noindent recordOutcome(id, o):
 \begin{itemize}
-\item transition: the work item of the entry corresponding to id takes outcome
-o; store is updated. An outcome may be revised later, which property P4 of
+\item transition: the work item whose ActionId is id takes outcome o; store is
+updated. If no entry holds an item for id, nothing changes. An outcome may be revised later, which property P4 of
 SRS~S.9 permits: evidence arriving after a task has finished updates the
 history, though it cannot restart the task.
 \end{itemize}
