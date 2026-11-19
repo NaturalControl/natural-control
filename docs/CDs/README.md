@@ -4,8 +4,8 @@
 
 Our CD-Fall deliverable is the interview report in [`Interviews/`](Interviews/):
 
-- [`Interviews/InterviewReport.tex`](Interviews/InterviewReport.tex): the report. It covers the methodology, questions, subjects, analysis, and raw data for both interviews. The PDF is `pdfs/CDs/Interviews/InterviewReport.pdf`.
-- [`Interviews/UserInterviewGuide.md`](Interviews/UserInterviewGuide.md): the interview guide used for P2.
+- [`Interviews/InterviewReport.tex`](Interviews/InterviewReport.tex): the report. It covers the methodology, questions, subjects, analysis, and raw data for all four interviews (P1 to P4). The PDF is `pdfs/CDs/Interviews/InterviewReport.pdf`.
+- [`Interviews/UserInterviewGuide.md`](Interviews/UserInterviewGuide.md): the interview guide (the second question set) used for P2, P3 and P4.
 - To keep the data organized, the transcripts/results of the interviews are stored in [`refs/interviews`](../../refs/interviews).
 
 ## CD-Winter: Usability Report (USABILITY)

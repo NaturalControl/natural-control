@@ -7,7 +7,7 @@ PDFLATEX_CMD = pdflatex -interaction=nonstopmode -recorder
 
 # Define the pandoc command, for teams who author a document in Markdown
 # instead of LaTeX. Uses the pdflatex already installed for the .tex rule.
-PANDOC_CMD = pandoc --pdf-engine=pdflatex --toc -V geometry:margin=1in
+PANDOC_CMD = pandoc --pdf-engine=pdflatex -V geometry:margin=1in
 
 # Define the compile step for pdflatex
 define COMPILE_TEX
