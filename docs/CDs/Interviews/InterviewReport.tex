@@ -852,31 +852,29 @@ This is the same interview that was used in the SRS.\\
 
 \section{Generative AI use disclosure}\label{app:ai}
 
-\todo{Each team member who used generative AI on this report fills in the three headings below. Do not submit with this placeholder.}
-
 \subsection*{Tools and versions}
-\todo{List each tool and model version used, and who used it.}
-
 \begin{itemize}
     \item Kevin Kim: ChatGPT (GPT-6), including its voice feature; Claude Code (Claude Opus 5.5).
+    \item Lucas DeBoer: Used Claude Code using Claude Opus 5.5 or Sonnett 5.5. Whatever tools/versions Apple uses to generate transcriptions from voice memos. 
 \end{itemize}
 
 \subsection*{Where used}
-\todo{List the sections of this report where AI was used, and for what (for example, drafting, summarizing or checking).}
 
 \begin{itemize}
     \item Kevin Kim:
     \begin{itemize}
         \item \textbf{P2 interview.} The ChatGPT voice feature transcribed P2's spoken answers into text during the interview. ChatGPT then turned screenshots of that transcription into the plain text in Appendix~\ref{app:p2interview}.
-        \item \textbf{P2 sections.} Claude Code drafted the P2 parts of this report from that text: the P2 interview method (Section~\ref{sec:p2method}), the P2 questions and subject, the P2 evidence in Findings 4 and 5, Findings 8 to 11 and their rows in Table~\ref{tab:trace}, and the P2 changes to the open questions, limitations and next steps. It also formatted Appendix~\ref{app:p2interview}.
+        \item \textbf{P2 sections.} Claude Code drafted the P2 parts of this report from that text: the P2 interview method, the P2 questions and subject, the P2 evidence in Findings 4 and 5, Findings 8 to 11 and their rows in Table~\ref{tab:trace}, and the P2 changes to the open questions, limitations and next steps. It also formatted Appendix~\ref{app:p2interview}.
     \end{itemize}
+    \item Lucas DeBoer: Used Apple's tooling to generate transcriptions for the P3 and P4 interviews. After team discussions, used Claude to help generate an intial draft of the report. After completing the report, 
+    I had Claude read over the entire report and scan for mistakes. 
 \end{itemize}
 
 \subsection*{How outputs were verified}
-\todo{Describe how the team checked AI output against the transcript, the SRS and the Hazard Analysis before submission.}
 
 \begin{itemize}
     \item Kevin Kim: Kevin conducted the P2 interview himself, so the questions, date, format and consent are first-hand. The raw responses in Appendix~\ref{app:p2interview} were compared line by line with the copy in \texttt{P2Interview.md}, and every quote in Findings 8 to 11 was checked against Appendix~\ref{app:p2interview}. Every SRS requirement ID cited for P2 was checked against the SRS, and every claim about the POC was checked against the POC. Claims that could not be confirmed from these sources were removed rather than kept.
+    \item Lucas DeBoer: Manually read over all interviews and compared to audio recording to ensure transcript is correct. After the initial draft of the report, I read through and updated all sections of the report using my knowledge of all the interviews and previous documents. Lastly, when using Claude to review the final report, I manually read over all suggestions before implementing any of them.
 \end{itemize}
 
 \end{document}
