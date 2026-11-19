@@ -276,14 +276,16 @@ Hardware-Hiding Module & Audio Device Module (\mref{mAudio})\\
 \label{TblMH}
 \end{table}
 
-Every software-decision module is used by a behaviour-hiding module except two,
-and both exceptions are deliberate:
+During a task, every software-decision module is used by a behaviour-hiding
+module except two, and both exceptions are deliberate. (\mref{mCtrl} also gives
+each of them its setting once at startup; see Section~\ref{SecUse}.)
 
 \begin{itemize}
-\item \mref{mModel} is used only by \mref{mHarness}. The harness is the sole
+\item \mref{mModel} is used during a task only by \mref{mHarness}. The harness is the sole
 consumer of model inference, and keeping the provider one level below the harness
 is what lets LC1 and LC3 change independently of each other.
-\item \mref{mCreds} is used only by \mref{mAccount} and \mref{mWeb}. This is the
+\item \mref{mCreds} is used during a task only by \mref{mAccount} and
+\mref{mWeb}. This is the
 point: no behaviour-hiding module ever holds a credential value, which is how
 FR.Sa.17 and NFR5 are satisfied structurally rather than by convention.
 \end{itemize}
