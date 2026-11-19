@@ -238,13 +238,13 @@ PageConfirmation, NoEvidence\}.
 
 \noindent\textbf{Details} \label{type:Details} --- the exact values of an
 action, as a map \str{} $\to$ \str{} from the name of a field to its value, for
-example the recipient, subject and body of a message. Two Details are equal when
+example the fields of an item to be created or sent. Two Details are equal when
 they have the same keys and equal values for each; this is the comparison FR9
 requires when it says that changed details invalidate an approval.
 
 \noindent\textbf{ResourceRef} \label{type:ResourceRef} --- a tuple of
-(provider: \str, kind: \str, identifier: \str) naming one account, folder,
-message, event or page.
+(provider: \str, kind: \str, identifier: \str) naming one account, a container within it,
+an item, or a page.
 
 \noindent\textbf{ActionId} \label{type:ActionId} --- an opaque identifier that
 can be compared for equality, unique over the lifetime of a session.
@@ -1746,18 +1746,16 @@ PAUSED\_RESULT: \str{} $=$ ``Not done: the task is paused.''
 
 \begin{programs}
 initTools & t: TaskState & -- & --\\
-searchMail & query: \str & \str & Paused\\
-readMessage & r: \hyperref[type:ResourceRef]{ResourceRef} & \str & Paused,
+search & query: \str & \str & Paused\\
+readItem & r: \hyperref[type:ResourceRef]{ResourceRef} & \str & Paused,
 Restricted\\
 readPage & url: \str, question: \str & \str & Paused\\
-sendMail & to: \str, subject: \str, body: \str &
-\hyperref[type:Outcome]{Outcome} & Paused, Restricted, NotApproved\\
-createEvent & title: \str, start: \str, end: \str, place: \str &
-\hyperref[type:Outcome]{Outcome} & Paused, NotApproved\\
-deleteItem & r: \hyperref[type:ResourceRef]{ResourceRef} &
-\hyperref[type:Outcome]{Outcome} & Paused, Restricted, NotPermitted,
-NotApproved\\
+act & a: \hyperref[type:Action]{Action} & \hyperref[type:Outcome]{Outcome} &
+Paused, NotConsequential, Restricted, NotPermitted, NotApproved\\
 \end{programs}
+
+\noindent The tools are general. Which apps exist and what their items look like
+is M16's secret, so adding a connected app adds no program here.
 
 \subsection{Semantics}
 
@@ -1785,8 +1783,8 @@ true.
 
 \noindent This is property P1 of SRS~S.9, and it is the reason this module
 exists as the only route from the planner to an account or a page. It is
-preserved because every consequential program below follows the same sequence
-and none performs its effect on any other path.
+preserved because act is the only program that performs anything, and it does
+so only after claim has returned true.
 
 \subsubsection{Access Routine Semantics}
 
@@ -1795,17 +1793,16 @@ and none performs its effect on any other path.
 \item transition: task $:=$ t
 \end{itemize}
 
-\noindent searchMail(query):
+\noindent search(query):
 \begin{itemize}
-\item output: $out :=$ UNTRUSTED\_PREFIX followed by the messages M16 returns
-for query, with any message whose resource M12 does not permit omitted
+\item output: $out :=$ UNTRUSTED\_PREFIX followed by the items M16 returns for
+query, with any item whose ref M12 does not permit omitted
 \item exception: $exc :=$ ($\lnot$task.mayAct() $\Rightarrow$ Paused)
 \end{itemize}
 
-\noindent readMessage(r):
+\noindent readItem(r):
 \begin{itemize}
-\item output: $out :=$ UNTRUSTED\_PREFIX followed by the message M16 returns
-for r
+\item output: $out :=$ UNTRUSTED\_PREFIX followed by the item M16 returns for r
 \item exception: $exc :=$ ($\lnot$task.mayAct() $\Rightarrow$ Paused $|$
 $\lnot$permitted(r) of M12 $\Rightarrow$ Restricted)
 \end{itemize}
@@ -1819,71 +1816,57 @@ for url
 
 \noindent These three run without approval, which FR10 permits because reading
 and navigating leave nothing behind. The prefix is not decoration: FR13 and
-FR.Sa.16 require content retrieved from a message or a page to be treated as
+FR.Sa.16 require content retrieved from an account or a page to be treated as
 data, and marking it at the boundary is what lets the planner's instructions
 distinguish what the user asked for from what a page asked for. It does not by
 itself make the planner obey, which is why the gate still stands between the
 planner and every consequential action.
 
-\noindent sendMail(to, subject, body):
+\noindent act(a):
 \begin{itemize}
-\item transition and output: let a $=$ (Send, the account's sent folder,
-\{to, subject, body\}). Then, in order:
+\item transition and output: the first four exceptions below are checked before
+anything else, so the user is never asked to approve an action that could not be
+carried out. Then, in order:
 \begin{enumerate}
 \item id $:=$ request(a) of M8
 \item task.moveTo(AwaitingApproval); the read-back is spoken by M5 when it
 handles the resulting ProposedAction event (poll of M5), and the user's decision
 reaches M8 through M5
-\item if verdict(id) is not Approved, $out :=$ Unknown is not produced; the
-program raises NotApproved and nothing is sent
+\item if verdict(id) is not Approved, the program raises NotApproved and nothing
+is performed
 \item if claim(id, a) of M8 returns false, the program raises NotApproved
 \item task.moveTo(Executing); task.noteInFlight(id); task.recordWork(id, a
-description of a, Unknown); M16 sends the message
-\item the result is assessed through M9 against the sent record; the outcome is
-recorded through record(id, $\cdot$) and on the task through
-task.recordWork(id, a description of a, that outcome); task.clearInFlight(id);
-$out :=$ that outcome
+description of a, Unknown); r $:=$ perform(a) of M16
+\item the evidence is read(r) of M16, or read(a.target) when a.kind is Delete;
+it is assessed through M9 against a; the outcome is recorded through record(id,
+$\cdot$) and on the task through task.recordWork(id, a description of a, that
+outcome); task.clearInFlight(id); $out :=$ that outcome
 \end{enumerate}
 \item exception: $exc :=$ ($\lnot$task.mayAct() $\Rightarrow$ Paused $|$
-$\lnot$permitted of M12 for the recipient $\Rightarrow$ Restricted $|$ claim
-returned false $\Rightarrow$ NotApproved)
+$\lnot$consequential(a) of M8 $\Rightarrow$ NotConsequential $|$
+$\lnot$permitted of M12 for a.target or for any resource named in a.details
+$\Rightarrow$ Restricted $|$ $\lnot$canPerform(a) of M16 $\Rightarrow$
+NotPermitted $|$ the verdict is not Approved or claim returned false
+$\Rightarrow$ NotApproved)
 \end{itemize}
 
-\noindent Step 4 is the one that may not be moved. Nothing is sent until claim
-has returned true, and claim is what makes the approval single-use and bound to
-these exact details, so a change to the recipient, subject or body between the
-read-back and the send makes the claim fail rather than sending something the
-user did not approve.
+\noindent Step 4 is the one that may not be moved. Nothing is performed until
+claim has returned true, and claim is what makes the approval single-use and
+bound to these exact details, so a change to any detail between the read-back
+and the action makes the claim fail rather than doing something the user did
+not approve.
 
-\noindent createEvent(title, start, end, place):
-\begin{itemize}
-\item transition and output: as sendMail, with a $=$ (Create, the calendar,
-\{title, start, end, place\}) and the event fetched back through M16 as the
-evidence M9 assesses
-\item exception: $exc :=$ ($\lnot$task.mayAct() $\Rightarrow$ Paused $|$ claim
-returned false $\Rightarrow$ NotApproved)
-\end{itemize}
+\noindent act refuses a kind M8 does not treat as consequential, and the three
+reading programs perform nothing. A planner that labels an action with the wrong
+kind therefore cannot run it without approval, which is how this module meets
+the obligation M8 places on it (FR10, hazard H5-a).
 
-\noindent deleteItem(r):
-\begin{itemize}
-\item transition and output: as sendMail, with the item at r re-read through
-M16 as the evidence M9 assesses and a $=$ (Delete, r, the identifying fields of
-the item at r, such as a message's sender and subject or an event's title and
-time). Before anything is requested, canDelete(r) of M16 is checked, so the user
-is never asked to approve a deletion the granted scopes cannot perform. The
-read-back names those fields and
-states whether the deletion can be undone, and M16 is asked for a recoverable
-deletion where the provider offers one.
-\item exception: $exc :=$ ($\lnot$task.mayAct() $\Rightarrow$ Paused $|$
-$\lnot$permitted(r) of M12 $\Rightarrow$ Restricted $|$ $\lnot$canDelete(r) of
-M16 $\Rightarrow$ NotPermitted $|$ claim returned false $\Rightarrow$
-NotApproved)
-\end{itemize}
-
-\noindent FR.Sa.19 asks for all three of these: the identifying details read
-back, the reversibility stated, and recoverable deletion preferred. Hazard H5-d
-is a deletion approved by mistake, and the first two are what give the user the
-chance to catch it before it happens rather than after.
+\noindent When a.kind is Delete, a.details are the identifying fields of the
+item at a.target, read through M16; the read-back names them and states whether
+the deletion can be undone, from reversible(a) of M16; and M16 deletes to a
+recoverable location where the provider offers one. FR.Sa.19 asks for all three
+of these. Hazard H5-d is a deletion approved by mistake, and the first two are
+what give the user the chance to catch it before it happens rather than after.
 
 \noindent If M16 or M17 cannot be reached, the program fails and the failure
 reaches M13 as the result of the tool call, which M13 reports as ServiceFailed
@@ -2076,7 +2059,7 @@ the user, not inferred by the system.
 permitted(r) $\Leftrightarrow$ no element of blocked covers r.
 
 \noindent Restrictions are closed downwards: blocking an account blocks every
-folder and message within it, so a restriction cannot be evaded by naming a more
+container and item within it, so a restriction cannot be evaded by naming a more
 specific resource. The default is that nothing is blocked, which is why this
 module answers a question rather than granting a capability.
 
@@ -2120,7 +2103,7 @@ off limits
 \hyperref[type:ResourceRef]{ResourceRef} $\to \B$\\
 covers(b, r) holds when b and r name the same provider and b's kind and
 identifier are a prefix of r's in the provider's own containment order, so that
-an account covers its folders and a folder covers its messages.
+an account covers its containers and a container covers its items.
 
 \subsubsection{Type of Module}
 
@@ -2506,50 +2489,30 @@ Credential Store (M18 \ref{mod:creds}).
 
 \subsubsection{Exported Constants}
 
-MAIL\_SCOPES: set of \str{} $=$ \{``mail.read'', ``mail.send''\}\\[2pt]
-CALENDAR\_SCOPES: set of \str{} $=$ \{``calendar.read'', ``calendar.write''\}
-
-\noindent These are the narrowest scopes the programs below require, which is
-what FR14 and FR.Sa.17 ask for and what hazard H7-c exists to prevent: broader
-access makes every other failure more damaging. Deletion is offered for any kind
-of item, but works only where the granted scopes already allow it; enabling it
-for another kind means granting a broader scope, which is a decision for the
-user at setup rather than something this module widens on its own.
+None. Which apps are supported, and the scope each requires, are this module's
+secret; scopes() reports the scopes in use.
 
 \subsubsection{Exported Types}
 
-\noindent DateTime: an instant, with a date and a time of day
+\noindent Item $=$ tuple of (ref: \hyperref[type:ResourceRef]{ResourceRef},
+fields: \hyperref[type:Details]{Details}), one record in a connected account,
+such as a message or a calendar event
 
-\noindent Message $=$ tuple of (ref: \hyperref[type:ResourceRef]{ResourceRef},
-sender: \str, recipient: \str, subject: \str, body: \str)
-
-\noindent CalendarEvent $=$ tuple of (ref:
-\hyperref[type:ResourceRef]{ResourceRef}, title: \str, start: DateTime, end:
-DateTime, place: \str)
-
-\noindent A Message carries both a sender and a recipient. A received message
-and a sent one are the same type, and confirming that a message was sent means
-finding a record whose recipient is the one approved, so a type that named only
-a correspondent could not express the check FR12 requires.
+\noindent An Item's fields use the same names as an Action's details for the
+same kind of record. That is what lets M9 compare what was intended with what
+was found, field by field, which is the check FR12 requires.
 
 \subsubsection{Exported Access Programs}
 
 \begin{programs}
 initConnector & connector: \str & -- & NotAuthorised\\
-searchMessages & query: \str & seq of Message & ProviderUnavailable\\
-readMessage & r: \hyperref[type:ResourceRef]{ResourceRef} & Message $\cup
-\{\nil\}$ & ProviderUnavailable\\
-sendMessage & to: \str, subject: \str, body: \str &
-\hyperref[type:ResourceRef]{ResourceRef} & ProviderUnavailable\\
-findSent & r: \hyperref[type:ResourceRef]{ResourceRef} & Message $\cup
-\{\nil\}$ & ProviderUnavailable\\
-deleteItem & r: \hyperref[type:ResourceRef]{ResourceRef}, recoverable: $\B$
-& -- & ProviderUnavailable, NotPermitted, NotRecoverable\\
-canDelete & r: \hyperref[type:ResourceRef]{ResourceRef} & $\B$ & --\\
-createEvent & title: \str, start: DateTime, end: DateTime, place: \str &
-\hyperref[type:ResourceRef]{ResourceRef} & ProviderUnavailable\\
-findEvent & r: \hyperref[type:ResourceRef]{ResourceRef} & CalendarEvent $\cup
-\{\nil\}$ & ProviderUnavailable\\
+search & query: \str & seq of Item & ProviderUnavailable\\
+read & r: \hyperref[type:ResourceRef]{ResourceRef} & Item $\cup \{\nil\}$ &
+ProviderUnavailable\\
+perform & a: \hyperref[type:Action]{Action} &
+\hyperref[type:ResourceRef]{ResourceRef} & NotPermitted, ProviderUnavailable\\
+canPerform & a: \hyperref[type:Action]{Action} & $\B$ & --\\
+reversible & a: \hyperref[type:Action]{Action} & $\B$ & --\\
 scopes & -- & set of \str & --\\
 \end{programs}
 
@@ -2561,18 +2524,24 @@ connected: $\B$
 
 \subsubsection{Environment Variables}
 
-accounts: the user's connected mail and calendar accounts, held by the connector
-service named in the argument to initConnector
+accounts: the user's connected accounts, held by the connector service named in
+the argument to initConnector
 
 \subsubsection{Assumptions}
 
 initConnector is called before any other access program, and the setup helper
 has connected the accounts and granted the scopes, as SRS~E.4 assumes.
 
-\noindent An account changes for reasons outside this system. A message may
-arrive, be read elsewhere or be deleted between one call and the next, so a
-result describes the account at the moment it was read, which is why M9 re-reads
-rather than trusting a value it already holds.
+\noindent An account changes for reasons outside this system. An item may
+arrive, change or be deleted between one call and the next, so a result
+describes the account at the moment it was read, which is why M9 re-reads rather
+than trusting a value it already holds.
+
+\noindent Each scope granted is the narrowest the supported actions need, which
+is what FR14 and FR.Sa.17 ask for and what hazard H7-c exists to prevent:
+broader access makes every other failure more damaging. An action outside the
+granted scopes is refused rather than the scope widened; widening one is a
+decision for the user at setup.
 
 \subsubsection{State Invariant}
 
@@ -2588,83 +2557,56 @@ with the credentials M18 supplies for it
 NotAuthorised)
 \end{itemize}
 
-\noindent searchMessages(query):
+\noindent search(query):
 \begin{itemize}
-\item output: $out :=$ the messages in accounts matching query, most recent
-first
+\item output: $out :=$ the items in accounts matching query, most recent first
 \item exception: $exc :=$ (accounts cannot be reached $\Rightarrow$
 ProviderUnavailable)
 \end{itemize}
 
-\noindent readMessage(r):
+\noindent read(r):
 \begin{itemize}
-\item output: $out :=$ the message at r, or $\nil$ if no message is there
+\item output: $out :=$ the item at r, or $\nil$ if no item is there
 \item exception: $exc :=$ (accounts cannot be reached $\Rightarrow$
 ProviderUnavailable)
 \end{itemize}
 
-\noindent sendMessage(to, subject, body):
+\noindent perform(a):
 \begin{itemize}
-\item transition: a message with the given recipient, subject and body is sent
-from the user's account
-\item output: $out :=$ the ResourceRef of the sent record
-\item exception: $exc :=$ (accounts cannot be reached $\Rightarrow$
-ProviderUnavailable)
+\item transition: a is carried out in the account a.target names. For Send and
+Create, an item with the fields a.details is sent or created; for Update, the
+item at a.target takes those fields; for Delete, the item at a.target is
+deleted, to a recoverable location when reversible(a) holds.
+\item output: $out :=$ the ResourceRef where the resulting item should be found,
+which is a.target for Update and Delete
+\item exception: $exc :=$ ($\lnot$canPerform(a) $\Rightarrow$ NotPermitted $|$
+accounts cannot be reached $\Rightarrow$ ProviderUnavailable)
 \end{itemize}
 
 \noindent Returning a reference rather than a confirmation is deliberate. A
-provider accepting a message for delivery is not the same as the message having
-been sent, so this program reports where the record should be and leaves the
-judgement to M9, which is what stops a queued request being reported as
-delivered.
+provider accepting a request is not the same as the request having taken
+effect, so this program reports where the result should be and leaves the
+judgement to M9, which is what stops a queued request being reported as done.
 
-\noindent findSent(r):
+\noindent canPerform(a):
 \begin{itemize}
-\item output: $out :=$ the message in the sent record at r, or $\nil$ if it is
-not there
-\item exception: $exc :=$ (accounts cannot be reached $\Rightarrow$
-ProviderUnavailable)
+\item output: $out :=$ the scopes granted for a.target.provider allow a.kind on
+items of a.target.kind
 \end{itemize}
 
-\noindent deleteItem(r, recoverable):
+\noindent reversible(a):
 \begin{itemize}
-\item transition: the item at r is deleted from the user's account, to a
-recoverable location when recoverable holds
-\item exception: $exc :=$ ($\lnot$canDelete(r) $\Rightarrow$ NotPermitted $|$
-accounts cannot be reached $\Rightarrow$ ProviderUnavailable $|$ recoverable $\wedge$ the provider offers no recoverable
-deletion $\Rightarrow$ NotRecoverable)
+\item output: $out :=$ a.kind $=$ Delete and the provider offers recoverable
+deletion for items of a.target.kind
 \end{itemize}
 
-\noindent The exception rather than a silent permanent deletion is the point.
-FR.Sa.19 requires the system to say whether a deletion can be undone, so a
-caller that asked for a recoverable one must learn that it cannot have it
-before the item is gone.
-
-\noindent canDelete(r):
-\begin{itemize}
-\item output: $out :=$ the scopes granted for r.provider include deletion of
-items of r.kind
-\end{itemize}
-
-\noindent createEvent(title, start, end, place):
-\begin{itemize}
-\item transition: an event with the given title, start, end and place is created
-in the user's calendar
-\item output: $out :=$ the ResourceRef of the new event
-\item exception: $exc :=$ (accounts cannot be reached $\Rightarrow$
-ProviderUnavailable)
-\end{itemize}
-
-\noindent findEvent(r):
-\begin{itemize}
-\item output: $out :=$ the event at r, or $\nil$ if it is not there
-\item exception: $exc :=$ (accounts cannot be reached $\Rightarrow$
-ProviderUnavailable)
-\end{itemize}
+\noindent This is asked before approval rather than discovered after. FR.Sa.19
+requires the user to be told whether a deletion can be undone before agreeing to
+it, so the answer has to exist before the read-back is spoken.
 
 \noindent scopes():
 \begin{itemize}
-\item output: $out :=$ MAIL\_SCOPES $\cup$ CALENDAR\_SCOPES, for setup to
+\item output: $out :=$ the scopes granted for each connected app, for setup to
 explain to the user along with which provider receives which data, as FR14
 requires
 \end{itemize}

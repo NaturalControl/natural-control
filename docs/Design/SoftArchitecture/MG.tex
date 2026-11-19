@@ -84,7 +84,7 @@ corresponding likely change costs one work assignment.
 \textbf{Name} & \textbf{Description}\\
 \midrule
 Browser Use & Browser automation library used to open and read websites (\mref{mWeb})\\
-Composio & Connector service holding OAuth tokens for Gmail and Google Calendar (\mref{mAccount})\\
+Composio & Connector service holding OAuth tokens for connected apps such as Gmail and Google Calendar (\mref{mAccount})\\
 ElevenLabs & Candidate text-to-speech provider, reached through LiveKit's plugin (\mref{mSpeech})\\
 Hermes & Candidate agent harness that plans tasks and proposes tool calls (\mref{mHarness})\\
 LiveKit & Real-time voice framework carrying audio and turn events (\mref{mVoice})\\
@@ -528,9 +528,9 @@ fixed interface; reports the unavailability of either service.
 \begin{description}
 \item[Secrets:] The connected-app integration: which apps are supported,
 which connector reaches them, and the permission scope each requires.
-\item[Services:] Searches and reads mail; sends mail; reads and creates
-calendar events; deletes an item in a connected account where its granted scope
-allows; re-reads a specific item; states the narrowest
+\item[Services:] Searches and reads the items in connected accounts; carries
+out an approved action on an item, such as sending, creating or deleting one,
+where its granted scope allows; re-reads a specific item; states the narrowest
 permission scope each app requires and which provider receives which data;
 admits a synthetic stand-in behind the identical interface.
 \item[Implemented By:] \progname{}, using the Composio SDK.
@@ -962,7 +962,7 @@ scheduled against the Revision 0 design document of January 18, 2027.
 
 Being required for the POC demonstration means a module must work along the path the
 demonstration takes, not that it is finished. SRS~S.7 scopes the demonstration to
-one email or calendar task and one unfamiliar website, so the slice runs from
+one task in a connected account and one unfamiliar website, so the slice runs from
 speech through the planner to a single connected app and a single page. Only
 \mref{mPhrase}, \mref{mCtrl} and \mref{mGate} must be complete, because the
 demonstration exists to test the control and approval path itself.
