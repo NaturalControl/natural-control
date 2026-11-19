@@ -528,8 +528,9 @@ fixed interface; reports the unavailability of either service.
 \begin{description}
 \item[Secrets:] The connected-app integration: which apps are supported,
 which connector reaches them, and the permission scope each requires.
-\item[Services:] Searches and reads mail; sends mail; reads, creates and
-deletes calendar events; re-reads a specific item; states the narrowest
+\item[Services:] Searches and reads mail; sends mail; reads and creates
+calendar events; deletes an item in a connected account where its granted scope
+allows; re-reads a specific item; states the narrowest
 permission scope each app requires and which provider receives which data;
 admits a synthetic stand-in behind the identical interface.
 \item[Implemented By:] \progname{}, using the Composio SDK.

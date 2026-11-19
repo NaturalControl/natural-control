@@ -1557,7 +1557,7 @@ not already been used, and the action now being run is the one that was
 approved.
 
 \noindent The last conjunct compares the whole Action, not only its details. An
-approval for creating a particular event must not authorise deleting a
+approval for acting on one item must not authorise deleting a
 different one that happens to carry the same field values, which is hazard H7-a:
 the target has to be re-checked against what was approved immediately before
 acting.
@@ -1754,8 +1754,9 @@ sendMail & to: \str, subject: \str, body: \str &
 \hyperref[type:Outcome]{Outcome} & Paused, Restricted, NotApproved\\
 createEvent & title: \str, start: \str, end: \str, place: \str &
 \hyperref[type:Outcome]{Outcome} & Paused, NotApproved\\
-deleteEvent & r: \hyperref[type:ResourceRef]{ResourceRef} &
-\hyperref[type:Outcome]{Outcome} & Paused, Restricted, NotApproved\\
+deleteItem & r: \hyperref[type:ResourceRef]{ResourceRef} &
+\hyperref[type:Outcome]{Outcome} & Paused, Restricted, NotPermitted,
+NotApproved\\
 \end{programs}
 
 \subsection{Semantics}
@@ -1863,17 +1864,20 @@ evidence M9 assesses
 returned false $\Rightarrow$ NotApproved)
 \end{itemize}
 
-\noindent deleteEvent(r):
+\noindent deleteItem(r):
 \begin{itemize}
-\item transition and output: as sendMail, with findEvent(r) of M16 as the
-evidence M9 assesses and a $=$ (Delete, r, the
-identifying fields of the event at r: its title, start, end and place). The
+\item transition and output: as sendMail, with the item at r re-read through
+M16 as the evidence M9 assesses and a $=$ (Delete, r, the identifying fields of
+the item at r, such as a message's sender and subject or an event's title and
+time). Before anything is requested, canDelete(r) of M16 is checked, so the user
+is never asked to approve a deletion the granted scopes cannot perform. The
 read-back names those fields and
 states whether the deletion can be undone, and M16 is asked for a recoverable
 deletion where the provider offers one.
 \item exception: $exc :=$ ($\lnot$task.mayAct() $\Rightarrow$ Paused $|$
-$\lnot$permitted(r) of M12 $\Rightarrow$ Restricted $|$ claim returned false
-$\Rightarrow$ NotApproved)
+$\lnot$permitted(r) of M12 $\Rightarrow$ Restricted $|$ $\lnot$canDelete(r) of
+M16 $\Rightarrow$ NotPermitted $|$ claim returned false $\Rightarrow$
+NotApproved)
 \end{itemize}
 
 \noindent FR.Sa.19 asks for all three of these: the identifying details read
@@ -2507,7 +2511,10 @@ CALENDAR\_SCOPES: set of \str{} $=$ \{``calendar.read'', ``calendar.write''\}
 
 \noindent These are the narrowest scopes the programs below require, which is
 what FR14 and FR.Sa.17 ask for and what hazard H7-c exists to prevent: broader
-access makes every other failure more damaging.
+access makes every other failure more damaging. Deletion is offered for any kind
+of item, but works only where the granted scopes already allow it; enabling it
+for another kind means granting a broader scope, which is a decision for the
+user at setup rather than something this module widens on its own.
 
 \subsubsection{Exported Types}
 
@@ -2536,8 +2543,9 @@ sendMessage & to: \str, subject: \str, body: \str &
 \hyperref[type:ResourceRef]{ResourceRef} & ProviderUnavailable\\
 findSent & r: \hyperref[type:ResourceRef]{ResourceRef} & Message $\cup
 \{\nil\}$ & ProviderUnavailable\\
-deleteEvent & r: \hyperref[type:ResourceRef]{ResourceRef}, recoverable: $\B$
-& -- & ProviderUnavailable, NotRecoverable\\
+deleteItem & r: \hyperref[type:ResourceRef]{ResourceRef}, recoverable: $\B$
+& -- & ProviderUnavailable, NotPermitted, NotRecoverable\\
+canDelete & r: \hyperref[type:ResourceRef]{ResourceRef} & $\B$ & --\\
 createEvent & title: \str, start: DateTime, end: DateTime, place: \str &
 \hyperref[type:ResourceRef]{ResourceRef} & ProviderUnavailable\\
 findEvent & r: \hyperref[type:ResourceRef]{ResourceRef} & CalendarEvent $\cup
@@ -2618,19 +2626,25 @@ not there
 ProviderUnavailable)
 \end{itemize}
 
-\noindent deleteEvent(r, recoverable):
+\noindent deleteItem(r, recoverable):
 \begin{itemize}
-\item transition: the event at r is deleted from the user's calendar, to a
+\item transition: the item at r is deleted from the user's account, to a
 recoverable location when recoverable holds
-\item exception: $exc :=$ (accounts cannot be reached $\Rightarrow$
-ProviderUnavailable $|$ recoverable $\wedge$ the provider offers no recoverable
+\item exception: $exc :=$ ($\lnot$canDelete(r) $\Rightarrow$ NotPermitted $|$
+accounts cannot be reached $\Rightarrow$ ProviderUnavailable $|$ recoverable $\wedge$ the provider offers no recoverable
 deletion $\Rightarrow$ NotRecoverable)
 \end{itemize}
 
 \noindent The exception rather than a silent permanent deletion is the point.
 FR.Sa.19 requires the system to say whether a deletion can be undone, so a
 caller that asked for a recoverable one must learn that it cannot have it
-before the event is gone.
+before the item is gone.
+
+\noindent canDelete(r):
+\begin{itemize}
+\item output: $out :=$ the scopes granted for r.provider include deletion of
+items of r.kind
+\end{itemize}
 
 \noindent createEvent(title, start, end, place):
 \begin{itemize}
