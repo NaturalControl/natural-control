@@ -57,10 +57,15 @@
     "docs/Checklists/Writing-Checklist.tex"
   ],
   "docs/Design/SoftArchitecture/MG.tex": [
-    "docs/Design/SoftArchitecture/MG.tex"
+    "docs/Design/SoftArchitecture/MG.tex",
+    "refs/References.bib"
   ],
   "docs/Design/SoftDetailedDes/MIS.tex": [
-    "docs/Design/SoftDetailedDes/MIS.tex"
+    "docs/Comments.text",
+    "docs/Common.text",
+    "docs/Design/SoftDetailedDes/MIS.tex",
+    "docs/Reflection.text",
+    "refs/References.bib"
   ],
   "docs/DevelopmentPlan/DevelopmentPlan.tex": [
     "docs/Common.text",
