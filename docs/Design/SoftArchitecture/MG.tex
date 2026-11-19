@@ -499,8 +499,8 @@ and resources, and answers whether a proposed target is permitted.
 \item[Secrets:] The agent harness behind the planner interface, including the
 adaptation of its streamed status, interrupts and clarification requests.
 \item[Services:] Plans a task and proposes tool calls; surfaces progress,
-clarification requests and completion as events; accepts a correction and an
-interrupt without losing the conversation.
+clarification requests and completion as events; accepts a correction, and an
+interrupt followed by a resume, without losing the conversation.
 \item[Implemented By:] \progname{}, adapting Hermes.
 \item[Type of Module:] Abstract Object
 \end{description}

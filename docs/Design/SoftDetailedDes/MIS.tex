@@ -1042,8 +1042,8 @@ to be reported rather than presented as though it had been prevented.
 \noindent resume():
 \begin{itemize}
 \item transition: relevant state is re-checked through M9 for every action whose
-outcome is Unknown, and the results are spoken; task.moveTo(Working); M13 is
-asked to continue, told what was and was not completed
+outcome is Unknown, and the results are spoken; task.moveTo(Working); resume(note) of
+M13 is called, with note stating what was and was not completed
 \item exception: $exc :=$ (task $= \nil$ $\vee$ task.state() $\neq$ Paused
 $\Rightarrow$ NothingPaused)
 \end{itemize}
@@ -2135,6 +2135,7 @@ initHarness & -- & -- & HarnessUnavailable\\
 start & request: \str & -- & AlreadyRunning\\
 correct & text: \str & -- & NotRunning\\
 interrupt & -- & -- & --\\
+resume & note: \str & -- & NothingToResume\\
 next & -- & PlannerEvent $\cup \{\nil\}$ & --\\
 running & -- & $\B$ & --\\
 \end{programs}
@@ -2145,7 +2146,8 @@ running & -- & $\B$ & --\\
 
 \noindent active: $\B$\\
 steps: $\N$\\
-pending: seq of PlannerEvent
+pending: seq of PlannerEvent\\
+held: $\B$ (an interrupted conversation is kept and may be resumed)
 
 \subsubsection{Environment Variables}
 
@@ -2170,24 +2172,29 @@ the design.
 \subsubsection{State Invariant}
 
 \noindent $\lnot$active $\Rightarrow$ pending $= \langle\rangle$\\
-active $\Rightarrow$ steps $\le$ STEP\_LIMIT
+active $\Rightarrow$ steps $\le$ STEP\_LIMIT\\
+held $\Rightarrow$ $\lnot$active
 
 \noindent The first says a stopped planner produces no further events, so an
 event cannot arrive after an interrupt and be acted on. The second is the limit
-itself: reaching it emits LimitReached and clears active rather than continuing.
+itself: reaching it emits LimitReached, clears active and sets held rather than
+continuing, so the user can choose to resume.
+The third says a kept conversation is one that is not running.
 
 \subsubsection{Access Routine Semantics}
 
 \noindent initHarness():
 \begin{itemize}
-\item transition: active, steps, pending $:=$ false, 0, $\langle\rangle$
+\item transition: active, steps, pending, held $:=$ false, 0, $\langle\rangle$,
+false
 \item exception: $exc :=$ (the harness cannot be reached $\Rightarrow$
 HarnessUnavailable)
 \end{itemize}
 
 \noindent start(request):
 \begin{itemize}
-\item transition: active, steps $:=$ true, 0; the planner begins work on
+\item transition: active, steps, held $:=$ true, 0, false; any kept
+conversation is discarded and the planner begins work on
 request, calling only the access programs of M10 and emitting a PlannerEvent for
 each step it takes, including a ProposedAction when it calls a program of M10
 that needs approval
@@ -2209,12 +2216,26 @@ the latter goes to start on a new task.
 
 \noindent interrupt():
 \begin{itemize}
-\item transition: active, pending $:=$ false, $\langle\rangle$; the planner's
-current turn is abandoned
+\item transition: held $:=$ held $\vee$ active; active, pending $:=$ false,
+$\langle\rangle$; the planner's current turn is abandoned, but the conversation
+so far is kept, so that a later resume continues it rather than starting again
 \item Interrupting the planner does not stop an action already claimed. That
 action is M10's, and it settles or does not independently of this call, which is
 the distinction FR8 draws between acknowledging a stop and having stopped.
 \end{itemize}
+
+\noindent resume(note):
+\begin{itemize}
+\item transition: active, steps, held $:=$ true, 0, false; the planner continues
+the kept conversation, receiving note as its next message
+\item exception: $exc :=$ ($\lnot$held $\Rightarrow$ NothingToResume)
+\end{itemize}
+
+\noindent The interrupted turn itself may not survive: the harness is only
+required to keep the conversation up to it. This is why M5 passes, in note, what
+was and was not completed, rather than relying on the planner to remember.
+Resetting steps is deliberate: a resume follows the user's explicit decision to
+continue, which is the prompt FR.Sa.11 requires before more steps are taken.
 
 \noindent next():
 \begin{itemize}
