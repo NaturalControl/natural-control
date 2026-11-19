@@ -1,17 +1,15 @@
 {
   "docs/CDs/Interviews/InterviewReport.tex": [
-    "docs/CDs/Interviews/InterviewReport.tex"
-  ],
-  "docs/CDs/Interviews/LowVisionParticipantInterview.md": [
-    "docs/CDs/Interviews/LowVisionParticipantInterview.md"
+    "docs/CDs/Interviews/InterviewReport.tex",
+    "docs/Comments.text",
+    "docs/Common.text",
+    "refs/interviews/2026-10-17-dbcs-transcript.tex",
+    "refs/interviews/2026-11-14-P2Interview.tex",
+    "refs/interviews/2026-11-17-P3Interview.tex",
+    "refs/interviews/2026-11-18-P4Interview.tex"
   ],
   "docs/CDs/Interviews/UserInterviewGuide.md": [
     "docs/CDs/Interviews/UserInterviewGuide.md"
-  ],
-  "docs/CDs/MLReport/main.tex": [
-    "docs/CDs/MLReport/acl.sty",
-    "docs/CDs/MLReport/custom.bib",
-    "docs/CDs/MLReport/main.tex"
   ],
   "docs/Checklists/Code-Checklist.tex": [
     "docs/Checklists/Code-Checklist.tex",
@@ -97,7 +95,6 @@
     "docs/Reflection.text",
     "docs/SRS-Meyer/AaronSRSReflection.text",
     "docs/SRS-Meyer/CurtisSRSReflection.text",
-    "docs/SRS-Meyer/InterviewTranscript.text",
     "docs/SRS-Meyer/KevinSRSReflection.text",
     "docs/SRS-Meyer/LucasSRSReflection.text",
     "docs/SRS-Meyer/SRS.mtc",
@@ -109,7 +106,8 @@
     "docs/SRS-Meyer/figures/sequence-normal.png",
     "docs/SRS-Meyer/figures/sequence-stop.png",
     "docs/SRS-Meyer/figures/state-diagram.png",
-    "refs/CapstoneSources.bib"
+    "refs/CapstoneSources.bib",
+    "refs/interviews/2026-10-17-dbcs-transcript.tex"
   ],
   "docs/UserGuide/UserGuide.tex": [
     "docs/Comments.text",
