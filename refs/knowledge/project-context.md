@@ -53,7 +53,7 @@ Updated September 23, 2026 after the user interview and explicit authorization t
 - Main POC risk: whether live conversation can supervise a general agent across account tools, an unfamiliar website, and a local Mac task.
 - Include clarification, approval, correction, meaningful progress, explicit execution stop, and reconnection. Use synthetic data and test accounts.
 - Provisional targets: at least 80% correct independent task completion on a declared suite; explicit stop acknowledged within two seconds; all consequential actions in test cases approved. Acknowledgment is not proof of cancellation; no new actions may be issued after confirmed stop.
-- Seek four to six blind collaborators for repeated discovery/evaluation. Recruitment and availability are unconfirmed. A personal connection may facilitate a CNIB introduction; no partnership is claimed. Personal contact details are deliberately absent here.
+- Seek four to six blind collaborators for repeated discovery/evaluation. As of November 19, 2026, Kevin reports that recruitment is confirmed with one blind participant so far; recruiting continues. A personal connection may facilitate a CNIB introduction; no partnership is claimed. Personal contact details are deliberately absent here.
 - If remote telephony or native control fails, preserve local voice with general browser/account tools and defer the failed capability. Document changed evaluation scope honestly.
 - Propose fall Interview Report and winter Usability Report for instructor approval.
 
