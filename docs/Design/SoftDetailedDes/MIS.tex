@@ -408,6 +408,7 @@ endSession & -- & -- & --\\
 press & k: ControlKey & -- & NotConnected\\
 submitText & text: \str & -- & NotConnected\\
 showState & s: \hyperref[type:TaskState]{TaskStateT} & -- & NotConnected\\
+showHistory & h: seq of HistoryEntry (M11) & -- & NotConnected\\
 showTurn & speaker: \str, text: \str & -- & --\\
 connected & -- & $\B$ & --\\
 \end{programs}
@@ -495,6 +496,15 @@ the task state changed but is not interrupted
 \item exception: $exc :=$ ($\lnot$live $\Rightarrow$ NotConnected)
 \end{itemize}
 
+\noindent showHistory(h):
+\begin{itemize}
+\item transition: h is rendered to screen as a list, most recent first, each
+entry with its outcome and with Unknown shown as Unknown; reader is told that the
+history changed without moving the keyboard focus. This is the screen-reader
+half of FR15; the spoken half is M6's.
+\item exception: $exc :=$ ($\lnot$live $\Rightarrow$ NotConnected)
+\end{itemize}
+
 \noindent showTurn(speaker, text):
 \begin{itemize}
 \item transition: turns $:=$ turns $\|$ $\langle$(speaker, text)$\rangle$, and
@@ -552,6 +562,7 @@ closeSession & -- & -- & --\\
 say & text: \str, interruptible: $\B$ & UtteranceId & NotOpen\\
 delivered & u: UtteranceId & $\B$ & NoSuchUtterance\\
 publishState & s: \hyperref[type:TaskState]{TaskStateT} & -- & --\\
+publishHistory & h: seq of HistoryEntry (M11) & -- & --\\
 open & -- & $\B$ & --\\
 \end{programs}
 
@@ -646,6 +657,12 @@ in full, so a ``yes'' spoken over the top of it does not authorise the action.
 \noindent publishState(s):
 \begin{itemize}
 \item transition: s is published on the session for M2 to display and announce
+\end{itemize}
+
+\noindent publishHistory(h):
+\begin{itemize}
+\item transition: h is published on the session for M2 to display through
+showHistory
 \end{itemize}
 
 \noindent open():
@@ -860,6 +877,10 @@ obligation M8 states as an assumption actually hold. The second says an approval
 can only be outstanding while the task is waiting for one.
 
 \subsubsection{Access Routine Semantics}
+
+\noindent Each time a program below calls recordTask of M11, it then calls
+publishHistory(review() of M11) of M3, so the history the client shows is never
+behind the recorded one.
 
 \noindent initControl():
 \begin{itemize}
