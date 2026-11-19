@@ -252,8 +252,10 @@ can be compared for equality, unique over the lifetime of a session.
 \noindent\textbf{Action} \label{type:Action} --- a tuple of (kind:
 \hyperref[type:ActionKind]{ActionKind}, target:
 \hyperref[type:ResourceRef]{ResourceRef}, details:
-\hyperref[type:Details]{Details}) describing one thing the planner proposes to
-do.
+\hyperref[type:Details]{Details}, undoable: $\B$) describing one thing the
+planner proposes to do. undoable says whether the effect can be reversed
+afterwards; it is set by M10 from M16, never by the planner, and matters to the
+user chiefly for a deletion (FR.Sa.19).
 
 \noindent\textbf{Approval} \label{type:Approval} --- a tuple of (id:
 \hyperref[type:ActionId]{ActionId}, details:
@@ -1473,7 +1475,9 @@ the held request.
 \begin{itemize}
 \item transition: presented(id) $:=$ true
 \item output: $out :=$ a description of proposed(id) naming its kind, its target
-and the value of every field of proposed(id).details, for M6 to speak. Every
+and the value of every field of proposed(id).details, and, when its kind is
+Delete, whether it can be undone, from proposed(id).undoable; M5 has it spoken
+through M3. Every
 approved field appears, because FR9 requires approval of the exact details
 rather than of a summary.
 \item exception: $exc :=$ (id $\notin \mathrm{dom}(\text{proposed}) \Rightarrow$
@@ -1560,7 +1564,8 @@ approved.
 approval for acting on one item must not authorise deleting a
 different one that happens to carry the same field values, which is hazard H7-a:
 the target has to be re-checked against what was approved immediately before
-acting.
+acting. Because undoable is part of the Action, an approval given for a deletion
+described as undoable cannot be used for one that is not.
 
 \subsubsection{Type of Module}
 
@@ -1826,7 +1831,9 @@ planner and every consequential action.
 \begin{itemize}
 \item transition and output: the first four exceptions below are checked before
 anything else, so the user is never asked to approve an action that could not be
-carried out. Then, in order:
+carried out. a.undoable is then set to reversible(a) of M16, whatever the
+planner supplied, and this a is the one requested and claimed below. Then, in
+order:
 \begin{enumerate}
 \item id $:=$ request(a) of M8
 \item task.moveTo(AwaitingApproval); the read-back is spoken by M5 when it
@@ -1863,7 +1870,7 @@ the obligation M8 places on it (FR10, hazard H5-a).
 
 \noindent When a.kind is Delete, a.details are the identifying fields of the
 item at a.target, read through M16; the read-back names them and states whether
-the deletion can be undone, from reversible(a) of M16; and M16 deletes to a
+the deletion can be undone, from a.undoable; and M16 deletes to a
 recoverable location where the provider offers one. FR.Sa.19 asks for all three
 of these. Hazard H5-d is a deletion approved by mistake, and the first two are
 what give the user the chance to catch it before it happens rather than after.
