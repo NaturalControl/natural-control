@@ -564,7 +564,8 @@ holds connector tokens; never reveals a credential value to any caller.
 derivable from it.
 \item[Services:] Appends a named event with a monotonic timestamp and
 structured fields; computes the stop, acknowledgment and pause timings;
-excludes message content, speech and credentials.
+records only what its callers supply, and its callers must never supply message
+content, speech or credentials.
 \item[Implemented By:] \progname{}.
 \item[Type of Module:] Abstract Object
 \end{description}
