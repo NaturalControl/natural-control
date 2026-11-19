@@ -998,6 +998,8 @@ recordTask of M11, and phrase(OutcomeReport) is spoken for e.text
 unchanged and waits for the user's reply
 \item e.kind $=$ LimitReached: stopWork(), which FR.Sa.11 requires when the
 step limit is reached
+\item e.kind $=$ ServiceFailed: stopWork(), then phrase(Blocker) is spoken for
+e.text, naming the service that failed, which FR.Sa.12 requires
 \end{itemize}
 \end{itemize}
 
@@ -1860,6 +1862,10 @@ back, the reversibility stated, and recoverable deletion preferred. Hazard H5-d
 is a deletion approved by mistake, and the first two are what give the user the
 chance to catch it before it happens rather than after.
 
+\noindent If M16 or M17 cannot be reached, the program fails and the failure
+reaches M13 as the result of the tool call, which M13 reports as ServiceFailed
+(FR.Sa.12). It is not retried here.
+
 \noindent An action whose outcome could not be established stays in
 task.inFlight() and is reported as Unknown. FR.Sa.18 forbids retrying it until
 the state has been checked directly and the user has approved the retry, and
@@ -2126,7 +2132,7 @@ PlannerEvent $=$ tuple of (kind: PlannerEventKind, text: \str, action:
 \hyperref[type:Action]{Action} $\cup \{\nil\}$)
 
 \noindent PlannerEventKind $=$ \{Progress, NeedsClarification, ProposedAction,
-Finished, Blocked, LimitReached\}
+Finished, Blocked, LimitReached, ServiceFailed\}
 
 \subsubsection{Exported Access Programs}
 
@@ -2246,6 +2252,11 @@ continue, which is the prompt FR.Sa.11 requires before more steps are taken.
 \noindent next has both a transition and an output: it removes and returns the
 head of pending in one step, so each event is handed out exactly once. A
 separate read would return the same event until a second call removed it.
+
+\noindent A ServiceFailed event is emitted, clearing active and setting held as
+for LimitReached, when respond of M14 raises ProviderUnavailable or a program of
+M10 fails because M16 or M17 cannot be reached. FR.Sa.12 requires an external
+service failure to pause the task, and hazard H4-d is the outage it exists for.
 
 \noindent A NeedsClarification event is what FR4 and FR.Sa.9 require when a
 detail is missing or ambiguous: the planner asks rather than guessing, and
