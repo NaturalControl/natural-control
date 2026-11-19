@@ -18,7 +18,6 @@
 \newcommand{\saidfour}{\paragraph{What P4 said.}}
 \newcommand{\means}{\paragraph{What it means for the project.}}
 \newcommand{\affects}{\paragraph{Requirements and design affected.}}
-\newcommand{\research}{\paragraph{Published research (not from the interview).}}
 
 \input{../../../docs/Comments.text}
 \input{../../../docs/Common.text}
@@ -53,7 +52,7 @@
 The purpose of this report is to explore the user interviews that the team has conducted thus far.
 It contains the questions asked, the methodology behind those questions, the results of the interviews, 
 and an analysis of these results. These interviews are a great way to elicit the requirements of the project, and 
-the findings from this report are directly applicable to the SRS, Hazard Analysis, and POC demo. They helped identify 
+the findings from this report are directly applicable to the SRS and Hazard Analysis, and they inform the POC and future development. They helped identify 
 key areas that the stakeholder groups think are important, and were a direct source of requirements for the SRS
 and Hazard Analysis. Additionally, they will help guide the direction of the project throughout the year. 
 This report covers the four user interviews the team has held so far. The four participants we interviewed were:
@@ -164,15 +163,15 @@ While the questions in Set 1 primarily covered Does and Thinks, Set 2 covers eve
 
 \subsection{Analysis method}\label{sec:analysismethod}
 
-After the P1 interview, the interviewer wrote findings notes that grouped P1's answers by topic and kept three things separate: what P1 said, what published sources say, and what it means for the project. We used those notes, checked against the anonymized transcript, to write Findings 1 to 8.
+After the P1 interview, the interviewer wrote findings notes that grouped P1's answers by topic and kept three things separate: what P1 said, what published sources say, and what it means for the project. We used those notes, checked against the anonymized transcript, to write Findings 1 to 7.
 
-For each later interview, we went through the participant's answers and checked each one against the existing findings. Where a later participant supports, adds to or contradicts an existing finding, we add their words to that finding. Where they raise something new, it becomes a new finding (Findings 9 to 12 from P2, Findings 13 to 16 from P3 and P4). We then placed the quotes into the empathy map (Section~\ref{sec:empathy}) to see which categories are well supported.
+For each later interview, we went through the participant's answers and checked each one against the existing findings. Where a later participant supports, adds to or contradicts an existing finding, we add their words to that finding. Where they raise something new, it becomes a new finding (Findings 8 to 11 from P2, Findings 12 to 15 from P3 and P4). We then placed the quotes into the empathy map (Section~\ref{sec:empathy}) to see which categories are well supported.
 
 For each finding we give:
 \begin{itemize}
     \item \textbf{What each participant said}: short direct quotes from the transcripts, labelled by participant;
     \item \textbf{What it means for the project}: our interpretation;
-    \item \textbf{Requirements and design affected}: SRS requirement IDs, Hazard Analysis items and POC decisions.
+    \item \textbf{Requirements and design affected}: SRS requirement IDs and Hazard Analysis items.
 \end{itemize}
 
 \section{Subjects}\label{sec:subjects}
@@ -192,40 +191,39 @@ P1 does not have any visual impairment, rather they spoke from their experience 
 These clients are described here only to frame the analysis. None of them took part in the interviews
 \section{Analysis}\label{sec:analysis}
 
-We found sixteen findings. Findings 1 to 8 come from P1; P2, P3 and P4 add evidence to several of them. Findings 9 to 12 are new from P2, and P3 and P4 add evidence to them. Findings 13 to 16 are new from P3 and P4. Table~\ref{tab:trace} shows how each one connects to the SRS, the Hazard Analysis and the POC, and which participants support it. The subsections that follow give the evidence.
+Fifteen findings were identified. Findings 1 to 7 come from P1; P2, P3 and P4 add evidence to several of them. Findings 8 to 11 are new from P2, and P3 and P4 add evidence to them. Findings 12 to 15 are new from P3 and P4. Table~\ref{tab:trace} shows how each one connects to the SRS and the Hazard Analysis, and which participants support it. The subsections that follow give the evidence.
 
-All requirement IDs below exist in the current SRS. ``HA'' refers to the Hazard Analysis. ``POC decision $n$'' refers to the numbered list in the prototype's \texttt{docs/decisions.md}. Tasks A and B are the two POC demo tasks in \texttt{docs/poc-plan.md}.
+All requirement IDs below exist in the current SRS. ``HA'' refers to the Hazard Analysis.
 
 {\small
 \setlength{\tabcolsep}{4pt}
-\begin{longtable}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.2cm} >{\raggedright\arraybackslash}p{3.6cm} >{\raggedright\arraybackslash}p{4.2cm}}
-\caption{Findings traced to the SRS, Hazard Analysis and POC.}\label{tab:trace}\\
+\begin{longtable}{>{\raggedright\arraybackslash}p{4.8cm} >{\raggedright\arraybackslash}p{5.4cm} >{\raggedright\arraybackslash}p{5.2cm}}
+\caption{Findings traced to the SRS and Hazard Analysis.}\label{tab:trace}\\
 \toprule
-\textbf{Finding (participants)} & \textbf{SRS} & \textbf{Hazard Analysis} & \textbf{POC}\\
+\textbf{Finding (participants)} & \textbf{SRS} & \textbf{Hazard Analysis}\\
 \midrule
 \endfirsthead
 \toprule
-\textbf{Finding (participants)} & \textbf{SRS} & \textbf{Hazard Analysis} & \textbf{POC}\\
+\textbf{Finding (participants)} & \textbf{SRS} & \textbf{Hazard Analysis}\\
 \midrule
 \endhead
 \bottomrule
 \endfoot
-1. Users' abilities and devices vary; many acquire loss later (P1, P3, P4) & G.8 user profile; G.7; NFR.E.1; G5 & None & Not addressed\\\addlinespace[3pt]
-2. Screen readers are hard to learn and read too much (P1, P4) & G1, G2; FR18; FR2; FR5; NFR.Sa.3 & H4-c (silence, user unsure) & Short fixed stop messages (decision 13); talking over speech stops speech only (decision 15)\\\addlinespace[3pt]
-3. Email, scheduling and everyday tasks matter most (P1 to P4) & G1; LC4; UC1, UC2; NFR2 & None & Task A (email reply); Task B (calendar event)\\\addlinespace[3pt]
-4. Health and banking details are private, and AI is distrusted (P1, P2, P3) & FR17; FR14; FR23; NFR5; FR.Sa.17 & Loss: privacy leak; H7-c & Made-up demo data (decision 21); no banking\\\addlinespace[3pt]
-5. Read-back helps, but a mistake means starting over (P1 to P4) & FR9; FR.Sa.3; FR.Sa.14; FR6; FR16; FR10; G4 & H2-a & Task A read-back and correction; ``yes'' counts only after the read-back (decision 14)\\\addlinespace[3pt]
-6. Family, intervenors and others help, with limited time (P1 to P4) & G.7 intervenors; G5; FR14; E.6 & Critical assumption: setup help may only be weekly; loss of independence & Not addressed\\\addlinespace[3pt]
-7. Use is mostly at home, somewhere quiet and private (P1) & E.4; FR23; NFR.E.1 & H2-a (causes: noise, other voices) & Not addressed\\\addlinespace[3pt]
-8. Voice-only output excludes deafblind users (P1) & G.6; E.4; ULC2; NFR1 & Critical assumption: users can understand spoken output & Not addressed (voice only)\\\addlinespace[3pt]
-9. Voice already replaces reading and typing, one step at a time (P2, P3, P4) & G1; G.3; ULC2; G.8 user profile & None & Voice interface\\\addlinespace[3pt]
-10. Two-step verification blocks tasks (P2, P3) & FR23; E.6; G5 & Loss of independence (proposed in Finding 6) & Not addressed\\\addlinespace[3pt]
-11. Users check results themselves; tools do not report outcomes (P2, P3, P4) & FR12; FR11; G3; ULC3 & H4-b; H6-a & Outcomes are checked, not assumed (decision 4)\\\addlinespace[3pt]
-12. Describing the screen would help when stuck (P2, P4) & None yet & Loss: privacy leak & Not addressed\\\addlinespace[3pt]
-13. Misheard commands can destroy work, and undo is unreliable (P3, P4) & FR9; FR.Sa.3; FR.Sa.19; FR6; FR16; G4 & H2-a; H5-a; H5-d & Read-back before send; ``yes'' counts only after the read-back (decision 14)\\\addlinespace[3pt]
-14. Banking matters, but security steps and inaccessible screens block it (P3, P4) & FR17; FR23; FR5; E.6; no scope statement yet & Loss: privacy leak; H7-c & No banking (decision 21)\\\addlinespace[3pt]
-15. Inaccessible websites block tasks; P4 wants to state the outcome (P4) & G1; G.3; UC3; NFR2; FR10; FR18 & H7-a (poor labels, unusual layout) & Task B reads a webpage; POC browser is read-only (decision 9)\\\addlinespace[3pt]
-16. Voice input is switched on deliberately (P3, P4) & FR22; E.4 & H2-a (other voices) & Not checked against the POC\\
+1. Users' abilities and devices vary; many acquire loss later (P1, P3, P4) & G.8 user profile; G.7; NFR.E.1; G5 & None\\\addlinespace[3pt]
+2. Screen readers are hard to learn and read too much (P1, P4) & G1, G2; FR18; FR2; FR5; NFR.Sa.3 & H4-c (silence, user unsure)\\\addlinespace[3pt]
+3. Email, scheduling and everyday tasks matter most (P1 to P4) & G1; LC4; UC1, UC2; NFR2 & None\\\addlinespace[3pt]
+4. Health and banking details are private, and AI is distrusted (P1, P2, P3) & FR17; FR14; FR23; NFR5; FR.Sa.17 & Loss: privacy leak; H7-c\\\addlinespace[3pt]
+5. Read-back helps, but a mistake means starting over (P1 to P4) & FR9; FR.Sa.3; FR.Sa.14; FR6; FR16; FR10; G4 & H2-a\\\addlinespace[3pt]
+6. Family, intervenors and others help, with limited time (P1 to P4) & G.7 intervenors; G5; FR14; E.6 & Critical assumption: setup help may only be weekly; loss of independence\\\addlinespace[3pt]
+7. Use is mostly at home, somewhere quiet and private (P1) & E.4; FR23; NFR.E.1 & H2-a (causes: noise, other voices)\\\addlinespace[3pt]
+8. Voice already replaces reading and typing, one step at a time (P2, P3, P4) & G1; G.3; ULC2; G.8 user profile & None\\\addlinespace[3pt]
+9. Two-step verification blocks tasks (P2, P3) & FR23; E.6; G5 & Loss of independence (proposed in Finding 6)\\\addlinespace[3pt]
+10. Users check results themselves; tools do not report outcomes (P2, P3, P4) & FR12; FR11; G3; ULC3 & H4-b; H6-a\\\addlinespace[3pt]
+11. Describing the screen would help when stuck (P2, P4) & None yet & Loss: privacy leak\\\addlinespace[3pt]
+12. Misheard commands can destroy work, and undo is unreliable (P3, P4) & FR9; FR.Sa.3; FR.Sa.19; FR6; FR16; G4 & H2-a; H5-a; H5-d\\\addlinespace[3pt]
+13. Banking matters, but security steps and inaccessible screens block it (P3, P4) & FR17; FR23; FR5; E.6; no scope statement yet & Loss: privacy leak; H7-c\\\addlinespace[3pt]
+14. Inaccessible websites block tasks; P4 wants to state the outcome (P4) & G1; G.3; UC3; NFR2; FR10; FR18 & H7-a (poor labels, unusual layout)\\\addlinespace[3pt]
+15. Voice input is switched on deliberately (P3, P4) & FR22; E.4 & H2-a (other voices)\\
 \end{longtable}
 }
 
@@ -255,8 +253,6 @@ A large group who could benefit from delegation are older, new to their vision l
 
 P3 shows the same pattern from a user: an experienced computer user whose abilities changed, who then had to learn a new way of controlling every device. Someone can be new to voice control without being new to computers. P4 is the opposite case: blind since birth and fluent with screen readers, as in our first evaluation group. P4 chose Apple because accessibility is built in and the commands are the same across devices. This supports our Mac platform choice (NFR.E.1) for users like P4, but does not remove P1's concern about cost.
 
-P1's clients have combined vision and hearing loss. Finding 8 covers what that means for a voice interface.
-
 \affects
 \begin{itemize}
     \item \textbf{G.8 user profiles.} The ``less experienced or recently blind user'' profile now reads ``often older, with acquired vision loss, limited screen-reader skill, and possibly an older device.'' This matches the change the findings notes proposed from P1. P3 suggests the same applies to people new to voice control after a change in ability.
@@ -264,9 +260,6 @@ P1's clients have combined vision and hearing loss. Finding 8 covers what that m
     \item \textbf{NFR.E.1} (macOS with Google Chrome). P4 supports the Apple choice. Open question for the team: whether the platform limit should be stated as a limitation for users on older devices.
     \item \textbf{G5} (straightforward setup). Users who are new to a tool depend more on setup being simple.
 \end{itemize}
-
-\research
-In the Canadian Longitudinal Study on Aging (ages 45 to 85), about 6\% of adults had at least mild dual sensory loss, and about 20 to 24\% had at least mild vision loss (\href{https://resolve.cambridge.org/core/services/aop-cambridge-core/content/view/EEAB27765E0BCA26AAD0C7AC56F048E0/S0714980820000070a.pdf/the-prevalence-of-hearing-vision-and-dual-sensory-loss-in-older-canadians-an-analysis-of-data-from-the-canadian-longitudinal-study-on-aging.pdf}{Mick et al., 2020}). Dual sensory loss rises with age and is much more common in home care and long-term care (\href{https://link.springer.com/doi/10.1186/s12877-022-03671-7}{Guthrie et al., 2022}; \href{https://pmc.ncbi.nlm.nih.gov/articles/PMC4858206}{Guthrie et al., 2016}). Ontario recognizes that deafblindness can be present from birth or acquired later in life (\href{https://www.ontario.ca/page/services-people-who-are-deaf-or-deafblind}{Ontario}).
 
 \subsection{Finding 2: Existing screen readers are hard to learn and read too much}
 
@@ -297,15 +290,11 @@ There is a tension to manage. The system must still report progress and blockers
 
 \affects
 \begin{itemize}
-    \item \textbf{FR18}: spoken updates and summaries include only information relevant to the current task, with more detail on request. The SRS cites the P1 interview as its source; P4 supports it. It is a Must before participant evaluation (SRS S.7), not a POC requirement.
+    \item \textbf{FR18}: spoken updates and summaries include only information relevant to the current task, with more detail on request. The SRS cites the P1 interview as its source; P4 supports it. It is a Must before participant evaluation (SRS S.7).
     \item \textbf{FR2}: the user can interrupt spoken output without restarting or pausing the task. This gives the user a way to cut off speech that is too long.
     \item \textbf{FR5} and \textbf{NFR.Sa.3}: meaningful progress without constant narration (HA H4-c covers the opposite risk, a silent or looping agent).
     \item \textbf{G1, G2}: independent completion, and awareness of relevant progress.
-    \item \textbf{POC.} The stop acknowledgment is a short pre-recorded phrase, ``Pausing work,'' followed by a short confirmation such as ``Paused. Nothing has been sent or changed.'' (decision 13, Task B). Talking over the system stops its speech and the task carries on (decision 15).
 \end{itemize}
-
-\research
-Screen-reader users mostly navigate by headings rather than reading pages in order (71.6\% use headings first), and long-standing problems include links or buttons with unclear meaning, screens changing unexpectedly, complex forms, and too many links or navigation items (\href{https://webaim.org/blog/screen-reader-user-survey-10-results/}{WebAIM Screen Reader Survey \#10}; summary by \href{https://www.rochester.edu/digital-accessibility/?p=7992}{University of Rochester}).
 
 \subsection{Finding 3: Email, scheduling and everyday tasks matter most, and are often done with help}
 
@@ -337,7 +326,7 @@ Screen-reader users mostly navigate by headings rather than reading pages in ord
 \means
 Email came up from P1 and P4, and every participant described everyday tasks: email, texting, writing, research and paying bills. This supports Gmail and Google Calendar as the first connected apps. Needing a friend to make an appointment is the kind of dependence G1 aims to reduce. Booking an appointment on a website is a realistic candidate task for the winter task suite.
 
-Two tasks came up that are outside our current scope. Banking was raised by P3 and P4 as something they do and care about (Finding 14). Spreadsheets were raised by P3 (as their most-used tool) and P4 (as hard to use); spreadsheet editing is not one of our connected apps.
+Two tasks came up that are outside our current scope. Banking was raised by P3 and P4 as something they do and care about (Finding 13). Spreadsheets were raised by P3 (as their most-used tool) and P4 (as hard to use); spreadsheet editing is not one of our connected apps.
 
 \affects
 \begin{itemize}
@@ -345,11 +334,7 @@ Two tasks came up that are outside our current scope. Banking was raised by P3 a
     \item \textbf{LC4}: Gmail and Google Calendar are the first two integrations.
     \item \textbf{UC1} (reply to an email) and \textbf{UC2} (add an event from a webpage to the calendar).
     \item \textbf{NFR2}: the declared task suite. Consider adding an appointment-booking task.
-    \item \textbf{POC.} Task A is an email reply and Task B ends with a calendar event, so both POC tasks are in the areas participants named. The POC browser is read-only (decision 9), so booking on a website is not in the POC.
 \end{itemize}
-
-\research
-Blind users interviewed about voice assistants valued them most at home and described them as part of daily life (\href{https://userpages.umbc.edu/~rkuber/pubs/assets2018.pdf}{Abdolrahmani, Kuber and Branham, ASSETS 2018}).
 
 \subsection{Finding 4: Health and banking details are private, and some users distrust AI with them}
 
@@ -387,11 +372,7 @@ FR17 covers restricting accounts, senders, folders and resources. It does not co
     \item \textbf{NFR5} and \textbf{FR.Sa.17}: no raw audio retained; credentials kept out of logs and model input.
     \item \textbf{FR23} (P2): website passwords are entered on a private setup page, stored encrypted, and never spoken.
     \item \textbf{HA}: ``privacy leak'' is one of the defined losses; H7-c covers access broader than needed. The findings notes propose a new FMEA row for sending health or banking details that a task did not need. It is not in the Hazard Analysis yet.
-    \item \textbf{POC.} The demo uses made-up data in test accounts (decision 21; SRS E.4) and has no banking task.
 \end{itemize}
-
-\research
-In a survey of 155 visually impaired people, concern about sharing information through assistive services varied by the kind of information and who received it (\href{https://www.usenix.org/conference/usenixsecurity20/presentation/akter}{Akter et al., USENIX Security 2020}). Blind users also avoid using voice assistants in public for privacy and social reasons (\href{https://userpages.umbc.edu/~rkuber/pubs/assets2018.pdf}{Abdolrahmani et al., 2018}).
 
 \subsection{Finding 5: A read-back before sending helps, but fixing a mistake means starting over}
 
@@ -432,17 +413,13 @@ Correction has to be cheap: the user should be able to fix one part (``change th
 
 \affects
 \begin{itemize}
-    \item \textbf{FR9} and \textbf{FR.Sa.3}: read back key details and require explicit approval before a consequential action. FR9 is a POC requirement (SRS S.7).
+    \item \textbf{FR9} and \textbf{FR.Sa.3}: read back key details and require explicit approval before a consequential action.
     \item \textbf{FR10}: reading and navigation proceed without approval, so confirmations are limited to actions that matter.
     \item \textbf{FR.Sa.14}: an approval is bound to the exact details; any change needs new approval.
     \item \textbf{FR6} and \textbf{FR16}: accept corrections without a restart, including correcting part of a read-back by voice. The SRS cites the P1 interview for FR16. FR16 is a Must before participant evaluation.
     \item \textbf{G4}: recover without restarting the whole task.
     \item \textbf{HA H2-a} (system misunderstands the user): the recommended action is the read-back with explicit approval.
-    \item \textbf{POC.} In Task A, the system reads back the reply and asks ``Should I send it?'' The user says ``change Friday to Monday''; the old approval stops counting and the new text is read back. This is a partial correction without restarting the request. A spoken ``yes'' counts only after the read-back has finished (decision 14).
 \end{itemize}
-
-\research
-In a study of blind people using speech input on phones, participants spent about 80\% of their time finding and correcting errors, even though speech was about five times faster than the keyboard (\href{https://unpaywall.org/10.1145\%2F2513383.2513440}{Azenkot and Lee, ASSETS 2013}).
 
 \subsection{Finding 6: Family, intervenors and others help, but help takes time and is not always available}
 
@@ -455,7 +432,7 @@ In a study of blind people using speech input on phones, participants spent abou
 
 \saidtwo
 \begin{itemize}
-    \item P2 Q6: ``I had to / Um contact IT for help'' (see Finding 10).
+    \item P2 Q6: ``I had to / Um contact IT for help'' (see Finding 9).
 \end{itemize}
 
 \saidthree
@@ -483,9 +460,6 @@ Every participant described depending on someone else when a tool fails: family,
     \item \textbf{HA critical assumptions}: ``Setup help may only be available weekly (for example, from an intervenor), so recovery after setup should not depend on it.''
 \end{itemize}
 
-\research
-DBCS intervenors help deafblind people get accurate information, communicate, and move around more independently, including at appointments and for errands; DBCS also runs a 24-hour emergency intervenor line (\href{https://champlainhealthline.ca/displayService.aspx?id=211322}{DBCS Ottawa listing}; \href{https://www.torontocentralhealthline.ca/(X(1))/printService.aspx?id=225003}{Toronto listing}).
-
 \subsection{Finding 7: Use is mostly at home, somewhere quiet and private}
 
 \said
@@ -494,7 +468,7 @@ DBCS intervenors help deafblind people get accurate information, communicate, an
 \end{itemize}
 
 \means
-This supports our assumption that only the user gives commands. It lowers the risk that private content read aloud is overheard, but does not remove it. It is also a second mention of older devices (Finding 1). P2 to P4 were not asked where they use their computers. Finding 16 covers how P3 and P4 keep voice input from picking up other people.
+This supports our assumption that only the user gives commands. It lowers the risk that private content read aloud is overheard, but does not remove it. It is also a second mention of older devices (Finding 1). P2 to P4 were not asked where they use their computers. Finding 15 covers how P3 and P4 keep voice input from picking up other people.
 
 \affects
 \begin{itemize}
@@ -504,30 +478,7 @@ This supports our assumption that only the user gives commands. It lowers the ri
     \item \textbf{NFR.E.1}: see Finding 1 on older devices.
 \end{itemize}
 
-\research
-Blind voice-assistant users describe home as their comfort zone and avoid using them on public transit (\href{https://userpages.umbc.edu/~rkuber/pubs/assets2018.pdf}{Abdolrahmani et al., 2018}).
-
-\subsection{Finding 8: Voice-only output excludes deafblind users}
-
-\said
-This was not asked directly (the transcript lists it as not covered). P1's whole client group has combined vision and hearing loss. P1 described intervenors providing ``any kind of visual context, ASL [transcribed as ``ALS''; confirm], or hand-touch language.''
-
-\means
-Natural Control speaks its questions, read-backs and results. A user who cannot hear that output cannot approve an action safely. The group P1 knows best is therefore largely outside what our first version supports. We state this as a limitation rather than hide it. Braille output through VoiceOver is a possible future extension. P4 mentioned using braille devices at school before talking computers existed, but did not say whether they use braille now.
-
-\affects
-\begin{itemize}
-    \item \textbf{G.6}: ``Users who cannot hear spoken output, including many deafblind users'' are excluded; braille output through VoiceOver is a possible extension.
-    \item \textbf{E.4}: ``The user can hear spoken output (see G.6).''
-    \item \textbf{HA critical assumptions}: ``Users can understand spoken output,'' with the note that this excludes many deafblind users, citing the P1 interview.
-    \item \textbf{ULC2}: voice stays the primary interaction mode, so this exclusion is a deliberate scope limit.
-    \item \textbf{NFR1}: session controls, pause, approval and history work with VoiceOver and the keyboard alone. This is the path a braille extension would build on.
-\end{itemize}
-
-\research
-DBCS intervenors use ASL, braille, large print, print on palm, two-hand manual, and voice-over (\href{https://www.torontocentralhealthline.ca/(X(1))/printService.aspx?id=225003}{DBCS listing}). VoiceOver on Mac can send output to a refreshable braille display and accept braille input (\href{https://support.apple.com/guide/voiceover/vo15607/mac}{Apple}).
-
-\subsection{Finding 9: Voice already replaces reading and typing for everyday tasks, but one step at a time}
+\subsection{Finding 8: Voice already replaces reading and typing for everyday tasks, but one step at a time}
 
 \saidtwo
 \begin{itemize}
@@ -563,7 +514,7 @@ P2 uses zoom and can partly check the screen, and P3 can see the screen fully. T
     \item \textbf{G.8 user profiles.} Proposal for team review: add a ``low-vision user'' profile, who uses zoom and voice and can partly check the screen, and extend the sighted-user profile to people who need voice because of a motor disability.
 \end{itemize}
 
-\subsection{Finding 10: Two-step verification blocks tasks}
+\subsection{Finding 9: Two-step verification blocks tasks}
 
 \saidtwo
 \begin{itemize}
@@ -579,7 +530,7 @@ P2 uses zoom and can partly check the screen, and P3 can see the screen fully. T
 \end{itemize}
 
 \means
-Sign-in and two-step verification are a real point where a user can get stuck and need someone else. P2 needed IT help. P3 can only use some code methods by voice, and their bank does not offer the one that works. Speaking a code is also where misrecognition can block sign-in (Finding 13). P3 still values the extra security, so the system should not try to avoid these checks; it should help the user through them. When a code does not arrive, the system should say so clearly and tell the user what they can do, instead of waiting or retrying without saying anything.
+Sign-in and two-step verification are a real point where a user can get stuck and need someone else. P2 needed IT help. P3 can only use some code methods by voice, and their bank does not offer the one that works. Speaking a code is also where misrecognition can block sign-in (Finding 12). P3 still values the extra security, so the system should not try to avoid these checks; it should help the user through them. When a code does not arrive, the system should say so clearly and tell the user what they can do, instead of waiting or retrying without saying anything.
 
 \affects
 \begin{itemize}
@@ -587,10 +538,9 @@ Sign-in and two-step verification are a real point where a user can get stuck an
     \item \textbf{E.6}: account states can change outside the system at any time, and authentication is controlled by the provider.
     \item \textbf{G5}: setup and routine use should not depend on outside help.
     \item \textbf{HA.} This supports the ``loss of independence'' FMEA row proposed in Finding 6.
-    \item \textbf{POC.} Not addressed.
 \end{itemize}
 
-\subsection{Finding 11: Users check results themselves, and current tools do not report outcomes}
+\subsection{Finding 10: Users check results themselves, and current tools do not report outcomes}
 
 \saidtwo
 \begin{itemize}
@@ -619,10 +569,9 @@ No participant has a tool that tells them whether an action worked. P2 checks by
     \item \textbf{G3}: compare reported outcomes with independently verified state.
     \item \textbf{ULC3}: reporting outcomes only against matching evidence.
     \item \textbf{HA H4-b} and \textbf{H6-a}: claiming or wrongly confirming an outcome that did not happen.
-    \item \textbf{POC.} Outcomes are checked, not assumed: after a send, the POC looks for the email in Sent (decision 4).
 \end{itemize}
 
-\subsection{Finding 12: Describing the screen would help when the user is stuck}
+\subsection{Finding 11: Describing the screen would help when the user is stuck}
 
 \saidtwo
 \begin{itemize}
@@ -644,10 +593,9 @@ For P2, describing a problem in words is slow and tiring, and showing the screen
     \item \textbf{No current requirement.} Proposal for team review: when the user asks for help, the system can describe the current page or screen, including content a screen reader cannot read, so the user does not have to explain it.
     \item \textbf{FR17} and \textbf{FR14}: any screen capture must respect restricted resources and needed permissions only.
     \item \textbf{HA}: ``privacy leak'' is one of the defined losses.
-    \item \textbf{POC.} Not addressed. The POC can take browser screenshots for the agent (untested), but not to help the user.
 \end{itemize}
 
-\subsection{Finding 13 (P3, P4): Misheard commands can destroy work, and undo is unreliable}
+\subsection{Finding 12 (P3, P4): Misheard commands can destroy work, and undo is unreliable}
 
 \saidthree
 \begin{itemize}
@@ -676,10 +624,9 @@ Two points for design. First, numbers, amounts and names should be read back in 
     \item \textbf{FR.Sa.19}: before deletions, read back identifying details, state whether the operation is reversible, and use recoverable deletion where supported.
     \item \textbf{FR6}, \textbf{FR16} and \textbf{G4}: correct a mistake without starting over.
     \item \textbf{HA H2-a} (misunderstands the user, including numbers), \textbf{H5-a} (a consequential action without approval) and \textbf{H5-d} (a delete approved by mistake). P3's experience is a real instance of each cause.
-    \item \textbf{POC.} The read-back before a send, and a ``yes'' that counts only after the read-back (decision 14), address the main risk for Task A. Deletion is not part of the POC tasks.
 \end{itemize}
 
-\subsection{Finding 14 (P3, P4): Banking matters, but security steps and inaccessible screens block it}
+\subsection{Finding 13 (P3, P4): Banking matters, but security steps and inaccessible screens block it}
 
 \saidthree
 \begin{itemize}
@@ -697,7 +644,7 @@ Two points for design. First, numbers, amounts and names should be read back in 
 \end{itemize}
 
 \means
-Banking is a task both P3 and P4 do and care about, and both are blocked in parts of it. P3's voice tool is not allowed in banking, and P3 is too slow with the alternative to finish before the site times them out. P4 can bank with VoiceOver except for one security screen that traps them in a loop. This conflicts with the privacy concerns in Finding 4 (P1, P2, P3) and with the current POC, which has no banking. Both can be true: banking is high value and high risk.
+Banking is a task both P3 and P4 do and care about, and both are blocked in parts of it. P3's voice tool is not allowed in banking, and P3 is too slow with the alternative to finish before the site times them out. P4 can bank with VoiceOver except for one security screen that traps them in a loop. This conflicts with the privacy concerns in Finding 4 (P1, P2, P3). Both can be true: banking is high value and high risk.
 
 The team should decide whether banking stays out of scope and, if so, state it as a limitation in the SRS. If banking is ever in scope, P3's timeouts matter: an agent waiting for the user's approval could be timed out by the site, so the user would need to know.
 
@@ -705,14 +652,13 @@ The team should decide whether banking stays out of scope and, if so, state it a
 \begin{itemize}
     \item \textbf{No current scope statement.} G.6 does not list banking. Proposal for team review: state whether banking is in scope.
     \item \textbf{FR17}: users can keep financial accounts off-limits.
-    \item \textbf{FR23}: authentication codes and passwords; see Finding 10.
+    \item \textbf{FR23}: authentication codes and passwords; see Finding 9.
     \item \textbf{FR5}: pending approvals do not expire while the user is connected, but a website session can. No current requirement says to warn the user.
     \item \textbf{E.6}: account and page states, including sessions, can change outside the system.
     \item \textbf{HA}: ``privacy leak'' is one of the defined losses; H7-c covers access broader than needed.
-    \item \textbf{POC.} No banking task (decision 21).
 \end{itemize}
 
-\subsection{Finding 15 (P4): Inaccessible websites block tasks, and P4 wants to state the outcome instead}
+\subsection{Finding 14 (P4): Inaccessible websites block tasks, and P4 wants to state the outcome instead}
 
 \saidfour
 \begin{itemize}
@@ -732,10 +678,9 @@ P4 is fluent with VoiceOver, but some websites are built so that a screen reader
     \item \textbf{FR10}: reading and navigation proceed without approval, so finding a control does not need the user.
     \item \textbf{FR18}: put what matters first; P4 asked sites not to ``bury'' important information.
     \item \textbf{HA H7-a}: acting on the wrong page element because of poor labels or an unusual layout.
-    \item \textbf{POC.} Task B reads an event from a webpage. The POC browser is read-only (decision 9), so it cannot submit data on a site like the one P4 described.
 \end{itemize}
 
-\subsection{Finding 16 (P3, P4): Voice input is switched on deliberately}
+\subsection{Finding 15 (P3, P4): Voice input is switched on deliberately}
 
 \saidthree
 \begin{itemize}
@@ -755,17 +700,6 @@ Both voice users start voice input on purpose and stop it when they are done, ra
     \item \textbf{FR22}: controls and a keyboard shortcut to start and end a voice session; the SRS rationale is that deliberate activation avoids an always-on microphone.
     \item \textbf{E.4}: ``Only the user gives commands; other voices are noise.''
     \item \textbf{HA H2-a}: causes include other people talking.
-    \item \textbf{POC.} Not checked against the POC in this report.
-\end{itemize}
-
-\subsection{What the interviews did not answer}\label{sec:open}
-
-\begin{itemize}
-    \item \textbf{How much spoken feedback.} P1: ``I don't think I'd be good at answering that. I can't answer that.'' P2 described having ``basically a conversation'' with an AI tool (P2 Q8), but did not say how much detail they want. P4 adjusts VoiceOver's speed and reads by word, line or character as needed (Finding 2), which suggests control over detail matters. No participant said how often an agent should report progress during a task. This affects FR5, FR18 and the value of IDLE\_PROMPT\_TIME (NFR.Sa.3).
-    \item \textbf{How a blind user wants to find and fix an agent's mistake.} P1 asked, ``Would it tell me that a mistake was made, or would I tell it?'' and then said, ``It should tell you, I'm assuming.'' P3 described fixing voice mistakes with undo or by hand (Finding 13), but P3 checks visually. P4 said VoiceOver ``doesn't really mess up'' because it only does what P4 tells it. We still do not know how a blind user wants to be told about, and correct, a mistake made by an agent. This affects G4, FR6, FR12 and FR16.
-    \item \textbf{Stopping a task.} No interview asked about stopping a running task, and no participant raised it. P3 described muting Voice Access so it stops listening (Finding 16), which is not the same as stopping work. The stop control is the POC's main control (FR3, FR8, FR.Sa.4, NFR3; HA H2-b). No interview supports or challenges it. It must be tested with blind participants.
-    \item \textbf{Delegating multi-step tasks.} Participants use voice for single commands (Finding 9). P4's ``play the video that corresponds with this'' (Finding 15) is the closest any participant came to describing delegation. Whether users trust an agent with a whole task is open, and P3's distrust of AI (Finding 4) suggests it cannot be assumed.
-    \item \textbf{Specific moments of difficulty.} Asked for a time someone got stuck (Q3), P1 said ``No,'' so the P1 findings rest on general impressions. Set 2 did produce specific incidents: P2's two-step verification, P3's lost spreadsheet work and bank timeouts, and P4's update prompt and banking PIN loop.
 \end{itemize}
 
 \subsection{Empathy map}\label{sec:empathy}
@@ -829,7 +763,7 @@ Gains & Convenience and speed from voice. & P2 Q4: ``it just makes my life more 
 \end{longtable}
 }
 
-\paragraph{What the map shows.} Every category now has direct words from people with a disability that affects how they use a computer, which the P1-only map did not have. Does and Pains are the best supported: participants described specific tasks, tools, workarounds and failures. Feels is still the thinnest; most entries came from participants' own words rather than from the Set 2 probes on feelings, which were not always asked. Two gaps remain. Only one participant (P4) is fully blind, so most entries are not yet confirmed by our first evaluation group. And no participant has delegated a multi-step task to an agent, so the map describes today's tools, not how users will feel about supervising an agent. The winter sessions should fill these gaps.
+\paragraph{What the map shows.} Every category now has direct words from people with a disability that affects how they use a computer, which the P1-only map did not have. Does and Pains are the best supported: participants described specific tasks, tools, workarounds and failures. Feels is still the thinnest; most entries came from participants' own words rather than from the Set 2 probes on feelings, which were not always asked.
 
 \section{Limitations}\label{sec:limits}
 
@@ -847,7 +781,7 @@ Overall, most of these limitations could be addressed by simply interviewing mor
 
 \begin{itemize}
     \item \textbf{Recruitment.} SRS P.4 aims to recruit two to four blind participants with screen-reader experience. P3 and P4 said they would test the prototype; P4 fits the first evaluation group, and P3 fits the second group. P1 said the could probably introduce the team to two or three people; follow up with P1 in writing. P4 suggested a family member who uses technology at work as another possible participant. 
-    \item \textbf{POC demonstration (November 23 to December 3).} The demo shows the read-back and partial correction in Task A, and the stop and short confirmations in Task B. When presenting the demo, the team can say that the interviews support the read-back and correction (P1, P3, P4) and checking outcomes (P2, P3, P4), but did not cover stopping.
+    \item \textbf{POC and future development.} The findings and open questions in this report should guide the POC and later development. Many findings fall outside the POC's scope and apply to later stages of the project. Open questions, such as how users want to stop a running task, should be tested with blind participants.
     \item \textbf{Proposals from User Interview} Decide whether any of the new findings should be added to the previous documents (SRS, HA, etc.), and if so, update the documents.
     \item \textbf{Update the SRS sources.} The SRS should be updated to reference the interviews from P2, P3, and P4 as sources.
 \end{itemize}
@@ -857,9 +791,7 @@ Overall, most of these limitations could be addressed by simply interviewing mor
 \titleformat{\section}{\normalfont\Large\bfseries}{Appendix \thesection:}{0.5em}{}
 
 
-\section{Questions asked}
-
-In this report, ``Q$n$'' on its own means a Set 1 question (asked to P1). ``P2 Q$n$'', ``P3 Q$n$'' and ``P4 Q$n$'' mean Set 2 question $n$ as asked to that participant. 
+\section{Question Sets}
 
 \subsection*{Set 1: Baseline Questions (P1)}\label{sec:initialQs}
 
@@ -936,7 +868,7 @@ This is the same interview that was used in the SRS.\\
     \item Kevin Kim:
     \begin{itemize}
         \item \textbf{P2 interview.} The ChatGPT voice feature transcribed P2's spoken answers into text during the interview. ChatGPT then turned screenshots of that transcription into the plain text in Appendix~\ref{app:p2interview}.
-        \item \textbf{P2 sections.} Claude Code drafted the P2 parts of this report from that text: the P2 interview method (Section~\ref{sec:p2method}), the P2 questions and subject, the P2 evidence in Findings 4 and 5, Findings 9 to 12 and their rows in Table~\ref{tab:trace}, and the P2 changes to the open questions, limitations and next steps. It also formatted Appendix~\ref{app:p2interview}.
+        \item \textbf{P2 sections.} Claude Code drafted the P2 parts of this report from that text: the P2 interview method (Section~\ref{sec:p2method}), the P2 questions and subject, the P2 evidence in Findings 4 and 5, Findings 8 to 11 and their rows in Table~\ref{tab:trace}, and the P2 changes to the open questions, limitations and next steps. It also formatted Appendix~\ref{app:p2interview}.
     \end{itemize}
 \end{itemize}
 
@@ -944,7 +876,7 @@ This is the same interview that was used in the SRS.\\
 \todo{Describe how the team checked AI output against the transcript, the SRS and the Hazard Analysis before submission.}
 
 \begin{itemize}
-    \item Kevin Kim: Kevin conducted the P2 interview himself, so the questions, date, format and consent are first-hand. The raw responses in Appendix~\ref{app:p2interview} were compared line by line with the copy in \texttt{P2Interview.md}, and every quote in Findings 9 to 12 was checked against Appendix~\ref{app:p2interview}. Every SRS requirement ID cited for P2 was checked against the SRS, and every claim about the POC was checked against the POC's \texttt{docs/decisions.md} and \texttt{docs/poc-plan.md}. Claims that could not be confirmed from these sources were removed rather than kept.
+    \item Kevin Kim: Kevin conducted the P2 interview himself, so the questions, date, format and consent are first-hand. The raw responses in Appendix~\ref{app:p2interview} were compared line by line with the copy in \texttt{P2Interview.md}, and every quote in Findings 8 to 11 was checked against Appendix~\ref{app:p2interview}. Every SRS requirement ID cited for P2 was checked against the SRS, and every claim about the POC was checked against the POC. Claims that could not be confirmed from these sources were removed rather than kept.
 \end{itemize}
 
 \end{document}
