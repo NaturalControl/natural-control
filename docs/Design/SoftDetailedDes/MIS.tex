@@ -2962,7 +2962,7 @@ cannot reach the user's machine or its signed-in browser sessions.
 \subsubsection{Exported Access Programs}
 
 \begin{programs}
-loadConfig & -- & -- & MalformedSetting\\
+loadConfig & -- & -- & MalformedSetting, MissingSetting\\
 config & -- & Config & NotLoaded\\
 \end{programs}
 
@@ -2989,7 +2989,8 @@ current $\neq \nil \Rightarrow$ every \str{} component of current is non-empty
 and current.secrets $\in$ SecretSource.
 
 \noindent This holds after loadConfig, which fills every component either from
-env or from a default above and otherwise raises MalformedSetting, and no other
+env or from a default above and otherwise raises MalformedSetting or
+MissingSetting, and no other
 program writes current.
 
 \subsubsection{Access Routine Semantics}
@@ -2999,9 +3000,12 @@ program writes current.
 \item transition: current $:=$ the Config whose every component is the
 corresponding setting in env, or the default above where env does not supply it
 \item exception: $exc :=$ (a setting is present in env but is not a value of its
-component's type $\Rightarrow$ MalformedSetting). An absent setting is not an
+component's type $\Rightarrow$ MalformedSetting $|$ localEndpoint is absent from
+env $\Rightarrow$ MissingSetting). An absent setting that has a default is not an
 error; a malformed one is, because silently falling back to a default would
-start a session against a provider the operator did not choose.
+start a session against a provider the operator did not choose. localEndpoint
+has no default, because where the local component runs differs between
+deployments (SRS~E.3), so its absence is an error rather than a guess.
 \end{itemize}
 
 \noindent config():
