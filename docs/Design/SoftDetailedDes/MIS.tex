@@ -1517,7 +1517,7 @@ not already been used, and the action now being run is the one that was
 approved.
 
 \noindent The last conjunct compares the whole Action, not only its details. An
-approval for sending a particular message must not authorise deleting a
+approval for creating a particular event must not authorise deleting a
 different one that happens to carry the same field values, which is hazard H7-a:
 the target has to be re-checked against what was approved immediately before
 acting.
@@ -1706,7 +1706,7 @@ sendMail & to: \str, subject: \str, body: \str &
 \hyperref[type:Outcome]{Outcome} & Paused, Restricted, NotApproved\\
 createEvent & title: \str, start: \str, end: \str, place: \str &
 \hyperref[type:Outcome]{Outcome} & Paused, NotApproved\\
-deleteMessage & r: \hyperref[type:ResourceRef]{ResourceRef} &
+deleteEvent & r: \hyperref[type:ResourceRef]{ResourceRef} &
 \hyperref[type:Outcome]{Outcome} & Paused, Restricted, NotApproved\\
 \end{programs}
 
@@ -1813,10 +1813,11 @@ evidence M9 assesses
 returned false $\Rightarrow$ NotApproved)
 \end{itemize}
 
-\noindent deleteMessage(r):
+\noindent deleteEvent(r):
 \begin{itemize}
 \item transition and output: as sendMail, with a $=$ (Delete, r, the
-identifying fields of the message at r). The read-back names those fields and
+identifying fields of the event at r: its title, start, end and place). The
+read-back names those fields and
 states whether the deletion can be undone, and M16 is asked for a recoverable
 deletion where the provider offers one.
 \item exception: $exc :=$ ($\lnot$task.mayAct() $\Rightarrow$ Paused $|$
@@ -2450,7 +2451,7 @@ sendMessage & to: \str, subject: \str, body: \str &
 \hyperref[type:ResourceRef]{ResourceRef} & ProviderUnavailable\\
 findSent & r: \hyperref[type:ResourceRef]{ResourceRef} & Message $\cup
 \{\nil\}$ & ProviderUnavailable\\
-deleteMessage & r: \hyperref[type:ResourceRef]{ResourceRef}, recoverable: $\B$
+deleteEvent & r: \hyperref[type:ResourceRef]{ResourceRef}, recoverable: $\B$
 & -- & ProviderUnavailable, NotRecoverable\\
 createEvent & title: \str, start: DateTime, end: DateTime, place: \str &
 \hyperref[type:ResourceRef]{ResourceRef} & ProviderUnavailable\\
@@ -2532,10 +2533,10 @@ not there
 ProviderUnavailable)
 \end{itemize}
 
-\noindent deleteMessage(r, recoverable):
+\noindent deleteEvent(r, recoverable):
 \begin{itemize}
-\item transition: the message at r is deleted, to a recoverable location when
-recoverable holds
+\item transition: the event at r is deleted from the user's calendar, to a
+recoverable location when recoverable holds
 \item exception: $exc :=$ (accounts cannot be reached $\Rightarrow$
 ProviderUnavailable $|$ recoverable $\wedge$ the provider offers no recoverable
 deletion $\Rightarrow$ NotRecoverable)
@@ -2544,7 +2545,7 @@ deletion $\Rightarrow$ NotRecoverable)
 \noindent The exception rather than a silent permanent deletion is the point.
 FR.Sa.19 requires the system to say whether a deletion can be undone, so a
 caller that asked for a recoverable one must learn that it cannot have it
-before the message is gone.
+before the event is gone.
 
 \noindent createEvent(title, start, end, place):
 \begin{itemize}
