@@ -2,21 +2,16 @@
 
 ## Interview details
 
-- **Participant:** P2, a recent graduate with low vision. P2 uses zoom and audio features, and asks Siri to do tasks.
 - **Date:** November 14, 2026
-- **Format:** In person, one conversation of about 15 minutes
-- **Recruitment:** A friend of the interviewer, recruited directly
 - **Interviewer:** Kevin Kim
-- **Questions:** The 12 questions in [`UserInterviewGuide.md`](UserInterviewGuide.md), asked in order.
-- **Recording:** P2's answers were transcribed into text by ChatGPT's voice feature during the interview. There is no audio recording.
-- **Consent:** P2 consented to the interview.
+- **Participant:** P2, a recent graduate with low vision. P2 uses zoom and audio features, and asks Siri to do tasks.
+- **Format:** In-person conversation, about 15 minutes long
+- **Editing:** P2's answers were transcribed into text by ChatGPT's voice feature during the interview. The interviewer's opening and closing remarks are not included. No other editing of the responses was conducted.  
+- **Recruitment:** A friend of the interviewer, recruited directly
+- **Consent:** P2 verbally consented to the interview and its recording prior to the recording beginning.
 - **Anonymization:** P2 is not named. No identifying details are recorded.
 
-This file is separate from `InterviewReport.tex`'s P1 interview. P1 was a former staff member of Deafblind Community Services who is not blind or deaf. `InterviewReport.tex` analyzes both interviews.
-
-## Raw responses
-
-The responses are ChatGPT's transcription of P2's words, kept unedited, including filler words, repetitions and grammar. Each line is a separate recorded message. The interviewer's opening and closing remarks are not included.
+---
 
 ### Q1. Tell me a bit about yourself and how technology fits into your day. As much as you're comfortable sharing, how does your disability affect how you use a computer, and has that changed over time?
 
@@ -126,12 +121,8 @@ The interviewer skipped this question.
 >
 > is very Useful for me as someone that has visual impairment
 
-## Limitations
+--- 
 
-- One participant, with low vision rather than blindness. P2 uses zoom, so some answers may not apply to users who cannot see the screen at all.
-- The interviewer is a team member and a developer of the system.
-- The responses are a machine transcription with no audio recording to check against, so some wording may be a transcription error.
-- Q10 was not answered. No conclusion is drawn from it.
-- Q11: P2 did not give a reason for avoiding saving personal information and passwords.
-
-The analysis of these responses is in `InterviewReport.tex`.
+## Questions not covered:
+- Q10 was skipped due to the interviewee not understanding it. 
+- A response was given for Q11, but P2 did not answer the second half of the question and give a reason why.
