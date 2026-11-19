@@ -203,9 +203,26 @@ Name 5 & Num & Num \\
 
 \section{CICD via GitHub Actions}
 
-\wss{Say how CICD technology is used and will be used in your project.}
+The repository uses one GitHub Actions workflow,
+\href{https://github.com/NaturalControl/natural-control/blob/main/.github/workflows/latex-pages.yml}{\texttt{latex-pages.yml}},
+to build and publish the documentation. It runs on every pull request to main,
+on every push to main, and on demand, whenever a change touches the documents,
+the references, the Makefile or the build scripts. It works out which documents
+the change affects and rebuilds only those, using the repository's Makefile.
 
-\wss{Provide links to your CICD yaml files}
+On a pull request, the workflow checks that the affected documents compile, so a
+broken document is caught before it is merged; the Development Plan requires
+these checks to pass before anything is merged into the protected main branch.
+On a push to main, it also commits the rebuilt PDFs to the \texttt{pdfs/} folder
+for TA review and deploys them to the project's
+\href{https://naturalcontrol.github.io/natural-control/}{GitHub Pages site}.
+
+The proof-of-concept code is still developed in a separate repository. Its
+workflows are written but have not yet run, because GitHub Actions fails to start
+in that repository. They will move into this repository with the code and run on
+every pull request to main: for the Python code, Ruff linting and format checks
+and the pytest tests; for the web client, linting, type checks, tests and a
+build.
 
 \section{Custom Documents (CDs)}
 
