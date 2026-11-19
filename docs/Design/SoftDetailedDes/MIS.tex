@@ -1854,7 +1854,7 @@ TaskHistory
 
 \subsection{Uses}
 
-Event Log (M19 \ref{mod:log}).
+None.
 
 \subsection{Syntax}
 
@@ -1901,9 +1901,9 @@ here, which is what lets the invariant below hold.
 
 \subsubsection{State Invariant}
 
-Every component of every element of entries derives from a
-\hyperref[type:LogEvent]{LogEvent} recorded by M19 or from the state of a task
-held by M7; no component derives from an assertion by the planner.
+Every component of every element of entries derives from the state of a task
+held by M7 or from an outcome established by M9; no component derives from an
+assertion by the planner.
 
 \noindent This is FR.Sa.2 and hazard H8-a. A history assembled from what the
 planner said it did would reproduce exactly the error the user cannot see, so
