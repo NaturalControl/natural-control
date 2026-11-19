@@ -156,12 +156,12 @@ system's spoken responses and how much detail each one carries.
 transitions allowed between them, as the state machine in SRS S.9 is refined.
 \item[\refstepcounter{acnum} \actheacnum \label{acGate}:] Which actions count as
 consequential, and how an approval is bound to the exact details of the action it
-authorises.
+authorises, including how those details are read back to the user.
 \item[\refstepcounter{acnum} \actheacnum \label{acVerify}:] What counts as
 sufficient evidence that an action happened, and how an outcome is classified as
 verified, partial, failed or unknown.
 \item[\refstepcounter{acnum} \actheacnum \label{acTools}:] The set of tools the
-planner may call, and the read-back each one produces for approval.
+planner may call.
 \item[\refstepcounter{acnum} \actheacnum \label{acHist}:] What the task history
 records, and how it is reviewed, retained and deleted.
 \item[\refstepcounter{acnum} \actheacnum \label{acPolicy}:] How a restriction on
@@ -438,8 +438,8 @@ in flight.
 \subsubsection{Action Gate Module (\mref{mGate})}
 \begin{description}
 \item[Secrets:] The conditions under which an action may execute: which
-effects count as consequential, and how an approval is bound to the exact details
-it authorises.
+effects count as consequential, how an approval is bound to the exact details
+it authorises, and how those details are read back to the user.
 \item[Services:] Classifies a proposed action by its effect; holds a
 consequential action with its read-back until the user decides or it is
 withdrawn; binds each approval to one set of details and a single use;
@@ -462,8 +462,7 @@ outcome is unresolved.
 
 \subsubsection{Agent Tools Module (\mref{mTools})}
 \begin{description}
-\item[Secrets:] The tool surface available to the planner, including the
-read-back each tool produces for approval.
+\item[Secrets:] The tool surface available to the planner.
 \item[Services:] Presents the only interface through which the planner can
 reach an account or a website; marks retrieved content as data; refuses to
 start a new action while the task may not act; obtains approval before a
