@@ -120,11 +120,26 @@ jobs:
           # before pandoc runs so it does not try to generate it in its temp dir.
           sudo fmtutil-sys --byfmt pdflatex
           kpsewhich --engine=pdftex pdflatex.fmt
+          # texlive-binaries ships /usr/bin/bibtex.original and registers
+          # /usr/bin/bibtex through update-alternatives in its postinst, so a
+          # restored cache leaves no bibtex on PATH at all. The Makefile's
+          # bibtex step cannot report that, so assert it here instead: without
+          # it every \cite renders as "?" and no References section appears.
+          if ! command -v bibtex >/dev/null; then
+            if [ -x /usr/bin/bibtex.original ]; then
+              sudo update-alternatives --install /usr/bin/bibtex bibtex /usr/bin/bibtex.original 50
+            else
+              echo "bibtex is missing and /usr/bin/bibtex.original is not there either" >&2
+              exit 1
+            fi
+          fi
 
           pdflatex --version | head -1
+          bibtex --version | head -1
           pandoc --version | head -1
           kpsewhich article.cls
           kpsewhich amsmath.sty
+          kpsewhich plainnat.bst
           # pandoc's default template pulls in packages the .tex documents
           # never ask for (lmodern.sty was missing the first time this ran),
           # so smoke-test the Markdown path itself rather than guessing at
