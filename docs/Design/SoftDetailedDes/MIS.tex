@@ -845,7 +845,8 @@ current & -- & TaskState $\cup \{\nil\}$ & --\\
 
 \noindent task: TaskState $\cup \{\nil\}$\\
 pendingId: \hyperref[type:ActionId]{ActionId} $\cup \{\nil\}$\\
-readbackOf: \hyperref[type:ActionId]{ActionId} $\to$ UtteranceId
+readbackOf: \hyperref[type:ActionId]{ActionId} $\to$ UtteranceId\\
+published: \hyperref[type:TaskState]{TaskStateT} $\cup \{\nil\}$ (the task state last sent to the client)
 
 \subsubsection{Environment Variables}
 
@@ -882,9 +883,16 @@ can only be outstanding while the task is waiting for one.
 publishHistory(review() of M11) of M3, so the history the client shows is never
 behind the recorded one.
 
+\noindent At the end of every program below, if task $\neq \nil$ and
+task.state() $\neq$ published, then publishState(task.state()) of M3 is called
+and published $:=$ task.state(). M10 also moves the task, during a tool call;
+because poll runs repeatedly while a task is active, such a change reaches the
+client within one poll. This is how the client's showState is driven.
+
 \noindent initControl():
 \begin{itemize}
-\item transition: task, pendingId, readbackOf $:=$ $\nil$, $\nil$, $\emptyset$.
+\item transition: task, pendingId, readbackOf, published $:=$ $\nil$, $\nil$,
+$\emptyset$, $\nil$.
 Then loadConfig() of M20 is called and each setting is passed to the module that
 needs it.
 \item exception: a provider that cannot be reached raises its own exception
@@ -923,7 +931,7 @@ Changed) and the text is passed to M13 as a correction. $out :=$ true
 \item the task is paused: phrase(AlreadyPaused) is spoken; $out :=$ true
 \item task $= \nil$ or task.state() $\in$ FINAL: task $:=$ new TaskState(text),
 and recordTask(task) of M11;
-the request is passed to M13; $out :=$ false
+start(text, task) of M13 is called; $out :=$ false
 \item otherwise: text is passed to M13 as a correction to the running task,
 which FR6 requires to need no restart, and if task.state() $=$
 AwaitingClarification then task.moveTo(Working), since the text is the user's
@@ -1017,8 +1025,8 @@ or phrase(AlreadyPaused) is spoken and nothing changes. Otherwise, in order:
 \item write(STOP\_HEARD) to M19
 \item task.moveTo(Pausing), after which task.mayAct() is false and M10 will
 start nothing further; write(BLOCKED)
-\item M13 is interrupted, withdrawAll() of M8 is called, and pendingId $:=
-\nil$
+\item M13 is interrupted; w $:=$ awaiting() of M8, read before anything is
+withdrawn; withdrawAll() of M8 is called, and pendingId $:= \nil$
 \item phrase(StopAcknowledged) is spoken and cannot be interrupted;
 write(ACKNOWLEDGED)
 \item each action in task.inFlight() is given up to SETTLE\_LIMIT to settle;
@@ -1028,7 +1036,8 @@ task.recordWork and passed to recordOutcome of M11, so that the recordTask call
 in the next step copies the settled outcome rather than overwriting it
 \item task.moveTo(Paused); recordTask(task) of M11; write(PAUSED)
 \item phrase(WorkReport) is spoken, naming completed work, work not done, and
-any outcome still unknown
+any outcome still unknown; if w $\neq \emptyset$, phrase(ApprovalWithdrawn) is
+also spoken, naming each action in w as not executed, which FR.Sa.15 requires
 \end{enumerate}
 \end{itemize}
 
@@ -1055,11 +1064,12 @@ state that reconnecting a voice session does not by itself resume work.
 
 \noindent cancel():
 \begin{itemize}
-\item transition: M13 is interrupted; withdrawAll() of M8 is called and
-pendingId $:= \nil$; task.moveTo(Cancelling); actions in task.inFlight() are
+\item transition: M13 is interrupted; w $:=$ awaiting() of M8; withdrawAll() of
+M8 is called and pendingId $:= \nil$; task.moveTo(Cancelling); actions in task.inFlight() are
 given up to SETTLE\_LIMIT as in stopWork; task.moveTo(Cancelled);
 recordTask(task) of M11; phrase(Cancelled) is spoken, which states that earlier
-actions were not undone
+actions were not undone, and if w $\neq \emptyset$, phrase(ApprovalWithdrawn)
+names each action in w as not executed
 \item exception: $exc :=$ (task $= \nil$ $\vee$ task.state() $\in$ FINAL
 $\Rightarrow$ NothingToCancel)
 \end{itemize}
@@ -1877,8 +1887,8 @@ None.
 
 \subsubsection{Type of Module}
 
-Abstract Object. One set of tools exists per session, and initTools is its
-initialisation.
+Abstract Object. One set of tools exists per session. initTools is its
+initialisation, and M13 calls it again at the start of each new task.
 
 \newpage
 
@@ -2138,7 +2148,7 @@ Finished, Blocked, LimitReached, ServiceFailed\}
 
 \begin{programs}
 initHarness & -- & -- & HarnessUnavailable\\
-start & request: \str & -- & AlreadyRunning\\
+start & request: \str, t: TaskState & -- & AlreadyRunning\\
 correct & text: \str & -- & NotRunning\\
 interrupt & -- & -- & --\\
 resume & note: \str & -- & NothingToResume\\
@@ -2197,9 +2207,10 @@ false
 HarnessUnavailable)
 \end{itemize}
 
-\noindent start(request):
+\noindent start(request, t):
 \begin{itemize}
-\item transition: active, steps, held $:=$ true, 0, false; any kept
+\item transition: active, steps, held $:=$ true, 0, false; initTools(t) of M10
+is called, so the tools act on the task M5 created; any kept
 conversation is discarded and the planner begins work on
 request, calling only the access programs of M10 and emitting a PlannerEvent for
 each step it takes, including a ProposedAction when it calls a program of M10
