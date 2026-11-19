@@ -1630,7 +1630,8 @@ read, not what is true now, and no program here assumes otherwise.
 
 $\forall\, id \in \mathrm{dom}(\text{results}) \cdot$ results(id) $=$ Verified
 $\Rightarrow$ the Evidence that produced it had source $\neq$ NoEvidence and
-observed details matching the action's.
+observed details matching the action's or, for a deletion, came from a
+successful read that found no such record.
 
 \noindent This is FR.Sa.10 and unlikely change ULC3 of the SRS stated as a
 property of the module's state: a Verified entry can only have come from
@@ -1649,6 +1650,9 @@ preserved because assess is the only producer of Verified.
 \item output:
 \begin{align*}
 out := (\ &e.\text{source} = \text{NoEvidence} \Rightarrow \text{Unknown}\\
+ |\ &a.\text{kind} = \text{Delete} \wedge \text{absent}(a, e) \Rightarrow \text{Verified}\\
+ |\ &a.\text{kind} = \text{Delete} \wedge \text{matches}(a, e) \Rightarrow \text{Failed}\\
+ |\ &a.\text{kind} = \text{Delete} \Rightarrow \text{Unknown}\\
  |\ &\text{matches}(a, e) \Rightarrow \text{Verified}\\
  |\ &\text{partial}(a, e) \Rightarrow \text{Partial}\\
  |\ &\text{absent}(a, e) \Rightarrow \text{Failed}\\
@@ -1662,6 +1666,10 @@ H6-a and H6-b are about exactly the two ways of guessing: reporting a success
 that did not happen, and reporting a failure that causes the user to retry
 something that did. A blind user cannot glance at the screen to catch either, so
 the third answer has to exist.
+
+\noindent A deletion is checked the other way round. Its success is that the
+record is gone, so a successful read that finds no such record is Verified, and
+finding the record still there is Failed. Anything in between is Unknown.
 
 \noindent A queued request is not a delivered one. Evidence that a provider
 accepted a request for later processing satisfies neither matches nor absent,
@@ -1857,7 +1865,8 @@ returned false $\Rightarrow$ NotApproved)
 
 \noindent deleteEvent(r):
 \begin{itemize}
-\item transition and output: as sendMail, with a $=$ (Delete, r, the
+\item transition and output: as sendMail, with findEvent(r) of M16 as the
+evidence M9 assesses and a $=$ (Delete, r, the
 identifying fields of the event at r: its title, start, end and place). The
 read-back names those fields and
 states whether the deletion can be undone, and M16 is asked for a recoverable
