@@ -31,17 +31,12 @@ the report.}
 \wss{Fill in the requested information, like project url, TA name, supervisor name, etc.}
 
 \section{Demo Plans}
-
+ Two main things we are focusing on. Can the computer receive instructions and can the system control the computer.
 \wss{What is your feasibility risk?}
 
 \wss{What will you be demonstrating}
 
 \section{Team Meeting Attendance}
-
-\wss{For each team member how many team meetings have they attended over the
-time period of interest.  This number should be determined from the meeting
-issues in the team's repo.  The first entry in the table should be the total
-number of team meetings held by the team.}
 
 \begin{table}[H]
 \centering
@@ -49,17 +44,17 @@ number of team meetings held by the team.}
 \toprule
 \textbf{Student} & \textbf{Meetings}\\
 \midrule
-Total & Num\\
-Name 1 & Num\\
-Name 2 & Num\\
-Name 3 & Num\\
-Name 4 & Num\\
-Name 5 & Num\\
+Total & 7\\
+Aaron Loh & 7\\
+Curtis Vos & 7\\
+Kevin Kim & 7\\
+Lucas DeBoer & 7\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\wss{If needed, an explanation for the counts can be provided here.}
+Note that these were only the official team meetings that were planned in advance. Short, informal 
+team meetings were occasionally held after TA meetings or on discord, and they are not recorded here.
 
 \section{Supervisor/Stakeholder Meeting Attendance}
 
@@ -102,6 +97,8 @@ Curtis Vos & 9\\
 \bottomrule
 \end{tabular}
 \end{table}
+
+As a team, we agreed that only one member needed to attend the lecture.
 
 \section{TA Document Discussion Attendance}
 
@@ -191,23 +188,19 @@ On a push to main, it also commits the rebuilt PDFs to the \texttt{pdfs/} folder
 for TA review and deploys them to the project's
 \href{https://naturalcontrol.github.io/natural-control/}{GitHub Pages site}.
 
-The proof-of-concept code is still developed in a separate repository. Its
-workflows are written but have not yet run, because GitHub Actions fails to start
-in that repository. They will move into this repository with the code and run on
-every pull request to main: for the Python code, Ruff linting and format checks
-and the pytest tests; for the web client, linting, type checks, tests and a
-build.
+We have started devloping the POC and are experimenting with its CICD workflows. 
+The plan is to have workflows for the linting, code formatting, and automatic tests.
+These will be moved into this repository when applicable.
 
 \section{Custom Documents (CDs)}
 
 The team's two custom documents are a user interview report for the fall term
 (CD-Fall) and a usability report for the winter term (CD-Winter). The interview
-report is complete: it covers the method, questions, subjects, analysis and raw
-data for four interviews with blind and visually impaired users. The usability
+report is complete: it covers the methodology, questions, subjects, analysis and raw
+data for the four interviews with our stakeholders. The usability
 report will present the participant evaluation planned in the Development Plan.
-Recruitment has started and one blind participant is confirmed; the Development
-Plan aims for two to four, so the team will continue recruiting and report the
-evaluation with however many participants take part.
+Many of the stakeholders involved in the user interviews will be used in the usability testing.
+We are exploring other avenues for adding more individuals to the testing plan.
 
 \section{Team Charter Trigger Items}
 
@@ -229,13 +222,17 @@ whole.
 \item Drafts of each deliverable existed before its deadline, but most editing
 and merging happened on the day before or the day of the deadline. This period
 overlapped with midterms in other courses.
-\item Most team meetings were not recorded as GitHub issues, and the agendas of
-the three that were (October 1, 6 and 14) were posted on the meeting day rather
-than 24 hours ahead. The team instead kept its own meeting notes, and recorded
-TA meetings as issues.
+\item Some team meetings were not recorded as GitHub issues, and the comprehensive agendas
+were often posted on the meeting day rather
+than 24 hours ahead. While agendas were often not given in advance,
+the team did keep personal meeting notes.
+
+
 \end{itemize}
 
-\textbf{Plan.} The team will open a draft pull request at least 48 hours before
+\textbf{Plan and Reflection.} Although trigger events were reached, the team collectively
+agreed that no corrective actions were necessary. 
+The team will open a draft pull request at least 48 hours before
 each deadline, so that the final day is for review rather than writing. The
 meeting chair will post each agenda as a GitHub issue the day before the
 meeting, and attendance and decisions will be recorded on that issue. The
