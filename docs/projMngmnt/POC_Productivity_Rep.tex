@@ -25,30 +25,33 @@ and the POC demo.
 
 \section{Demo Plans}
 
-The main feasibility risk for the POC is whether a user can control a 
-running general-purpose agent through voice alone. The speech and agent 
-components exist separately, but it has not yet been shown that they work 
-together. We have split this risk into two questions.
+\textbf{Feasibility risk.} The main risk is whether a blind user can supervise a
+running general-purpose agent through voice alone: tell it what to do, stop it
+at any time, and be sure it sends or creates nothing without their approval. The
+speech, agent and tool components each work on their own. The risk is whether
+they work together while the user stays in control.
 
-The first question is whether the system can receive instructions. The user's
-speech has to be captured, turned into text and passed to the agent, and the
-agent has to work out what the user wants from it. For a calendar request, that
-means getting the right details, such as the title, date and time of the entry.
-If any step loses or changes part of the request, the agent will do the wrong
-thing even if the rest of the system works.
+\textbf{What we will demonstrate.} As planned in the Development Plan, we will
+run one short task from each task class, by voice, using made-up email and
+calendar data.
+\begin{enumerate}
+\item \textbf{Email:} the user asks the agent to reply to an invitation. Two
+senders share the same name, so the agent asks which one. It reads the reply
+back, the user corrects one detail, and the reply is sent only after the user
+approves the corrected version. The agent then checks that the reply is in the
+Sent folder.
+\item \textbf{Website:} the agent compares ticket options on a conference website
+chosen in advance. Partway through, the user says ``stop working''. The agent
+acknowledges the stop, then confirms the pause and that nothing was changed.
+After the user says ``continue'', the agent recommends a ticket, changes its
+recommendation when the user corrects a preference, and adds the event to the
+calendar after the user approves its details.
+\end{enumerate}
 
-The second question is whether the system can control the computer. Once the
-agent knows what the user wants, it has to carry out the steps needed to do it,
-and then give the user a spoken summary of what it did. Because the user cannot 
-see the screen, this summary is how they find out whether the task succeeded, 
-so it has to be accurate and clear. The demo is meant to show both parts working together on one task.
-
-For the demo, we plan to give spoken instructions to create an entry in Google
-Calendar and then delete it. This is intentionally a simplified version of what
-the final system will do, since the goal of the POC is only to demonstrate that
-the approach is feasible. More complex tasks will be developed and tested after
-the POC.
-
+\textbf{How we will judge it.} The demo succeeds if, in both tasks, no new action
+starts after a stop until the user resumes, and nothing is sent or created
+without the user's approval of its details. Both are checked in the system's
+event log, which also records how quickly each stop was acknowledged.
 
 \section{Team Meeting Attendance}
 
@@ -202,7 +205,7 @@ On a push to main, it also commits the rebuilt PDFs to the \texttt{pdfs/} folder
 for TA review and deploys them to the project's
 \href{https://naturalcontrol.github.io/natural-control/}{GitHub Pages site}.
 
-We have started devloping the POC and are experimenting with its CICD workflows. 
+We have started developing the POC and are experimenting with its CICD workflows. 
 The plan is to have workflows for the linting, code formatting, and automatic tests.
 These will be moved into this repository when applicable.
 
