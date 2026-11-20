@@ -63,14 +63,8 @@ Name 5 & Num\\
 
 \section{Supervisor/Stakeholder Meeting Attendance}
 
-\wss{For each team member how many supervisor/stakeholder team meetings have
-they attended over the time period of interest.  This number should be determined
-from the supervisor meeting issues in the team's repo.  The first entry in the
-table should be the total number of supervisor and team meetings held by the
-team.  If there is no supervisor, there will usually be meetings with
-stakeholders (potential users) that can serve a similar purpose.}
-
-\noindent \textbf{Supervisor's Name: } [fill in this information]
+\noindent \textbf{Supervisor's Name: } None. The team has no supervisor, so the
+stakeholder interviews are counted instead.
 
 \begin{table}[H]
 \centering
@@ -78,17 +72,19 @@ stakeholders (potential users) that can serve a similar purpose.}
 \toprule
 \textbf{Student} & \textbf{Meetings}\\
 \midrule
-Total & Num\\
-Name 1 & Num\\
-Name 2 & Num\\
-Name 3 & Num\\
-Name 4 & Num\\
-Name 5 & Num\\
+Total & 4\\
+Aaron Loh & 1\\
+Curtis Vos & 0\\
+Kevin Kim & 1\\
+Lucas DeBoer & 2\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\wss{If needed, an explanation for the counts can be provided here.}
+The four meetings are the user interviews recorded in the team's interview
+report (CD-Fall), held on October 17 and November 14, 17 and 18, 2026. Each was
+run by one team member, as the report records, and no other team members
+attended.
 
 \section{Lecture Attendance}
 
@@ -128,22 +124,6 @@ Curtis Vos & 4\\
 
 \section{Commits, Lines Added and Lines Deleted, Pull Requests}
 
-\wss{For each team member how many commits to the main branch have been made
-over the time period of interest.  The total is the total number of commits for
-the entire team since the beginning of the term.  The percentage is the
-percentage of the total commits made by each team member.}
-
-\wss{There are also columns for lines added and lines deleted to give a sense of
-the magnitude of each team member's contributions.  Note that these numbers can
-be somewhat misleading, as a team member who does refactoring may have high
-numbers in both columns, while a team member who implements a large new feature
-may have a high number of lines added, but few lines deleted.  As for all commit
-information, these numbers will be interpreted with care.}
-
-\wss{The pull requests column counts the number of pull requests created by each
-team member.  This is a measure of how many contributions were made in branches,
-which may not be reflected in the commit counts for the main branch.}
-
 \begin{table}[H]
 \centering
 \begin{tabular}{lllllll}
@@ -151,26 +131,29 @@ which may not be reflected in the commit counts for the main branch.}
 \textbf{Student} & \textbf{Commits} & \textbf{Percent} & \textbf{Lines Added} &
 \textbf{Lines Deleted} & \textbf{Pull Requests}\\
 \midrule
-Total & Num & 100\% & total added & total deleted & total PRs\\
-Name 1 & Num & \% & num & num & num\\
-Name 2 & Num & \% & num & num & num\\
-Name 3 & Num & \% & num & num & num\\
-Name 4 & Num & \% & num & num & num\\
-Name 5 & Num & \% & num & num & num\\
+Total & 130 & 100\% & 26,594 & 9,030 & 35\\
+Aaron Loh & 27 & 21\% & 4,073 & 809 & 6\\
+Curtis Vos & 30 & 23\% & 16,890 & 1,320 & 7\\
+Kevin Kim & 53 & 41\% & 2,860 & 1,299 & 13\\
+Lucas DeBoer & 20 & 15\% & 2,771 & 5,602 & 9\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\wss{If needed, an explanation for the counts can be provided here.  For
-instance, if a team member has more commits to unmerged branches, these numbers
-can be provided here.  If multiple people contribute to a commit, git allows for
-multi-author commits.}
+The counts cover September 1 to November 19, 2026, 6:08 p.m.\ EST, and were
+taken from the main branch. Commits exclude merge commits and the 25 commits
+made by the GitHub Actions bot that rebuilds the PDFs. Members who committed
+from two GitHub identities are counted once. Pull requests are those each member
+opened, whether merged, open or closed.
+
+Curtis's lines added include the repository's initial commit (11,354 lines),
+which imported the course template; without it, he added about 5,500 lines.
+Most of Lucas's deleted lines come from removing unused template files, such as
+the unused SRS templates and LaTeX style files. Seven of Kevin's thirteen pull
+requests are still open or were closed without merging, so their commits are not
+in the counts above.
 
 \section{Issue Tracker}
-
-\wss{For each team member how many issues have they authored (including open and
-closed issues (O+C)) and how many have they been assigned (only counting closed
-issues (C only)) over the time period of interest.}
 
 \begin{table}[H]
 \centering
@@ -178,53 +161,88 @@ issues (C only)) over the time period of interest.}
 \toprule
 \textbf{Student} & \textbf{Authored (O+C)} & \textbf{Assigned (C only)}\\
 \midrule
-Name 1 & Num & Num \\
-Name 2 & Num & Num \\
-Name 3 & Num & Num \\
-Name 4 & Num & Num \\
-Name 5 & Num & Num \\
+Aaron Loh & 7 & 5 \\
+Curtis Vos & 42 & 6 \\
+Kevin Kim & 3 & 6 \\
+Lucas DeBoer & 7 & 5 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\wss{If needed, an explanation for the counts can be provided here.}
+The counts cover September 1 to November 19, 2026, 6:37 p.m.\ EST. Of Curtis's
+42 issues, 27 record the TA's feedback on the SRS and Hazard Analysis, one issue
+per comment, and 10 record lecture attendance. Another 17 issues in the
+repository were written by the peer-review team and are not counted above. Eight
+closed issues had no assignee, so the assigned counts understate the work closed.
 
 \section{CICD via GitHub Actions}
 
-\wss{Say how CICD technology is used and will be used in your project.}
+The repository uses one GitHub Actions workflow,
+\href{https://github.com/NaturalControl/natural-control/blob/main/.github/workflows/latex-pages.yml}{\texttt{latex-pages.yml}},
+to build and publish the documentation. It runs on every pull request to main,
+on every push to main, and on demand, whenever a change touches the documents,
+the references, the Makefile or the build scripts. It works out which documents
+the change affects and rebuilds only those, using the repository's Makefile.
 
-\wss{Provide links to your CICD yaml files}
+On a pull request, the workflow checks that the affected documents compile, so a
+broken document is caught before it is merged; the Development Plan requires
+these checks to pass before anything is merged into the protected main branch.
+On a push to main, it also commits the rebuilt PDFs to the \texttt{pdfs/} folder
+for TA review and deploys them to the project's
+\href{https://naturalcontrol.github.io/natural-control/}{GitHub Pages site}.
+
+The proof-of-concept code is still developed in a separate repository. Its
+workflows are written but have not yet run, because GitHub Actions fails to start
+in that repository. They will move into this repository with the code and run on
+every pull request to main: for the Python code, Ruff linting and format checks
+and the pytest tests; for the web client, linting, type checks, tests and a
+build.
 
 \section{Custom Documents (CDs)}
 
-\wss{What is the plan (as documented in TeamComposition.csv) for the team's
-CDs?  Should the CDs be modified now that the team knows more about the
-project?}
+The team's two custom documents are a user interview report for the fall term
+(CD-Fall) and a usability report for the winter term (CD-Winter). The interview
+report is complete: it covers the method, questions, subjects, analysis and raw
+data for four interviews with blind and visually impaired users. The usability
+report will present the participant evaluation planned in the Development Plan.
+Recruitment has started and one blind participant is confirmed; the Development
+Plan aims for two to four, so the team will continue recruiting and report the
+evaluation with however many participants take part.
 
 \section{Team Charter Trigger Items}
 
-\wss{Provide a summary of the quantified triggers identified in the team's
-charter.}
+\textbf{Trigger summary.} The team charter (Development Plan, Appendix C) and
+the Development Plan's meeting and communication plans set these measurable
+expectations:
+\begin{itemize}
+\item Two unexplained missed commitments in one month trigger a private recovery
+conversation, and the TA is involved if the problem remains unresolved.
+\item Drafts are ready 48 hours before a deadline.
+\item Each meeting's agenda is posted as a GitHub issue at least 24 hours in
+advance, and attendance and decisions are recorded on GitHub.
+\item Actionable Discord messages receive a reply within one working day.
+\end{itemize}
 
-\wss{Provide a list of any violations of the triggers.  If the team wishes, the
-violations can be summarized on aggregate, instead of naming specific team
-members.}
+\textbf{Observed trigger events.} The events are summarized for the team as a
+whole.
+\begin{itemize}
+\item Drafts of each deliverable existed before its deadline, but most editing
+and merging happened on the day before or the day of the deadline. This period
+overlapped with midterms in other courses.
+\item Most team meetings were not recorded as GitHub issues, and the agendas of
+the three that were (October 1, 6 and 14) were posted on the meeting day rather
+than 24 hours ahead. The team instead kept its own meeting notes, and recorded
+TA meetings as issues.
+\end{itemize}
 
-\wss{Provide a plan to address the violations.  This could include revising the
-triggers, if they are found to be too weak, strong or ambiguous.}
+\textbf{Plan.} The team will open a draft pull request at least 48 hours before
+each deadline, so that the final day is for review rather than writing. The
+meeting chair will post each agenda as a GitHub issue the day before the
+meeting, and attendance and decisions will be recorded on that issue. The
+triggers themselves remain appropriate and are not being revised.
 
 \section{Additional Productivity Metrics}
 
-\wss{If your team has additional metrics of productivity, please feel free to
-add them to this report.  If not, please explicitly state that there are no additional
-metrics.}
-
-\wss{Additional metrics can include things like code reviews done, pull requests
-created, count of joining meetings late, count of number of times contributions
-had to be corrected, number of internal deadlines missed, test cases written, etc.}
-
-\wss{We are looking for data on these metrics, not just a list of additional
-metrics the team is planning on tracking.  However, if all you have is a plan,
-please share it here.}
+The team has no additional productivity metrics.
 
 \end{document}
