@@ -26,32 +26,35 @@ and the POC demo.
 \section{Demo Plans}
 
 \textbf{Feasibility risk.} The main risk is whether a blind user can supervise a
-running general-purpose agent through voice alone: tell it what to do, stop it
-at any time, and be sure it sends or creates nothing without their approval. The
-speech, agent and tool components each work on their own. The risk is whether
-they work together while the user stays in control.
+running general-purpose agent through voice alone. The user has to be able to
+tell the agent what to do and stop it at any time. The agent must not send or
+create anything without the user's approval. The speech, agent and tool
+components each work on their own, but it has not yet been shown that they work
+together while the user stays in control.
 
-\textbf{What we will demonstrate.} As planned in the Development Plan, we will
-run one short task from each task class, by voice, using made-up email and
-calendar data.
-\begin{enumerate}
-\item \textbf{Email:} the user asks the agent to reply to an invitation. Two
-senders share the same name, so the agent asks which one. It reads the reply
-back, the user corrects one detail, and the reply is sent only after the user
-approves the corrected version. The agent then checks that the reply is in the
-Sent folder.
-\item \textbf{Website:} the agent compares ticket options on a conference website
-chosen in advance. Partway through, the user says ``stop working''. The agent
-acknowledges the stop, then confirms the pause and that nothing was changed.
-After the user says ``continue'', the agent recommends a ticket, changes its
-recommendation when the user corrects a preference, and adds the event to the
-calendar after the user approves its details.
-\end{enumerate}
+\textbf{What we will demonstrate.} We will run one short task from each task
+class in the Development Plan. Both tasks use spoken instructions and made-up
+email and calendar data.
+\begin{itemize}
+\item \textbf{Email:} The user asks the agent to reply to an invitation. Two
+senders have the same name, so the agent asks which one the user means. The
+agent reads the reply back and the user changes one detail. The reply is sent
+only after the user approves the new version. The agent then checks that the
+reply is in the Sent folder.
+\item \textbf{Website:} The agent compares ticket options on a conference website
+that we choose in advance. Partway through, the user says ``stop working''. The
+agent acknowledges the stop and then confirms that the task is paused and
+nothing was changed. When the user says ``continue'' the agent recommends a
+ticket. The user corrects a preference and the agent changes its recommendation.
+The agent adds the event to the calendar only after the user approves the
+details.
+\end{itemize}
 
-\textbf{How we will judge it.} The demo succeeds if, in both tasks, no new action
-starts after a stop until the user resumes, and nothing is sent or created
-without the user's approval of its details. Both are checked in the system's
-event log, which also records how quickly each stop was acknowledged.
+\textbf{How we will judge it.} The demo succeeds if two things hold in both
+tasks. No new action starts after a stop until the user resumes, and nothing is
+sent or created without the user's approval of its details. We will check both
+in the system's event log. The log also records how quickly each stop was
+acknowledged.
 
 \section{Team Meeting Attendance}
 
