@@ -66,3 +66,7 @@ Aaron authorized resolving PR #27 against main. Codex retained the SRS glossary 
 ## November 2, 2026: V&V Plan Section 2
 
 Aaron determined the content of Section 2 (scope, objectives, custom documents, and relevant documents), drawing on the team's earlier decisions and his draft. Claude Code (Claude Opus 5.5) helped flesh out the wording and format it in LaTeX. Aaron reviewed the final text.
+
+## November 19, 2026: POC demo plan
+
+Aaron read the POC productivity report and noticed that its demo plan did not match the Development Plan. He used Claude Code (Claude Opus 5.5) to compare the section with the Development Plan and the open peer-review changes, and it presented a suggested revision. Aaron decided what the fix should be and reviewed the final text.
