@@ -22,19 +22,33 @@ This document summarizes the contributions of each team member up to the POC
 Demo.  The time period of interest is the time between the beginning of the term
 and the POC demo.
 
-\wss{Please do not delete sections or modify the table formats.  Standardization
-helps the instructors and TAs to review these documents. You may add sections to
-the report.}
-
-\wss{Remove the instructor guidelines/comments in the final version.}
-
-\wss{Fill in the requested information, like project url, TA name, supervisor name, etc.}
 
 \section{Demo Plans}
- Two main things we are focusing on. Can the computer receive instructions and can the system control the computer.
-\wss{What is your feasibility risk?}
 
-\wss{What will you be demonstrating}
+The main feasibility risk for the POC is whether a user can control a 
+running general-purpose agent through voice alone. The speech and agent 
+components exist separately, but it has not yet been shown that they work 
+together. We have split this risk into two questions.
+
+The first question is whether the system can receive instructions. The user's
+speech has to be captured, turned into text and passed to the agent, and the
+agent has to work out what the user wants from it. For a calendar request, that
+means getting the right details, such as the title, date and time of the entry.
+If any step loses or changes part of the request, the agent will do the wrong
+thing even if the rest of the system works.
+
+The second question is whether the system can control the computer. Once the
+agent knows what the user wants, it has to carry out the steps needed to do it,
+and then give the user a spoken summary of what it did. Because the user cannot 
+see the screen, this summary is how they find out whether the task succeeded, 
+so it has to be accurate and clear. The demo is meant to show both parts working together on one task.
+
+For the demo, we plan to give spoken instructions to create an entry in Google
+Calendar and then delete it. This is intentionally a simplified version of what
+the final system will do, since the goal of the POC is only to demonstrate that
+the approach is feasible. More complex tasks will be developed and tested after
+the POC.
+
 
 \section{Team Meeting Attendance}
 
