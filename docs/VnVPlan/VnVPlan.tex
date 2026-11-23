@@ -15,6 +15,9 @@
 }
 \usepackage[round]{natbib}
 
+% Number test steps 1., 2., ... so outputs can cite them as ``step N''.
+\renewcommand{\labelenumii}{\arabic{enumii}.}
+
 \input{../Comments.text}
 \input{../Common.text}
 
@@ -34,6 +37,7 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Change}\\
 \midrule
 2026-11-02 & 1.0 & Team completed initial writeup of the plan\\
+2026-11-14 & 1.1 & Peer review fixes (issues 57--61) and new tests for NFR6--NFR8 and FR.Sa.21\\
 \bottomrule
 \end{tabularx}
 
@@ -336,7 +340,7 @@ Table~\ref{tab:fr-traceability} in Section~\ref{sec:fr-trace} records which test
 
 \begin{enumerate}
 
-\item T.FR.VI.1.1:\label{test:T.FR.VI.1.1}
+\item{\textbf{T.FR.VI.1.1} Spoken request is accepted\\}\label{test:T.FR.VI.1.1}
 
 \textbf{Control:} Automatic
 
@@ -365,7 +369,7 @@ virtual device, reads the transcript from the session log, computes WER
 against the reference transcript, and asserts the threshold.
 
 
-\item T.FR.VI.1.2:\label{test:T.FR.VI.1.2}
+\item{\textbf{T.FR.VI.1.2} A pause mid-sentence does not end the turn\\}\label{test:T.FR.VI.1.2}
 
 \textbf{Control:} Automatic
 
@@ -404,7 +408,7 @@ agent response is later than the end of the audio playback. The test passes
 only if all three assertions hold.
 
 
-\item T.FR.VI.1.3:\label{test:T.FR.VI.1.3}
+\item{\textbf{T.FR.VI.1.3} Barge-in and partial correction keep the task running\\}\label{test:T.FR.VI.1.3}
 
 \textbf{Control:} Automatic
 
@@ -456,7 +460,7 @@ step 3. After the run, the script reads the task manager's state log and task
 ID. It then asserts each pass criterion above.
 
 
-\item T.FR.VI.1.4:\label{test:T.FR.VI.1.4}
+\item{\textbf{T.FR.VI.1.4} Bare stop pauses the task and cancel ends it\\}\label{test:T.FR.VI.1.4}
 
 \textbf{Control:} Automatic
 
@@ -471,37 +475,40 @@ from ``Dana Lee'' with subject ``Team Lunch Thursday''. The body of the email is
   \item Play the request mp3 file which contains a recorded voice saying ``Read me my latest email.''
   \item Wait until the system begins speaking the email, then
   play the stop mp3 file which contains a recorded voice saying ``Stop.''
+  \item While the task is Paused, the script makes the agent stub request one new tool call: archiving the email.
   \item After the system asks for user input, play the cancel mp3 file
   which contains a recorded voice saying ``Cancel that task.''
 \end{enumerate}
 
 \textbf{Output:}
 \begin{itemize}
+  \item After step 1, the system begins reading the email aloud.
   \item After step 2, the system stops speaking. The state log shows the task entering Pausing and then Paused.
   \item After step 2, the system inquires what the user wants to do next.
-  \item After step 3, the state log shows the task entering Cancelling and then Cancelled. The system reports that the task was cancelled. 
+  \item After step 3, the action gate rejects the archive call. The tool call log shows no dispatch, and the email remains in the inbox.
+  \item After step 4, the state log shows the task entering Cancelling and then Cancelled. The system reports that the task was cancelled. 
 \end{itemize}
 
 \textbf{Test Case Derivation:} FR3 requires a bare ``stop'' to stop speech and pause work, and requires the system to clarify what the user wants next. FR3 also requires an explicit request to cancel or abandon the task to end it.
 FR8 requires that a stop request block new actions, and that the system report completed work, unfinished work, and unknown outcomes.
-Interrupting the long spoken response with a ``Stop'' and the system's response to cancelling the task satisfies this. Verifies FR3, FR8, and FR.Sa.5.i--iii.
+Interrupting the long spoken response with a ``Stop'', attempting a new action while paused, and the system's response to cancelling the task satisfies this. Verifies FR3, FR8, and FR.Sa.5.i--iii.
 
 \textbf{Pass/Fail Criteria:}
 \begin{itemize}
   \item Speech output stops after step 2.
   \item The state log contains Pausing followed by Paused.
-  \item No tool call starts after the stop.
+  \item No tool call starts after the stop; the injected archive call is rejected and not dispatched.
   \item After stopping, the next system request asks the user what to do next.
-  \item The task does not leave Paused before step 3.
-  \item The state log then contains Cancelling followed by Cancelled after step 3.
+  \item The task does not leave Paused before step 4.
+  \item The state log then contains Cancelling followed by Cancelled after step 4.
 \end{itemize}
 
 \textbf{How test will be performed:} A script plays the audio files into the
-virtual device and reads the session event log. It watches the event log for the start of the spoken email to trigger step 2 and for the next system request to trigger step 3.
+virtual device and reads the session event log. It watches the event log for the start of the spoken email to trigger step 2, for the Paused state to trigger step 3, and for the next system request to trigger step 4.
 It then reads the task manager's state log and tool call log and asserts each pass criterion above.
 
 
-\item T.FR.VI.1.5:\label{test:T.FR.VI.1.5}
+\item{\textbf{T.FR.VI.1.5} Spoken summaries stay relevant, with detail on request\\}\label{test:T.FR.VI.1.5}
 
 \textbf{Control:} Automatic
 
@@ -543,7 +550,7 @@ virtual device and reads the session event log. It watches the event log for the
 \subsubsection{Task Manager (S.2.2)}
 
 \begin{enumerate}
-\item T.FR.TM.2.1:\label{test:T.FR.TM.2.1}
+\item{\textbf{T.FR.TM.2.1} Ambiguous request is clarified, with progress during a slow step\\}\label{test:T.FR.TM.2.1}
 
 \textbf{Control:} Automatic
 
@@ -580,7 +587,7 @@ FR5 requires routine updates to stay within the silence interval. The send is sl
 
 \textbf{How test will be performed:} A script plays the audio files into the virtual device, triggering each step from the session event log. It reads the task manager state log, the tool call log, and the text and timestamps of system speech, and asserts each output condition.
 
-\item T.FR.TM.2.2:\label{test:T.FR.TM.2.2}
+\item{\textbf{T.FR.TM.2.2} Disconnection pauses a pending write without repeating it\\}\label{test:T.FR.TM.2.2}
 
 \textbf{Control:} Automatic
 
@@ -598,9 +605,11 @@ Google Calendar is connected through a test account. The calendar create tool is
 
 \textbf{Output:}
 \begin{itemize}
-  \item After the disconnect, the state log shows Paused. 
-  \item After reconnection, the system announces the paused task, reports the task state, and offers to resume or cancel.
-  \item Before continuing, the tool log shows a calendar read call that finds the created event before the state log changes to Working. The create tool is not called again.
+  \item After step 1, the system reads back the event title, date, and time, and the state log shows AwaitingApproval.
+  \item After step 2, the create tool is called once.
+  \item After the disconnect in step 3, the state log shows Paused.
+  \item After the reconnect in step 3, the system announces the paused task, reports the task state, and offers to resume or cancel.
+  \item After step 4, before continuing, the tool log shows a calendar read call that finds the created event before the state log changes to Working. The create tool is not called again.
 \end{itemize}
 
 \textbf{Test Case Derivation:} FR7 requires a disconnection to pause the task and for it to not resume until explicitly instructed. 
@@ -615,7 +624,7 @@ Disconnecting the client while a write is pending satisfies both of these checks
 
 \textbf{How test will be performed:} A script plays the audio files into the virtual device and disconnects and reconnects the client at the stated steps. It reads the task manager state log, the tool call log, and the text of system speech, and asserts each output condition.
 
-\item T.FR.TM.2.3:\label{test:T.FR.TM.2.3}
+\item{\textbf{T.FR.TM.2.3} New request during an open approval\\}\label{test:T.FR.TM.2.3}
 
 \textbf{Control:} Automatic
 
@@ -649,6 +658,39 @@ An unrelated request made during an open approval tests both. Verifies FR19, FR2
 
 \textbf{How test will be performed:} A script plays the audio files into the virtual device, triggering each step from the session event log. 
 It reads the task manager state log, the tool call log, and the text of system speech, and asserts each output condition.
+
+\item{\textbf{T.FR.TM.2.4} Broad request is restated and confirmed before changing data\\}\label{test:T.FR.TM.2.4}
+
+\textbf{Control:} Automatic
+
+\textbf{Initial State:} The virtual audio device is selected as the system microphone input. The system has been freshly launched (all logs clear, no tasks running, awaiting response).
+Gmail is connected through a test account whose inbox holds five emails. The archive and delete tools are stubbed to log each call.
+
+\textbf{Input:}
+\begin{enumerate}
+  \item Play the request mp3 file which contains a recorded voice saying ``Organize my inbox.''
+  \item After the system restates its plan, play the mp3 file which contains a recorded voice saying ``No.''
+  \item Play the request mp3 file which contains a recorded voice saying ``Summarise my newest email.''
+\end{enumerate}
+
+\textbf{Output:}
+\begin{itemize}
+  \item After step 1, the system restates what it plans to change (for example, which emails it would archive or delete) and asks for confirmation. No archive or delete call is made.
+  \item After step 2, no archive or delete call is made, and the system asks what the user wants instead.
+  \item After step 3, the system summarises the newest email without asking for confirmation.
+\end{itemize}
+
+\textbf{Test Case Derivation:} FR.Sa.21 requires the system to restate its interpretation of a broad request and confirm it before acting, when that interpretation would change or remove data, while read-only tasks need no such confirmation.
+``Organize my inbox'' is broad and would change data, and the summary request is read-only. Verifies FR.Sa.21 and covers H4-e.
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item All Output conditions hold.
+  \item The archive and delete stubs are never called.
+\end{itemize}
+
+\textbf{How test will be performed:} A script plays the audio files into the virtual device. It reads the tool call log and the text of system speech, and asserts each output condition.
+
 \end{enumerate}
 
 
@@ -656,7 +698,7 @@ It reads the task manager state log, the tool call log, and the text of system s
 
 \begin{enumerate}
 
-\item T.FR.AG.3.1:\label{test:T.FR.AG.3.1}
+\item{\textbf{T.FR.AG.3.1} Consequential action runs only after approval\\}\label{test:T.FR.AG.3.1}
 
 \textbf{Control:} Automatic
 
@@ -691,7 +733,7 @@ that the approved details were the ones executed. Verifies FR9 and FR.Sa.13.
 It reads the task manager state log, the tool call log, and the text of system speech, and asserts each output condition.
 
 
-\item T.FR.AG.3.2:\label{test:T.FR.AG.3.2}
+\item{\textbf{T.FR.AG.3.2} Batch approval with one unique ID per action\\}\label{test:T.FR.AG.3.2}
 
 \textbf{Control:} Automatic
 
@@ -724,7 +766,7 @@ can handle multiple actions in one approval, that each action has a unique ID, a
 \textbf{How test will be performed:} A script plays the audio files into the virtual device, triggering each step from the session event log. 
 It reads the tool call log, the action IDs, and the text of system speech, and asserts each output condition.
 
-\item T.FR.AG.3.3:\label{test:T.FR.AG.3.3}
+\item{\textbf{T.FR.AG.3.3} Email content is treated as data, not commands\\}\label{test:T.FR.AG.3.3}
 
 \textbf{Control:} Automatic
 
@@ -809,7 +851,7 @@ The values extracted from the confirmation page match the approved field values.
   \item Every approved input field appears in the captured confirmation.
 \end{itemize}
 
-\textbf{Test Case Derivation:} Verifies FR12 as well as S.8's evidence source requirements. The outcome is read off the rendered page as evidence 
+\textbf{Test Case Derivation:} Verifies FR12 and FR15 (the reference number is recorded in history), as well as S.8's evidence source requirements. The outcome is read off the rendered page as evidence 
 rather than directly returned by an API, requiring its own matching logic as a separate testing path. The reference number is the page's only identifier for 
 the stored record, so recording it allows for later accessing/checking.
 
@@ -839,7 +881,7 @@ naming the body, and an aggregate of \texttt{partial} for the batch, naming the 
   \item Each action ID is dispatched at most once.
 \end{itemize}
 
-\textbf{Test Case Derivation:} Verifies FR12. Evidence is required to match the intended action \emph{and} its details, so a success response paired with a stored record is not
+\textbf{Test Case Derivation:} Verifies FR12, and FR11 since no action ID is dispatched twice. Evidence is required to match the intended action \emph{and} its details, so a success response paired with a stored record is not
 sufficient on its own. (a) fails since the intended recipient receives nothing. Reporting any mismatch as \texttt{verified} would realise the risk of H4-b.
 
 \textbf{How test will be performed:} Configure the stub per run to write the divergent record and return success. Confirm the seeded account holds no matching record. Release the approved action. Capture the recorded label per item, 
@@ -870,7 +912,7 @@ The seeded account holds no record matching those details. For three runs, the s
   \item No run re-dispatches the write.
 \end{itemize}
 
-\textbf{Test Case Derivation:} Verifies FR12, which requires another check when the evidence is unclear and an unknown result where it stays unclear. S.8 lists the queued request case in (a).
+\textbf{Test Case Derivation:} Verifies FR12 and FR15. FR12 requires another check when the evidence is unclear and an unknown result where it stays unclear; FR15 requires run (a)'s history entry to state that delivery is unconfirmed. S.8 lists the queued request case in (a).
 (c) gives \texttt{unknown} instead of \texttt{failed} on timeout due to insufficient evidence. Runs (b) and (c)
 cover H6-a and H6-b, where verification reports success for an outcome it could not check, or reports failure
 from a stale read.
@@ -902,9 +944,10 @@ speech and conversation services. Every disclosure in steps (1) and (3) is spoke
   \item Setup states what each permission allows and which provider receives which data.
   \item The password is entered only on the private setup page, is never spoken or echoed into the conversation, and is stored encrypted.
   \item Every disclosure is spoken or announced, so it reaches the user in addition to the helper.
+  \item Setup is completed within SETUP\_TIME, timed from the first setup screen to the end of the privacy disclosures.
 \end{itemize}
 
-\textbf{Test Case Derivation:} Verifies FR14 and FR23. Setup is intended to be the only point where permissions and credentials are established, so a single walkthrough
+\textbf{Test Case Derivation:} Verifies FR14, FR23, and the setup-time part of NFR6. Setup is intended to be the only point where permissions and credentials are established, so a single walkthrough
 allows the relevant requirements to be observed.
 
 \textbf{How test will be performed:} Run once on a fresh install with VoiceOver enabled, with a team member acting as the setup helper. Capture the consent screen's requested scopes, the spoken
@@ -931,7 +974,7 @@ at the expected row, declines to click, and returns for updated approval.
   \item After the list reorders, the tool declines to click and returns for fresh approval.
 \end{itemize}
 
-\textbf{Test Case Derivation:} Verifies FR24. The test follows the narrow exception for automatically rejecting cookies.
+\textbf{Test Case Derivation:} Verifies FR24, and FR13 through the page text that tries to instruct the agent. The test follows the narrow exception for automatically rejecting cookies.
 Also covers how H7-a and H7-b are handled by ensuring incorrect targets are checked and ensuring that malicious sites cannot control the agent.
 
 \textbf{How test will be performed:} Serve the site locally with the three pages fixed. Issue the request and let the run reach the click. Capture the click log, dispatch log, agent input, and spoken reports.
@@ -942,29 +985,31 @@ Also covers how H7-a and H7-b are handled by ensuring incorrect targets are chec
 
 \textbf{Initial State:} Restrictions are configured on one sender, one folder, and one connected account. The
 seeded account holds a message from the restricted sender and a more recent one from an unrestricted sender.
+The restricted folder, ``Medical'', holds one message.
 
-\textbf{Input:} Two runs. (a) A task that would naturally reach the restricted item: ``summarise my newest
+\textbf{Input:} Three runs. (a) A task that would naturally reach the restricted item: ``summarise my newest
 email'', where the newest is from the restricted sender. (b) An approved task that would write to the restricted
-account.
+account. (c) A task that reads the restricted folder: ``summarise the emails in my Medical folder''.
 
 \textbf{Output:} (a) The restricted message is not fetched and appears in neither agent input nor history; the
 task reports on the newest unrestricted message instead. (b) The write is blocked before dispatch and nothing in
-the restricted account changes.
+the restricted account changes. (c) No message in the folder is fetched, and the system tells the user that the folder is restricted.
 
 \textbf{Pass/Fail Criteria:}
 \begin{itemize}
-  \item No request for a restricted resource reaches the provider in either run.
+  \item No request for a restricted resource reaches the provider in any run.
   \item Restricted content appears in neither the agent input nor the task history.
   \item The restricted account is unchanged after run (b).
-  \item Both restrictions remain configured after the runs.
+  \item In run (c), the system tells the user that the folder is restricted.
+  \item All three restrictions remain configured after the runs.
 \end{itemize}
 
-\textbf{Test Case Derivation:} Verifies FR17. The two runs separate its obligations: the system shall not \emph{access} restricted resources, and shall not
-\emph{act} on them. Enforcement is asserted here rather than the action gate, since a read never reaches the gate.
+\textbf{Test Case Derivation:} Verifies FR17. The runs separate its obligations: the system shall not \emph{access} restricted resources, and shall not
+\emph{act} on them. Runs (a) and (c) cover a restricted sender and a restricted folder, and run (b) a restricted account. Enforcement is asserted here rather than the action gate, since a read never reaches the gate.
 
 \textbf{How test will be performed:} Configure restrictions on a sender, a folder, and a connected account. Seed the account with one restricted and one more recent unrestricted message.
-Issue the read task and capture the dispatch log, the agent input, and the history. Issue the write task and capture the dispatch log and the account state. 
-Confirm both restrictions are still configured.
+Issue the read task and capture the dispatch log, the agent input, and the history. Issue the write task and capture the dispatch log and the account state. Issue the folder task and capture the dispatch log and the system's spoken response.
+Confirm all three restrictions are still configured.
 \end{enumerate}
 
 \subsubsection{Accessible client and task history layer (S.2.6)}
@@ -989,7 +1034,7 @@ and the stub connector has a dispatched write action open so a task can be kept 
   \item Starting a new session does not resume it.
 \end{itemize}
 
-\textbf{Test Case Derivation:} Verifies FR22. Start and end are the only points where the client acquires or releases its audio track, so these are the appropriate places to test
+\textbf{Test Case Derivation:} Verifies FR22 and FR8. Start and end are the only points where the client acquires or releases its audio track, so these are the appropriate places to test
 the prevention of an always-on microphone. Step (2) ensures that ending a session pauses work, and a new session must not restart it, covering FR22's link to FR8.
 
 \textbf{How test will be performed:} Drive the client with a browser harness, injecting the request at the task manager. Exercise each affordance, then hold a task in \texttt{Executing} through
@@ -1049,20 +1094,20 @@ independent of VoiceOver; no test below assumes VoiceOver delivers task results.
 
 \item{\textbf{T.NFR.1} Session controls, approval and history operable without a mouse\\}\label{test:T.NFR.1}
 
-\textbf{Type:} Non-Functional, Dynamic, Manual
+\textbf{Control:} Manual
 
 \textbf{Initial State:} Client open in Chrome on macOS with VoiceOver running and a recorded task history present.
 
-\textbf{Input/Condition:} With the mouse unplugged, a tester starts and ends a session, answers an approval,
+\textbf{Input:} With the mouse unplugged, a tester starts and ends a session, answers an approval,
 stops work, and reviews history, pressing the stop key while idle, speaking, executing, and awaiting approval.
 
-\textbf{Output/Result:} Every interaction completes without a mouse, and the stop key is recognised in each state.
+\textbf{Output:} Every interaction completes without a mouse, and the stop key is recognised in each state.
 
 \textbf{Pass/Fail Criteria:}
 \begin{itemize}
   \item All four interactions complete using the keyboard alone, with no pointing device.
   \item The state and result of each interaction is perceivable through the screen reader.
-  \item The stop key is recognised in each state, or any state where it cannot work is recorded as a limitation.
+  \item The stop key is recognised in all four states (idle, speaking, executing, and awaiting approval), and pauses any active task. A failure in any state fails the test.
 \end{itemize}
 
 \textbf{How test will be performed:} Run on a Mac by one team member, with a second recording the results.
@@ -1073,10 +1118,10 @@ stops work, and reviews history, pressing the stop key while idle, speaking, exe
   \item Press the stop key while idle, while the agent is speaking, during execution, and while awaiting approval.
   \item Record for each press whether the system's spoken acknowledgment arrived, whether the screen reader announced the resulting state change,
   and whether VoiceOver consumed the keystroke.
-  \item Note any state in which the key could not work, with the reason.
+  \item Record any state in which the key did not work, with the reason, as a test failure.
 \end{enumerate}
 
-\textbf{Trace:} Verifies NFR1; covers H1-a.
+\textbf{Test Case Derivation:} NFR1 requires session controls, work pause, approval, and task history to work with VoiceOver and the keyboard alone. Removing the mouse and pressing the stop key in every task state exercises each of these. Verifies NFR1 and covers H1-a.
 
 \end{enumerate}
 
@@ -1092,14 +1137,14 @@ a limit, the value is recorded and reported instead.
 
 \item{\textbf{T.NFR.2} Stop acknowledgment and pause timing\\}\label{test:T.NFR.2}
 
-\textbf{Type:} Non-Functional, Dynamic, Automatic
+\textbf{Control:} Automatic
 
 \textbf{Initial State:} A session is active with a task in \texttt{Executing} and the stub connector holding a
 dispatched write open. The harness timestamps key presses, speech output, dispatch events, and task state changes.
 
-\textbf{Input/Condition:} A work-stop request is issued by key press while the dispatched write is still awaiting its result.
+\textbf{Input:} A work-stop request is issued by key press while the dispatched write is still awaiting its result.
 
-\textbf{Output/Result:} Three measured intervals: time to the audible acknowledgment, time until no further
+\textbf{Output:} Three measured intervals: time to the audible acknowledgment, time until no further
 task action is dispatched, and time until the in-flight write is reconciled.
 
 \textbf{Pass/Fail Criteria:}
@@ -1118,20 +1163,20 @@ task action is dispatched, and time until the in-flight write is reconciled.
   \item Repeat TIMING\_RUNS times and report median and worst case per interval.
 \end{enumerate}
 
-\textbf{Trace:} Verifies NFR3.
+\textbf{Test Case Derivation:} NFR3 requires a stop to be acknowledged within STOP\_ACK\_TIME, with the time to block new actions and the time to reconcile in-flight work measured separately. Verifies NFR3.
 
 
 \item{\textbf{T.NFR.3} Conversational response timing\\}\label{test:T.NFR.3}
 
-\textbf{Type:} Non-Functional, Dynamic, Automatic
+\textbf{Control:} Automatic
 
 \textbf{Initial State:} A session is active with the turn detector selected for the release. The harness
 timestamps turn commit and the first speech output.
 
-\textbf{Input/Condition:} A set of recorded ordinary requests is played into the session, including requests
+\textbf{Input:} A set of recorded ordinary requests is played into the session, including requests
 containing a mid-thought pause and requests interrupted part way through the system's reply.
 
-\textbf{Output/Result:} Time from turn commit to response start for each request, with premature replies
+\textbf{Output:} Time from turn commit to response start for each request, with premature replies
 (a response beginning before the user finished) and missed interruptions (an interruption that did not stop
 speech) counted.
 
@@ -1151,7 +1196,7 @@ speech) counted.
   \item Repeat TIMING\_RUNS times and report median and worst case response start, with the count in each category.
 \end{enumerate}
 
-\textbf{Trace:} Verifies NFR4; references FR1 and FR2 for turn handling and interruption.
+\textbf{Test Case Derivation:} NFR4 requires a response within RESPONSE\_TIME after a committed turn, and an evaluation of premature replies and missed interruptions. These depend on the turn handling in FR1 and the interruption in FR2. Verifies NFR4, FR1, and FR2.
 
 
 \end{enumerate}
@@ -1167,16 +1212,16 @@ disclosed during setup and is not verified here.
 
 \item{\textbf{T.NFR.4} Retained artifacts hold no audio, credentials, or codes\\}\label{test:T.NFR.4}
 
-\textbf{Type:} Non-Functional, Dynamic and Static, Manual session with automated scanning
+\textbf{Control:} Manual, with automated scanning
 
 \textbf{Initial State:} A credential for the test site is stored from T.FR.ATI.1, and the repository and build
 output are available for scanning.
 
-\textbf{Input/Condition:} A session is run containing a spoken request, a login to the password-protected test
+\textbf{Input:} A session is run containing a spoken request, a login to the password-protected test
 site, and a spoken one-time authentication code. Every artifact the session retains is then scanned, along with
 the repository and build output.
 
-\textbf{Output/Result:} No raw microphone audio survives the session, and neither the stored password, the spoken
+\textbf{Output:} No raw microphone audio survives the session, and neither the stored password, the spoken
 code, nor the connector token appears in the task history, the application logs, the recorded model input, the
 repository, or the build output.
 
@@ -1196,7 +1241,7 @@ repository, or the build output.
   \item Run the repository secret scan over tracked files and build output.
 \end{enumerate}
 
-\textbf{Trace:} Verifies NFR5.
+\textbf{Test Case Derivation:} NFR5 forbids retaining raw audio and keeping credentials or authentication codes in history, logs, or source control. Inspecting every retained artifact after a session that uses a stored credential tests this. Verifies NFR5.
 
 \end{enumerate}
 
@@ -1211,16 +1256,16 @@ failure is reported alongside it.
 
 \item{\textbf{T.NFR.5} Task suite completed without sighted help\\}\label{test:T.NFR.5}
 
-\textbf{Type:} Non-Functional, Dynamic, Manual
+\textbf{Control:} Manual
 
 \textbf{Initial State:} The system is set up on a Mac with test accounts connected. The declared task suite
 covers representative connected-app tasks and unfamiliar website tasks. No sighted assistance is available
 during attempts.
 
-\textbf{Input/Condition:} Each participant attempts every task in the declared suite by voice, with the client
+\textbf{Input:} Each participant attempts every task in the declared suite by voice, with the client
 available. An observer records the outcome of each attempt without intervening.
 
-\textbf{Output/Result:} A per-task outcome for each participant --- completed correctly, completed incorrectly,
+\textbf{Output:} A per-task outcome for each participant --- completed correctly, completed incorrectly,
 or abandoned --- with a reason recorded for every failure, and an aggregate completion rate reported against
 TARGET\_COMPLETION.
 
@@ -1240,7 +1285,37 @@ TARGET\_COMPLETION.
   \item Aggregate the completion rate across participants and report every attempt and failure.
 \end{enumerate}
 
-\textbf{Trace:} Verifies NFR2.
+\textbf{Test Case Derivation:} NFR2 requires TARGET\_COMPLETION of the declared task suite to be completed correctly without sighted help, so every attempt by every participant counts toward the rate. Verifies NFR2.
+
+\item{\textbf{T.NFR.6} First task, task time, and independence after setup\\}\label{test:T.NFR.6}
+
+\textbf{Control:} Manual
+
+\textbf{Initial State:} Run in the same participant sessions as T.NFR.5. Setup has just been completed with the participant as in UC6 of the SRS, and the participant has not used the system before. The setup helper is not present.
+
+\textbf{Input:}
+\begin{enumerate}
+  \item The participant attempts a first task from the declared suite, without help.
+  \item For each task in the suite, the participant also completes the same task with their usual screen-reader method. The order of the two methods alternates between tasks.
+\end{enumerate}
+
+\textbf{Output:}
+\begin{itemize}
+  \item After step 1, the time to complete the first task and whether any help was needed.
+  \item After step 2, the time for each task with each method, and the ratio of the system's median task time to the usual method's.
+  \item Across the sessions, the number of times the setup helper was needed.
+\end{itemize}
+
+\textbf{Pass/Fail Criteria:}
+\begin{itemize}
+  \item The first task is completed without help within LEARN\_TIME.
+  \item The median task time ratio does not exceed EFFICIENCY\_RATIO.
+  \item The setup helper is not needed after setup.
+\end{itemize}
+
+\textbf{How test will be performed:} An observer times each attempt with each method and records any request for help, without intervening.
+
+\textbf{Test Case Derivation:} NFR7 requires a first task without help within LEARN\_TIME, NFR8 bounds task time against the user's usual method, and NFR6 requires routine use without the setup helper. Timing both methods on the same tasks gives a direct comparison. Verifies NFR6, NFR7, and NFR8.
 
 \end{enumerate}
 
@@ -1269,21 +1344,21 @@ requirements that test appears against each of them.
 \endhead
 \bottomrule
 \endfoot
-FR1 & \hyperref[test:T.FR.VI.1.1]{T.FR.VI.1.1}, \hyperref[test:T.FR.VI.1.2]{T.FR.VI.1.2}\\
-FR2 & \hyperref[test:T.FR.VI.1.3]{T.FR.VI.1.3}\\
+FR1 & \hyperref[test:T.FR.VI.1.1]{T.FR.VI.1.1}, \hyperref[test:T.FR.VI.1.2]{T.FR.VI.1.2}, \hyperref[test:T.NFR.3]{T.NFR.3}\\
+FR2 & \hyperref[test:T.FR.VI.1.3]{T.FR.VI.1.3}, \hyperref[test:T.NFR.3]{T.NFR.3}\\
 FR3 & \hyperref[test:T.FR.VI.1.4]{T.FR.VI.1.4}\\
 FR4 & \hyperref[test:T.FR.TM.2.1]{T.FR.TM.2.1}\\
 FR5 & \hyperref[test:T.FR.TM.2.1]{T.FR.TM.2.1}\\
 FR6 & \hyperref[test:T.FR.VI.1.3]{T.FR.VI.1.3}\\
 FR7 & \hyperref[test:T.FR.TM.2.2]{T.FR.TM.2.2}\\
-FR8 & \hyperref[test:T.FR.VI.1.4]{T.FR.VI.1.4}\\
+FR8 & \hyperref[test:T.FR.VI.1.4]{T.FR.VI.1.4}, \hyperref[test:T.FR.ACTH.1]{T.FR.ACTH.1}\\
 FR9 & \hyperref[test:T.FR.AG.3.1]{T.FR.AG.3.1}, \hyperref[test:T.FR.AG.3.2]{T.FR.AG.3.2}\\
 FR10 & \hyperref[test:T.FR.AG.3.3]{T.FR.AG.3.3}\\
-FR11 & \hyperref[test:T.FR.AG.3.2]{T.FR.AG.3.2}\\
+FR11 & \hyperref[test:T.FR.AG.3.2]{T.FR.AG.3.2}, \hyperref[test:T.FR.OV.3]{T.FR.OV.3}\\
 FR12 & \hyperref[test:T.FR.OV.1]{T.FR.OV.1}, \hyperref[test:T.FR.OV.2]{T.FR.OV.2}, \hyperref[test:T.FR.OV.3]{T.FR.OV.3}, \hyperref[test:T.FR.OV.4]{T.FR.OV.4}\\
-FR13 & \hyperref[test:T.FR.AG.3.3]{T.FR.AG.3.3}\\
+FR13 & \hyperref[test:T.FR.AG.3.3]{T.FR.AG.3.3}, \hyperref[test:T.FR.ATI.2]{T.FR.ATI.2}\\
 FR14 & \hyperref[test:T.FR.ATI.1]{T.FR.ATI.1}\\
-FR15 & \hyperref[test:T.FR.ACTH.2]{T.FR.ACTH.2}\\
+FR15 & \hyperref[test:T.FR.OV.2]{T.FR.OV.2}, \hyperref[test:T.FR.OV.4]{T.FR.OV.4}, \hyperref[test:T.FR.ACTH.2]{T.FR.ACTH.2}\\
 FR16 & \hyperref[test:T.FR.VI.1.3]{T.FR.VI.1.3}\\
 FR17 & \hyperref[test:T.FR.ATI.3]{T.FR.ATI.3}\\
 FR18 & \hyperref[test:T.FR.VI.1.5]{T.FR.VI.1.5}\\
@@ -1311,6 +1386,9 @@ NFR2 & \hyperref[test:T.NFR.5]{T.NFR.5}\\
 NFR3 & \hyperref[test:T.NFR.2]{T.NFR.2}\\
 NFR4 & \hyperref[test:T.NFR.3]{T.NFR.3}\\
 NFR5 & \hyperref[test:T.NFR.4]{T.NFR.4}\\
+NFR6 & \hyperref[test:T.FR.ATI.1]{T.FR.ATI.1}, \hyperref[test:T.NFR.6]{T.NFR.6}\\
+NFR7 & \hyperref[test:T.NFR.6]{T.NFR.6}\\
+NFR8 & \hyperref[test:T.NFR.6]{T.NFR.6}\\
 \bottomrule
 \end{tabularx}
 \end{table}
