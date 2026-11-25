@@ -91,7 +91,7 @@ Table~\ref{tab:dev-roles} summarizes proposed workstreams.
 \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.29\textwidth}X}
 \toprule Proposed workstream & Responsibility and assignment\\\midrule
 Voice and accessible client & Conversation controls, keyboard access, VoiceOver compatibility. Owner: Lucas DeBoer. Cross-reviewer: Curtis Vos.\\
-Agent and tool integration & Hermes adapter, account/browser tools, execution control. Owner: Aaron Loh. Cross-reviewer: Kevin Kim.\\
+Agent and tool integration & LiveKit agent, account/browser tools, approval gate. Owner: Aaron Loh. Cross-reviewer: Kevin Kim.\\
 Deployment and reliability & Configuration, credentials, CI, reconnection, observability. Owner: Kevin Kim. Cross-reviewer: Aaron Loh.\\
 Evaluation and quality & Recruitment coordination, task protocol, outcome measurement, accessibility checks. Owner: Curtis Vos. Cross-reviewer: Lucas DeBoer.\\
 \bottomrule
@@ -178,13 +178,15 @@ spend; paid expansion requires a revised allocation within the ceiling or an
 explicitly approved budget change.
 
 \section{Proof of Concept Demonstration Plan}
-The POC tests whether the voice interface can supervise a running agent. It is
-a technical demonstration, separate from the later participant evaluation.
+The POC tests whether a voice interface alone can direct a general-purpose agent
+through a real task. It is a technical demonstration, separate from the later
+participant evaluation.
 \subsection{Risk and experiment}
-The central risk is whether a visually impaired user can understand and control a running
-general-purpose agent through voice without visually monitoring it. Individual
-speech and agent components do not establish that their integration works.
-The POC will test the supervision interface across two task classes, rather
+The central risk is whether a visually impaired user can get a general-purpose
+agent to finish a real task through voice alone. The user cannot see the screen,
+so they must be able to say what they want and hear what the agent is about to
+do before it acts. Individual speech and agent components do not establish that
+their integration works. The POC will test this across two task classes, rather
 than implement a set of website-specific scripts:
 \begin{enumerate}
 \item \textbf{Email/calendar tools:} use synthetic correspondence to prepare a
@@ -196,13 +198,17 @@ The site and task are selected before the trial, without coding a dedicated work
 \end{enumerate}
 
 The demonstration uses one short task from each class. Across these tasks,
-exercise clarification, consequential-action approval, progress, correction,
-and explicit execution stop at least once. A full repetition of
+exercise clarification, consequential-action approval, progress and correction
+at least once. The demonstration succeeds if both tasks are finished from spoken
+instructions alone and nothing is sent or created before the user approves its
+details. Stopping a running task is tested after the POC. A full repetition of
 every condition in every class belongs to later evaluation. The demonstration uses
 controlled accounts and data; no participant's real email is required.
 Disconnection and reconnection behavior will be evaluated before participant evaluation.
 
 \subsection{Control semantics}
+These semantics describe the intended product. The POC demonstrates the approval
+rules; stopping, pausing and reconnection are tested after the POC.
 Ordinary speech interruption stops spoken output while the underlying task
 continues. An explicit ``stop working'' command or the stop key requests a pause,
 preserving task context for later resumption. An explicit request to cancel or
@@ -224,10 +230,10 @@ and preparation can proceed autonomously, but sending, purchasing, submitting,
 and consequential account/file changes require specific approval. If the action
 or its relevant details change, the previous approval does not apply.
 
-The POC will inject a misunderstanding, interrupt speech, and request a stop during a
-tool operation. Logs correlate task, action,
+The POC will inject a misunderstanding and a correction. Interrupting speech and
+requesting a stop during a tool operation are tested after the POC. Logs correlate task, action,
 approval, cancellation, and connection events without retaining sensitive payloads.
-The team must verify cancellation through the adapter and downstream worker;
+The team must verify cancellation through the agent framework and downstream worker;
 account and browser actions may have different cancellation behavior.
 
 \subsection{Later evaluation and provisional targets}\label{sec:evaluation}
@@ -269,7 +275,7 @@ Table~\ref{tab:dev-risks} summarizes POC uncertainties and failure consequences.
 \captionof{table}{POC uncertainties and failure consequences.}\label{tab:dev-risks}
 \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.25\textwidth}X}
 \toprule Uncertainty & Evidence needed and consequence if unresolved\\\midrule
-Harness supervision & Verify streamed status, approvals, steering, cancellation, and reconnection on a pinned Hermes version. If unavailable, revisit the adapter/harness before promising supervision.\\
+Harness supervision & Verify clarification, approvals and progress through LiveKit's agent framework with our own tools, then cancellation and reconnection after the POC. If unreliable, revisit the harness before promising supervision.\\
 Tool cancellation & Test slow and in-flight account/browser operations. If the outcome is unknown, expose that state and block retries; do not claim confirmed stop.\\
 Browser context & Test structured page information and screenshots on unfamiliar sites. Missing labels or ambiguous visuals may prevent reliable action; report the limitation and request clarification rather than assume success.\\
 Voice and VoiceOver & Measure latency, intelligibility, and competing audio with keyboard alternatives. If remote calls fail, retain local voice.\\
@@ -282,8 +288,8 @@ Recruitment & Confirm access early. Without participants, report technical feasi
 \section{Expected Technology}
 The proposed architecture is:
 \begin{quote}
-Accessible TypeScript/React web client $\rightarrow$ LiveKit/Python integration
-$\rightarrow$ Hermes $\rightarrow$ account tools and Browser Use.
+Accessible TypeScript/React web client $\rightarrow$ LiveKit agent framework
+(Python) $\rightarrow$ our tools $\rightarrow$ account tools and Browser Use.
 \end{quote}
 The team will implement the accessible task/decision presentation and supervision
 adapter, reusing existing speech, agent, and tool implementations. One supported
@@ -292,19 +298,19 @@ points and user-provided credentials. Provider choices and exact versions remain
 pending POC evidence. No model training is planned.
 
 \subsection{Agent and action tools}
-\textbf{Hermes is the primary harness candidate.} Its documented programmatic
-interface includes streaming events, steering, interrupt requests, and server
-requests for clarification/approval \citep{HermesIntegration}. These are promising
-integration primitives, not proof that our end-to-end control semantics already
-work. The POC must verify actual behavior and failure handling on a pinned release.
-Codex app server is an alternative with a custom-client integration surface
+\textbf{LiveKit's agent framework is the agent harness.} It is open source under
+the Apache 2.0 license and already carries the voice session \citep{LiveKitTools}.
+The model runs inside it through OpenRouter, and it can act only through tools we
+write. Every user sentence reaches our code before the model, so approval rules
+do not depend on the model. Hermes was the first candidate \citep{HermesIntegration}.
+It was replaced because running the model inside LiveKit removes a separate agent
+service and adapter, which keeps the POC small. Codex app server is an alternative with a custom-client integration surface
 \citep{CodexServer}; OpenClicky is an implementation reference. Neither establishes
 that arbitrary desktop plugins or account integrations transfer to our client.
 OpenClaw is excluded from the proposed stack.
 
-\textbf{Browser Use} is the intended general browser component through Hermes.
-Hermes documents a Browser Use path and fallback browser mechanisms
-\citep{HermesBrowser}. Packaged browser sessions must not be assumed to share a
+\textbf{Browser Use} is the intended general browser component. It is called
+from one of our tools, read-only for the POC. Packaged browser sessions must not be assumed to share a
 user's logged-in Chrome profile. Authentication, signed-in browser attachment,
 permission boundaries, and compatibility need separate trials. Direct account
 APIs can offer clearer structured outcomes than visual clicking; browser tools
@@ -321,7 +327,7 @@ source guarantees correct interpretation of an arbitrary website.
 
 The Browser Use library is open source under the MIT license and can run with a
 local browser; model inference and optional hosted services have separate costs
-\citep{BrowserUseSource}. The POC must verify which context the Hermes adapter
+\citep{BrowserUseSource}. The POC must verify which context Browser Use
 actually exposes, how it reports action results, and whether it permits approval
 before consequential actions and cancellation during delegated browser work.
 An instruction to ask for approval is not evidence of an enforced action boundary.
