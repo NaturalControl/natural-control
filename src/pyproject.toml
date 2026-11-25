@@ -1,0 +1,25 @@
+[project]
+name = "natural-control"
+version = "0.1.0"
+description = "Natural Control proof of concept: a voice assistant for email, calendar and websites"
+requires-python = ">=3.12,<3.14"
+dependencies = []
+
+[project.optional-dependencies]
+browser = [
+    "browser-use==0.13.14",
+]
+voice = [
+    "livekit-agents==1.8.10",
+    "livekit-plugins-openai==1.8.10",
+]
+
+[dependency-groups]
+dev = ["pytest==9.2.0", "ruff==0.17.3"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
