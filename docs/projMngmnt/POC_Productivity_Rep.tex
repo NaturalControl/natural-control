@@ -38,20 +38,19 @@ email and calendar data.
 \begin{itemize}
 \item \textbf{Email:} The user asks the agent to reply to an invitation. Two
 senders have the same name, so the agent asks which one the user means. The
-agent reads the reply back and the user changes one detail. The reply is sent
-only after the user approves the new version. The agent then checks that the
-reply is in the Sent folder.
+agent reads the reply back and sends it only after the user says yes. The agent
+then checks that the reply is in the Sent folder.
 \item \textbf{Website:} The agent compares ticket options on a conference website
-that we choose in advance and recommends a ticket. The user corrects a
-preference and the agent changes its recommendation.
+that we choose in advance and recommends a ticket.
 The agent adds the event to the calendar only after the user approves the
 details.
 \end{itemize}
 
 \textbf{How we will judge it.} The demo succeeds if two things hold in both
 tasks. The task is finished from spoken instructions alone, and nothing is sent
-or created before the user approves its details. We will check the second in the
-system's event log. Stopping a running task is tested after the POC.
+or created before the user approves its details. Both are visible during the demo, since
+the agent reads each email or event back and acts only after the user says yes.
+Corrections and stopping a running task are tested after the POC.
 
 \section{Team Meeting Attendance}
 
