@@ -881,12 +881,12 @@ The five use cases below expand the high-level scenarios in G.5. Each lists the 
 \nsection{S.7 Prioritization}
 
 \begin{itemize}
-    \item Must (POC, by November 23, 2026): \reqlink{FR1} to \reqlink{FR3}, \reqlink{FR8}, \reqlink{FR9}, \reqlink{NFR3}.
-    \item Must (before participant evaluation sessions, which must complete before the March 8, 2027 V\&V Report and Usability Report): \reqlink{FR4} to \reqlink{FR7}, \reqlink{FR10} to \reqlink{FR16}, \reqlink{FR18} to \reqlink{FR24}, \reqlink{NFR1}, \reqlink{NFR5}, \reqlink{NFR.E.1} to \reqlink{NFR.E.3}.
+    \item Must (POC, by November 23, 2026): \reqlink{FR1}, \reqlink{FR9}.
+    \item Must (before participant evaluation sessions, which must complete before the March 8, 2027 V\&V Report and Usability Report): \reqlink{FR2} to \reqlink{FR8}, \reqlink{FR10} to \reqlink{FR16}, \reqlink{FR18} to \reqlink{FR24}, \reqlink{NFR1}, \reqlink{NFR3}, \reqlink{NFR5}, \reqlink{NFR.E.1} to \reqlink{NFR.E.3}.
     \item Should (tune with usability evidence from those sessions, reflected in the March 8, 2027 report): conversational timing, \reqlink{FR17}, \reqlink{NFR2}, \reqlink{NFR4}.
 \end{itemize}
 
-The POC shall demonstrate approval and work-stop controls for its selected email/calendar and browser workflows. This demonstrates feasibility for the tested action paths; it does not establish coverage of every integration or website action.
+The POC shall demonstrate that spoken instructions alone can complete its selected email/calendar and browser workflows, with approval before each consequential action. Work-stop controls are demonstrated after the POC. This demonstrates feasibility for the tested action paths; it does not establish coverage of every integration or website action.
 
 \Needspace{8\baselineskip}
 \nsection{S.8 Verification and acceptance criteria}
@@ -1035,11 +1035,11 @@ Component skeleton & Pin Hermes, LiveKit, and Browser Use versions; create place
 Deployment and CI setup & Configure GitHub Actions checks for Python and TypeScript; establish credential handling that keeps secrets out of source control and logs (NFR5). & V\&V Plan & Nov 2\\\addlinespace[4pt]
 Voice interface integration & Wire LiveKit Agents into the task manager for audio sessions and turn handling. & Design document revision minus one; Interview Report & Nov 16\\\addlinespace[4pt]
 Task manager and state machine & Implement task state tracking and transitions (S.9) (FR8, FR19 to FR21). & POC demonstration & Nov 16\\\addlinespace[4pt]
-Hermes harness supervision & Connect Hermes on a pinned version; verify streamed status, approvals, interrupts, and reconnection. & Design document revision minus one; Interview Report & Nov 16\\\addlinespace[4pt]
+Agent harness & Run the model in LiveKit's agent framework with our own tools; verify clarification, approvals and progress. & Design document revision minus one; Interview Report & Nov 16\\\addlinespace[4pt]
 Participant recruitment & Recruit two to four blind participants with screen-reader experience; resolve protocol, consent, and institutional research requirements before any session (P.6). & Design document revision minus one; Interview Report & Nov 16\\\addlinespace[4pt]
 Action gate and approval flow & Implement the gate that requires explicit approval of exact details before any consequential action executes. Ready before the demonstration window opens. & POC demonstration & Nov 16\\\addlinespace[4pt]
 Browser and account tools & Integrate Browser Use and Composio as action tools behind the gate. Ready before the demonstration window opens. & POC demonstration & Nov 16\\\addlinespace[4pt]
-POC demonstration & Demonstrate approval and work-stop controls for the selected connect app workflows (S.7). & POC demonstration & Nov 23 - Dec 3\\\addlinespace[4pt]
+POC demonstration & Demonstrate voice-only task completion with approval for the selected email/calendar and browser workflows (S.7). & POC demonstration & Nov 23 - Dec 3\\\addlinespace[4pt]
 Issue remediation & Address problems surfaced during the POC demonstration before design revision. & Design document & Jan 18, 2027\\\addlinespace[4pt]
 Outcome verification & Check consequential-action results against tool responses or account/page state; record verified, partial, failed, or unknown. & Design document & Jan 18, 2027\\\addlinespace[4pt]
 Accessible client and task history & Build keyboard- and VoiceOver-compatible session controls and the accessible task history layer. & Design document & Jan 18, 2027\\\addlinespace[4pt]
